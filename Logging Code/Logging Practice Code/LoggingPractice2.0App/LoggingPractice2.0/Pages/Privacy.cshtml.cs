@@ -10,6 +10,7 @@ namespace LoggingPractice2._0.Pages
 {
     public class PrivacyModel : PageModel
     {
+        private string msg = "has been logged";
         private readonly ILogger<PrivacyModel> _logger;
 
         public PrivacyModel(ILogger<PrivacyModel> logger)
@@ -19,7 +20,7 @@ namespace LoggingPractice2._0.Pages
 
         public void OnGet()
         {
-            _logger.LogInformation(LoggingId.privacyPageNavCode,"Privacy Page has been navigated to.");
+            _logger.LogInformation(LoggingId.privacyPageNavCode,"{IP} Has navigated to Privacy Page to at {Time}",LoggingId.GetLocalIPAddress(), DateTime.UtcNow);
         }
     }
 }
