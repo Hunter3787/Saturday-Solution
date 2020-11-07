@@ -30,6 +30,7 @@ namespace LoggingPractice2._0
             var host = CreateHostBuilder(args).Build();
             var logger = host.Services.GetRequiredService<ILogger<Program>>();
             logger.LogInformation("Host Created.");
+            logger.LogInformation(GetLocalIPAddress());
             host.Run();
         }
 
