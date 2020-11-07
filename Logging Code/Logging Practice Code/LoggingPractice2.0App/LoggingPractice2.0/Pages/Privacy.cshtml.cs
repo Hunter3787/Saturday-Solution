@@ -19,6 +19,7 @@ namespace LoggingPractice2._0.Pages
 
         public void OnGet()
         {
+            _logger.LogInformation("Privacy Page has been navigated to.");
         }
     }
 }
