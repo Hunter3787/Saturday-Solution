@@ -15,12 +15,14 @@ namespace LoggingPractice.Pages
 
         private readonly ILogger _logger;
 
-        // Standard way of capturing category
+        ////Standard way of capturing category
         //public IndexModel(ILogger<IndexModel> logger) // convention is to use IndexModel.
         //{
         //    _logger = logger;
         //}
-        public IndexModel(ILoggerFactory factory) 
+
+        // Configuring new custom logger
+        public IndexModel(ILoggerFactory factory)
         {
             _logger = factory.CreateLogger("DemoCategory"); // same efficiency as standard way (IndexModel).
         }
@@ -31,9 +33,9 @@ namespace LoggingPractice.Pages
             _logger.LogTrace("Trace Log"); // heavy debugging detailed view on what is happening.
             _logger.LogDebug("Debug Log"); // heavy debugging info for data of each value/attribute.
             _logger.LogInformation(LoggingId.DemoCode, "Info Log"); // Flow of application, how users are using application.  **MOST USED**.
-            _logger.LogWarning("Error log"); // throwing an exception that has been caught (open file and file isnt there)   **MOST USED**.
-            _logger.LogError("error log"); // exception that causes a crash, unexpected error (database now avalible or log file is corrupted).
-            _logger.LogCritical("critical log"); // application is crashing, website is down, losing data, losing sale, server down.
+            _logger.LogWarning("Warning log"); // throwing an exception that has been caught (open file and file isnt there)   **MOST USED**.
+            _logger.LogError("Error log"); // exception that causes a crash, unexpected error (database now avalible or log file is corrupted).
+            _logger.LogCritical("Critical log"); // application is crashing, website is down, losing data, losing sale, server down.
 
             // Advanced Logging messages
             //_logger.LogError("The server went down temporarily at {Time}", DateTime.UtcNow); // Can filter by time by sending as an argument.
