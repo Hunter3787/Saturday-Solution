@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using LoggingPractice2._0.LoggingFiles;
 
 namespace LoggingPractice2._0
 {
@@ -30,7 +31,10 @@ namespace LoggingPractice2._0
                     webBuilder.UseStartup<Startup>();
                 }).ConfigureLogging((context, logging) =>
                 {
-                    logging.Add
+                    logging.AddFileLogger(options =>
+                    {
+                        context.Configuration.GetSection("Logging").GetSection("LoggingFile").GetSection("Options").Bind(options);
+                    });
                 });
     }
 }

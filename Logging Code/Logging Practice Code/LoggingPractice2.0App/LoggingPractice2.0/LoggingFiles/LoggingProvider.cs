@@ -24,7 +24,7 @@ namespace LoggingPractice2._0.LoggingFiles
 
         public ILogger CreateLogger(string categoryName)
         {
-            return new LoggingPractice(this);
+            return new FileLogger(this);
         }
 
         public void Dispose()

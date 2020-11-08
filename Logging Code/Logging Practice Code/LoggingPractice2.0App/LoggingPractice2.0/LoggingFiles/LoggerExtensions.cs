@@ -9,7 +9,7 @@ namespace LoggingPractice2._0.LoggingFiles
 {
     public static class LoggerExtensions
     {
-        public static ILoggingBuilder AddLoggerType(this ILoggingBuilder builder, Action<LoggingOptions> configure)
+        public static ILoggingBuilder AddFileLogger(this ILoggingBuilder builder, Action<LoggingOptions> configure)
         {
             builder.Services.AddSingleton<ILoggerProvider, LoggingProvider>();
             builder.Services.Configure(configure);
