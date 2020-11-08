@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -14,13 +13,6 @@ namespace LoggingPractice2._0
         public const int privacyPageNavCode = 1003;
         public const int clickedButton = 1004;
 
-        private readonly ILogger<LoggingId> _logger;
-
-        public LoggingId(ILogger<LoggingId> logger)
-        {
-            _logger = logger;
-        }
-
         public static string GetLocalIPAddress()
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());
@@ -32,10 +24,6 @@ namespace LoggingPractice2._0
                 }
             }
             throw new Exception("No network adapters with an IPv4 address in the system!");
-        }
-        public void onClick()
-        {
-            _logger.LogInformation(LoggingId.clickedButton, "Privacy Page has been navigated to.");
         }
     }
 }
