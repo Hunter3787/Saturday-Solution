@@ -14,12 +14,12 @@ namespace LoggingPractice2._0.LoggingFiles
         public const int privacyPageNavCode = 1003;
         public const int clickedButton = 1004;
 
-        private ILogger<LogSet> _logger;
+        private readonly ILogger<LogSet> _logger;
 
-        public ILogger LoggingId(ILogger<LogSet> logger)
+        public LogSet(ILogger<LogSet> logger)
         {
             _logger = logger;
-            return _logger;
+            //return _logger;
         }
 
         public static string GetLocalIPAddress()

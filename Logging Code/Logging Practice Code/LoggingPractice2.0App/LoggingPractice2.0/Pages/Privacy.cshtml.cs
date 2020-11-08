@@ -18,7 +18,6 @@ namespace LoggingPractice2._0.Pages
             _logger = logger;
         }
 
-
         //private readonly LogSet _logSet;
         //public PrivacyModel(LogSet logger)
         //{
@@ -26,8 +25,9 @@ namespace LoggingPractice2._0.Pages
         //}
         public void OnGet()
         {
-            //_logSet.infoLogger("Privacy page");
+            // _logSet.infoLogger("Privacy page");
             _logger.LogInformation("Privacy page");
+            _logger.LogWarning("warning");
         }
     }
 }

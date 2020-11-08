@@ -251,3 +251,96 @@ Privacy Page has been navigated to 11/08/2020 08:03:06
 2020-11-08 09:30:10InformationPrivacy page
 2020-11-08 09:30:11InformationPrivacy page
 2020-11-08 09:30:40InformationApplication is shutting down...
+2020-11-08 09:41:19InformationHost Created.
+2020-11-08 09:41:19Information192.168.56.1
+2020-11-08 09:41:19InformationNow listening on: https://localhost:5001
+2020-11-08 09:41:19InformationNow listening on: http://localhost:5000
+2020-11-08 09:41:19InformationApplication started. Press Ctrl+C to shut down.
+2020-11-08 09:41:19InformationHosting environment: Development
+2020-11-08 09:41:20InformationContent root path: C:\Users\Serge\Documents\GitHub\Saturday-Solution\Logging Code\Logging Practice Code\LoggingPractice2.0App\LoggingPractice2.0
+2020-11-08 09:41:22InformationPrivacy page
+2020-11-08 09:41:22Warningwarning
+2020-11-08 09:41:33InformationApplication is shutting down...
+2020-11-08 09:44:11InformationHost Created.
+2020-11-08 09:44:12Information192.168.56.1
+2020-11-08 09:44:12InformationNow listening on: https://localhost:5001
+2020-11-08 09:44:12InformationNow listening on: http://localhost:5000
+2020-11-08 09:44:12InformationApplication started. Press Ctrl+C to shut down.
+2020-11-08 09:44:12InformationHosting environment: Development
+2020-11-08 09:44:12InformationContent root path: C:\Users\Serge\Documents\GitHub\Saturday-Solution\Logging Code\Logging Practice Code\LoggingPractice2.0App\LoggingPractice2.0
+2020-11-08 09:44:14ErrorAn unhandled exception has occurred while executing the request.   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.TryFindMatchingConstructor(Type instanceType, Type[] argumentTypes, ConstructorInfo& matchingConstructor, Nullable`1[]& parameterMap)
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.FindApplicableConstructor(Type instanceType, Type[] argumentTypes, ConstructorInfo& matchingConstructor, Nullable`1[]& parameterMap)
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.CreateFactory(Type instanceType, Type[] argumentTypes)
+   at Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure.DefaultPageModelActivatorProvider.CreateActivator(CompiledPageActionDescriptor actionDescriptor)
+   at Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure.DefaultPageModelFactoryProvider.CreateModelFactory(CompiledPageActionDescriptor descriptor)
+   at Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure.PageActionInvokerProvider.CreateCacheEntry(ActionInvokerProviderContext context, FilterItem[] cachedFilters)
+   at Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure.PageActionInvokerProvider.OnProvidersExecuting(ActionInvokerProviderContext context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionInvokerFactory.CreateInvoker(ActionContext actionContext)
+   at Microsoft.AspNetCore.Mvc.Routing.ActionEndpointFactory.<>c__DisplayClass7_0.<CreateRequestDelegate>b__0(HttpContext context)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2020-11-08 09:44:22InformationApplication is shutting down...
+2020-11-08 09:47:35InformationHost Created.
+2020-11-08 09:47:35Information192.168.56.1
+2020-11-08 09:47:35InformationNow listening on: https://localhost:5001
+2020-11-08 09:47:35InformationNow listening on: http://localhost:5000
+2020-11-08 09:47:35InformationApplication started. Press Ctrl+C to shut down.
+2020-11-08 09:47:35InformationHosting environment: Development
+2020-11-08 09:47:35InformationContent root path: C:\Users\Serge\Documents\GitHub\Saturday-Solution\Logging Code\Logging Practice Code\LoggingPractice2.0App\LoggingPractice2.0
+2020-11-08 09:47:38ErrorAn unhandled exception has occurred while executing the request.   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.TryFindMatchingConstructor(Type instanceType, Type[] argumentTypes, ConstructorInfo& matchingConstructor, Nullable`1[]& parameterMap)
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.FindApplicableConstructor(Type instanceType, Type[] argumentTypes, ConstructorInfo& matchingConstructor, Nullable`1[]& parameterMap)
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.CreateFactory(Type instanceType, Type[] argumentTypes)
+   at Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure.DefaultPageModelActivatorProvider.CreateActivator(CompiledPageActionDescriptor actionDescriptor)
+   at Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure.DefaultPageModelFactoryProvider.CreateModelFactory(CompiledPageActionDescriptor descriptor)
+   at Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure.PageActionInvokerProvider.CreateCacheEntry(ActionInvokerProviderContext context, FilterItem[] cachedFilters)
+   at Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure.PageActionInvokerProvider.OnProvidersExecuting(ActionInvokerProviderContext context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionInvokerFactory.CreateInvoker(ActionContext actionContext)
+   at Microsoft.AspNetCore.Mvc.Routing.ActionEndpointFactory.<>c__DisplayClass7_0.<CreateRequestDelegate>b__0(HttpContext context)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2020-11-08 09:50:33InformationHost Created.
+2020-11-08 09:50:33Information192.168.56.1
+2020-11-08 09:50:34InformationNow listening on: https://localhost:5001
+2020-11-08 09:50:34InformationNow listening on: http://localhost:5000
+2020-11-08 09:50:34InformationApplication started. Press Ctrl+C to shut down.
+2020-11-08 09:50:34InformationHosting environment: Development
+2020-11-08 09:50:34InformationContent root path: C:\Users\Serge\Documents\GitHub\Saturday-Solution\Logging Code\Logging Practice Code\LoggingPractice2.0App\LoggingPractice2.0
+2020-11-08 09:50:37ErrorAn unhandled exception has occurred while executing the request.   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.TryFindMatchingConstructor(Type instanceType, Type[] argumentTypes, ConstructorInfo& matchingConstructor, Nullable`1[]& parameterMap)
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.FindApplicableConstructor(Type instanceType, Type[] argumentTypes, ConstructorInfo& matchingConstructor, Nullable`1[]& parameterMap)
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.CreateFactory(Type instanceType, Type[] argumentTypes)
+   at Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure.DefaultPageModelActivatorProvider.CreateActivator(CompiledPageActionDescriptor actionDescriptor)
+   at Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure.DefaultPageModelFactoryProvider.CreateModelFactory(CompiledPageActionDescriptor descriptor)
+   at Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure.PageActionInvokerProvider.CreateCacheEntry(ActionInvokerProviderContext context, FilterItem[] cachedFilters)
+   at Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure.PageActionInvokerProvider.OnProvidersExecuting(ActionInvokerProviderContext context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionInvokerFactory.CreateInvoker(ActionContext actionContext)
+   at Microsoft.AspNetCore.Mvc.Routing.ActionEndpointFactory.<>c__DisplayClass7_0.<CreateRequestDelegate>b__0(HttpContext context)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2020-11-08 09:54:39InformationHost Created.
+2020-11-08 09:54:39Information192.168.56.1
+2020-11-08 09:54:40InformationNow listening on: https://localhost:5001
+2020-11-08 09:54:40InformationNow listening on: http://localhost:5000
+2020-11-08 09:54:40InformationApplication started. Press Ctrl+C to shut down.
+2020-11-08 09:54:40InformationHosting environment: Development
+2020-11-08 09:54:40InformationContent root path: C:\Users\Serge\Documents\GitHub\Saturday-Solution\Logging Code\Logging Practice Code\LoggingPractice2.0App\LoggingPractice2.0
+2020-11-08 09:54:42InformationPrivacy page
+2020-11-08 09:54:42Warningwarning
+2020-11-08 09:54:44InformationPrivacy page
+2020-11-08 09:54:44Warningwarning
+2020-11-08 09:54:44InformationPrivacy page
+2020-11-08 09:54:44Warningwarning
+2020-11-08 09:54:44InformationPrivacy page
+2020-11-08 09:54:44Warningwarning
+2020-11-08 09:54:46InformationApplication is shutting down...
