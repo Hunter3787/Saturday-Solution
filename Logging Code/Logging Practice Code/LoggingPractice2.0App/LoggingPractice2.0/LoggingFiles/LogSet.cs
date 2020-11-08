@@ -1,18 +1,26 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace LoggingPractice2._0
+namespace LoggingPractice2._0.LoggingFiles
 {
-    public class LoggingId
+    public class LogSet
     {
         public const int webRunningCode = 1001;
         public const int ipCode = 1002;
         public const int privacyPageNavCode = 1003;
         public const int clickedButton = 1004;
+
+        private ILogger<LogSet> _logger;
+
+        public ILogger LoggingId(ILogger<LogSet> logger)
+        {
+            _logger = logger;
+            return _logger;
+        }
 
         public static string GetLocalIPAddress()
         {
@@ -25,6 +33,16 @@ namespace LoggingPractice2._0
                 }
             }
             throw new Exception("Invalid");
+        }
+
+        public static string getSessionID()
+        {
+            return "Session id";
+        }
+
+        public void infoLogger(string msg)
+        {
+            _logger.LogInformation("Session ID: {sID} \n IP Address: {IP} \n {Message} \n {Time}", getSessionID(), GetLocalIPAddress(), msg, DateTime.UtcNow);
         }
     }
 }

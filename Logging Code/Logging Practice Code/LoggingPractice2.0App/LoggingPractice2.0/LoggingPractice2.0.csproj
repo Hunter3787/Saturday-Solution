@@ -5,4 +5,8 @@
     <RootNamespace>LoggingPractice2._0</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="System\Web\" />
+  </ItemGroup>
+
 </Project>

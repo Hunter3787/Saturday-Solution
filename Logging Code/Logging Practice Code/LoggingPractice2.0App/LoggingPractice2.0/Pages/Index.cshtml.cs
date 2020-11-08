@@ -19,7 +19,7 @@ namespace LoggingPractice2._0.Pages
 
         public void OnGet()
         {
-
+           
         }
     }
 }
