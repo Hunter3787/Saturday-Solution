@@ -28,6 +28,9 @@ namespace LoggingPractice2._0
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                }).ConfigureLogging((context, logging) =>
+                {
+                    logging.Add
                 });
     }
 }
