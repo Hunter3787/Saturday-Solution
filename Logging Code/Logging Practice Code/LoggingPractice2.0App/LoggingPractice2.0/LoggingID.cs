@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -23,7 +24,7 @@ namespace LoggingPractice2._0
                     return ip.ToString();
                 }
             }
-            throw new Exception("No network adapters with an IPv4 address in the system!");
+            throw new Exception("Invalid");
         }
     }
 }
