@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +15,22 @@ namespace LoggingPractice2._0.LoggingFiles
         public const int privacyPageNavCode = 1003;
         public const int clickedButton = 1004;
 
-        private readonly ILogger<LogSet> _logger;
+        //public static string sessionid = HttpContext.Session.Id.ToString();
 
-        public LogSet(ILogger<LogSet> logger)
-        {
-            _logger = logger;
-            //return _logger;
-        }
+        //public static string sessID()
+        //{
+        //    string s = HttpContext.Session.Id.ToString();
+        //    return s;
+        //}
+
+        //private ILogger<LogSet> infologger;
+
+        //public ILogger infoLogger(ILogger<LogSet> logger)
+        //{
+        //    infologger = logger;
+        //    infologger.LogInformation("yes");
+        //    return _logger;
+        //}
 
         public static string GetLocalIPAddress()
         {
@@ -35,14 +45,17 @@ namespace LoggingPractice2._0.LoggingFiles
             throw new Exception("Invalid");
         }
 
+        
+
         public static string getSessionID()
         {
             return "Session id";
         }
 
-        public void infoLogger(string msg)
-        {
-            _logger.LogInformation("Session ID: {sID} \n IP Address: {IP} \n {Message} \n {Time}", getSessionID(), GetLocalIPAddress(), msg, DateTime.UtcNow);
-        }
+
+        //public void infoLogger(string msg)
+        //{
+        //    _logger.LogInformation("Session ID: {sID} \n IP Address: {IP} \n {Message} \n {Time}", getSessionID(), GetLocalIPAddress(), msg, DateTime.UtcNow);
+        //}
     }
 }

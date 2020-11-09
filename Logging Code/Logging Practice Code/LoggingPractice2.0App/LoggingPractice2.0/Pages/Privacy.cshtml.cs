@@ -19,15 +19,25 @@ namespace LoggingPractice2._0.Pages
         }
 
         //private readonly LogSet _logSet;
-        //public PrivacyModel(LogSet logger)
+        //public PrivacyModel(Log logger)
         //{
         //    _logSet = logger;
         //}
         public void OnGet()
         {
-            // _logSet.infoLogger("Privacy page");
-            _logger.LogInformation("Privacy page");
-            _logger.LogWarning("warning");
+            //_logSet.InfoLogger("Privacy page");
+            _logger.LogInformation("information message");
+
+            try
+            {
+                throw new Exception("catch");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex,"The file is invalid");
+            }
+
+            _logger.LogError("The server is down");
         }
     }
 }
