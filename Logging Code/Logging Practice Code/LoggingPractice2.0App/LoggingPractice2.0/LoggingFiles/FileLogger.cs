@@ -36,7 +36,7 @@ namespace LoggingPractice2._0.LoggingFiles
             }
             var fullFilePath = string.Format("{0}/{1}", _provider.Options.FolderPath, _provider.Options.FilePath.Replace("{date}", DateTime.UtcNow.ToString("yyyyMMdd")));
 
-            var logRecord = string.Format("{0} [{1}] ({2}) {3} ({4}) ({5})", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"), logLevel.ToString(), formatter(state, exception), (exception != null ? exception.StackTrace : ""), LogSet.GetLocalIPAddress(), LogSet.getSessionID());
+            var logRecord = string.Format("{0},[{1}],({2}),{3},({4}),({5})", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"), logLevel.ToString(), formatter(state, exception), (exception != null ? exception.StackTrace : ""), LogSet.GetLocalIPAddress(), LogSet.getSessionID());
 
             using (var streamWriter = new StreamWriter(fullFilePath, true))
             {
