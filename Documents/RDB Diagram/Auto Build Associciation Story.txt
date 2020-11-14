@@ -1,0 +1,18 @@
+User Account: A private, authorized, access key held by one, and only one, user to utilize "premium" features.
+
+A user account has one and only one associated set of user details.
+
+User Details: Specific information gathered about the user that can be shared, used to control access, and/or help identify a user outside of the website.
+
+A user has access, and controls, one Garage.
+
+User Garage: A storage space for items, or builds, the user may be interested in viewing at a later time.
+
+The User Garage houses shelves and builds for the user, they can store 50 builds, and have multiple shelves. Excluding the 50 build limit, the sections work similarly.
+
+Shelves: A place to place individual items for later review, that helps keep things in plain sight so as not to forget or lose them.
+
+The shelves can contain many individual products (including duplicates).
+
+PCBuilds: A series of components and devices used in conjunction to make a functional computer system.
+
