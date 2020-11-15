@@ -14,5 +14,12 @@ Shelves: A place to place individual items for later review, that helps keep thi
 
 The shelves can contain many individual products (including duplicates).
 
-PCBuilds: A series of components and devices used in conjunction to make a functional computer system.
+PCBuilds: A series of components and devices used in conjunction to make a computer system.
 
+PC Builds are made up of one to many components that work together to make a functional system. PC Builds can also contain 0 to many additional items.
+
+Registered users can have up to 50 builds in their garage, each build can be published and those published builds will duplicate with a unique name for permanent storage.
+
+Sessions: An activity that has a period of time devoted to it.
+
+These sessions can be spawned by any user, a registered user will pass on their username
