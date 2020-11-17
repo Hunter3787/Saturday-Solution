@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace LoggingPractice2._0.LoggingFiles
 {
-    public static class LoggerExtensions
+    public static class LoggerExtensions // Needs to be static so that it can be called anywhere.
     {
-        public static ILoggingBuilder AddFileLogger(this ILoggingBuilder builder, Action<LoggingOptions> configure)
+        public static ILoggingBuilder AddFileLogger(this ILoggingBuilder builder, Action<LoggingOptions> configure) // pass in an instance of a ILoggingBuilder and Options to access appsettings.
         {
-            builder.Services.AddSingleton<ILoggerProvider, LoggingProvider>();
-            builder.Services.Configure(configure);
+            builder.Services.AddSingleton<ILoggerProvider, LoggingProvider>(); // Creates a new singleton for the IloggerProvider.
+            builder.Services.Configure(configure); // Uses the configure method to configure the singleton logger with the specified values, also used to identify and navigate appsettings.
 
-            return builder;
+            return builder; // this will return the builder that we have configured. 
         }
     }
 }

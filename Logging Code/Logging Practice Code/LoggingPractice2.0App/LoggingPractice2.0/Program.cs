@@ -28,10 +28,11 @@ namespace LoggingPractice2._0
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                }).ConfigureLogging((context, logging) =>
+                }).ConfigureLogging((context, logging) => // passes in the host builder and also passes in the parameter for logging.
                 {
-                    logging.AddFileLogger(options =>
+                    logging.AddFileLogger(options => // Calls the FileLogger.cs file methods.
                     {
+                        // sets configurations that we specified, reads from appsettings, gets the required sections for appsettings.json. Binding the options into it so that it can be reference in other places.
                         context.Configuration.GetSection("Logging").GetSection("LoggingFile").GetSection("Options").Bind(options);
                     });
                 });
