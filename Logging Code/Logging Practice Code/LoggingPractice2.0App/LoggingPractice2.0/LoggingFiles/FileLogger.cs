@@ -11,7 +11,7 @@ namespace LoggingPractice2._0.LoggingFiles
 {
     public class FileLogger : ILogger // Use ILogger interface.
     {
-        protected readonly LoggingProvider _provider; // Sets instance.
+        public readonly LoggingProvider _provider;
 
         public FileLogger([NotNull] LoggingProvider provider) // Default constructor for this class. It should not be null. Also passing in an object from the LoggingProvider class as a parameter.
         {
