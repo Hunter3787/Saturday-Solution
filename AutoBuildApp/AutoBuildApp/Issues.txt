@@ -1,0 +1,5 @@
+why the hell:
+
+- Under DAL solutions folder for dependencies when I right click "add project reference"
+ i cant seem to find something or search for it but can only goto Nugget packet
+
