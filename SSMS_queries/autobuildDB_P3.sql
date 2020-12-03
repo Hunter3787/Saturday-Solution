@@ -1,5 +1,6 @@
 
-USE AutoBuildDB_P2;
+USE AutoBuild_V3;
+
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS logs;
 DROP TABLE IF EXISTS sess;
@@ -11,29 +12,56 @@ DROP TABLE IF EXISTS pcBuilds;
 DROP TABLE IF EXISTS userAccounts;
 
 
+ -- sessions --> userAccounts ( 1..*-> 0..1)
+ -- shelves  --> userAccounts ( 0..*-> 1..1)
+
+ CREATE TABLE userAccounts(
+
+ userID INTEGER NOT NULL IDENTITY(0010000,2),
+ username varchar(30),
+ email varchar(30),
+ passwordHash varchar,
+ firstName varchar(20),
+ lastName varchar(20),
+ registrationDate Date,
+
+ -- creating a enum
+ -- accountTypes represented as an enumeration:
+ roley varchar(15) NOT NULL CHECK (roley IN ('BASIC' , 'ADMIN', 'DEVOLOPER', 'VENDOR')),
+
+-- primary key
+CONSTRAINT userAccounts_PK PRIMARY KEY(userID)
+
+ );
+
+
+
 -- a following schema of Logs and Sessions: "Admin Data" will be created.
   -- sessions -> logs ( 0..1-> 1..*)
  CREATE TABLE sess(
 
  -- what im trying to do is have a agent ID that has a 
  -- certain patern: example: 300XXX need to read more into it
- visitorID INTEGER NOT NULL IDENTITY,
- pageID INTEGER, -- NOT NULL IDENTITY(500000,1),
- username VARCHAR(20),
+ visitorID INTEGER NOT NULL IDENTITY(0020000,2),
+ pageID INTEGER, -- NOT NULL IDENTITY, need to wait if this is a CK
+ userID INTEGER NOT NULL,
  beginAt DATETIME,
  endAt DATETIME,
  ipAddress binary(4),
 
- CONSTRAINT sess_PK PRIMARY KEY (visitorID)
+ CONSTRAINT sess_PK PRIMARY KEY (visitorID),
  -- will be defining FK and PK and unique values
+ 
+CONSTRAINT	sessions_account FOREIGN KEY
+(userID) REFERENCES userAccounts (userID)
 
  );
 
  -- logs --> sessions ( 1..*-> 0..1)
  CREATE TABLE logs(
 
-logID INTEGER NOT NULL IDENTITY(000000,2), -- PRIMARY KEY,
-causeID INTEGER, -- foriegn key from sessions visitorID, -- PRIMARY KEY,
+logID INTEGER, -- PRIMARY KEY,
+causeID INTEGER NOT NULL IDENTITY(0030000,2), -- foriegn key from sessions visitorID, -- PRIMARY KEY,
 creationDate DATETIME,
 event Varchar(20), --example 192/168/1/1
 message text, -- 
@@ -49,57 +77,14 @@ CONSTRAINT	logs_sessions FOREIGN KEY
 );
 
 
-
- -- sessions --> userAccounts ( 1..*-> 0..1)
- -- shelves  --> userAccounts ( 0..*-> 1..1)
-
- CREATE TABLE userAccounts(
-
- userID INTEGER NOT NULL IDENTITY,
- username varchar(20),
- email varchar(20),
- passwordHash BINARY(64) NOT NULL,
- fName varchar(20),
- lName varchar(20),
- createdAt DATETIME,
- createdby Varchar(20),
- modifiedAt DATETIME,
- modifiedBy Varchar(20),
- -- creating a enum
- -- accountTypes represented as an enumeration:
- roley varchar(15) NOT NULL CHECK (roley IN ('BASIC' , 'ADMIN', 'DEVOLOPER', 'VENDOR')),
-
--- primary key
-CONSTRAINT userAccounts_PK PRIMARY KEY(userID)
- );
-
-
- -- userAccounts -> shelves (1..1 -> 0..*)
- CREATE TABLE shelves(
- shelfID INTEGER NOT NULL IDENTITY(2300000,1),
- userIDFK INTEGER  NOT NULL,
- nameOfShelf VARCHAR(20),
- createdAt DATETIME,
- createdby Varchar(20),
- modifiedAt DATETIME,
- modifiedBy Varchar(20),
-
- CONSTRAINT shelves_PK PRIMARY KEY(shelfID),
-
- CONSTRAINT	userAccounts_shelves_FK FOREIGN KEY
-(userIDFK) REFERENCES userAccounts (userID)
-
- );
-
- 
  -- userAccounts -> PCbuids (1..1 -> 0..50)
  -- PCbuilds -> PublishedBuilds (1..1 -> 0..1)
 
 
  CREATE TABLE pcBuilds(
- userIDFK INTEGER NOT NULL, -- foriegn key from userAccount
 
- pcBuildID INTEGER NOT NULL IDENTITY, --PK
+ userID INTEGER NOT NULL, -- foriegn key from userAccount -- PK
+ pcBuildID INTEGER NOT NULL IDENTITY (0040000,2), --PK
  buildName Varchar(20),
  createdAt DATETIME,
  createdby Varchar(20),
@@ -107,61 +92,62 @@ CONSTRAINT userAccounts_PK PRIMARY KEY(userID)
  modifiedBy Varchar(20),
  position INTEGER,
 
- CONSTRAINT pcBuilds_PK PRIMARY KEY(pcBuildID),
- constraint pcBuilds_Unique UNIQUE ( userIDFK),
+ CONSTRAINT pcBuilds_PK PRIMARY KEY(pcBuildID, userID),
+
+ CONSTRAINT pcBuilds_unique UNIQUE (userID, buildName),
 
  CONSTRAINT userAccounts_pcBuilds_FK FOREIGN KEY
- (userIDFK) REFERENCES userAccounts (userID)
+ (userID) REFERENCES userAccounts (userID)
 
  );
+
+
  -- userAccounts -> PCbuids (1..1 -> 0..50)
  -- PCbuilds -> publishedBuilds (1..1 -> 0..1)
 
+
  CREATE TABLE publishedbuilds(
 
- userIDpb INTEGER NOT NULL,
- pcBuildIDFK INTEGER, -- FK from the PCbuild
+ publishID INTEGER NOT NULL IDENTITY (0050000,2),
+ userID INTEGER NOT NULL,
+ pcBuildID INTEGER NOT NULL, -- FK from the PCbuild
  createdAt DATETIME,
  createdby Varchar(20),
  modifiedAt DATETIME,
  modifiedBy Varchar(20),
- uploadedPicture INTEGER NOT NULL IDENTITY(0900000,1), -- fk from Uploaded images
 
- CONSTRAINT pb_uploadedPicture_unique UNIQUE (uploadedPicture),
+ CONSTRAINT pb_PK PRIMARY KEY(publishID),
 
  CONSTRAINT pb_pcBuilds_FK FOREIGN KEY 
- (pcBuildIDFK) REFERENCES pcBuilds (pcBuildID),
-
- CONSTRAINT pb_pcBuilds_FK_2 FOREIGN KEY 
- (userIDpb) REFERENCES pcBuilds (userIDFK),
- 
- CONSTRAINT pb_PK PRIMARY KEY( pcBuildIDFK)
-
+ (pcBuildID, userID) REFERENCES pcBuilds (pcBuildID,userID),
  );
  
  -- uplaodedImages -> publishedBuilds ( 0..* -> 1..1)
  CREATE TABLE uploadedImages(
- imageID INTEGER, --FK
+
+ imageName Varchar(20), --FK
+ publishID INTEGER NOT NULL, -- FK from the PCbuild
  createdAt DATETIME,
  createdby Varchar(20),
  modifiedAt DATETIME,
  modifiedBy Varchar(20),
- position INTEGER,
 
- CONSTRAINT uploadedImages_PK PRIMARY KEY(imageID),
+ CONSTRAINT uploadedImages_PK PRIMARY KEY(imageName, publishID),
  
  CONSTRAINT pb_uploadedImages_FK FOREIGN KEY
- (imageID) REFERENCES publishedbuilds(uploadedPicture),
+ ( publishID) REFERENCES publishedbuilds(publishID),
 
  );
 
-
+ 
  -- publishedbuilds -> posts ( 1..1 -> 0..*)
  -- userAccounts    -> posts (1..1 -> 0..*)
  CREATE TABLE posts(
 
- userIDFK INTEGER, -- FORIEGN KEY
- postTect  text,
+ userAccountID INTEGER NOT NULL,
+ publishID INTEGER NOT NULL,
+
+ postText  text,
  createdAt DATETIME,
  createdby Varchar(20),
  modifiedAt DATETIME,
@@ -170,10 +156,38 @@ CONSTRAINT userAccounts_PK PRIMARY KEY(userID)
  -- ratings represented as an enumeration:
  rating varchar(15) NOT NULL CHECK (rating IN ('5 stars' , '4 stars', '3 stars', '2 stars', '1 star', '0 stars')),
 
-
  CONSTRAINT posts_userAccount_FK FOREIGN KEY 
- (userIDFK) REFERENCES userAccounts (userID),
+ (userAccountID) REFERENCES userAccounts (userID),
 
- CONSTRAINT posts_PK PRIMARY KEY (userIDFK)
+ CONSTRAINT posts_publishedbuilds_FK_1 FOREIGN KEY 
+ (publishID) REFERENCES publishedbuilds (publishID),
+
+  CONSTRAINT post_PK PRIMARY KEY(userAccountID, publishID),
+ 
 
  );
+
+
+ -- userAccounts -> shelves (1..1 -> 0..*)
+ CREATE TABLE shelves(
+ shelfID INTEGER NOT NULL  IDENTITY (0060000,2),
+ userID INTEGER  NOT NULL,
+ nameOfShelf VARCHAR(20) NOT NULL, --ck 
+ createdAt DATETIME,
+ createdby Varchar(20),
+ modifiedAt DATETIME,
+ modifiedBy Varchar(20),
+
+ CONSTRAINT shelves_PK PRIMARY KEY(shelfID, userID),
+
+ 
+ CONSTRAINT shelves_unique UNIQUE (userID, nameOfShelf),
+
+ CONSTRAINT	userAccounts_shelves_FK FOREIGN KEY
+(userID) REFERENCES userAccounts (userID)
+
+ );
+
+ 
+
+
