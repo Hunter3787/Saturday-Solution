@@ -20,7 +20,7 @@ DROP TABLE IF EXISTS userAccounts;
  userID INTEGER NOT NULL IDENTITY(0010000,2),
  username varchar(30),
  email varchar(30),
- passwordHash varchar,
+ passwordHash varchar(40),
  firstName varchar(20),
  lastName varchar(20),
  registrationDate Date,
