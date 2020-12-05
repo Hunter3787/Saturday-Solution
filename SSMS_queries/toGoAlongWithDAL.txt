@@ -1,0 +1,60 @@
+-- Create database Middleware_Testing -- thisyou can create it fast 
+
+USE Middleware_Testing -- change to the database name ^ above
+
+DROP TABLE IF EXISTS userAccounts 
+DROP TABLE IF EXISTS logs 
+
+ CREATE TABLE userAccounts(
+
+ userID INTEGER NOT NULL IDENTITY(0010000,2),
+ username varchar(30),
+ email varchar(30),
+ passwordHash varchar(20),
+ firstName varchar(20),
+ lastName varchar(20),
+ registrationDate Date,
+
+ -- creating a enum
+ -- accountTypes represented as an enumeration:
+ roley varchar(15) NOT NULL CHECK (roley IN ('BASIC' , 'ADMIN', 'DEVOLOPER', 'VENDOR')),
+
+-- primary key
+CONSTRAINT userAccounts_PK PRIMARY KEY(userID)
+
+ );
+
+ 
+ -- logs --> sessions ( 1..*-> 0..1)
+ CREATE TABLE logs(
+
+logID INTEGER NOT NULL IDENTITY(0030000,2), -- PRIMARY KEY,
+creationDate DATETIME,
+event Varchar(20), --example 192/168/1/1
+message text, -- 
+tag Varchar(20),
+
+-- primary key
+CONSTRAINT logs_PK PRIMARY KEY(logID,creationDate),
+
+);
+
+INSERT INTO logs(creationDate, event, message, tag) VALUES ('02-20-2019','dummyevent', 'THIS IS A TEST', 'DUMMYTEG');
+
+ INSERT INTO userAccounts(username, email, passwordHash, firstName, lastName, registrationDate, roley) 
+ VALUES ('Zee123', 'Zee@gmailz.com', 'passwordisHash', 'Zeinab', 'Farhat', '02-12-2015', 'BASIC'),
+		('user', 'user@gmailz.com', 'passwordisHash', 'user', 'name', '02-12-2015', 'BASIC'),
+		('username', 'user@gmail.com', 'passwordisHash', 'user', 'name', '02-12-2015', 'BASIC');
+
+ SELECT* FROM userAccounts;
+ SELECT* FROM logs;
+
+ SELECT userID FROM userAccounts  WHERE username= 'anyName' AND email = 'non@gmail.com';
+ 
+
+ DELETE FROM userAccounts WHERE userID = ( SELECT userID FROM userAccounts WHERE username= 'HEYYYYY' AND email = 'hey@gmailz.com');
+
+  SELECT userId, username, firstName, lastName, roley  FROM userAccounts WHERE username= 'anyName' AND email = 'non@gmail.com';
+
+  SELECT userID, username, firstName, lastName, roley FROM userAccounts WHERE username = 'anyName'  AND email = 'non@gmail.com';
+
