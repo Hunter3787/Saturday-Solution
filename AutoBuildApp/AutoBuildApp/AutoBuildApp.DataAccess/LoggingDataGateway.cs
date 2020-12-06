@@ -25,8 +25,6 @@ namespace AutoBuildApp.DataAccess
 
 
         // create log 
-
-
         public static String storeLogDatainDB(logging logger)
         {
 
@@ -68,14 +66,7 @@ namespace AutoBuildApp.DataAccess
         //retrieve log at day x?
 
 
-        // delete log
-
-
-
-
-
-
-
+        // delete log? do we eveen need this?
 
 
 

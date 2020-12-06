@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AutoBuildApp.DataAccess\AutoBuildApp.DataAccess.csproj" />
     <ProjectReference Include="..\AutoBuildApp.Models\AutoBuildApp.Models.csproj" />
   </ItemGroup>
 

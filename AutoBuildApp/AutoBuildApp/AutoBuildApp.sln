@@ -21,6 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "References(TEXT)", "Referen
 	ProjectSection(SolutionItems) = preProject
 		Issues.txt = Issues.txt
 		References_P1.txt = References_P1.txt
+		testingsomethinginconsoleApp.txt = testingsomethinginconsoleApp.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoBuildApp.DataAccess", "AutoBuildApp.DataAccess\AutoBuildApp.DataAccess.csproj", "{3C325FAF-02DC-490A-9C74-FF51905C92DE}"

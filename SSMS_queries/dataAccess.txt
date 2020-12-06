@@ -1,6 +1,7 @@
--- Create database Middleware_Testing -- thisyou can create it fast 
+Create database danny; -- thisyou can create it fast 
 
-USE Middleware_Testing -- change to the database name ^ above
+
+USE danny;
 
 DROP TABLE IF EXISTS userAccounts 
 DROP TABLE IF EXISTS logs 

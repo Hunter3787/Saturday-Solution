@@ -59,7 +59,7 @@
             // 
             // SearchButton
             // 
-            this.SearchButton.Location = new System.Drawing.Point(550, 56);
+            this.SearchButton.Location = new System.Drawing.Point(699, 53);
             this.SearchButton.Name = "SearchButton";
             this.SearchButton.Size = new System.Drawing.Size(200, 52);
             this.SearchButton.TabIndex = 3;
@@ -114,9 +114,9 @@
             // 
             // serach
             // 
-            this.serach.Location = new System.Drawing.Point(768, 60);
+            this.serach.Location = new System.Drawing.Point(699, 131);
             this.serach.Name = "serach";
-            this.serach.Size = new System.Drawing.Size(188, 48);
+            this.serach.Size = new System.Drawing.Size(200, 56);
             this.serach.TabIndex = 5;
             this.serach.Text = "search";
             this.serach.UseVisualStyleBackColor = true;

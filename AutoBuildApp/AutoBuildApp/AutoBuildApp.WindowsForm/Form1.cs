@@ -89,7 +89,7 @@ namespace AutoBuildApp.WindowsForm
         private void serach_Click(object sender, EventArgs e)
         {
 
-            using (SqlConnection connection = new SqlConnection(ConnectionStringHelperClass.ConnectNow("AutoBuildDB")))
+            using (SqlConnection connection = new SqlConnection("Server=localhost;Database=Middleware_Testing;Trusted_Connection=True;"))
             {// using statement is used because it automatically closes when you reach the end curly brace
 
                 // good reference: https://www.dotnetperls.com/sqlconnection

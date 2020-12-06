@@ -1,10 +1,11 @@
-﻿using AutoBuildApp.Models;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 using Microsoft.Data.SqlClient;
 using System.Data;
+using AutoBuildApp.Models;
 
 namespace AutoBuildApp.DataAccess
 {
@@ -106,8 +107,7 @@ namespace AutoBuildApp.DataAccess
 
         }
 
-
-
+   
         public static String deleteUserAccountinDB(UserAccount userA)
         {
 
