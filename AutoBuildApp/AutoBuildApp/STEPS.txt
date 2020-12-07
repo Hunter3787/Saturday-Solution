@@ -2,11 +2,11 @@
 
 1- SET UP THE CONNECTION STRING WITHER THROUGH THE CONFIG FILE OR CONSOLE
 
-2- MY CODE (START UP CODE IS IN CONSOLE - > called startHere )
+2- MY CODE (START UP CODE IS IN CONSOLE - > called startHere IT IS IN THE 'Clients' solution folder under AUTOBUILD.CONSOLEAPP )
 
 3 - to create a connection string in console i used:    
 // https://www.c-sharpcorner.com/UploadFile/5089e0/how-to-create-single-connection-string-in-console-applicatio/
-
+// this is where you pass your connection string almost like the app.cpnfig file^
 
 4- in SSMS I copy and pasted the query in the 'QUERY_USED.txt' file and executed it in SSMS
 
