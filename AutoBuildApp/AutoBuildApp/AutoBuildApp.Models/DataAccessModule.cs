@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿//https://devblogs.microsoft.com/dotnet/introducing-the-new-microsoftdatasqlclient/ 
 
-//https://devblogs.microsoft.com/dotnet/introducing-the-new-microsoftdatasqlclient/ 
-
+using Dapper;
 using Microsoft.Data.SqlClient;
-
-
+using System;
+using System.Collections.Generic;
+using System.Data;
 
 namespace AutoBuildApp.Models
 {
@@ -16,34 +14,7 @@ namespace AutoBuildApp.Models
      */
     public class DataAccessModule
     {
-
-        public List<UserAccount> RetrieveAccounts(string byLastName)
-        {
-            // this is like what vongster did
-            // this llowed compilation without this thing 
-            // ever being used 
-
-
-            // this is essentially that new Microsoft.Data.SqlClient.Sqlconnection
-            using (SqlConnection conn = new SqlConnection(ConnectionStringHelperClass.ConnectNow("AutoBuildDB")))
-            {
-
-                
-                throw new NotImplementedException();
-
-            }
-
-
-            //lets see how to talk to SQL Server...
-
-
-        }
-
-
-
-
-
-
+        // this is nothing just a test
 
     }
 }

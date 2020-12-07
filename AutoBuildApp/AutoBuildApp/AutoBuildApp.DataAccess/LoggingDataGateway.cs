@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-
 using AutoBuildApp.Models;
 using System.Data;
 
@@ -11,11 +10,19 @@ namespace AutoBuildApp.DataAccess
 {
     class LoggingDataGateway
     {
-        // now will be making a SQL connection  check
-        public static void checkConnection(string connectionString)
+        private String connection = " ";
+
+        public LoggingDataGateway(String connectionString)
         {
+            this.connection = connectionString;
+        }
+
+        // now will be making a SQL connection  check
+        public void checkConnection(string connectionString)
+        {
+
             //https://prod.liveshare.vsengsaas.visualstudio.com/join?0C811C8DF3B3EA0C85449FA8739BD16D004D
-            using (SqlConnection connection = new SqlConnection(ConnectionStringHelperClass.ConnectNow(connectionString)))
+            using (SqlConnection connection = new SqlConnection(this.connection))
             {
                 connection.Open();
                 Console.WriteLine("ServerVersion: {0}", connection.ServerVersion);
@@ -25,10 +32,10 @@ namespace AutoBuildApp.DataAccess
 
 
         // create log 
-        public static String storeLogDatainDB(logging logger)
+        public String storeLogDatainDB(logging logger)
         {
 
-            using (SqlConnection connection = new SqlConnection(ConnectionStringHelperClass.ConnectNow("AutoBuildDB")))
+            using (SqlConnection connection = new SqlConnection(this.connection))
             {
 
                

@@ -1,0 +1,20 @@
+
+
+1- SET UP THE CONNECTION STRING WITHER THROUGH THE CONFIG FILE OR CONSOLE
+
+2- MY CODE (START UP CODE IS IN CONSOLE - > called startHere )
+
+3 - to create a connection string in console i used:    
+// https://www.c-sharpcorner.com/UploadFile/5089e0/how-to-create-single-connection-string-in-console-applicatio/
+
+
+4- in SSMS I copy and pasted the query in the 'QUERY_USED.txt' file and executed it in SSMS
+
+5 - i demonstrate using a "userAccount gateway" that lives in the DAL solutions folder to communicate to the datastore and then using 
+		a DTO that retireves information from the gateway instead of 'OTHER' modules. 
+
+6- the userAccount is like what it looks like in the query (most of it is left out for now) it is in the DAL solutions folder it is under 
+the modules section 
+
+
+

@@ -7,19 +7,29 @@ using Microsoft.Data.SqlClient;
 using System.Data;
 using AutoBuildApp.Models;
 
+using System.Configuration; // for ConfigurationManager
 namespace AutoBuildApp.DataAccess
 {
-    class userAccountGateway
+    public class userAccountGateway
     {
+        private String connection =" ";
+        public userAccountGateway()
+        {
+            this.connection = null;
+        }
+        
+        public userAccountGateway(String connectionString)
+        {
+            this.connection = connectionString;
+        }
 
         Microsoft.Data.SqlClient.SqlDataAdapter adapter = new SqlDataAdapter();
 
-       public static Boolean verifyAccountExists(UserAccount userA)
+       public Boolean verifyAccountExists(UserAccount userA)
         {
             // now how to verify account exists? -> from their pk: userID
             bool Flag = true;
-
-            using (SqlConnection connection = new SqlConnection(ConnectionStringHelperClass.ConnectNow("AutoBuildDB")))
+            using (SqlConnection connection = new SqlConnection(this.connection))
             {
                 // using (var command = new Microsoft.Data.SqlClient.SqlCommand()){
                 // using statement is used because it automatically closes when you reach the end curly brace
@@ -35,7 +45,9 @@ namespace AutoBuildApp.DataAccess
                     {
                         connection.Open();
                         object test = adapter.InsertCommand.ExecuteScalar();
-                        if (test != null) { Flag = true; }
+                        if (test != null) { 
+                        // then user does exist 
+                        Flag = true; }
                         else { Flag = false; } 
 
                         connection.Close();
@@ -58,10 +70,10 @@ namespace AutoBuildApp.DataAccess
 
 
         // now will be making a SQL connection  check
-        public static void checkConnection(string connectionString)
+        public void checkConnection()
         {
             //https://prod.liveshare.vsengsaas.visualstudio.com/join?0C811C8DF3B3EA0C85449FA8739BD16D004D
-            using (SqlConnection connection = new SqlConnection(ConnectionStringHelperClass.ConnectNow(connectionString)))
+            using (SqlConnection connection = new SqlConnection(this.connection))
             {
                 connection.Open();
                 Console.WriteLine("ServerVersion: {0}", connection.ServerVersion);
@@ -70,10 +82,10 @@ namespace AutoBuildApp.DataAccess
         }
             
 
-        public static String createUserAccountinDB(UserAccount userA)
+        public  String createUserAccountinDB(UserAccount userA)
         {
-           
-            using (SqlConnection connection = new SqlConnection(ConnectionStringHelperClass.ConnectNow("AutoBuildDB")))
+
+            using (SqlConnection connection = new SqlConnection(this.connection))
             {
                 String sql = "INSERT INTO userAccounts(username, email, firstName, lastName, roley)  VALUES(@USERNAME,@EMAIL, @FIRSTNAME, @LASTNAME, @ROLEY);";
 
@@ -108,10 +120,10 @@ namespace AutoBuildApp.DataAccess
         }
 
    
-        public static String deleteUserAccountinDB(UserAccount userA)
+        public String deleteUserAccountinDB(UserAccount userA)
         {
 
-            using (SqlConnection connection = new SqlConnection(ConnectionStringHelperClass.ConnectNow("AutoBuildDB")))
+            using (SqlConnection connection = new SqlConnection(this.connection))
             {
 
 
@@ -143,11 +155,11 @@ namespace AutoBuildApp.DataAccess
         }
 
 
-        public static String retrieveAccountInformation(UserAccount userA)
+        public String retrieveAccountInformation(UserAccount userA)
         {
             String ret = "";
 
-            using (SqlConnection connection = new SqlConnection(ConnectionStringHelperClass.ConnectNow("AutoBuildDB")))
+            using (SqlConnection connection = new SqlConnection(this.connection))
             {
 
                 String sequal = "SELECT userID, username, firstName, lastName, roley FROM userAccounts WHERE username = @USERNAME AND email = @EMAIL;";
@@ -164,7 +176,7 @@ namespace AutoBuildApp.DataAccess
                         SqlDataReader reader = cmd.ExecuteReader();
                         while (reader.Read())
                         {
-                            ret = $"{reader.GetInt32(0)} {reader.GetString(1)} {reader.GetString(2)}";
+                            ret = $"user ID: {reader.GetInt32(0)} UserName: {reader.GetString(1)} First Name: {reader.GetString(2)}";
                         }
 
                     }
@@ -178,7 +190,6 @@ namespace AutoBuildApp.DataAccess
             }
 
             return ret;
-
 
         }
 

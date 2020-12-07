@@ -9,16 +9,19 @@ namespace AutoBuildApp.DataAccess
 {
     public class isUserCreatedDTO
     {
-        public static bool createUserinDB(UserAccount userA)
+        private userAccountGateway userGateway;
+
+        public isUserCreatedDTO(String connection)
+        {
+            userGateway = new userAccountGateway(connection);
+        }
+        public bool createUserinDB(UserAccount userA)
         {
             bool Flag = true;
-            
-            Flag = userAccountGateway.verifyAccountExists(userA);
-            if(Flag == true)
-            {
-                userAccountGateway.createUserAccountinDB(userA);
 
-            }
+            Flag = this.userGateway.verifyAccountExists(userA);
+            if (Flag == true) { Console.WriteLine("user exists"); }
+            else { Console.WriteLine("user does not exist so creating..."); userGateway.createUserAccountinDB(userA); }
             return Flag;
         }
     }

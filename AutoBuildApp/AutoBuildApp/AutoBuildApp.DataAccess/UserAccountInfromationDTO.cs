@@ -7,9 +7,16 @@ namespace AutoBuildApp.DataAccess
 {
     public class UserAccountInfromationDTO
     {
-        public static string DisplayInfoOnUser(UserAccount userA)
+        private userAccountGateway userGateway;
+        // establishing the connection which is passed to the gateway
+        public UserAccountInfromationDTO(String connection)
         {
-            return userAccountGateway.retrieveAccountInformation(userA);
+            userGateway = new userAccountGateway(connection);
+        }
+        // gatewat is reponsible for querying that informationa and returing it here:
+        public string DisplayInfoOnUser(UserAccount userA)
+        {
+            return userGateway.retrieveAccountInformation(userA); // userAccountGateway.retrieveAccountInformation(userA);
 
         }
     }
