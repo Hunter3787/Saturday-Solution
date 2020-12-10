@@ -25,19 +25,12 @@ namespace AutoBuildApp.ConsoleApp
             else { Console.WriteLine("user does not exist so creating..."); userGateway.createUserAccountinDB(userA);  }
            
             Console.ReadLine();
-            //BUT WE DO THIS INSTEAD: using a DTO an example instead of calling the gateway itself:
-            // client -> ...  -> DTO -> Data access gateway
-            Console.WriteLine("Creating a user A to the DB via a DTO");
-            isUserCreatedDTO dtoCreateUserifnotcreated = new isUserCreatedDTO(Settings1.Default.connectionString);
-            dtoCreateUserifnotcreated.createUserinDB(userA);
-
+           
             //======================= testing the create User
             Console.WriteLine("Creating a user B to the DB using DTO");
             UserAccount userB = new UserAccount("HEYYYYY", "user", "hey", "hey@gmail.com", "BASIC");
-            dtoCreateUserifnotcreated.createUserinDB(userB);
+            userGateway.createUserAccountinDB(userB);
             Console.ReadLine();
-            //userGateway.createUserAccountinDB(userB);
-
             //-------------------testing the delete user
 
             Console.WriteLine("deleting a user B in the DB using DTO");
