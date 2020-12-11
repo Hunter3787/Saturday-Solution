@@ -6,21 +6,22 @@ DROP TABLE IF EXISTS userCredentials;
 
 
  -- userAccounts (1..1) -> UserCredentials (1..1)
+
  CREATE TABLE userAccounts(
 
  userID BIGINT NOT NULL IDENTITY(0010000,2),
- username varchar(30),
  email varchar(30),
- passwordHash varchar(20),
  firstName varchar(20),
  lastName varchar(20),
+ createdAt DATETIME,
+ createdby DATETIME,
  modifiedAt DATETIME,
  modifiedBy DATETIME,
 -- primary key
 CONSTRAINT userAccounts_PK PRIMARY KEY(userID)
 
  );
- 
+
  -- userAccounts (1..1) -> UserCredentials (1..1)
   CREATE TABLE userCredentials(
 
