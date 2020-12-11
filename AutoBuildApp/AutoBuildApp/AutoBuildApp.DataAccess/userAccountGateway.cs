@@ -80,16 +80,64 @@ namespace AutoBuildApp.DataAccess
                 Console.WriteLine("State: {0}", connection.State);
             }
         }
-            
 
-        public  String createUserAccountinDB(UserAccount userA)
+
+        public String createUserAccountinDB(UserAccount userA)
         {
+
+            // role check
+
+
+            //log that someone is trying to create an acc
+
+            if(IsInformationValid(userA))
+            {
+                return "Invalid input";
+            }
+
+
+            // service code
+            //return Service.CreateUserAccountInDB(UserAccount userA)
 
             using (SqlConnection connection = new SqlConnection(this.connection))
             {
-                String sql = "INSERT INTO userAccounts(username, email, firstName, lastName, roley)  VALUES(@USERNAME,@EMAIL, @FIRSTNAME, @LASTNAME, @ROLEY);";
+                Microsoft.Data.SqlClient.SqlDataAdapter adapter = new SqlDataAdapter();
 
-            Microsoft.Data.SqlClient.SqlDataAdapter adapter = new SqlDataAdapter();
+                String sql = "SELECT USERID FROM userAccounts WHERE username = @USERNAME AND email = @EMAIL;";
+
+                adapter.InsertCommand = new SqlCommand(sql, connection);
+                adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = userA.UserName;
+                adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = userA.UserEmail;
+
+                try
+                {
+                    connection.Open();
+                    // best way to check?
+                    object test = adapter.InsertCommand.ExecuteScalar();
+                    Console.WriteLine("test obj = " + test);
+                    connection.Close();
+                    if(test != null)
+                    {
+                        // log here?
+                        return "User already exists.";
+                    }
+
+                }
+                catch (SqlException ex)
+                {
+                    if(ex.Number == -2)
+                    {
+                        Console.WriteLine("Data store has timed out.");
+                    }
+                    //https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlerror?view=dotnet-plat-ext-5.0 
+                    // 
+                    throw new NotImplementedException();
+
+                }
+
+
+                sql = "INSERT INTO userAccounts(username, email, firstName, lastName, roley)  VALUES(@USERNAME,@EMAIL, @FIRSTNAME, @LASTNAME, @ROLEY);";
+
                 adapter.InsertCommand = new SqlCommand(sql, connection);
                 adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = userA.UserName;
                 adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = userA.UserEmail;
@@ -111,15 +159,21 @@ namespace AutoBuildApp.DataAccess
 
 
                 }
-                Console.ReadLine();
 
-                return " ";
+                // log here? saying it was successful idk
+                return "Successful user creation";
 
             }
 
         }
 
-   
+
+        public String updateUserAccountInDB(UserAccount userA)
+        {
+
+            return "Successfully edited";
+        }
+
         public String deleteUserAccountinDB(UserAccount userA)
         {
 
@@ -193,16 +247,24 @@ namespace AutoBuildApp.DataAccess
 
         }
 
+        public bool validEmail(string email)
+        {
+            return email.Contains("@") && email.Contains(".");
+        }
+
+        public bool validUserName(string username)
+        {
+            return !String.IsNullOrEmpty(username) && username.Length >= 4 && username.Length <= 12;
+        }
 
 
-
-
-
-
-
-
-
-
+        public bool IsInformationValid(UserAccount user)
+        {
+            return validEmail(user.UserEmail) 
+                && validUserName(user.UserName) 
+                && !String.IsNullOrEmpty(user.FirstName) 
+                && !String.IsNullOrEmpty(user.LastName);
+        }
 
 
     }

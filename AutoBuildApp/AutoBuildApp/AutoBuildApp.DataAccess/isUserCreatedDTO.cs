@@ -20,8 +20,15 @@ namespace AutoBuildApp.DataAccess
             bool Flag = true;
 
             Flag = this.userGateway.verifyAccountExists(userA);
-            if (Flag == true) { Console.WriteLine("user exists"); }
-            else { Console.WriteLine("user does not exist so creating..."); userGateway.createUserAccountinDB(userA); }
+            if (Flag == true) 
+            { 
+                Console.WriteLine("user exists");
+            }
+            else 
+            { 
+                Console.WriteLine("user does not exist so creating..."); 
+                userGateway.createUserAccountinDB(userA); 
+            }
             return Flag;
         }
     }

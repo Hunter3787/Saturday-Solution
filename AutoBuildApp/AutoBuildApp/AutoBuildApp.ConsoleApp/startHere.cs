@@ -11,7 +11,7 @@ namespace AutoBuildApp.ConsoleApp
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            UserAccount userA = new UserAccount("username" ,"user", "name", "user@gmail.com", "BASIC");
+            UserAccount userA = new UserAccount("username", "user", "name", "user@gmafvifl.com2", "BASIC");
             // how to connect to sql in a console application so you can pass the string : Settings1.Default.connectionString to the
             // user account gateway NOTE THIS STRING CAN BE PASSED USING THE NAME GIVEN IN THE APP.CONFIG OR ANY OTHER FILE
             // https://www.c-sharpcorner.com/UploadFile/5089e0/how-to-create-single-connection-string-in-console-applicatio/
@@ -19,17 +19,19 @@ namespace AutoBuildApp.ConsoleApp
 
             Console.WriteLine("Creating a user A to the DB");
             userAccountGateway userGateway = new userAccountGateway(Settings1.Default.connectionString);
+
+            Console.WriteLine(userGateway.createUserAccountinDB(userA));
             userGateway.checkConnection();
             bool flag = userGateway.verifyAccountExists(userA);
-            if(flag == true){ Console.WriteLine("user exists"); }
-            else { Console.WriteLine("user does not exist so creating..."); userGateway.createUserAccountinDB(userA);  }
-           
+            if (flag == true) { Console.WriteLine("user exists"); }
+            else { Console.WriteLine("user does not exist so creating..."); userGateway.createUserAccountinDB(userA); }
+
             Console.ReadLine();
-           
             //======================= testing the create User
             Console.WriteLine("Creating a user B to the DB using DTO");
             UserAccount userB = new UserAccount("HEYYYYY", "user", "hey", "hey@gmail.com", "BASIC");
             userGateway.createUserAccountinDB(userB);
+
             Console.ReadLine();
             //-------------------testing the delete user
 
@@ -48,9 +50,6 @@ namespace AutoBuildApp.ConsoleApp
 
             Console.WriteLine("creating user C in the DB and retrieving info using DTO");
 
-            //using a DTO to retrive that information:
-            UserAccountInfromationDTO DTOuserinfo = new UserAccountInfromationDTO(Settings1.Default.connectionString);
-            Console.WriteLine(DTOuserinfo.DisplayInfoOnUser(userC));
             Console.ReadLine();
 
         }
