@@ -21,6 +21,8 @@ namespace AutoBuildApp.ConsoleApp
 
             UserManagementManager userManagementManager = new UserManagementManager(Settings1.Default.connectionString);
 
+            userManagementManager.CreateUserRecord(admin, basic);
+
             while (running)
             {
                 int option = 0, authority = 0, user = 0;
@@ -74,7 +76,6 @@ namespace AutoBuildApp.ConsoleApp
                         break;
                     case 5:
                         Console.WriteLine("What would you like to update from this user?");
-                        userManagementManager.CreateUserRecord(admin, basic);
                         Console.WriteLine("1) " + basic.UserName + "\n2) " + basic.FirstName + "\n3) " + basic.LastName + "\n4) " + basic.UserEmail);
                         int choice = Convert.ToInt32(Console.ReadLine());
                         string newValue;
