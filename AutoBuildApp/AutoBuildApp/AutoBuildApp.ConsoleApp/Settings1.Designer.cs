@@ -26,8 +26,8 @@ namespace AutoBuildApp.ConsoleApp {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=DESKTOP-CI24C55\\MSSQLSERVER02;Initial Catalog=dannytemp;Integrated Se" +
-            "curity=True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=DESKTOP-CI24C55\\MSSQLSERVER02;Initial Catalog=dannytemp2;Integrated S" +
+            "ecurity=True")]
         public string connectionString {
             get {
                 return ((string)(this["connectionString"]));

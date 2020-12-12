@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AutoBuildApp.DataAccess\AutoBuildApp.DataAccess.csproj" />
-    <ProjectReference Include="..\AutoBuildApp.ServiceLayer\AutoBuildApp.ServiceLayer.csproj" />
+    <ProjectReference Include="..\AutoBuildApp.Models\AutoBuildApp.Models.csproj" />
   </ItemGroup>
 
 </Project>
