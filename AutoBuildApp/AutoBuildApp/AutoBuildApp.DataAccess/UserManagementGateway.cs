@@ -204,5 +204,31 @@ namespace AutoBuildApp.DataAccess
                 }
             }
         }
+      
+        public String retrieveAccountInformation(UserAccount userA)
+        {
+            String ret = "";
+            using (SqlConnection connection = new SqlConnection(this.connection))
+            { String sequal = "SELECT userID, username, email, firstName, lastName, roley, passwordHash, registrationDate FROM userAccounts;";
+                
+                using (SqlCommand cmd = new SqlCommand(sequal, connection))
+                {
+                  
+                    try
+                    {
+                        connection.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            ret = $"user ID: {reader.GetInt32(0)} UserName: {reader.GetString(1)} Password Hashed { reader.GetString(5) } First Name: {reader.GetString(2)} LastNme: {reader.GetString(3)} Role { reader.GetString(4) } Refistration Date {reader.GetString(6)}";
+                        }
+                    }
+                    catch (SqlException ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                }
+            } return ret;
+        }
     }
 }
