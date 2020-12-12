@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "References(TEXT)", "Referen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoBuildApp.DataAccess", "AutoBuildApp.DataAccess\AutoBuildApp.DataAccess.csproj", "{3C325FAF-02DC-490A-9C74-FF51905C92DE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServiceLayer (App Specific)", "ServiceLayer (App Specific)", "{384B395F-8154-40B4-9E95-1125EF23AE84}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service Layer", "Service Layer", "{384B395F-8154-40B4-9E95-1125EF23AE84}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTestProject1\UnitTests.csproj", "{E2503FBF-D388-4319-81BC-140BC5C01E05}"
 EndProject
