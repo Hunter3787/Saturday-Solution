@@ -98,8 +98,8 @@ namespace AutoBuildApp.DataAccess
                             return "User doesn't exist.";
                         }
 
-                        String sql = "Update userAccounts set username = @Username, email = @email, firstname = @firstname, lastname = @lastname where email = @oldemail";
-                        adapter.InsertCommand = new SqlCommand(sql, connection);
+                        String sql = "Update userAccounts set username = @USERNAME, email = @EMAIL, firstname = @FIRSTNAME, lastname = @LASTNAME where email = @OLDEMAIL";
+                        adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
                         adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = String.IsNullOrEmpty(updatedUser.UserName) ? user.UserName : updatedUser.UserName;
                         adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = String.IsNullOrEmpty(updatedUser.UserEmail) ? user.UserEmail : updatedUser.UserEmail;
                         adapter.InsertCommand.Parameters.Add("@FIRSTNAME", SqlDbType.VarChar).Value = String.IsNullOrEmpty(updatedUser.FirstName) ? user.FirstName : updatedUser.FirstName;
@@ -108,6 +108,7 @@ namespace AutoBuildApp.DataAccess
                         adapter.InsertCommand.ExecuteNonQuery();
 
                         transaction.Commit();
+
                     }
                     catch (SqlException ex)
                     {// the number that represents timeout
@@ -182,7 +183,7 @@ namespace AutoBuildApp.DataAccess
                     try
                     {
                         String sql = "SELECT USERID FROM userAccounts WHERE username = @USERNAME OR email = @EMAIL;";
-                        adapter.InsertCommand = new SqlCommand(sql, connection);
+                        adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
                         adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = user.UserName;
                         adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = user.UserEmail;
 
