@@ -73,15 +73,13 @@ namespace AutoBuildApp.ConsoleApp
                         Console.WriteLine(userManagementManager.EnableUser(accounts[authority - 1], accounts[user - 1], role[roleNum - 1]));
                         break;
                     case 5:
-                        //Console.WriteLine("Who is performing the update?\n1. Admin\n2.Basic User\n3. Developer\n4. Vendor");
-                        //while (authority < 1 || authority > 4)
-                        //    authority = Convert.ToInt32(Console.ReadLine());
                         Console.WriteLine("What would you like to update from this user?");
-
+                        userManagementManager.CreateUserRecord(admin, basic);
                         Console.WriteLine("1) " + basic.UserName + "\n2) " + basic.FirstName + "\n3) " + basic.LastName + "\n4) " + basic.UserEmail);
                         int choice = Convert.ToInt32(Console.ReadLine());
                         string newValue;
                         UpdateUserDTO updatedAccount;
+                        Console.Write("Output the new input: ");
                         switch(choice)
                         {
                             case 1:
@@ -105,6 +103,7 @@ namespace AutoBuildApp.ConsoleApp
                                 updatedAccount = new UpdateUserDTO("", "", "", newValue, "");
                                 Console.WriteLine(userManagementManager.UpdateUserRecord(admin, basic, updatedAccount));
                                 break;
+
                         }
                         break;
                     case 6:
