@@ -10,20 +10,16 @@ using AutoBuildApp.Models;
 using System.Configuration; // for ConfigurationManager
 namespace AutoBuildApp.DataAccess
 {
-    public class userAccountGateway
+    public class UserManagementGateway
     {
-        private String connection =" ";
-        public userAccountGateway()
-        {
-            this.connection = null;
-        }
-        
-        public userAccountGateway(String connectionString)
+        private String connection;
+        private SqlDataAdapter adapter = new SqlDataAdapter();
+
+        public UserManagementGateway(String connectionString)
         {
             this.connection = connectionString;
         }
 
-        Microsoft.Data.SqlClient.SqlDataAdapter adapter = new SqlDataAdapter();
 
        public Boolean verifyAccountExists(UserAccount userA)
         {
@@ -33,9 +29,6 @@ namespace AutoBuildApp.DataAccess
             {
                 // using (var command = new Microsoft.Data.SqlClient.SqlCommand()){
                 // using statement is used because it automatically closes when you reach the end curly brace
-
-                Microsoft.Data.SqlClient.SqlDataAdapter adapter = new SqlDataAdapter();
-
 
                 String sequal = "SELECT USERID FROM userAccounts WHERE username = @USERNAME AND email = @EMAIL;";
                 adapter.InsertCommand = new SqlCommand(sequal, connection);
@@ -82,39 +75,22 @@ namespace AutoBuildApp.DataAccess
         }
 
 
-        public String createUserAccountinDB(UserAccount userA)
+        public String CreateUserRecord(UserAccount user)
         {
-
-            // role check
-
-
-            //log that someone is trying to create an acc
-
-            if(IsInformationValid(userA))
-            {
-                return "Invalid input";
-            }
-
-
-            // service code
-            //return Service.CreateUserAccountInDB(UserAccount userA)
 
             using (SqlConnection connection = new SqlConnection(this.connection))
             {
-                Microsoft.Data.SqlClient.SqlDataAdapter adapter = new SqlDataAdapter();
-
                 String sql = "SELECT USERID FROM userAccounts WHERE username = @USERNAME AND email = @EMAIL;";
 
                 adapter.InsertCommand = new SqlCommand(sql, connection);
-                adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = userA.UserName;
-                adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = userA.UserEmail;
+                adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = user.UserName;
+                adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = user.UserEmail;
 
                 try
                 {
                     connection.Open();
                     // best way to check?
                     object test = adapter.InsertCommand.ExecuteScalar();
-                    Console.WriteLine("test obj = " + test);
                     connection.Close();
                     if(test != null)
                     {
@@ -127,23 +103,18 @@ namespace AutoBuildApp.DataAccess
                 {
                     if(ex.Number == -2)
                     {
-                        Console.WriteLine("Data store has timed out.");
+                        return ("Data store has timed out.");
                     }
-                    //https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlerror?view=dotnet-plat-ext-5.0 
-                    // 
-                    throw new NotImplementedException();
-
                 }
-
 
                 sql = "INSERT INTO userAccounts(username, email, firstName, lastName, roley)  VALUES(@USERNAME,@EMAIL, @FIRSTNAME, @LASTNAME, @ROLEY);";
 
                 adapter.InsertCommand = new SqlCommand(sql, connection);
-                adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = userA.UserName;
-                adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = userA.UserEmail;
-                adapter.InsertCommand.Parameters.Add("@FIRSTNAME", SqlDbType.VarChar).Value = userA.FirstName;
-                adapter.InsertCommand.Parameters.Add("@LASTNAME", SqlDbType.VarChar).Value = userA.LastName;
-                adapter.InsertCommand.Parameters.Add("@ROLEY", SqlDbType.VarChar).Value = userA.role;
+                adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = user.UserName;
+                adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = user.UserEmail;
+                adapter.InsertCommand.Parameters.Add("@FIRSTNAME", SqlDbType.VarChar).Value = user.FirstName;
+                adapter.InsertCommand.Parameters.Add("@LASTNAME", SqlDbType.VarChar).Value = user.LastName;
+                adapter.InsertCommand.Parameters.Add("@ROLEY", SqlDbType.VarChar).Value = user.role;
 
                 try
                 {
@@ -156,8 +127,6 @@ namespace AutoBuildApp.DataAccess
                     //https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlerror?view=dotnet-plat-ext-5.0 
                     // 
                     throw new NotImplementedException();
-
-
                 }
 
                 // log here? saying it was successful idk
@@ -174,7 +143,7 @@ namespace AutoBuildApp.DataAccess
             return "Successfully edited";
         }
 
-        public String deleteUserAccountinDB(UserAccount userA)
+        public String DeleteUserRecord(UserAccount user)
         {
 
             using (SqlConnection connection = new SqlConnection(this.connection))
@@ -185,8 +154,8 @@ namespace AutoBuildApp.DataAccess
 
                 Microsoft.Data.SqlClient.SqlDataAdapter adapter = new SqlDataAdapter();
                 adapter.InsertCommand = new SqlCommand(sql, connection);
-                adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = userA.UserName;
-                adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = userA.UserEmail;
+                adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = user.UserName;
+                adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = user.UserEmail;
 
                 try
                 {

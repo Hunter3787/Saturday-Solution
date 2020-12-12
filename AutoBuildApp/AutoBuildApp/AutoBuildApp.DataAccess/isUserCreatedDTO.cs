@@ -9,11 +9,11 @@ namespace AutoBuildApp.DataAccess
 {
     public class isUserCreatedDTO
     {
-        private userAccountGateway userGateway;
+        private UserManagementGateway userGateway;
 
         public isUserCreatedDTO(String connection)
         {
-            userGateway = new userAccountGateway(connection);
+            userGateway = new UserManagementGateway(connection);
         }
         public bool createUserinDB(UserAccount userA)
         {

@@ -6,21 +6,45 @@ namespace AutoBuildApp.BusinessLayer
 {
     public class UserManagementManager
     {
-        private userAccountGateway gateway;
+        private UserManagementGateway gateway;
 
-        public UserManagementManager()
+        public UserManagementManager(String connectionString)
         {
-            gateway = new userAccountGateway();
+            gateway = new UserManagementGateway(connectionString);
         }
-        public String createUserAccountinDB(UserAccount userA)
+
+        public String CreateUserRecord(UserAccount caller, UserAccount user)
         {
-            if (IsInformationValid(userA))
+            //log that someone is trying to create an acc?
+
+            // role check
+            if (caller.role != "ADMIN")
+            {
+                return "Unauthorized";
+            }
+
+            if (IsInformationValid(user))
             {
                 return "Invalid input";
             }
-            userAccountGateway gateway = new userAccountGateway();
-            return "User successfully created";
+
+            return gateway.CreateUserRecord(user);
         }
+
+        public String DeleteUserRecord(UserAccount caller, UserAccount user)
+        {
+            //log that someone is trying to create an acc?
+
+            // role check
+            if (caller.role != "ADMIN")
+            {
+                return "Unauthorized";
+            }
+
+            return gateway.DeleteUserRecord(user);
+        }
+
+
         public bool validEmail(string email)
         {
             return email.Contains("@") && email.Contains(".");

@@ -17,7 +17,7 @@ namespace UnitTestProject1
         public void IsInformationValid_Pass(string email, string username, string firstName, string lastName)
         {
             //Arrange
-            userAccountGateway gateway = new userAccountGateway();
+            UserManagementGateway gateway = new UserManagementGateway();
             Mock<UserAccount> user = new Mock<UserAccount>();
             user.Object.UserEmail = email;
             user.Object.UserName = username;
@@ -47,7 +47,7 @@ namespace UnitTestProject1
         public void IsInformationValid_Fail(string email, string username, string firstName, string lastName)
         {
             //Arrange
-            userAccountGateway gateway = new userAccountGateway();
+            UserManagementGateway gateway = new UserManagementGateway();
             Mock<UserAccount> user = new Mock<UserAccount>();
             user.Object.UserEmail = email;
             user.Object.UserName = username;
