@@ -44,7 +44,7 @@ namespace AutoBuildApp.BusinessLayer
                 return "Unauthorized";
             }
 
-            if (!IsInformationValid(user))
+            if (!IsInformationValid(updatedUser))
             {
                 return "Invalid input";
             }
@@ -101,6 +101,14 @@ namespace AutoBuildApp.BusinessLayer
         }
 
         public bool IsInformationValid(UserAccount user)
+        {
+            return ValidEmail(user.UserEmail)
+                && ValidUserName(user.UserName)
+                && !String.IsNullOrEmpty(user.FirstName)
+                && !String.IsNullOrEmpty(user.LastName);
+        }
+
+        public bool IsInformationValid(UpdateUserDTO user)
         {
             return ValidEmail(user.UserEmail)
                 && ValidUserName(user.UserName)
