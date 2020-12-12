@@ -125,7 +125,41 @@ namespace AutoBuildApp.WebMVC
 
                         break;
                     case 5:
-                       
+                        Console.WriteLine("What would you like to update from this user?");
+
+                        Console.WriteLine("1) " + basic.UserName + "\n2) " + basic.FirstName + "\n3) " + basic.LastName + "\n4) " + basic.UserEmail);
+                        int choice = Convert.ToInt32(Console.ReadLine());
+
+                        string newValue;
+
+                        logger.LogInformation("User has selected choice: {choice}", choice);
+                        UpdateUserDTO updatedAccount;
+                        switch (choice)
+                        {
+                            case 1:
+                                newValue = Console.ReadLine();
+                                updatedAccount = new UpdateUserDTO(newValue, "", "", "", "");
+                                Console.WriteLine(userManagementManager.UpdateUserRecord(admin, basic, updatedAccount));
+
+                                break;
+                            case 2:
+                                newValue = Console.ReadLine();
+                                updatedAccount = new UpdateUserDTO("", newValue, "", "", "");
+                                Console.WriteLine(userManagementManager.UpdateUserRecord(admin, basic, updatedAccount));
+                                break;
+                            case 3:
+                                newValue = Console.ReadLine();
+                                updatedAccount = new UpdateUserDTO("", "", newValue, "", "");
+                                Console.WriteLine(userManagementManager.UpdateUserRecord(admin, basic, updatedAccount));
+                                break;
+                            case 4:
+                                newValue = Console.ReadLine();
+                                updatedAccount = new UpdateUserDTO("", "", "", newValue, "");
+                                Console.WriteLine(userManagementManager.UpdateUserRecord(admin, basic, updatedAccount));
+                                break;
+                        }
+                        break;
+                    case 6:
                         running = false;
                         break;
                     default:
