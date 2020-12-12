@@ -12,7 +12,11 @@ namespace AutoBuildApp.ConsoleApp
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            UserAccount userA = new UserAccount("username", "user", "name", "user@gmafvifl.com2", "BASIC");
+            UserAccount userA = new UserAccount("usernamfff", "user", "name", "user@userssg.com", "BASIC");
+            UserAccount admin = new UserAccount("adminAcc", "ad", "min", "admin@admin.com", "ADMIN");
+
+            UpdateUserDTO updatedInformation = new UpdateUserDTO("test", "test", "test", "test@test.test", "test");
+
             // how to connect to sql in a console application so you can pass the string : Settings1.Default.connectionString to the
             // user account gateway NOTE THIS STRING CAN BE PASSED USING THE NAME GIVEN IN THE APP.CONFIG OR ANY OTHER FILE
             // https://www.c-sharpcorner.com/UploadFile/5089e0/how-to-create-single-connection-string-in-console-applicatio/
@@ -20,6 +24,11 @@ namespace AutoBuildApp.ConsoleApp
             Console.WriteLine("Creating a user A to the DB");
             UserManagementManager manager = new UserManagementManager(Settings1.Default.connectionString);
 
+            Console.WriteLine(manager.CreateUserRecord(admin, userA));
+
+
+            Console.ReadLine();
+            Console.WriteLine(manager.DeleteUserRecord(admin, userA));
 
             //UserManagementGateway userGateway = new UserManagementGateway(Settings1.Default.connectionString);
 
