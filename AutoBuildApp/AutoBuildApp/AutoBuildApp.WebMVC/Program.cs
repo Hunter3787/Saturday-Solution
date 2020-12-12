@@ -126,14 +126,12 @@ namespace AutoBuildApp.WebMVC
                         break;
                     case 5:
                         Console.WriteLine("What would you like to update from this user?");
-
                         Console.WriteLine("1) " + basic.UserName + "\n2) " + basic.FirstName + "\n3) " + basic.LastName + "\n4) " + basic.UserEmail);
                         int choice = Convert.ToInt32(Console.ReadLine());
-
                         string newValue;
-
-                        logger.LogInformation("User has selected choice: {choice}", choice);
                         UpdateUserDTO updatedAccount;
+                        Console.Write("Output the new input: ");
+                        logger.LogInformation("User has selected choice: {choice}", choice);
                         switch (choice)
                         {
                             case 1:
