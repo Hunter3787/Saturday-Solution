@@ -23,7 +23,7 @@ namespace AutoBuildApp.WebMVC
             Boolean running = true;
             UserAccount[] accounts = { admin, basic, developer, vendor };
 
-            UserManagementManager userManagementManager = new UserManagementManager();
+            UserManagementManager userManagementManager = new UserManagementManager("Data Source=DESKTOP-CI24C55\\MSSQLSERVER02;Initial Catalog=dannytemp2;Integrated Security=True");
             userManagementManager.CreateUserRecord(admin,admin);
 
             while (running)

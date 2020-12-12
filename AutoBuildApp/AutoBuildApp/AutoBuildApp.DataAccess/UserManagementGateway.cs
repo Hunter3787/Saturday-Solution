@@ -62,7 +62,7 @@ namespace AutoBuildApp.DataAccess
                         adapter.InsertCommand.ExecuteNonQuery();
 
                         transaction.Commit();
-                        return "Successful user creation";
+                        return "Successful user creationff";
                     }
                     catch (SqlException ex)
                     { 
@@ -148,7 +148,7 @@ namespace AutoBuildApp.DataAccess
                         adapter.InsertCommand.ExecuteNonQuery();
 
                         transaction.Commit();
-                        ret = "Complete";
+                        ret = "User deleted";
                     }
                     catch (SqlException ex)
                     {

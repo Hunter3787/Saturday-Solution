@@ -97,10 +97,15 @@ namespace AutoBuildApp.BusinessLayer
 
         public bool IsInformationValid(UpdateUserDTO user)
         {
-            return ValidEmail(user.UserEmail)
-                && ValidUserName(user.UserName)
-                && !String.IsNullOrEmpty(user.FirstName)
-                && !String.IsNullOrEmpty(user.LastName);
+            if(!String.IsNullOrEmpty(user.UserEmail))
+            {
+                return ValidEmail(user.UserEmail);
+            }
+            else if(!String.IsNullOrEmpty(user.UserName)) {
+                return ValidUserName(user.UserName);
+            }
+            return true;
+
         }
     }
 }
