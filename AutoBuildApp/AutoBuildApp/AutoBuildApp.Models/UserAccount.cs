@@ -52,7 +52,9 @@ namespace AutoBuildApp.Models
             this.LastName = lname;
             this.UserEmail = email;
 
-            this.passHash = BC.EnhancedHashPassword(passHash);
+            //The total length of the output that you will store in the database is always 60 bytes long from this Bcrypt hash just a note.
+            this.passHash = BC.HashPassword(passHash, BC.GenerateSalt());
+            // BC.EnhancedHashPassword(passHash);
             
             //"yyyy-MM-dd HH:mm" :https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings?redirectedfrom=MSDN
             //                    http://blog.stevex.net/string-formatting-in-csharp/

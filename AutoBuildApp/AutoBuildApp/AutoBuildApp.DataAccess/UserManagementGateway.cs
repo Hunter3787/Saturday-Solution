@@ -20,7 +20,6 @@ namespace AutoBuildApp.DataAccess
     public class UserManagementGateway
     {
         private String connection;
-
         /*
          * "Represents a set of data commands and a database connection 
          * that are used to fill the DataSet and update a SQL Server database"
@@ -29,13 +28,12 @@ namespace AutoBuildApp.DataAccess
          * the adapter is essentially the "gateway" to the actual database side
          */
         private SqlDataAdapter adapter = new SqlDataAdapter();
-
+        //Represents a Transact-SQL transaction to be made in a SQL Server database
         public UserManagementGateway(String connectionString)
         {
             // instantiation of the connections string via a constructor to avoid any hardcoding
             this.connection = connectionString;
         }
-
 
         /*
          * this method carries out a query that checks an instance of the userAccount
@@ -49,49 +47,43 @@ namespace AutoBuildApp.DataAccess
             bool Flag = true;
             using (SqlConnection connection = new SqlConnection(this.connection))
             {  // using statement is used because it automatically closes when you reach the end curly brace
-                // from what i have read this saves us from th chance of our system slowing down because a 
-                // connection was not closed
+               // from what i have read this saves us from th chance of our system slowing down because a 
+               // connection was not closed
 
-
-                String sequal = "SELECT USERID FROM userAccounts WHERE username = @USERNAME AND email = @EMAIL;";
-                adapter.InsertCommand = new SqlCommand(sequal, connection);
-                adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = userA.UserName;
-                adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = userA.UserEmail;
-                try
+                connection.Open();
+                using (SqlTransaction transaction = connection.BeginTransaction())
                 {
-                    connection.Open();
-                    object test = adapter.InsertCommand.ExecuteScalar();
-                    if (test != null)
+                    try
                     {
-                        // then user does exist 
-                        Flag = true;
+                        String sequal = "SELECT USERID FROM userAccounts WHERE username = @USERNAME AND email = @EMAIL;";
+                        adapter.InsertCommand = new SqlCommand(sequal, connection, transaction);
+                        adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = userA.UserName;
+                        adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = userA.UserEmail;
+
+                        object test = adapter.InsertCommand.ExecuteScalar();
+                        transaction.Commit();
+
+                        if (test != null)
+                        {  // then user does exist 
+                            Flag = true;
+                        }
+                        else { Flag = false; }
                     }
-                    else { Flag = false; }
-
-                    connection.Close();
+                    catch (SqlException ex)
+                    {
+                        //https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlerror?view=dotnet-plat-ext-5.0  
+                        transaction.Rollback();
+                        throw new NotImplementedException();
+                    }
+                    finally{ connection.Close();}
+                    Console.ReadLine();
                 }
-                catch (SqlException ex)
-                {
-                    //https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlerror?view=dotnet-plat-ext-5.0 
-                    // 
-                    throw new NotImplementedException();
-
-                }
-                Console.ReadLine();
-                // }
+                return Flag;
             }
-
-            return Flag;
-
-
         }
-
-
         // now will be making a SQL connection  check
         public void checkConnection()
-        {
-            //https://prod.liveshare.vsengsaas.visualstudio.com/join?0C811C8DF3B3EA0C85449FA8739BD16D004D
-            using (SqlConnection connection = new SqlConnection(this.connection))
+        { using (SqlConnection connection = new SqlConnection(this.connection))
             {
                 connection.Open();
                 Console.WriteLine("ServerVersion: {0}", connection.ServerVersion);
@@ -100,48 +92,47 @@ namespace AutoBuildApp.DataAccess
         }
 
         public String CreateUserRecord(UserAccount user)
-        {
-            using (SqlConnection connection = new SqlConnection(this.connection))
-            {
-                try
+        { using (SqlConnection connection = new SqlConnection(this.connection))
+            { connection.Open();
+                using (SqlTransaction transaction = connection.BeginTransaction())
                 {
-                    connection.Open();
-                    // best way to check?
-                    if (DoesUserExist(connection, user))
+                    try
+                    {
+                        if (DoesUserExist(user))
+                        {
+                            connection.Close();
+                            // log here?
+                            return "User already exists.";
+                        }
+                        String sql = "INSERT INTO userAccounts(username, email, firstName, lastName, roley, registrationDate, passwordHash ) VALUES(@USERNAME,@EMAIL, @FIRSTNAME, @LASTNAME, @ROLEY, @REG, @PASSWORD);";
+
+                        adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
+                        adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = user.UserName;
+                        adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = user.UserEmail;
+                        adapter.InsertCommand.Parameters.Add("@FIRSTNAME", SqlDbType.VarChar).Value = user.FirstName;
+                        adapter.InsertCommand.Parameters.Add("@LASTNAME", SqlDbType.VarChar).Value = user.LastName;
+                        adapter.InsertCommand.Parameters.Add("@ROLEY", SqlDbType.VarChar).Value = user.role;
+                        adapter.InsertCommand.Parameters.Add("@PASSWORD", SqlDbType.VarChar).Value = user.passHash;
+                        adapter.InsertCommand.Parameters.Add("@REG", SqlDbType.Date).Value = user.registrationDate;
+                        adapter.InsertCommand.ExecuteNonQuery();
+
+                        // log here? saying it was successful idk
+                        transaction.Commit();
+                        return "Successful user creation";
+                    }
+                    catch (SqlException ex)
+                    { // the number that represents timeout
+                        if (ex.Number == -2)
+                        {
+                            transaction.Rollback();
+                            return ("Data store has timed out.");
+                        }
+                        throw new NotImplementedException();
+                    }
+                    finally
                     {
                         connection.Close();
-                        // log here?
-                        return "User already exists.";
                     }
-
-                    String sql = "INSERT INTO userAccounts(username, email, firstName, lastName, roley, passwordHash, registrationDate)  VALUES(@USERNAME,@EMAIL, @FIRSTNAME, @LASTNAME, @ROLEY, @PASSWORD, @REGISTRATIONDATE);";
-                    
-                    adapter.InsertCommand = new SqlCommand(sql, connection);
-                    adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = user.UserName;
-                    adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = user.UserEmail;
-                    adapter.InsertCommand.Parameters.Add("@FIRSTNAME", SqlDbType.VarChar).Value = user.FirstName;
-                    adapter.InsertCommand.Parameters.Add("@LASTNAME", SqlDbType.VarChar).Value = user.LastName;
-                    adapter.InsertCommand.Parameters.Add("@ROLEY", SqlDbType.VarChar).Value = user.role;
-                    adapter.InsertCommand.Parameters.Add("@PASSWORD", SqlDbType.VarChar).Value = user.passHash;
-                    adapter.InsertCommand.Parameters.Add("@REGISTRATIONDATE", SqlDbType.VarChar).Value = user.registrationDate;
-
-                    adapter.InsertCommand.ExecuteNonQuery();
-                    connection.Close();
-
-                    // log here? saying it was successful idk
-                    return "Successful user creation";
-                }
-                catch (SqlException ex)
-                {
-                    // the number that represents timeout
-                    if (ex.Number == -2)
-                    {
-                        return ("Data store has timed out.");
-                    }
-
-                    //https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlerror?view=dotnet-plat-ext-5.0 
-                    // 
-                    throw new NotImplementedException();
                 }
             }
         }
@@ -150,137 +141,130 @@ namespace AutoBuildApp.DataAccess
         {
             using (SqlConnection connection = new SqlConnection(this.connection))
             {
-                try
+                connection.Open();
+                using (SqlTransaction transaction = connection.BeginTransaction())
                 {
-                    connection.Open();
-                    // best way to check?
-                    if (!DoesUserExist(connection, user))
+                    try
+                    {
+                        if (!DoesUserExist(user))
+                        {
+                            transaction.Rollback();
+                            connection.Close();
+                            return "User doesn't exist.";
+                        }
+
+                        String sql = "INSERT INTO userAccounts(username, email, firstName, lastName, roley, passwordHash, registrationDate) VALUES(@USERNAME,@EMAIL, @FIRSTNAME, @LASTNAME, @ROLEY, @PASSWORD, @REGISTRATIONDATE);";
+
+                        adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
+                        adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = user.UserName;
+                        adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = user.UserEmail;
+                        adapter.InsertCommand.Parameters.Add("@FIRSTNAME", SqlDbType.VarChar).Value = user.FirstName;
+                        adapter.InsertCommand.Parameters.Add("@LASTNAME", SqlDbType.VarChar).Value = user.LastName;
+                        adapter.InsertCommand.Parameters.Add("@ROLEY", SqlDbType.VarChar).Value = user.role;
+                        adapter.InsertCommand.Parameters.Add("@PASSWORD", SqlDbType.VarChar).Value = user.passHash;
+                        adapter.InsertCommand.Parameters.Add("@REGISTRATIONDATE", SqlDbType.Date).Value = user.registrationDate;
+                        adapter.InsertCommand.ExecuteNonQuery();
+
+                        transaction.Commit();
+
+                    }
+                    catch (SqlException ex)
+                    {// the number that represents timeout
+                        if (ex.Number == -2)
+                        {
+                            transaction.Rollback();
+                            return ("Data store has timed out.");
+                        } throw new NotImplementedException();
+                    }
+                    finally
                     {
                         connection.Close();
-                        // log here?
-                        return "User doesn't exist.";
                     }
-
-                    String sql = "INSERT INTO userAccounts(username, email, firstName, lastName, roley, passwordHash, registrationDate) VALUES(@USERNAME,@EMAIL, @FIRSTNAME, @LASTNAME, @ROLEY, @PASSWORD, @REGISTRATIONDATE);";
-
-                    adapter.InsertCommand = new SqlCommand(sql, connection);
-                    adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = user.UserName;
-                    adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = user.UserEmail;
-                    adapter.InsertCommand.Parameters.Add("@FIRSTNAME", SqlDbType.VarChar).Value = user.FirstName;
-                    adapter.InsertCommand.Parameters.Add("@LASTNAME", SqlDbType.VarChar).Value = user.LastName;
-                    adapter.InsertCommand.Parameters.Add("@ROLEY", SqlDbType.VarChar).Value = user.role;
-                    adapter.InsertCommand.Parameters.Add("@PASSWORD", SqlDbType.VarChar).Value = user.passHash;
-                    adapter.InsertCommand.Parameters.Add("@REGISTRATIONDATE", SqlDbType.VarChar).Value = user.registrationDate;
-
-                    adapter.InsertCommand.ExecuteNonQuery();
-                    connection.Close();
-
                 }
-                catch (SqlException ex)
-                {
-                    // the number that represents timeout
-                    if (ex.Number == -2)
-                    {
-                        return ("Data store has timed out.");
-                    }
-
-                    //https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlerror?view=dotnet-plat-ext-5.0 
-                    // 
-                    throw new NotImplementedException();
-                }
+                return "Successfully edited";
             }
-
-            return "Successfully edited";
         }
 
         public String DeleteUserRecord(UserAccount user)
         {
-
             using (SqlConnection connection = new SqlConnection(this.connection))
             {
-                try
+                connection.Open();
+                using (SqlTransaction transaction = connection.BeginTransaction())
                 {
-                    connection.Open();
-                    if (!DoesUserExist(connection, user))
+                    try
+                    {
+                        if (!DoesUserExist(user))
+                        {
+                            connection.Close();
+                            return "User doesn't exist.";
+                        }
+                        String sql = "DELETE FROM userAccounts WHERE email = @EMAIL";
+
+                        adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
+                        adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = user.UserEmail;
+                        adapter.InsertCommand.ExecuteNonQuery();
+
+                        transaction.Commit();
+                        return "Complete";
+                    }
+                    catch (SqlException ex)
+                    {
+                        // the number that represents timeout
+                        if (ex.Number == -2)
+                        {
+                            transaction.Rollback();
+                            return ("Data store has timed out.");
+                        }
+
+                        //https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlerror?view=dotnet-plat-ext-5.0 
+                        // 
+                        transaction.Rollback();
+                        throw new NotImplementedException();
+                    }
+                    finally
                     {
                         connection.Close();
-                        return "User doesn't exist.";
                     }
-
-                    String sql = "DELETE FROM userAccounts WHERE email = @EMAIL";
-
-                    adapter.InsertCommand = new SqlCommand(sql, connection);
-                    adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = user.UserEmail;
-                    adapter.InsertCommand.ExecuteNonQuery();
-                    connection.Close();
-                    return "Complete";
                 }
-                catch (SqlException ex)
+            }
+        }
+
+        public bool DoesUserExist( UserAccount user)
+        {
+            bool Flag = true;
+            using (SqlConnection connection = new SqlConnection(this.connection))
+            {
+                connection.Open();
+                using (SqlTransaction transaction = connection.BeginTransaction())
                 {
-                    // the number that represents timeout
-                    if (ex.Number == -2)
+                    try
                     {
-                        return ("Data store has timed out.");
+                        String sql = "SELECT USERID FROM userAccounts WHERE username = @USERNAME OR email = @EMAIL;";
+                        adapter.InsertCommand = new SqlCommand(sql, connection);
+                        adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = user.UserName;
+                        adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = user.UserEmail;
+
+                        adapter.InsertCommand.Transaction = transaction;
+
+                        var result = adapter.InsertCommand.ExecuteScalar();
+
+                        transaction.Commit();
+                        connection.Close();
+                        return result != null;
+                    }
+                    catch (SqlException ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        
                     }
 
-                    //https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlerror?view=dotnet-plat-ext-5.0 
-                    // 
-                    throw new NotImplementedException();
+                    return Flag;
                 }
 
             }
-
         }
 
-
-        //public String retrieveAccountInformation(UserAccount userA)
-        //{
-        //    String ret = "";
-
-        //    using (SqlConnection connection = new SqlConnection(this.connection))
-        //    {
-
-        //        String sequal = "SELECT userID, username, firstName, lastName, roley FROM userAccounts WHERE username = @USERNAME AND email = @EMAIL;";
-
-        //        using (SqlCommand cmd = new SqlCommand(sequal, connection))
-        //        {
-        //            cmd.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = userA.UserName;
-        //            cmd.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = userA.UserEmail;
-
-        //            try
-        //            {
-        //                connection.Open();
-
-        //                SqlDataReader reader = cmd.ExecuteReader();
-        //                while (reader.Read())
-        //                {
-        //                    ret = $"user ID: {reader.GetInt32(0)} UserName: {reader.GetString(1)} First Name: {reader.GetString(2)}";
-        //                }
-
-        //            }
-        //            catch (SqlException ex)
-        //            {
-        //                Console.WriteLine(ex.Message);
-        //            }
-
-        //            // }
-        //        }
-        //    }
-
-        //    return ret;
-
-        //}
-
-        public bool DoesUserExist(SqlConnection connection, UserAccount user)
-        {
-            String sql = "SELECT USERID FROM userAccounts WHERE username = @USERNAME OR email = @EMAIL;";
-            adapter.InsertCommand = new SqlCommand(sql, connection);
-            adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = user.UserName;
-            adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = user.UserEmail;
-            var result = adapter.InsertCommand.ExecuteScalar();
-
-            return result != null;
-        }
         public bool validEmail(string email)
         {
             return email.Contains("@") && email.Contains(".");
