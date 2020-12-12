@@ -73,8 +73,15 @@ namespace AutoBuildApp.DataAccess
                     {
                         //https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlerror?view=dotnet-plat-ext-5.0  
                         transaction.Rollback();
-                        throw new NotImplementedException();
-                    }
+                   
+                        switch (ex.Number)
+                        {
+                            case -2:
+                                Console.WriteLine(ex.Message);
+                                break;
+                        }
+
+                       }
                     finally{ connection.Close();}
                     Console.ReadLine();
                 }
@@ -92,7 +99,9 @@ namespace AutoBuildApp.DataAccess
         }
 
         public String CreateUserRecord(UserAccount user)
-        { using (SqlConnection connection = new SqlConnection(this.connection))
+        {
+            
+            using (SqlConnection connection = new SqlConnection(this.connection))
             { connection.Open();
                 using (SqlTransaction transaction = connection.BeginTransaction())
                 {
@@ -127,12 +136,13 @@ namespace AutoBuildApp.DataAccess
                             transaction.Rollback();
                             return ("Data store has timed out.");
                         }
-                        throw new NotImplementedException();
                     }
                     finally
                     {
                         connection.Close();
                     }
+
+                    return "Successful user creation";
                 }
             }
         }
@@ -174,7 +184,7 @@ namespace AutoBuildApp.DataAccess
                         {
                             transaction.Rollback();
                             return ("Data store has timed out.");
-                        } throw new NotImplementedException();
+                        } 
                     }
                     finally
                     {
@@ -187,6 +197,7 @@ namespace AutoBuildApp.DataAccess
 
         public String DeleteUserRecord(UserAccount user)
         {
+            String ret = " ";
             using (SqlConnection connection = new SqlConnection(this.connection))
             {
                 connection.Open();
@@ -206,7 +217,7 @@ namespace AutoBuildApp.DataAccess
                         adapter.InsertCommand.ExecuteNonQuery();
 
                         transaction.Commit();
-                        return "Complete";
+                        ret = "Complete";
                     }
                     catch (SqlException ex)
                     {
@@ -214,18 +225,19 @@ namespace AutoBuildApp.DataAccess
                         if (ex.Number == -2)
                         {
                             transaction.Rollback();
-                            return ("Data store has timed out.");
+                            ret = "Data store has timed out.";
                         }
 
                         //https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlerror?view=dotnet-plat-ext-5.0 
                         // 
                         transaction.Rollback();
-                        throw new NotImplementedException();
                     }
                     finally
                     {
                         connection.Close();
                     }
+
+                    return ret;
                 }
             }
         }
@@ -256,7 +268,8 @@ namespace AutoBuildApp.DataAccess
                     catch (SqlException ex)
                     {
                         Console.WriteLine(ex.Message);
-                        
+                        Console.WriteLine(ex.Source);
+
                     }
 
                     return Flag;
