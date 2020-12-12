@@ -10,5 +10,8 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Data Source=DESKTOP-CI24C55\MSSQLSERVER02;Initial Catalog=dannytemp2;Integrated Security=True</Value>
     </Setting>
+    <Setting Name="Setting" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Server=localhost;Database=DB;Trusted_Connection=True;</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
