@@ -12,8 +12,10 @@ namespace AutoBuildApp.ConsoleApp
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            UserAccount userA = new UserAccount("usernamfff", "user", "name", "user@userssg.com", "BASIC");
-            UserAccount admin = new UserAccount("adminAcc", "ad", "min", "admin@admin.com", "ADMIN");
+            UserAccount userA = new UserAccount("usernamfff", "user", "name", "user@userssg.com", "BASIC", "pass", "01/12/1990");
+            UserAccount admin = new UserAccount("adminAcc", "ad", "min", "admin@admin.com", "ADMIN", "pass", "01/12/1990");
+            Console.WriteLine(userA.ToString());
+
 
             UpdateUserDTO updatedInformation = new UpdateUserDTO("test", "test", "test", "test@test.test", "test");
 

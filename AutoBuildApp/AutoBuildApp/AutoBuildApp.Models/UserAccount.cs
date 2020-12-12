@@ -1,6 +1,8 @@
 ﻿
 using System;
 
+using System.Globalization; // this is for Iformamter in .public static DateTime ParseExact (string s, string format, IFormatProvider? provider);
+
 namespace AutoBuildApp.Models
 {
     /*
@@ -22,25 +24,34 @@ namespace AutoBuildApp.Models
         public string LastName { get; set; }
         public string UserEmail { get; set; }
 
+        public string passHash { get; set; }
         public string role { get; set; }
 
+        public DateTime registrationDate { get; set; }
         public UserAccount()
         {
             this.UserName = "";
             this.FirstName = "";
             this.LastName = "";
+            this.passHash = " ";
+
+            this.registrationDate = DateTime.MinValue;
             this.role = "";
         }
 
         // created my little constructor... TAKING IN THE BASICs
-        public UserAccount( string username, string fname, string lname, string email, string role)
+        public UserAccount( string username, string fname, string lname, string email, string role, string passHash, string regisDate)
         {
             this.UserName = username;
             this.FirstName = fname;
             this.LastName = lname;
             this.UserEmail = email;
+            this.passHash = passHash;
+            //"yyyy-MM-dd HH:mm" :https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings?redirectedfrom=MSDN
+            //                    http://blog.stevex.net/string-formatting-in-csharp/
+            //CultureInfo.InvariantCulture : https://docs.microsoft.com/en-us/dotnet/api/system.globalization.cultureinfo.invariantculture?view=net-5.0 
+            this.registrationDate = DateTime.ParseExact(regisDate,"yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
             this.role = role.ToUpper();
-
 
         }
 
@@ -49,7 +60,7 @@ namespace AutoBuildApp.Models
             get
             {
                 // this will return fname lname and (email)
-                return $"{FirstName} {LastName} ({UserEmail} {role})";
+                return $"{FirstName} {LastName} ({UserEmail} {role}) {passHash}";
             }
         }
 
