@@ -3,31 +3,55 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+
+/*
+ * this "Microsoft.Data.SqlClient" is a swap 
+ * out for the existing "System.Data.SqlClient" namespace. since i started using the latter
+ * https://www.connectionstrings.com/the-new-microsoft-data-sqlclient-explained/
+ * https://devblogs.microsoft.com/dotnet/introducing-the-new-microsoftdatasqlclient/
+ */
 using Microsoft.Data.SqlClient;
 using System.Data;
 using AutoBuildApp.Models;
 
-using System.Configuration; // for ConfigurationManager
+
 namespace AutoBuildApp.DataAccess
 {
     public class UserManagementGateway
     {
         private String connection;
+
+        /*
+         * "Represents a set of data commands and a database connection 
+         * that are used to fill the DataSet and update a SQL Server database"
+         * https://docs.microsoft.com/en-us/dotnet/api/microsoft.data.sqlclient.sqldataadapter?view=sqlclient-dotnet-core-2.1
+         * 
+         * the adapter is essentially the "gateway" to the actual database side
+         */
         private SqlDataAdapter adapter = new SqlDataAdapter();
 
         public UserManagementGateway(String connectionString)
         {
+            // instantiation of the connections string via a constructor to avoid any hardcoding
             this.connection = connectionString;
         }
 
+
+        /*
+         * this method carries out a query that checks an instance of the userAccount
+         * module to see if it exists in the database or not
+         * by returning a boolean
+         * 
+         */
         public Boolean verifyAccountExists(UserAccount userA)
         {
             // now how to verify account exists? -> from their pk: userID
             bool Flag = true;
             using (SqlConnection connection = new SqlConnection(this.connection))
-            {
-                // using (var command = new Microsoft.Data.SqlClient.SqlCommand()){
-                // using statement is used because it automatically closes when you reach the end curly brace
+            {  // using statement is used because it automatically closes when you reach the end curly brace
+                // from what i have read this saves us from th chance of our system slowing down because a 
+                // connection was not closed
+
 
                 String sequal = "SELECT USERID FROM userAccounts WHERE username = @USERNAME AND email = @EMAIL;";
                 adapter.InsertCommand = new SqlCommand(sequal, connection);
