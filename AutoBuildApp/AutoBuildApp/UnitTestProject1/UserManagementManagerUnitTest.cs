@@ -62,30 +62,84 @@ namespace UnitTests
             Assert.IsFalse(result);
         }
 
-        [DataTestMethod]
-        [DataRow("ADMIN", "username", "firstName", "lastName")]
-        public void CreateUserRecord_Success(string role, string email, string username, string firstName, string lastName)
+        //[DataTestMethod]
+        //[DataRow("ABCD", "firstName", "lastName", "email@email.com", "ADMIN")]
+        //[DataRow("abcdefghijkl", "firstName", "lastName", "email@email.com", "ADMIN")]
+
+
+        //public void CreateUserRecord_Success(string username, string firstName, string lastName, string email, string role)
+        //{
+        //    //Arrange
+        //    UserAccount admin = new UserAccount("a", "b", "c", "d", "ADMIN", "f", "09-12-1990");
+        //    UserAccount user = new UserAccount(username, firstName, lastName, email, role, "f", "09-12-1990");
+
+        //    //Act
+        //    string result = manager.CreateUserRecord(admin, user);
+
+        //    //Assert
+        //    Assert.IsTrue(result == "Successful user creation");
+        //}
+
+        //[DataTestMethod]
+        //[DataRow("ABCD", "firstName", "lastName", "email@email.com", "ADMIN")]
+        //[DataRow("abcdefghijkl", "firstName", "lastName", "email@email.com", "ADMIN")]
+        //public void CreateUserRecord_Failure(string username, string firstName, string lastName, string email, string role)
+        //{
+        //    //Arrange
+        //    UserAccount admin = new UserAccount("a", "b", "c", "d", "ADMIN", "f", "09-12-1990");
+        //    UserAccount user = new UserAccount(username, firstName, lastName, email, role, "f", "09-12-1990");
+        //    Mock<UserManagementService> service = new Mock<UserManagementService>("");
+        //    service.Setup(x => x.CreateUser(user)).Returns("hello");
+        //    //Act
+        //    string result = manager.CreateUserRecord(admin, user);
+
+        //    //Assert
+        //    Assert.IsTrue(result != "Successful user creation");
+        //}
+
+        //[TestMethod]
+        //public void UserManagementManager_UnauthorizedUser_Authorized()
+        //{
+        //    //Arrange
+        //    UserAccount admin = new UserAccount("asdf", "b", "c", "d@.", "ADMIN", "f", "09-12-1990");
+        //    UserAccount user = new UserAccount("asdf", "b", "c", "d@.", "USER", "f", "09-12-1990");
+        //    UserManagementManager manager = new UserManagementManager("");
+
+        //    //Act
+        //    var response = manager.CreateUserRecord(admin, user);
+
+        //    //Assert
+        //    Assert.IsTrue(response != "Unauthorized");
+        //}
+
+        [TestMethod]
+        public void UserManagementManager_UnauthorizedUser_Unauthorized()
         {
             //Arrange
-            Mock<UserAccount> admin = new Mock<UserAccount>();
-            admin.Object.role = role;
-
-            Mock<UserAccount> user = new Mock<UserAccount>();
-            user.Object.UserEmail = email;
-            user.Object.UserName = username;
-            user.Object.FirstName = firstName;
-            user.Object.LastName = lastName;
-
-            //Mock<UserManagementService> service = new Mock<UserManagementService>();
-            //service.Setup(service => service.CreateUser(user.Object)).Returns("Success");
+            UserAccount admin = new UserAccount("a", "b", "c", "d", "ADMIN", "f", "09-12-1990");
+            UserAccount user = new UserAccount("a", "b", "c", "d", "USER", "f", "09-12-1990");
+            UserManagementManager manager = new UserManagementManager("");
 
             //Act
-            string result = manager.CreateUserRecord(admin.Object, user.Object);
+            var response = manager.CreateUserRecord(user, admin);
 
             //Assert
-            Assert.IsTrue(result == "Success");
+            Assert.IsTrue(response == "Unauthorized");
         }
 
+        public void service_test()
+        {
+            UserAccount uc = new UserAccount("a", "b", "c", "d", "e", "f", "g");
+            UserAccount uc2 = new UserAccount("a", "b", "c", "d", "e", "f", "g");
+
+            UserManagementService service = new UserManagementService("Data Source=DESKTOP-CI24C55\\MSSQLSERVER02;Initial Catalog=dannytemp2;Integrated Security=True");
+            Mock <UserManagementGateway> gateway = new Mock<UserManagementGateway>();
+            gateway.Setup(x => x.CreateUserRecord(It.IsAny<UserAccount>())).Returns("Hello");
+
+            string response = service.CreateUser(uc);
+
+            Assert.IsTrue(response == "Hello");
+        }
         public void UpdateUserRecord_Success()
         {
             //Arrange

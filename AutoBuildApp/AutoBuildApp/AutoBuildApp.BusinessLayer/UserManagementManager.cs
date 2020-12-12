@@ -7,20 +7,16 @@ namespace AutoBuildApp.BusinessLayer
 {
     public class UserManagementManager
     {
-        //private UserManagementGateway gateway;
         private readonly UserManagementService service;
 
         public UserManagementManager(String connectionString)
         {
             service = new UserManagementService(connectionString);
-            //gateway = new UserManagementGateway(connectionString);
         }
 
         public String CreateUserRecord(UserAccount caller, UserAccount user)
         {
-            //log that someone is trying to create an acc?
 
-            // role check
             if (caller.role != "ADMIN")
             {
                 return "Unauthorized";
@@ -31,14 +27,11 @@ namespace AutoBuildApp.BusinessLayer
                 return "Invalid input";
             }
             return service.CreateUser(user);
-            //return gateway.CreateUserRecord(user);
         }
 
         public String UpdateUserRecord(UserAccount caller, UserAccount user, UpdateUserDTO updatedUser)
         {
-            //log that someone is trying to update an acc?
 
-            // role check
             if (caller.role != "ADMIN")
             {
                 return "Unauthorized";
@@ -49,28 +42,23 @@ namespace AutoBuildApp.BusinessLayer
                 return "Invalid input";
             }
 
-            return service.UpdateUser(user);
-            //return gateway.UpdateUserRecord(user);
+            return service.UpdateUser(user, updatedUser);
 
         }
 
         public String DeleteUserRecord(UserAccount caller, UserAccount user)
         {
-            //log that someone is trying to delete an acc?
 
-            // role check
             if (caller.role != "ADMIN")
             {
                 return "Unauthorized";
             }
 
             return service.DeleteUser(user);
-            //return gateway.DeleteUserRecord(user);
         }
 
         public string EnableUser(UserAccount caller, UserAccount user, string role)
         {
-            // role check
             if (caller.role != "ADMIN")
             {
                 return "Unauthorized";
@@ -81,7 +69,6 @@ namespace AutoBuildApp.BusinessLayer
 
         public String DisableUser(UserAccount caller, UserAccount user)
         {
-            // role check
             if (caller.role != "ADMIN")
             {
                 return "Unauthorized";

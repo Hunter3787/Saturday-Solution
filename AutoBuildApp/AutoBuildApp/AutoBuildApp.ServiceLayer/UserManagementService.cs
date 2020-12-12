@@ -12,14 +12,14 @@ namespace AutoBuildApp.ServiceLayer
         {
             gateway = new UserManagementGateway(connectionString);
         }
-        public String CreateUser(UserAccount user)
+        public virtual String CreateUser(UserAccount user)
         {
             return gateway.CreateUserRecord(user);
         }
 
-        public String UpdateUser(UserAccount user)
+        public String UpdateUser(UserAccount user, UpdateUserDTO updatedUser)
         {
-            return gateway.UpdateUserRecord(user);
+            return gateway.UpdateUserRecord(user, updatedUser);
         }
 
         public String DeleteUser(UserAccount user)
@@ -35,7 +35,7 @@ namespace AutoBuildApp.ServiceLayer
 
         public String DisableUser(UserAccount user)
         {
-            user.role = "DISABLED";
+            user.role = "DEFAULT";
             return "User has been disabled.";
         }
     }
