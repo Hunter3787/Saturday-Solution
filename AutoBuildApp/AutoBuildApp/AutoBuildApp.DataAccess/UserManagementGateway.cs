@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-
+//this is a test
 /*
  * this "Microsoft.Data.SqlClient" is a swap 
  * out for the existing "System.Data.SqlClient" namespace. since i started using the latter
@@ -114,14 +114,16 @@ namespace AutoBuildApp.DataAccess
                         return "User already exists.";
                     }
 
-                    String sql = "INSERT INTO userAccounts(username, email, firstName, lastName, roley)  VALUES(@USERNAME,@EMAIL, @FIRSTNAME, @LASTNAME, @ROLEY);";
-
+                    String sql = "INSERT INTO userAccounts(username, email, firstName, lastName, roley, passwordHash, registrationDate)  VALUES(@USERNAME,@EMAIL, @FIRSTNAME, @LASTNAME, @ROLEY, @PASSWORD, @REGISTRATIONDATE);";
+                    
                     adapter.InsertCommand = new SqlCommand(sql, connection);
                     adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = user.UserName;
                     adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = user.UserEmail;
                     adapter.InsertCommand.Parameters.Add("@FIRSTNAME", SqlDbType.VarChar).Value = user.FirstName;
                     adapter.InsertCommand.Parameters.Add("@LASTNAME", SqlDbType.VarChar).Value = user.LastName;
                     adapter.InsertCommand.Parameters.Add("@ROLEY", SqlDbType.VarChar).Value = user.role;
+                    adapter.InsertCommand.Parameters.Add("@PASSWORD", SqlDbType.VarChar).Value = user.passHash;
+                    adapter.InsertCommand.Parameters.Add("@REGISTRATIONDATE", SqlDbType.VarChar).Value = user.registrationDate;
 
                     adapter.InsertCommand.ExecuteNonQuery();
                     connection.Close();
@@ -159,7 +161,7 @@ namespace AutoBuildApp.DataAccess
                         return "User doesn't exist.";
                     }
 
-                    String sql = "INSERT INTO userAccounts(username, email, firstName, lastName, roley)  VALUES(@USERNAME,@EMAIL, @FIRSTNAME, @LASTNAME, @ROLEY);";
+                    String sql = "INSERT INTO userAccounts(username, email, firstName, lastName, roley, passwordHash, registrationDate) VALUES(@USERNAME,@EMAIL, @FIRSTNAME, @LASTNAME, @ROLEY, @PASSWORD, @REGISTRATIONDATE);";
 
                     adapter.InsertCommand = new SqlCommand(sql, connection);
                     adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = user.UserName;
@@ -167,6 +169,8 @@ namespace AutoBuildApp.DataAccess
                     adapter.InsertCommand.Parameters.Add("@FIRSTNAME", SqlDbType.VarChar).Value = user.FirstName;
                     adapter.InsertCommand.Parameters.Add("@LASTNAME", SqlDbType.VarChar).Value = user.LastName;
                     adapter.InsertCommand.Parameters.Add("@ROLEY", SqlDbType.VarChar).Value = user.role;
+                    adapter.InsertCommand.Parameters.Add("@PASSWORD", SqlDbType.VarChar).Value = user.passHash;
+                    adapter.InsertCommand.Parameters.Add("@REGISTRATIONDATE", SqlDbType.VarChar).Value = user.registrationDate;
 
                     adapter.InsertCommand.ExecuteNonQuery();
                     connection.Close();
@@ -286,7 +290,6 @@ namespace AutoBuildApp.DataAccess
         {
             return !String.IsNullOrEmpty(username) && username.Length >= 4 && username.Length <= 12;
         }
-
 
         public bool IsInformationValid(UserAccount user)
         {
