@@ -19,6 +19,7 @@ namespace AutoBuildApp.ConsoleApp
             string hash = userA.passHash;
             Console.WriteLine(hash);
 
+
             UpdateUserDTO updatedInformation = new UpdateUserDTO("test", "test", "test", "test@test.test", "test");
 
             // how to connect to sql in a console application so you can pass the string : Settings1.Default.connectionString to the
