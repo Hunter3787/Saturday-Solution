@@ -13,11 +13,20 @@ namespace AutoBuildApp.ConsoleApp
         {
             Console.WriteLine("Hello World!");
 
-            UserAccount userA = new UserAccount("usernamfff", "user", "name", "user@userssg.com", "BASIC", "pass", "09-12-1990");
-            UserAccount admin = new UserAccount("adminAcc", "ad", "min", "admin@admin.com", "ADMIN", "pass", "10-29-1982");
+            UserAccount userA = new UserAccount("usernamfff", "user", "name", "user@userssg.com", "BASIC", "pejnejenjnejenen", "09-12-1990");
+            UserAccount admin = new UserAccount("adminAcc", "ad", "min", "admin@admin.com", "ADMIN", "pkjewk;kjrew;kjnkjrwekjwnr", "10-29-1982");
             Console.WriteLine(userA.ToString());
             string hash = userA.passHash;
-            Console.WriteLine(hash);
+
+            Console.WriteLine("hash1" + hash);
+            Console.WriteLine("hash1 Length" + hash.Length);
+
+
+            Console.WriteLine(admin.ToString());
+            string hash2 = admin.passHash;
+
+            Console.WriteLine("hash2" + hash2);
+            Console.WriteLine("hash2 Length" +  hash.Length);
 
 
             UpdateUserDTO updatedInformation = new UpdateUserDTO("test", "test", "test", "test@test.test", "test");
@@ -27,7 +36,9 @@ namespace AutoBuildApp.ConsoleApp
             // https://www.c-sharpcorner.com/UploadFile/5089e0/how-to-create-single-connection-string-in-console-applicatio/
 
             Console.WriteLine("Creating a user A to the DB");
-            UserManagementManager manager = new UserManagementManager(Settings1.Default.connectionString);
+          //  UserManagementManager manager = new UserManagementManager(Settings1.Default.connectionString);
+            UserManagementManager manager = new UserManagementManager("Server = localhost; Database = DB; Trusted_Connection = True;");
+
 
             Console.WriteLine(manager.CreateUserRecord(admin, userA));
 

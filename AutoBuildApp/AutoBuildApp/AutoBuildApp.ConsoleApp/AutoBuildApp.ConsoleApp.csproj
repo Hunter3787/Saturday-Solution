@@ -11,7 +11,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AutoBuildApp.BusinessLayer\AutoBuildApp.BusinessLayer.csproj" />
-    <ProjectReference Include="..\AutoBuildApp.DataAccess\AutoBuildApp.DataAccess.csproj" />
     <ProjectReference Include="..\AutoBuildApp.Models\AutoBuildApp.Models.csproj" />
   </ItemGroup>
 
