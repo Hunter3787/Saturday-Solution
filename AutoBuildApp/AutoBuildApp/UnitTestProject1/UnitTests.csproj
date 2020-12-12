@@ -19,7 +19,6 @@
     <ProjectReference Include="..\AutoBuildApp.DataAccess\AutoBuildApp.DataAccess.csproj" />
     <ProjectReference Include="..\AutoBuildApp.Models\AutoBuildApp.Models.csproj" />
     <ProjectReference Include="..\AutoBuildApp.WebMVC\AutoBuildApp.WebMVC.csproj" />
-    <ProjectReference Include="..\AutoBuildApp.WindowsForm\AutoBuildApp.WindowsForm.csproj" />
   </ItemGroup>
 
 </Project>
