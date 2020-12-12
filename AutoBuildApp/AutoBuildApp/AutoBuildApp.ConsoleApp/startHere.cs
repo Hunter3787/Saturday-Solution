@@ -36,9 +36,9 @@ namespace AutoBuildApp.ConsoleApp
             // https://www.c-sharpcorner.com/UploadFile/5089e0/how-to-create-single-connection-string-in-console-applicatio/
 
             Console.WriteLine("Creating a user A to the DB");
-          //  UserManagementManager manager = new UserManagementManager(Settings1.Default.connectionString);
-            UserManagementManager manager = new UserManagementManager("Server = localhost; Database = DB; Trusted_Connection = True;");
+          // UserManagementManager manager = new UserManagementManager(Settings1.Default.connectionString);
 
+            UserManagementManager manager = new UserManagementManager("Server = .; Database = DB; Trusted_Connection = True;");
 
             Console.WriteLine(manager.CreateUserRecord(admin, userA));
 
