@@ -40,7 +40,7 @@ namespace AutoBuildApp.WebMVC
                         while(authority<1 && authority>4)
                             authority = Convert.ToInt32(Console.ReadLine());
                         Console.WriteLine("Who to add?\n1. Admin\n2.Basic User\n3. Developer\n4. Vendor");
-                        while (authority < 1 && authority > 4)
+                        while (user < 1 && user > 4)
                             user = Convert.ToInt32(Console.ReadLine());
                         Console.WriteLine(userManagementManager.CreateUserRecord(accounts[authority - 1], accounts[user - 1]));
                         break;
@@ -49,7 +49,7 @@ namespace AutoBuildApp.WebMVC
                         while (authority < 1 && authority > 4)
                             authority = Convert.ToInt32(Console.ReadLine());
                         Console.WriteLine("Who to delete?\n1. Admin\n2.Basic User\n3. Developer\n4. Vendor");
-                        while (authority < 1 && authority > 4)
+                        while (user < 1 && user > 4)
                             user = Convert.ToInt32(Console.ReadLine());
                         Console.WriteLine(userManagementManager.DeleteUserRecord(accounts[authority - 1], accounts[user - 1]));
                         break;
@@ -58,7 +58,7 @@ namespace AutoBuildApp.WebMVC
                         while (authority < 1 && authority > 4)
                             authority = Convert.ToInt32(Console.ReadLine());
                         Console.WriteLine("Who to modify?\n1. Admin\n2.Basic User\n3. Developer\n4. Vendor");
-                        while (authority < 1 && authority > 4)
+                        while (user < 1 && user > 4)
                             user = Convert.ToInt32(Console.ReadLine());
                         Console.WriteLine(userManagementManager.DisableUser(accounts[authority - 1], accounts[user - 1]));
                         break;
@@ -67,12 +67,12 @@ namespace AutoBuildApp.WebMVC
                         while (authority < 1 && authority > 4)
                             authority = Convert.ToInt32(Console.ReadLine());
                         Console.WriteLine("Who to add?\n1. Admin\n2.Basic User\n3. Developer\n4. Vendor");
-                        while (authority < 1 && authority > 4)
+                        while (user < 1 && user > 4)
                             user = Convert.ToInt32(Console.ReadLine());
                         int roleNum = 0;
                         String[] role = { "ADMIN", "BASIC", "DEVELOPER", "VENDOR" };
                         Console.WriteLine("What role are they to be?\n1. Admin\n2. Basic\n3. Developer\n4. Vendor");
-                        while (authority < 1 && authority > 4)
+                        while (roleNum < 1 && roleNum > 4)
                             roleNum = Convert.ToInt32(Console.ReadLine());
                         Console.WriteLine(userManagementManager.EnableUser(accounts[authority - 1], accounts[user - 1], role[roleNum-1]));
                         break;
