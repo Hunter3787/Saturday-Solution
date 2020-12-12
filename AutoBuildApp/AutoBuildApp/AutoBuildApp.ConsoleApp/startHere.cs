@@ -12,9 +12,12 @@ namespace AutoBuildApp.ConsoleApp
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            UserAccount userA = new UserAccount("usernamfff", "user", "name", "user@userssg.com", "BASIC", "pass", "01/12/1990");
-            UserAccount admin = new UserAccount("adminAcc", "ad", "min", "admin@admin.com", "ADMIN", "pass", "01/12/1990");
+
+            UserAccount userA = new UserAccount("usernamfff", "user", "name", "user@userssg.com", "BASIC", "pass", "09-12-1990");
+            UserAccount admin = new UserAccount("adminAcc", "ad", "min", "admin@admin.com", "ADMIN", "pass", "10-29-1982");
             Console.WriteLine(userA.ToString());
+            string hash = userA.passHash;
+            Console.WriteLine(hash);
 
 
             UpdateUserDTO updatedInformation = new UpdateUserDTO("test", "test", "test", "test@test.test", "test");

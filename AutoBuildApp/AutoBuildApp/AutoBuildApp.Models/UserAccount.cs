@@ -1,6 +1,11 @@
 ﻿
 using System;
 
+
+ // using BCrypt.Net-Next -> third party nugget package that supports our versioning 
+using BC = BCrypt.Net.BCrypt;
+
+
 using System.Globalization; // this is for Iformamter in .public static DateTime ParseExact (string s, string format, IFormatProvider? provider);
 
 namespace AutoBuildApp.Models
@@ -46,11 +51,15 @@ namespace AutoBuildApp.Models
             this.FirstName = fname;
             this.LastName = lname;
             this.UserEmail = email;
-            this.passHash = passHash;
+
+            this.passHash = BC.EnhancedHashPassword(passHash);
+            
             //"yyyy-MM-dd HH:mm" :https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings?redirectedfrom=MSDN
             //                    http://blog.stevex.net/string-formatting-in-csharp/
             //CultureInfo.InvariantCulture : https://docs.microsoft.com/en-us/dotnet/api/system.globalization.cultureinfo.invariantculture?view=net-5.0 
-            this.registrationDate = DateTime.ParseExact(regisDate,"yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+            this.registrationDate = DateTime.ParseExact(regisDate, "MM-dd-yyyy", CultureInfo.InvariantCulture,DateTimeStyles.None);
+
+        
             this.role = role.ToUpper();
 
         }
