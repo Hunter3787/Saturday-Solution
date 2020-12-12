@@ -29,8 +29,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServiceLayer (App Specific)
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject1", "UnitTestProject1\UnitTestProject1.csproj", "{E2503FBF-D388-4319-81BC-140BC5C01E05}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewFolder1", "NewFolder1", "{84F5120A-7397-4921-8874-43089DDAFF2B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoBuildApp.BusinessLayer", "AutoBuildApp.BusinessLayer\AutoBuildApp.BusinessLayer.csproj", "{AF678572-1D7D-4764-A6C3-BFA07AD8E8D4}"
 EndProject
 Global
