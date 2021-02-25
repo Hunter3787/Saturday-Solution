@@ -2,12 +2,32 @@
 using AutoBuildApp.Models;
 using AutoBuildApp.ServiceLayer;
 using System;
+using AutoBuildApp.Loggg;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
+using Moq;
 
 namespace AutoBuildApp.BusinessLayer
 {
     public class UserManagementManager
     {
         private readonly UserManagementService service;
+
+        private readonly FileLogger logger;
+
+        private readonly ILogger<UserManagementManager> _logger;
+
+
+        public UserManagementManager(ILogger<UserManagementManager> logger)
+        {
+            _logger = logger;
+        }
+
+        public UserManagementManager(FileLogger logger)
+        {
+            this.logger = logger;
+        }
+
 
         public UserManagementManager(String connectionString)
         {
@@ -19,6 +39,8 @@ namespace AutoBuildApp.BusinessLayer
 
             if (caller.role != "ADMIN")
             {
+                _logger.LogInformation("HEEEEEEEEEEEEEEEEEE");
+                logger.LogInformation("HEEEEEEEEEEEEEEEEEE");
                 return "Unauthorized";
             }
 

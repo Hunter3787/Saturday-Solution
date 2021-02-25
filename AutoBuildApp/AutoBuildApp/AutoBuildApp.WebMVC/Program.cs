@@ -36,7 +36,7 @@ namespace AutoBuildApp.WebMVC
                 Console.WriteLine("Make a selection to proceed\n1. Create user" +
                     "\n2. Delete user\n3. Disable User\n4. Enable User\n5. Quit");
                 option = Convert.ToInt32(Console.ReadLine());
-                logger.LogInformation("User has selected: {option}", option);
+                logger?.LogInformation("User has selected: {option}", option);
                 switch (option)
                 {
                     case 1:
