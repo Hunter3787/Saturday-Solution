@@ -39,8 +39,6 @@ namespace AutoBuildApp.BusinessLayer
 
             if (caller.role != "ADMIN")
             {
-                _logger.LogInformation("HEEEEEEEEEEEEEEEEEE");
-                logger.LogInformation("HEEEEEEEEEEEEEEEEEE");
                 return "Unauthorized";
             }
 
