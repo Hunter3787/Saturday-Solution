@@ -1,0 +1,40 @@
+.footer {
+    background-color: rgb(62, 62, 66);
+    height: 209px;
+    width: 100%;
+}
+
+.footer-nav {
+    display: flex;
+    padding: 2vw 2vh;
+}
+
+.footer-pages{
+    margin-left:auto;
+    padding: 0 15px;
+}
+
+.footer-about {
+    padding: 0px 20px;
+}
+
+.wrapper {
+    min-height: 100vh;
+}
+#copyright {
+    position: relative;
+    left:50%;
+    bottom:1%;
+    color: white;
+}
+
+h4 { 
+    text-decoration: underline;
+    text-underline-offset: 20%;
+    color: rgba(255, 255, 255, 0.658);
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
