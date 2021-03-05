@@ -6,29 +6,29 @@ using System.Threading.Tasks;
 
 namespace AutoBuildApp.ServiceLayer
 {
-    public class LoggingService : ILogger
+    public class LoggingService
     {
-        public IDisposable BeginScope<TState>(TState state)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsEnabled(Microsoft.Extensions.Logging.LogLevel logLevel)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool Log(string message, LogLevel level)
         {
             return true;
         }
-
-        public void Log<TState>(Microsoft.Extensions.Logging.LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        public Task<bool> LogAsync(string message, LogLevel level)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> LogAsync(string message, LogLevel level)
+
+
+
+        public IDisposable BeginScope<TState>(TState state)
+        {
+            return null;
+        }
+        public bool IsEnabled(Microsoft.Extensions.Logging.LogLevel logLevel)
+        {
+            return logLevel != Microsoft.Extensions.Logging.LogLevel.None;
+        }
+        public void Log<TState>(Microsoft.Extensions.Logging.LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
             throw new NotImplementedException();
         }
@@ -55,6 +55,7 @@ namespace AutoBuildApp.ServiceLayer
     {
         Information,
         Warning,
-        Error
+        Error,
+        None
     }
 }
