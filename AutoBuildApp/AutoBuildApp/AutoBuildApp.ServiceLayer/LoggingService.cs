@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AutoBuildApp.ServiceLayer
 {
-    public class LoggingService
+    public class LoggingService : ILogger
     {
         public bool Log(string message, LogLevel level)
         {
@@ -16,7 +16,6 @@ namespace AutoBuildApp.ServiceLayer
         {
             throw new NotImplementedException();
         }
-
 
 
 
