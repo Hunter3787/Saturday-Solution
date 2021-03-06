@@ -12,7 +12,9 @@ button to exit.
 
 function UserAnalysisDash() {
     return (
-        <div className="portal-wrapper"></div>
+        <div className="portal-wrapper">
+        <h2>THIS IS THE USER ANALYSIS DASHBOARD PAGE! </h2>
+        </div>
     );
     }
 
