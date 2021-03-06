@@ -81,6 +81,7 @@ function App() {
             <Route path="/">
               <Builds builds={buildList}/>
             </Route>
+            
           </Switch>
         </div>
         <Footer />
