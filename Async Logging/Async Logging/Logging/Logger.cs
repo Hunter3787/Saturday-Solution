@@ -19,7 +19,6 @@ namespace Producer
 
         private bool isDisposed = false;
 
-
         public QueuePublisher()
         {
 
@@ -32,7 +31,6 @@ namespace Producer
 
             this.producer = this.session.CreateProducer(destination);
         }
-
         public void Testing(LogObject log)
         {
             if (!isDisposed)
@@ -48,10 +46,7 @@ namespace Producer
             {
                 throw new ObjectDisposedException(this.GetType().FullName);
             }
-
-
         }
-
         #region IDisposable Members
         public void Dispose()
         {
@@ -64,7 +59,6 @@ namespace Producer
             }
         }
         #endregion
-
     }
     public class Logger : ILogger
     {
@@ -87,9 +81,6 @@ namespace Producer
             queuePublisher.Testing(logObject);
         }
     }
-
-   
-
     public class LogObject
     {
         private String message;
@@ -118,7 +109,6 @@ namespace Producer
             return logger.Log(message, LogLevel.Error);
         }
     }
-
     public enum LogLevel
     {
         Information,
@@ -126,7 +116,6 @@ namespace Producer
         Error,
         None
     }
-
     public interface ILogger
     {
         bool Log(string message, LogLevel level);
