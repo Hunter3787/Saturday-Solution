@@ -1,8 +1,12 @@
 import React from 'react';
-import Spinner from 'react-bootstrap/Spinner';
 import "./portal.css";
-
+import Nav from 'react-bootstrap/Nav';
+import Button from 'react-bootstrap/Button'
+import { Container, Row } from 'react-bootstrap';
+import Col from 'react-bootstrap/Col'
 /*
+
+
 Elements on the page:
     Image buttons with name:
         User Analysis Dashboard
@@ -10,23 +14,40 @@ Elements on the page:
 */
 function Portal(){
     return (
+
+
+
     <div className="portal-wrapper">
-        <h1>Shopping List for</h1>
-        <ul>
-            <li>Instagram</li>
-            <li>WhatsApp</li>
-            <li>Oculus</li>
-            <Spinner animation="border" role="status">
-            <span className="sr-only">Loading...</span>
-        </Spinner>
-        </ul>
-        /*
-        this spinner will show in place of the graph when it is loading 
-        */
+         <Nav.Link href="/user-analysis" /*hidden*/>User-Analysis</Nav.Link>
         
+         <div className="mb-2">
+             <Button variant="primary" size="lg"> Large button</Button>{' '}
+              <Button variant="secondary" size="lg"> Large button </Button></div>
+
+<Button onClick ={(e) =>{ e.preventDefault(); window.location.href="/user-analysis";}}
+>UserAnalysis!</Button>
+
+
+<Container>
+<Row>
+    <Col md={{ span: 8, offset: 5}}>
+        {<Button onClick ={(e) =>
+            { e.preventDefault(); window.location.href="/user-analysis";}}>UserAnalysis!</Button>}
+            </Col>
+
+    <Col md={{ span: 5, offset: 6}}>
+        {<Button onClick ={(e) =>
+            { e.preventDefault(); window.location.href="/user-account-management";}}>User Account Management</Button>}
+            </Col>
+</Row>
+
+
+</Container>
 
 
     </div>
+
+
     );
 }
 
