@@ -38,6 +38,10 @@
     "eject": "react-scripts eject",
     "lint": "eslint ./src/"
   },
+  "jest":{
+    "verbose": true
+
+  },
   "browserslist": {
     "production": [
       ">0.2%",
