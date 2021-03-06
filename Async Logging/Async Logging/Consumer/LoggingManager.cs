@@ -5,6 +5,7 @@ using Apache.NMS;
 using Apache.NMS.ActiveMQ;
 using Newtonsoft.Json;
 using Producer;
+using DataAccess;
 
 namespace Consumer
 {
@@ -37,9 +38,14 @@ namespace Consumer
         {
             ITextMessage textMessage = message as ITextMessage;
             LogObject logObject = JsonConvert.DeserializeObject<LogObject>(textMessage.Text);
+            LoggerDataAccess loggerDataAccess = new LoggerDataAccess("Server = localhost; Database = DB; Trusted_Connection = True;");
+
+            //OnMessageReceived += new MessageReceivedDelegate(subscriber_OnMessageReceived);
+
             if (this.OnMessageReceived != null)
             {
-                this.OnMessageReceived(logObject.Message);
+                loggerDataAccess.CreateLogRecord(logObject);
+                this.OnMessageReceived(textMessage.Text);
             }
         }
 

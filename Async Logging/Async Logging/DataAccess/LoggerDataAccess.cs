@@ -1,0 +1,61 @@
+﻿using Producer;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Text;
+
+namespace DataAccess
+{
+    public class LoggerDataAccess
+    {
+        private String connection;
+        //private LogObject log;
+
+        private SqlDataAdapter adapter = new SqlDataAdapter();
+        public LoggerDataAccess(String connectionString)
+        {
+            this.connection = connectionString;
+        }
+        public LoggerDataAccess()
+        {
+
+        }
+
+        public String CreateLogRecord(LogObject logObject)
+        {
+            using (SqlConnection connection = new SqlConnection(this.connection))
+            {
+                connection.Open();
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        String sql = "INSERT INTO logs(message, loglevel) VALUES(@MESSAGE,@LOGLEVEL);";
+
+                        adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
+                        adapter.InsertCommand.Parameters.Add("@MESSAGE", SqlDbType.VarChar).Value = logObject.Message;
+                        adapter.InsertCommand.Parameters.Add("@LOGLEVEL", SqlDbType.VarChar).Value = logObject.LevelLog;
+                        adapter.InsertCommand.ExecuteNonQuery();
+
+                        transaction.Commit();
+                        return "Successful Log creation";
+                    }
+                    catch (SqlException ex)
+                    {
+                        if (ex.Number == -2)
+                        {
+                            transaction.Rollback();
+                            return ("Data store has timed out.");
+                        }
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
+                    return "Successful Log creation";
+                }
+            }
+        }
+    }
+}
