@@ -12,10 +12,6 @@ namespace Producer
 {
     public class QueuePublisher
     {
-        private const string URI = "tcp://localhost:61616";
-        private const string DESTINATION = "LogggingQueue";
-
-
         private readonly IConnectionFactory connectionFactory;
         private readonly IConnection connection;
         private readonly ISession session;
@@ -79,7 +75,6 @@ namespace Producer
             logObject.Message = message;
             logObject.LevelLog = level;
             sendLog();
-            Console.WriteLine("hello");
             return true;
         }
         public Task<bool> LogAsync(string message, LogLevel level)
@@ -108,15 +103,18 @@ namespace Producer
     {
         public static bool LogInformation(this Logger logger, string message)
         {
+            Console.WriteLine("LogInfo");
             return logger.Log(message, LogLevel.Information);
         }
 
         public static bool LogWarning(this Logger logger, string message)
         {
+            Console.WriteLine("LogWarn");
             return logger.Log(message, LogLevel.Warning);
         }
         public static bool LogError(this Logger logger, string message)
         {
+            Console.WriteLine("LogError");
             return logger.Log(message, LogLevel.Error);
         }
     }

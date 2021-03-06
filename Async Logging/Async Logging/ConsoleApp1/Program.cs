@@ -1,4 +1,5 @@
-﻿using Producer;
+﻿using Consumer;
+using Producer;
 using System;
 
 namespace ConsoleApp1
@@ -9,13 +10,23 @@ namespace ConsoleApp1
         {
             Logger logger = new Logger();
 
-            logger.LogInformation("Hello");
+            LoggingManager loggingManager = new LoggingManager();
 
-            logger.LogWarning("Hello");
+            logger.LogInformation("This is an Information Log");
 
-            logger.LogError("Hello");
+            logger.LogWarning("This is a Warning Log");
 
-            Console.WriteLine("Hello World!");
+            logger.LogError("This is an Error Log");
+
+            loggingManager.OnMessageReceived += new MessageReceivedDelegate(subscriber_OnMessageReceived);
+
+            Console.ReadKey();
+        }
+
+        static void subscriber_OnMessageReceived(string message)
+        {
+            Console.WriteLine("message fron Queue!" + message);
         }
     }
+
 }
