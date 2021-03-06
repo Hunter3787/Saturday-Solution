@@ -1,0 +1,18 @@
+.apb-login {
+    margin-left: auto;
+}
+
+.custom-btn {
+    border-color: transparent;    
+    margin: 0 .25vw;
+}
+
+#profile-button {
+    border-color:transparent;
+    background-color: dimgrey;
+    color: white;
+}
+
+.item {
+    background-color: dimgrey;
+}

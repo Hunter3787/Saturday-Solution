@@ -1,0 +1,6 @@
+html, .app {
+  background-color: rgb(107, 107, 107);
+  min-height: 100vh;
+  min-width: 100vw;
+  overflow: scroll;
+}
