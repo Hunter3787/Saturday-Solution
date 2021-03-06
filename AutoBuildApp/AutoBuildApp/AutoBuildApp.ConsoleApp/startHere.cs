@@ -3,7 +3,6 @@
 using AutoBuildApp.DataAccess;
 
 using System;
-using AutoBuildApp.DataAccess;
 using System.Configuration;
 
 namespace AutoBuildApp.ConsoleApp
