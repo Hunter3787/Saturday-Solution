@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using AutoBuildApp.Models;
 using AutoBuildApp.DataAccess;
+using System.Configuration;
 
 namespace AutoBuildApp.ServiceLayer
 {
@@ -14,8 +15,19 @@ namespace AutoBuildApp.ServiceLayer
         public LoginService(UserAccount user)
         {
             // establish a connection to DB
-            _registrationDAO = new RegistrationDAO("Server=localhost; Database=Registration_Pack;Trusted_Connection=True;");
+            _registrationDAO = new RegistrationDAO(GetConnectionStringByName("ZeeConnection"));
             _user = user;
+        }
+        static string GetConnectionStringByName(string name)
+        {
+            string retVal = null;
+
+            ConnectionStringSettings settings = ConfigurationManager.ConnectionStrings[name];
+            // If found, return the connection string.
+            if (settings != null)
+                retVal = settings.ConnectionString;
+
+            return retVal;
         }
 
         // login

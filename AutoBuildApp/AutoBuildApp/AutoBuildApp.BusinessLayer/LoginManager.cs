@@ -1,29 +1,47 @@
 ﻿using System;
-using System.Collections.Generic;
-
-using System.Text;
 using AutoBuildApp.Models;
 using AutoBuildApp.ServiceLayer;
-using System.Linq;
-
 namespace AutoBuildApp.BusinessLayer
 {
     class LoginManager
     {
         private LoginService _LogService;
-        private String _cnnctString;
         private UserAccount _userAccount;
+       
         public LoginManager(LoginService LogService)
         {
-            _cnnctString = "Server=localhost; Database=Registration_Pack;Trusted_Connection=True;";
             _LogService = LogService;
         }
 
-        public String DoesUserExist(UserAccount user)
+
+        public bool ValidUserName(string username)
         {
-            return _LogService.LoginUser(user);
+            return !String.IsNullOrEmpty(username) && username.Length >= 4 && username.Length <= 20;
+        }
+        public bool IsPasswordValid(string password)
+        {
+            return !String.IsNullOrEmpty(password);
+        }
+        public bool IsInformationValid(UserAccount user)
+        {
+            return ValidUserName(user.UserName)
+                && !IsPasswordValid(user.passHash);
+         
         }
 
+
+        public String DoesUserExist(UserAccount user)
+        {
+            if(  IsInformationValid( user) == false)
+            {
+                return "Information is invalid!";
+            }
+            else
+                return _LogService.LoginUser(user);
+        }
+
+
+       
 
     }
 }

@@ -12,11 +12,8 @@ namespace AutoBuildApp.BusinessLayer
     {
 
         private RegistrationService _RegService;
-        private String _cnnctString;
-        private UserAccount _userAccount;
         public RegistrationManager(RegistrationService RegService)
         {
-            _cnnctString = "Server=localhost; Database=Registration_Pack;Trusted_Connection=True;";
             _RegService = RegService;
         }
 

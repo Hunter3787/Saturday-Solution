@@ -10,6 +10,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoBuildApp.ConsoleApp", "AutoBuildApp.ConsoleApp\AutoBuildApp.ConsoleApp.csproj", "{529DC64D-6BF8-440B-8F68-FAE8B6D2E094}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataAccessLayer (DAL)", "DataAccessLayer (DAL)", "{66A885B3-B566-42CA-82F1-AC511C72B037}"
+	ProjectSection(SolutionItems) = preProject
+		Configs.config = Configs.config
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BusinessLayer (BL)", "BusinessLayer (BL)", "{36B4A509-E9BC-447A-8CF6-1E225993B3CD}"
 EndProject

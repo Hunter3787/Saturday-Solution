@@ -3,7 +3,8 @@
 using AutoBuildApp.DataAccess;
 
 using System;
-using AutoBuildApp.BusinessLayer;
+using AutoBuildApp.DataAccess;
+using System.Configuration;
 
 namespace AutoBuildApp.ConsoleApp
 {
@@ -11,6 +12,12 @@ namespace AutoBuildApp.ConsoleApp
     {
         static void Main(string[] args)
         {
+            ConnectionStringSettings settings = ConfigurationManager.ConnectionStrings["ZeeConnection"];
+            // If found, return the connection string.
+
+            Console.WriteLine($"  THIS IS CONNECTION STRING IN CONFIG FILE! : {settings.ConnectionString}");
+
+
 
             /*
             UserAccount admin = new UserAccount("TacOCat", "Nick", "Marshall", "tacoCat20@gmail.com", "ADMIN", "12345", "10-21-2020");
