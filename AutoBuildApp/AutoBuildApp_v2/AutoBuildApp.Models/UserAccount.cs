@@ -3,7 +3,7 @@ using System;
 
 
  // using BCrypt.Net-Next -> third party nugget package that supports our versioning 
-using BC = BCrypt.Net.BCrypt;
+//using BC = BCrypt.Net.BCrypt;
 
 
 using System.Globalization; // this is for Iformamter in .public static DateTime ParseExact (string s, string format, IFormatProvider? provider);
@@ -51,9 +51,10 @@ namespace AutoBuildApp.Models
             this.FirstName = fname;
             this.LastName = lname;
             this.UserEmail = email;
+            this.passHash = passHash;
 
             //The total length of the output that you will store in the database is always 60 bytes long from this Bcrypt hash just a note.
-            this.passHash = BC.HashPassword(passHash, BC.GenerateSalt());
+            //this.passHash = BC.HashPassword(passHash, BC.GenerateSalt());
             // BC.EnhancedHashPassword(passHash);
             
             //"yyyy-MM-dd HH:mm" :https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings?redirectedfrom=MSDN
