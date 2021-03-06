@@ -22,7 +22,10 @@ Button:
     Delete User
 */
 function AccountManager(){
-    return null;
+    return(
+    <div>
+    <h2>THIS IS THE USER MANAGEMENT PAGE! </h2></div>
+    );
 }
 
 export default AccountManager;

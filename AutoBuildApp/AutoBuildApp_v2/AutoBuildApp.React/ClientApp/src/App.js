@@ -10,6 +10,9 @@ import Builds from './pages/most-popular-builds/builds';
 import Portal from "./pages/administration/portal/portal"
 import Inventory from "./pages/administration/managers/inventoryManager"
 
+import Analytics from "./pages/administration/analytics/userAnalysis"
+import UMManager from "./pages/administration/managers/userAccountManager"
+
 //Fix below.
 import Login from './pages/login/login';
 
@@ -57,6 +60,12 @@ function App() {
             <Route path="/admin-portal">
               <Portal />
             </Route>
+            <Route path="/user-analysis">
+              <Analytics/>
+            </Route>
+            <Route path="/user-account-management">
+              <UMManager/>
+            </Route>
             <Route path="/privacy-policy">
               <PrivacyPolicy />
             </Route>
@@ -81,7 +90,7 @@ function App() {
             <Route path="/">
               <Builds builds={buildList}/>
             </Route>
-            
+
           </Switch>
         </div>
         <Footer />
