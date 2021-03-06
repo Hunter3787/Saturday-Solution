@@ -14,12 +14,8 @@ namespace AutoBuildApp.ServiceLayer
         public LoginService(String CnnctString)
         {
             // establish a connection to DB
-<<<<<<< Updated upstream
-            _registrationDAO = new RegistrationDAO("Server = localhost; Database = Registration_Pack; Trusted_Connection = True;");
-            _user = user;
-=======
+
             _LoginDAO = new LoginDAO(CnnctString);
->>>>>>> Stashed changes
         }
 
         // login

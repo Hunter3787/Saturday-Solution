@@ -13,17 +13,12 @@ namespace AutoBuildApp.BusinessLayer
     {
 
         private RegistrationService _RegService;
-<<<<<<< Updated upstream
-        public RegistrationManager(RegistrationService RegService)
-        {
-            _RegService = RegService;
-=======
+
         private String _cnnctString;
         public RegistrationManager(String _cnnctString)
         {
             this._cnnctString = _cnnctString;
             _RegService = new RegistrationService(_cnnctString);
->>>>>>> Stashed changes
         }
 
 

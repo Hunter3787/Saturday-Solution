@@ -13,12 +13,8 @@ namespace AutoBuildApp.ServiceLayer
         {
 
             // establish a connection to DB
-<<<<<<< Updated upstream
-            _registrationDOA = new RegistrationDAO("Server = localhost; Database = Registration_Pack; Trusted_Connection = True;");
-            _user = user;
-=======
+
             _registrationDOA = new RegistrationDAO(CnnctString);
->>>>>>> Stashed changes
         }
        
         // create user 
