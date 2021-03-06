@@ -1,6 +1,7 @@
 ﻿using Apache.NMS;
 using Apache.NMS.ActiveMQ;
 using Apache.NMS.Util;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -38,12 +39,14 @@ namespace Producer
 
         public void Testing(LogObject log)
         {
-            if (!this.isDisposed)
+            if (!isDisposed)
             {
-                IObjectMessage objectMessage = session.CreateObjectMessage(log);
-                producer.Send(objectMessage);
-                //ITextMessage textMessage = this.session.CreateTextMessage(message);
-                //this.producer.Send(textMessage);
+                string json = JsonConvert.SerializeObject(log, Formatting.Indented);
+
+                //IObjectMessage objectMessage = this.session.CreateObjectMessage(log);
+                //this.producer.Send(objectMessage);
+                ITextMessage textMessage = session.CreateTextMessage(json);
+                producer.Send(textMessage);
             }
             else
             {

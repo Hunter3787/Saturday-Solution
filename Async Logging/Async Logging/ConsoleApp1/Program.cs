@@ -11,9 +11,9 @@ namespace ConsoleApp1
 
             logger.LogInformation("Hello");
 
-            QueuePublisher demo = new QueuePublisher();
+            logger.LogWarning("Hello");
 
-            //demo.Testing(logger);
+            logger.LogError("Hello");
 
             Console.WriteLine("Hello World!");
         }
