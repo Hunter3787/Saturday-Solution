@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^4.6.0",
+    "immer": "^8.0.1",
     "jquery": "^3.4.1",
     "merge": "^1.2.1",
     "oidc-client": "^1.9.0",
@@ -17,6 +18,13 @@
     "rimraf": "^2.6.2"
   },
   "devDependencies": {
+    "@babel/cli": "^7.13.0",
+    "@babel/core": "^7.13.8",
+    "@babel/plugin-syntax-jsx": "^7.12.13",
+    "@babel/plugin-transform-modules-commonjs": "^7.13.8",
+    "@babel/plugin-transform-react-jsx": "^7.12.17",
+    "@babel/preset-react": "^7.12.13",
+    "@testing-library/react": "^11.2.5",
     "ajv": "^6.9.1",
     "cross-env": "^5.2.0",
     "eslint": "^6.8.0",
@@ -38,9 +46,8 @@
     "eject": "react-scripts eject",
     "lint": "eslint ./src/"
   },
-  "jest":{
+  "jest": {
     "verbose": true
-
   },
   "browserslist": {
     "production": [
