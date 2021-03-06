@@ -8,7 +8,6 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
             Logger logger = new Logger();
-            //logger.Log("hello", LogLevel.Information);
 
             logger.LogInformation("Hello");
 

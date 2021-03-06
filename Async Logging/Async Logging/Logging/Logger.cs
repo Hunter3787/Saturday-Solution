@@ -36,12 +36,12 @@ namespace Producer
             this.producer = this.session.CreateProducer(destination);
         }
 
-        public void Testing()
+        public void Testing(LogObject log)
         {
             if (!this.isDisposed)
             {
-                //IObjectMessage objectMessage = session.CreateObjectMessage(this.);
-                //this.producer.Send(objectMessage);
+                IObjectMessage objectMessage = session.CreateObjectMessage(log);
+                producer.Send(objectMessage);
                 //ITextMessage textMessage = this.session.CreateTextMessage(message);
                 //this.producer.Send(textMessage);
             }
@@ -69,21 +69,36 @@ namespace Producer
     }
     public class Logger : ILogger
     {
+        QueuePublisher queuePublisher = new QueuePublisher();
+        private LogObject logObject = new LogObject();
         public bool Log(string message, LogLevel level)
         {
+            logObject.Message = message;
+            logObject.LevelLog = level;
+            sendLog();
             Console.WriteLine("hello");
-            QueuePublisher queuePublisher = new QueuePublisher();
-            queuePublisher.Testing();
             return true;
         }
         public Task<bool> LogAsync(string message, LogLevel level)
         {
             throw new NotImplementedException();
         }
-        public String test()
+
+        public void sendLog()
         {
-            return "hello";
+            queuePublisher.Testing(logObject);
         }
+    }
+
+   
+
+    public class LogObject
+    {
+        private String message;
+        public String Message { get; set; }
+        private LogLevel levelLog;
+        public LogLevel LevelLog {get; set;}
+
     }
 
     public static class LoggerEx
