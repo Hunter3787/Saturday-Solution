@@ -1,6 +1,9 @@
 import React from 'react';
 import "./about.css";
 
+/*
+About page with text explaining who we are and what we are about.
+ */
 function About() {
     var privacyPolicy =<a href="/privacy-policy">privacy policy</a>;
     
