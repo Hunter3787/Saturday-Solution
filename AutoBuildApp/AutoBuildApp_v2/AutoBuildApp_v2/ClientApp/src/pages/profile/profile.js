@@ -13,7 +13,6 @@ Security: edit
 
 Delete Account:
     Delete account button, are you sure prompt, type in confirmation.
-
  */
 function Profile() {
     return null;
