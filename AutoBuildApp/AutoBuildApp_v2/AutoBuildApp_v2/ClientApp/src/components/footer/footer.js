@@ -1,6 +1,12 @@
 import React from 'react';
 import './footer.css';
 
+/*
+Image logo on left
+Site map on aligned right
+Pages section will be a list of all normally accessible pages.
+About will contain contact info and privacy policy.
+*/
 function Footer(){
     return (
         <footer class="footer">

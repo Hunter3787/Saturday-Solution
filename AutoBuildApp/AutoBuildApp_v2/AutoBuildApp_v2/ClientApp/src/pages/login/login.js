@@ -1,6 +1,17 @@
 import React from 'react';
 import Modal from 'react-bootstrap/Modal';
+import "./login.css";
 
+/* 
+Login modal:
+  Fields:
+    email/username
+    password
+  Buttons:
+    Login
+    Forgot Password
+    Create Account
+*/
 function Login(props) {
   return(
     <Modal

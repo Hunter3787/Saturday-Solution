@@ -1,13 +1,14 @@
 import React from "react";
 import Table from "react-bootstrap/Table";
 import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
-
+//Page Imports
 import About from "./pages/about/about";
 import Footer from "./components/footer/footer";
 import Header from "./components/header/header";
 import PrivacyPolicy from "./pages/privacy-policy/privacyPolicy";
 import Builds from './pages/most-popular-builds/builds';
 import Portal from "./pages/administration/portal/portal"
+import Inventory from "./pages/administration/managers/inventoryManager"
 
 //Fix below.
 import Login from './pages/login/login';
@@ -50,7 +51,10 @@ function App() {
         <Header />
         <div>
           <Switch>
-            <Route path="/portal">
+            <Route path="/inventory-management">
+              <Inventory />
+            </Route>
+            <Route path="/admin-portal">
               <Portal />
             </Route>
             <Route path="/privacy-policy">

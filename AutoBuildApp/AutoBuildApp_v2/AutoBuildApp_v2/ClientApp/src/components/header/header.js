@@ -6,6 +6,30 @@ import Button from "react-bootstrap/Button";
 import './header.css';
 import Dropdown from "react-bootstrap/Dropdown";
 
+/*
+Header is at the top and has a home button that is the name of the website.
+Elements:
+    (Links?)
+    Home button (as website name)
+    Builder dropdown that has selection for builder or upgrader.
+    Most popular builds (homepage for now)
+    Garage (changing name depending on login)
+        This element also needs to be security locked, 
+        a user should be prompted to login if they are not already.
+    Catalog button to take the user to the catalog
+    Administration portal is default hidden
+        When a user logs in of appropriate credentials they can access the portal
+    Inventory Management is default hidden
+        When a user logs in of appropriate credentials they can access the portal
+    
+    Buttons (Hidden when logged in):
+        Login
+        Register
+    Dropdown(Hidden when not logged in):
+        profile
+        settings
+        logout
+*/
 function Header(){
     return (
         <Navbar collapseOnSelect bg="dark" variant="dark">
