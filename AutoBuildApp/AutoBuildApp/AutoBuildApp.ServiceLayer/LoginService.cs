@@ -9,21 +9,19 @@ namespace AutoBuildApp.ServiceLayer
 {
     public class LoginService
     {
-        private UserAccount _user;
-        private RegistrationDAO _registrationDAO;
 
-        public LoginService(UserAccount user)
         {
             // establish a connection to DB
+<<<<<<< Updated upstream
             _registrationDAO = new RegistrationDAO("Server = localhost; Database = Registration_Pack; Trusted_Connection = True;");
             _user = user;
+=======
+>>>>>>> Stashed changes
         }
 
         // login
         public string LoginUser(UserAccount user)
         {
-            return _registrationDAO.Match(user.UserEmail, user.passHash);
         }
-
     }
 }

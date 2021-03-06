@@ -3,9 +3,9 @@ using AutoBuildApp.Models;
 using AutoBuildApp.ServiceLayer;
 namespace AutoBuildApp.BusinessLayer
 {
-    class LoginManager
     {
         private LoginService _LogService;
+<<<<<<< Updated upstream
         private UserAccount _userAccount;
        
         public LoginManager(LoginService LogService)
@@ -30,6 +30,8 @@ namespace AutoBuildApp.BusinessLayer
         }
 
 
+=======
+>>>>>>> Stashed changes
         public String DoesUserExist(UserAccount user)
         {
             if(  IsInformationValid( user) == false)

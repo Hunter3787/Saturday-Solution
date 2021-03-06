@@ -8,10 +8,10 @@ using System.Linq;
 
 namespace AutoBuildApp.BusinessLayer
 {
-    class RegistrationManager
     {
 
         private RegistrationService _RegService;
+<<<<<<< Updated upstream
         public RegistrationManager(RegistrationService RegService)
         {
             _RegService = RegService;
@@ -35,7 +35,6 @@ namespace AutoBuildApp.BusinessLayer
 
         public bool ValidEmail(string email)
         {
-            return email.Contains("@") && email.Contains(".");
         }
 
         public bool ValidUserName(string username)

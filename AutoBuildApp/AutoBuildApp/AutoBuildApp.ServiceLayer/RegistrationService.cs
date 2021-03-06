@@ -7,15 +7,16 @@ namespace AutoBuildApp.ServiceLayer
 {
     public class RegistrationService
     {
-        private UserAccount _user;
         private RegistrationDAO _registrationDOA;
 
-        public RegistrationService(UserAccount user)
         {
 
             // establish a connection to DB
+<<<<<<< Updated upstream
             _registrationDOA = new RegistrationDAO("Server = localhost; Database = Registration_Pack; Trusted_Connection = True;");
             _user = user;
+=======
+>>>>>>> Stashed changes
         }
        
         // create user 
