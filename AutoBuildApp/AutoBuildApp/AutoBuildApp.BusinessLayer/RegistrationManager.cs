@@ -5,9 +5,11 @@ using AutoBuildApp.ServiceLayer;
 using System.Text;
 using AutoBuildApp.Models;
 using System.Linq;
+using BC = BCrypt.Net.BCrypt;
 
 namespace AutoBuildApp.BusinessLayer
 {
+    public class RegistrationManager
     {
 
         private RegistrationService _RegService;
@@ -15,6 +17,13 @@ namespace AutoBuildApp.BusinessLayer
         public RegistrationManager(RegistrationService RegService)
         {
             _RegService = RegService;
+=======
+        private String _cnnctString;
+        public RegistrationManager(String _cnnctString)
+        {
+            this._cnnctString = _cnnctString;
+            _RegService = new RegistrationService(_cnnctString);
+>>>>>>> Stashed changes
         }
 
 
@@ -30,11 +39,13 @@ namespace AutoBuildApp.BusinessLayer
             {
                 return "Invalid Input!";
             }
+            user.passHash = BC.HashPassword(user.passHash, BC.GenerateSalt());
             return _RegService.IsRegistrationValid(user);
         }
 
         public bool ValidEmail(string email)
         {
+            return email.Contains("@") && email.Contains(".") && !String.IsNullOrEmpty(email);
         }
 
         public bool ValidUserName(string username)

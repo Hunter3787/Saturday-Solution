@@ -28,6 +28,7 @@ namespace AutoBuildApp.DataAccess
         }
         public bool DoesUserExist(UserAccount user)
         {
+            bool Flag = false;
             using (SqlConnection connection = new SqlConnection(this._connection))
             {
                 connection.Open();
@@ -35,15 +36,18 @@ namespace AutoBuildApp.DataAccess
                 {
                     try
                     {
+                        String sql = "SELECT COUNT (*) FROM userAccounts WHERE username = @USERNAME OR email = @EMAIL;";
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
                         adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = user.UserName;
                         adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = user.UserEmail;
 
                         adapter.InsertCommand.Transaction = transaction;
 
+                        int result = Convert.ToInt32(adapter.InsertCommand.ExecuteScalar());
 
                         transaction.Commit();
                         connection.Close();
+                        return result != 0;
                     }
                     catch (SqlException ex)
                     {
@@ -73,6 +77,7 @@ namespace AutoBuildApp.DataAccess
                             connection.Close();
                             return "User already exists.";
                         }
+                        String sql = "INSERT INTO userAccounts(username, email, firstName, lastName, roley, passwordHash, registrationDate ) VALUES(@USERNAME,@EMAIL, @FIRSTNAME, @LASTNAME, @ROLEY, @PASSWORD, @REG);";
 
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
                         adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = user.UserName;

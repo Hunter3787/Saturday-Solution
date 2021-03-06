@@ -3,6 +3,7 @@ using AutoBuildApp.Models;
 using AutoBuildApp.ServiceLayer;
 namespace AutoBuildApp.BusinessLayer
 {
+    public class LoginManager
     {
         private LoginService _LogService;
 <<<<<<< Updated upstream
@@ -31,6 +32,14 @@ namespace AutoBuildApp.BusinessLayer
 
 
 =======
+        private String _cnnctString;
+        public LoginManager(String _cnnctString)
+        {
+            this._cnnctString = _cnnctString;
+            _LogService = new LoginService(_cnnctString);
+        }
+
+
 >>>>>>> Stashed changes
         public String DoesUserExist(UserAccount user)
         {

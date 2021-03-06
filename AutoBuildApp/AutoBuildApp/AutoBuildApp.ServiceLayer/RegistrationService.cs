@@ -9,6 +9,7 @@ namespace AutoBuildApp.ServiceLayer
     {
         private RegistrationDAO _registrationDOA;
 
+        public RegistrationService(String CnnctString)
         {
 
             // establish a connection to DB
@@ -16,6 +17,7 @@ namespace AutoBuildApp.ServiceLayer
             _registrationDOA = new RegistrationDAO("Server = localhost; Database = Registration_Pack; Trusted_Connection = True;");
             _user = user;
 =======
+            _registrationDOA = new RegistrationDAO(CnnctString);
 >>>>>>> Stashed changes
         }
        
