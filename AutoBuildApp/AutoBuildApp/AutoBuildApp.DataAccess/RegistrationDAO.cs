@@ -106,7 +106,6 @@ namespace AutoBuildApp.DataAccess
             }
         }
 
-
         public String UpdateUserRecord(UserAccount user, UpdateUserDTO updatedUser)
         {
             using (SqlConnection connection = new SqlConnection(this._connection))
@@ -197,7 +196,6 @@ namespace AutoBuildApp.DataAccess
             }
         }
 
-      
         public String retrieveAccountInformation(UserAccount userA)
         {
             String ret = "";
@@ -215,6 +213,43 @@ namespace AutoBuildApp.DataAccess
                         while (reader.Read())
                         {
                             ret = $"user ID: {reader.GetInt32(0)} UserName: {reader.GetString(1)} Password Hashed { reader.GetString(5) } First Name: {reader.GetString(2)} LastNme: {reader.GetString(3)} Role { reader.GetString(4) } Refistration Date {reader.GetString(6)}";
+                        }
+                    }
+                    catch (SqlException ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                }
+            }
+            return ret;
+        }
+
+        public string Match(String userName, String password)
+        {
+            String ret = "";
+            using (SqlConnection connection = new SqlConnection(this._connection))
+            {
+                String sequal = "SELECT UserName, passHash FROM userAccounts;";
+
+                using (SqlCommand cmd = new SqlCommand(sequal, connection))
+                {
+
+                    try
+                    {
+                        connection.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            if (reader.GetString(1) == userName && reader.GetString(5) == password)
+                            {
+                                ret = "logged in";
+                                return ret;
+                            }
+                            else
+                            {
+                                ret = "incorrect login";
+                                return ret;
+                            }
                         }
                     }
                     catch (SqlException ex)

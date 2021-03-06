@@ -12,6 +12,7 @@ namespace AutoBuildApp.ConsoleApp
         static void Main(string[] args)
         {
 
+            /*
             UserAccount admin = new UserAccount("TacOCat", "Nick", "Marshall", "tacoCat20@gmail.com", "ADMIN", "12345", "10-21-2020");
             UserAccount basic = new UserAccount("TwistadSista", "Kristi", "Marshall", "sistamista1999@gmail.com", "BASIC", "12345", "12-12-2020");
             UserAccount developer = new UserAccount("Cabic", "Carl", "Flurston", "cabic533@gmail.com", "DEVELOPER", "12345", "11-21-2020");
@@ -113,6 +114,7 @@ namespace AutoBuildApp.ConsoleApp
                         break;
                 }
             }
+            */
         }
     }
 }

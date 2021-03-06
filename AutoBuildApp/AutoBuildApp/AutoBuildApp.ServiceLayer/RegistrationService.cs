@@ -19,14 +19,10 @@ namespace AutoBuildApp.ServiceLayer
             _user = user;
         }
 
-        // check if user  exists:
+        // create user 
         public String IsRegistrationValid(UserAccount user)
         {
             return _registrationDOA.CreateUserRecord(user);
         }
-
-        // create user 
-        
-
     }
 }
