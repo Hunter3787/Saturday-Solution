@@ -149,57 +149,6 @@ function Tables(props) {
       {_renderBody()}
     </Table>
   );
-  // const build = props.builds[0];
-  // return (
-  //   <Table striped bordered hover size="sm">
-  //     <thead>
-  //       <tr>
-  //         {Object.keys(build).map(function (key) {
-  //           if (key == "id") {
-  //             return;
-  //           }
-  //           return (
-  //             <th key={key}>{key.charAt(0).toUpperCase() + key.slice(1)}</th>
-  //           );
-  //         })}
-  //       </tr>
-  //     </thead>
-  //     <tbody>
-  //       {props.builds.map(function (build) {
-  //         return (
-  //           <tr>
-  //             {Object.keys(build).map(function (key) {
-  //               console.log(key);
-  //               if (key == "id") {
-  //                 return;
-  //               }
-  //               return <td key={key}>{build[key]}</td>;
-  //             })}
-  //           </tr>
-  //         );
-  //       })}
-  //     </tbody>
-  //   </Table>
-  // );
-
-  // return(
-  //   <Table striped bordered hover size="sm">
-  //     <thead>
-  //       <tr>
-  //         <th>Title</th>
-  //         <th>CPU</th>
-  //         <th>GPU</th>
-  //       </tr>
-  //     </thead>
-  //     <tbody>
-  //       <tr>
-  //         <td>{build.title}</td>
-  //         <td>{build.cpu}</td>
-  //         <td>{build.gpu}</td>
-  //       </tr>
-  //     </tbody>
-  //   </Table>
-  // );
 }
 
 export default App;
