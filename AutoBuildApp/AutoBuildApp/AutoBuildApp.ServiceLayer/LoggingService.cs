@@ -18,19 +18,18 @@ namespace AutoBuildApp.ServiceLayer
         }
 
 
-
-        public IDisposable BeginScope<TState>(TState state)
-        {
-            return null;
-        }
-        public bool IsEnabled(Microsoft.Extensions.Logging.LogLevel logLevel)
-        {
-            return logLevel != Microsoft.Extensions.Logging.LogLevel.None;
-        }
-        public void Log<TState>(Microsoft.Extensions.Logging.LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
-        {
-            throw new NotImplementedException();
-        }
+        //public IDisposable BeginScope<TState>(TState state)
+        //{
+        //    return null;
+        //}
+        //public bool IsEnabled(Microsoft.Extensions.Logging.LogLevel logLevel)
+        //{
+        //    return logLevel != Microsoft.Extensions.Logging.LogLevel.None;
+        //}
+        //public void Log<TState>(Microsoft.Extensions.Logging.LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 
     public static class LoggerEx
@@ -56,5 +55,12 @@ namespace AutoBuildApp.ServiceLayer
         Warning,
         Error,
         None
+    }
+
+    public interface ILogger
+    {
+        bool Log(string message, LogLevel level);
+
+        Task<bool> LogAsync(string message, LogLevel level);
     }
 }

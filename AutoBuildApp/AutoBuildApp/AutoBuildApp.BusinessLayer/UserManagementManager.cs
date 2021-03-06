@@ -4,7 +4,7 @@ using AutoBuildApp.ServiceLayer;
 using System;
 using AutoBuildApp.Loggg;
 //using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Logging;
+//using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace AutoBuildApp.BusinessLayer
@@ -13,6 +13,8 @@ namespace AutoBuildApp.BusinessLayer
     {
         private readonly UserManagementService service;
 
+        ILogger logger = new LoggingService();
+
         public UserManagementManager(String connectionString)
         {
             service = new UserManagementService(connectionString);
@@ -20,6 +22,7 @@ namespace AutoBuildApp.BusinessLayer
 
         public String CreateUserRecord(UserAccount caller, UserAccount user)
         {
+            logger.Log("hello", LogLevel.Information);
             if (caller.role != "ADMIN")
             {
                 return "Unauthorized";
