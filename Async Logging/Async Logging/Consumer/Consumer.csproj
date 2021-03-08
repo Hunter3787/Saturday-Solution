@@ -5,11 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
+=======
+>>>>>>> parent of 0622254 (database working)
     <ProjectReference Include="..\Logging\Producer.csproj" />
   </ItemGroup>
 

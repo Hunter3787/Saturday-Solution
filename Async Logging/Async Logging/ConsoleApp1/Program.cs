@@ -1,5 +1,4 @@
 ﻿using Consumer;
-using DataAccess;
 using Producer;
 using System;
 using System.Configuration;
@@ -10,8 +9,6 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            //LoggerDataAccess loggerDataAccess = new LoggerDataAccess("Server = localhost; Database = DB; Trusted_Connection = True;");
-
             Logger logger = new Logger();
 
             LoggingManager loggingManager = new LoggingManager();
@@ -32,7 +29,7 @@ namespace ConsoleApp1
 
         static void subscriber_OnMessageReceived(string message)
         {
-            Console.WriteLine("message fron Queue! " + message);
+            Console.WriteLine("message fron Queue!" + message);
         }
 
         static string GetConnectionStringByName()

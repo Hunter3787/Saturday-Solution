@@ -7,8 +7,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Consumer\Consumer.csproj" />
-    <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
     <ProjectReference Include="..\Logging\Producer.csproj" />
+    <ProjectReference Include="..\Queue\Queue.csproj" />
   </ItemGroup>
 
 </Project>

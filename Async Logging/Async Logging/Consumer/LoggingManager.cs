@@ -5,9 +5,12 @@ using Apache.NMS;
 using Apache.NMS.ActiveMQ;
 using Newtonsoft.Json;
 using Producer;
+<<<<<<< HEAD
 using DataAccess;
 using System.Configuration;
 
+=======
+>>>>>>> parent of 0622254 (database working)
 
 namespace Consumer
 {
@@ -55,14 +58,16 @@ namespace Consumer
         {
             ITextMessage textMessage = message as ITextMessage;
             LogObject logObject = JsonConvert.DeserializeObject<LogObject>(textMessage.Text);
+<<<<<<< HEAD
          
 
             //OnMessageReceived += new MessageReceivedDelegate(subscriber_OnMessageReceived);
 
+=======
+>>>>>>> parent of 0622254 (database working)
             if (this.OnMessageReceived != null)
             {
-                loggerDataAccess.CreateLogRecord(logObject);
-                this.OnMessageReceived(textMessage.Text);
+                this.OnMessageReceived(logObject.Message);
             }
         }
 
