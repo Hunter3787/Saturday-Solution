@@ -30,6 +30,7 @@ namespace ConsoleApp1
         static void subscriber_OnMessageReceived(string message)
         {
             Console.WriteLine("message fron Queue!" + message);
+<<<<<<< HEAD
         }
 
         static string GetConnectionStringByName()
@@ -43,6 +44,8 @@ namespace ConsoleApp1
                 retVal = settings.ConnectionString;
             Console.WriteLine($"the retval:   {retVal}");
             return retVal;
+=======
+>>>>>>> parent of 0622254 (database working)
         }
 
 
