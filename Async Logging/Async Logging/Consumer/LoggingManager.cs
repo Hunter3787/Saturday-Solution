@@ -7,12 +7,9 @@ using Newtonsoft.Json;
 using Producer;
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
 using DataAccess;
 using System.Configuration;
 
-=======
->>>>>>> parent of 0622254 (database working)
 =======
 >>>>>>> parent of 0622254 (database working)
 =======
@@ -66,13 +63,10 @@ namespace Consumer
             LogObject logObject = JsonConvert.DeserializeObject<LogObject>(textMessage.Text);
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
          
 
             //OnMessageReceived += new MessageReceivedDelegate(subscriber_OnMessageReceived);
 
-=======
->>>>>>> parent of 0622254 (database working)
 =======
 >>>>>>> parent of 0622254 (database working)
 =======
