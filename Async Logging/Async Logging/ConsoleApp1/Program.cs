@@ -28,7 +28,11 @@ namespace ConsoleApp1
 
         static void subscriber_OnMessageReceived(string message)
         {
+
             Console.WriteLine("message fron Queue! " + message);
+
+            Console.WriteLine("message fron Queue!" + message);
+
         }
     }
 
