@@ -2,7 +2,6 @@
 using DataAccess;
 using Producer;
 using System;
-using System.Configuration;
 
 namespace ConsoleApp1
 {
@@ -24,9 +23,6 @@ namespace ConsoleApp1
 
             loggingManager.OnMessageReceived += new MessageReceivedDelegate(subscriber_OnMessageReceived);
 
-
-           // Console.WriteLine(GetConnectionStringByName());
-
             Console.ReadKey();
         }
 
@@ -34,23 +30,6 @@ namespace ConsoleApp1
         {
             Console.WriteLine("message fron Queue! " + message);
         }
-
-        static string GetConnectionStringByName()
-        {
-
-            string retVal = null;
-
-            ConnectionStringSettings settings = ConfigurationManager.ConnectionStrings["ZeeC"];
-            // If found, return the connection string.
-            if (settings != null)
-                retVal = settings.ConnectionString;
-            Console.WriteLine($"the retval:   {retVal}");
-            return retVal;
-        }
-
-
-
-
     }
 
 }

@@ -6,8 +6,6 @@ using Apache.NMS.ActiveMQ;
 using Newtonsoft.Json;
 using Producer;
 using DataAccess;
-using System.Configuration;
-
 
 namespace Consumer
 {
@@ -23,8 +21,6 @@ namespace Consumer
 
         private const string URI = "tcp://localhost:61616";
         private const string DESTINATION = "LoggingQueue";
-        public LoggerDataAccess loggerDataAccess;
-
 
         public LoggingManager()
         {
@@ -36,26 +32,13 @@ namespace Consumer
             IDestination destination = session.GetQueue(DESTINATION);
             this.consumer = this.session.CreateConsumer(destination);
             this.consumer.Listener += new MessageListener(OnMessage);
-            this.loggerDataAccess = new LoggerDataAccess(GetConnectionStringByName("ZeeC"));
-        }
-
-        static string GetConnectionStringByName(string name)
-        {
-            string retVal = null;
-
-            ConnectionStringSettings settings = ConfigurationManager.ConnectionStrings[name];
-            // If found, return the connection string.
-            if (settings != null)
-                retVal = settings.ConnectionString;
-            Console.WriteLine($"the retval:   {retVal}");
-            return retVal;
         }
 
         public void OnMessage(IMessage message)
         {
             ITextMessage textMessage = message as ITextMessage;
             LogObject logObject = JsonConvert.DeserializeObject<LogObject>(textMessage.Text);
-         
+            LoggerDataAccess loggerDataAccess = new LoggerDataAccess("Server = localhost; Database = DB; Trusted_Connection = True;");
 
             //OnMessageReceived += new MessageReceivedDelegate(subscriber_OnMessageReceived);
 
