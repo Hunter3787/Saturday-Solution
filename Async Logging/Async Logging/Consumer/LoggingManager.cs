@@ -6,12 +6,9 @@ using Apache.NMS.ActiveMQ;
 using Newtonsoft.Json;
 using Producer;
 <<<<<<< HEAD
-<<<<<<< HEAD
 using DataAccess;
 using System.Configuration;
 
-=======
->>>>>>> parent of 0622254 (database working)
 =======
 >>>>>>> parent of 0622254 (database working)
 
@@ -62,13 +59,10 @@ namespace Consumer
             ITextMessage textMessage = message as ITextMessage;
             LogObject logObject = JsonConvert.DeserializeObject<LogObject>(textMessage.Text);
 <<<<<<< HEAD
-<<<<<<< HEAD
          
 
             //OnMessageReceived += new MessageReceivedDelegate(subscriber_OnMessageReceived);
 
-=======
->>>>>>> parent of 0622254 (database working)
 =======
 >>>>>>> parent of 0622254 (database working)
             if (this.OnMessageReceived != null)
