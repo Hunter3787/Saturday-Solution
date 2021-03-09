@@ -60,7 +60,7 @@ namespace Producer
         }
         #endregion
     }
-    public class Logger : ILogger
+    public class Logger : ILogger //service
     {
         QueuePublisher queuePublisher = new QueuePublisher();
         private LogObject logObject = new LogObject();
@@ -71,9 +71,14 @@ namespace Producer
             sendLog();
             return true;
         }
+        // notice here Task<bool> -> so this task return an boolean 
         public Task<bool> LogAsync(string message, LogLevel level)
         {
             throw new NotImplementedException();
+            //logObject.Message = message;
+           // logObject.LevelLog = level;
+           
+
         }
 
         public void sendLog()
