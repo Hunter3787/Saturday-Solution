@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-//using System.Threading.Tasks;
 
 namespace Producer
 {
@@ -52,8 +51,6 @@ namespace Producer
             {
                 string json = JsonConvert.SerializeObject(log, Formatting.Indented);
 
-                //IObjectMessage objectMessage = this.session.CreateObjectMessage(log);
-                //this.producer.Send(objectMessage);
                 ITextMessage textMessage = session.CreateTextMessage(json);
                 producer.Send(textMessage);
             }
@@ -107,7 +104,6 @@ namespace Producer
     public interface ILogger
     {
         bool Log(string message, LogLevel level, String dateTime);
-
         Task LogAsync(string message, LogLevel level, String dateTime);
     }
 }
