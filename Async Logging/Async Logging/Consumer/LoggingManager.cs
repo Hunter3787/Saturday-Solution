@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Apache.NMS;
 using Apache.NMS.ActiveMQ;
 using Newtonsoft.Json;
@@ -33,7 +31,6 @@ namespace Consumer
             this.consumer = this.session.CreateConsumer(destination);
             this.consumer.Listener += new MessageListener(OnMessage);
         }
-
         public void OnMessage(IMessage message)
         {
             ITextMessage textMessage = message as ITextMessage;
@@ -43,11 +40,6 @@ namespace Consumer
             loggerDataAccess.CreateLogRecord(logObject);
             //this.OnMessageReceived(textMessage.Text);
         }
-
-
-
-        #region IDisposable Members
-
         public void Dispose()
         {
             if (!this.isDisposed)
@@ -58,9 +50,5 @@ namespace Consumer
                 this.isDisposed = true;
             }
         }
-
-        #endregion
     }
-
-
 }

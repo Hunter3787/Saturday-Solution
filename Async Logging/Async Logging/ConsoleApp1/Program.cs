@@ -1,8 +1,6 @@
 ﻿using Consumer;
-using DataAccess;
 using Producer;
 using System;
-using System.Threading.Tasks;
 
 namespace ConsoleApp1
 {
@@ -26,11 +24,5 @@ namespace ConsoleApp1
 
             Console.ReadKey();
         }
-
-        static void subscriber_OnMessageReceived(string message)
-        {
-            Console.WriteLine("message fron Queue! " + message);
-        }
     }
-
 }

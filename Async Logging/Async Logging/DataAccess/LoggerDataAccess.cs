@@ -1,9 +1,7 @@
 ﻿using Producer;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Text;
 
 namespace DataAccess
 {
@@ -11,17 +9,11 @@ namespace DataAccess
     {
         private String connection;
         //private LogObject log;
-
         private SqlDataAdapter adapter = new SqlDataAdapter();
         public LoggerDataAccess(String connectionString)
         {
             this.connection = connectionString;
         }
-        public LoggerDataAccess()
-        {
-
-        }
-
         public String CreateLogRecord(LogObject logObject)
         {
             using (SqlConnection connection = new SqlConnection(this.connection))
