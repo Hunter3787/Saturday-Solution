@@ -11,18 +11,16 @@ using System.Threading.Tasks;
 
 namespace Producer
 {
-    public class QueuePublisher
+    public class Logger : ILogger //service
     {
+        private LogObject logObject = new LogObject();
         private readonly IConnectionFactory connectionFactory;
         private readonly IConnection connection;
         private readonly ISession session;
         private readonly IMessageProducer producer;
-
         private bool isDisposed = false;
-
-        public QueuePublisher()
+        public Logger()
         {
-
             this.connectionFactory = new ConnectionFactory("tcp://localhost:61616");
             this.connection = this.connectionFactory.CreateConnection();
             this.connection.Start();
@@ -32,7 +30,23 @@ namespace Producer
 
             this.producer = this.session.CreateProducer(destination);
         }
-        public void Testing(LogObject log)
+        public bool Log(string message, LogLevel level, String dateTime)
+        {
+            logObject.Message = message;
+            logObject.LevelLog = level;
+            logObject.Datetime = dateTime;
+            sendLog(logObject);
+            return true;
+        }
+        public async Task LogAsync(string message, LogLevel level, String dateTime)
+        {
+            logObject.Message = message;
+            logObject.LevelLog = level;
+            logObject.Datetime = dateTime;
+            sendLog(logObject);
+            await Task.Delay(2000);
+        }
+        public void sendLog(LogObject log)
         {
             if (!isDisposed)
             {
@@ -48,7 +62,6 @@ namespace Producer
                 throw new ObjectDisposedException(this.GetType().FullName);
             }
         }
-        #region IDisposable Members
         public void Dispose()
         {
             if (!this.isDisposed)
@@ -59,34 +72,6 @@ namespace Producer
                 this.isDisposed = true;
             }
         }
-        #endregion
-    }
-    public class Logger : ILogger //service
-    {
-        QueuePublisher queuePublisher = new QueuePublisher();
-        private LogObject logObject = new LogObject();
-        public bool Log(string message, LogLevel level, String dateTime)
-        {
-            logObject.Message = message;
-            logObject.LevelLog = level;
-            logObject.Datetime = dateTime;
-            sendLog();
-            return true;
-        }
-
-        public async Task LogAsync(string message, LogLevel level, String dateTime)
-        {
-            logObject.Message = message;
-            logObject.LevelLog = level;
-            logObject.Datetime = dateTime;
-            sendLog();
-            await Task.Delay(2000);
-        }
-
-        public void sendLog()
-        {
-            queuePublisher.Testing(logObject);
-        }
     }
     public class LogObject
     {
@@ -96,9 +81,7 @@ namespace Producer
         public String Message { get; set; }
         public LogLevel LevelLog {get; set;}
         public String Datetime { get; set; }
-
     }
-
     public static class LoggerEx
     {
         public static async void LogInformation(this Logger logger, string message)

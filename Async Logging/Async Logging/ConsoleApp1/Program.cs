@@ -10,8 +10,6 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            //LoggerDataAccess loggerDataAccess = new LoggerDataAccess("Server = localhost; Database = DB; Trusted_Connection = True;");
-
             Logger logger = new Logger();
 
             LoggingManager loggingManager = new LoggingManager();
@@ -21,11 +19,6 @@ namespace ConsoleApp1
             logger.LogWarning("This is a Warning Log");
 
             logger.LogError("This is an Error Log");
-
-            Console.WriteLine("hello");
-
-
-            //loggingManager.OnMessageReceived += new MessageReceivedDelegate(subscriber_OnMessageReceived);
 
             Console.ReadKey();
         }
