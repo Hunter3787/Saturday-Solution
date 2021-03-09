@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 //using System.Threading.Tasks;
 
@@ -64,21 +65,22 @@ namespace Producer
     {
         QueuePublisher queuePublisher = new QueuePublisher();
         private LogObject logObject = new LogObject();
-        public bool Log(string message, LogLevel level)
+        public bool Log(string message, LogLevel level, String dateTime)
         {
             logObject.Message = message;
             logObject.LevelLog = level;
+            logObject.Datetime = dateTime;
             sendLog();
             return true;
         }
-        // notice here Task<bool> -> so this task return an boolean 
-        public Task<bool> LogAsync(string message, LogLevel level)
-        {
-            throw new NotImplementedException();
-            //logObject.Message = message;
-           // logObject.LevelLog = level;
-           
 
+        public async Task LogAsync(string message, LogLevel level, String dateTime)
+        {
+            logObject.Message = message;
+            logObject.LevelLog = level;
+            logObject.Datetime = dateTime;
+            sendLog();
+            await Task.Delay(2000);
         }
 
         public void sendLog()
@@ -89,29 +91,27 @@ namespace Producer
     public class LogObject
     {
         private String message;
-        public String Message { get; set; }
         private LogLevel levelLog;
+        private String dateTime;
+        public String Message { get; set; }
         public LogLevel LevelLog {get; set;}
+        public String Datetime { get; set; }
 
     }
 
     public static class LoggerEx
     {
-        public static bool LogInformation(this Logger logger, string message)
+        public static async void LogInformation(this Logger logger, string message)
         {
-            Console.WriteLine("LogInfo");
-            return logger.Log(message, LogLevel.Information);
+            await logger.LogAsync(message, LogLevel.Information, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
         }
-
-        public static bool LogWarning(this Logger logger, string message)
+        public static async void LogWarning(this Logger logger, string message)
         {
-            Console.WriteLine("LogWarn");
-            return logger.Log(message, LogLevel.Warning);
+            await logger.LogAsync(message, LogLevel.Warning, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
         }
-        public static bool LogError(this Logger logger, string message)
+        public static async void LogError(this Logger logger, string message)
         {
-            Console.WriteLine("LogError");
-            return logger.Log(message, LogLevel.Error);
+            await logger.LogAsync(message, LogLevel.Error, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
         }
     }
     public enum LogLevel
@@ -123,8 +123,8 @@ namespace Producer
     }
     public interface ILogger
     {
-        bool Log(string message, LogLevel level);
+        bool Log(string message, LogLevel level, String dateTime);
 
-        Task<bool> LogAsync(string message, LogLevel level);
+        Task LogAsync(string message, LogLevel level, String dateTime);
     }
 }

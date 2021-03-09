@@ -2,6 +2,7 @@
 using DataAccess;
 using Producer;
 using System;
+using System.Threading.Tasks;
 
 namespace ConsoleApp1
 {
@@ -21,7 +22,10 @@ namespace ConsoleApp1
 
             logger.LogError("This is an Error Log");
 
-            loggingManager.OnMessageReceived += new MessageReceivedDelegate(subscriber_OnMessageReceived);
+            Console.WriteLine("hello");
+
+
+            //loggingManager.OnMessageReceived += new MessageReceivedDelegate(subscriber_OnMessageReceived);
 
             Console.ReadKey();
         }

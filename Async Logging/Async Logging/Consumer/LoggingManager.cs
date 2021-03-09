@@ -40,13 +40,8 @@ namespace Consumer
             LogObject logObject = JsonConvert.DeserializeObject<LogObject>(textMessage.Text);
             LoggerDataAccess loggerDataAccess = new LoggerDataAccess("Server = localhost; Database = DB; Trusted_Connection = True;");
 
-            //OnMessageReceived += new MessageReceivedDelegate(subscriber_OnMessageReceived);
-
-            if (this.OnMessageReceived != null)
-            {
-                loggerDataAccess.CreateLogRecord(logObject);
-                this.OnMessageReceived(textMessage.Text);
-            }
+            loggerDataAccess.CreateLogRecord(logObject);
+            //this.OnMessageReceived(textMessage.Text);
         }
 
 

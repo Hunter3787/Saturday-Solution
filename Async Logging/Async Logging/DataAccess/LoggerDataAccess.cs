@@ -31,11 +31,12 @@ namespace DataAccess
                 {
                     try
                     {
-                        String sql = "INSERT INTO logs(message, loglevel) VALUES(@MESSAGE,@LOGLEVEL);";
+                        String sql = "INSERT INTO logs(message, loglevel, dateTime) VALUES(@MESSAGE,@LOGLEVEL,@DATETIME);";
 
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
                         adapter.InsertCommand.Parameters.Add("@MESSAGE", SqlDbType.VarChar).Value = logObject.Message;
                         adapter.InsertCommand.Parameters.Add("@LOGLEVEL", SqlDbType.VarChar).Value = logObject.LevelLog;
+                        adapter.InsertCommand.Parameters.Add("@DATETIME", SqlDbType.VarChar).Value = logObject.Datetime;
                         adapter.InsertCommand.ExecuteNonQuery();
 
                         transaction.Commit();
