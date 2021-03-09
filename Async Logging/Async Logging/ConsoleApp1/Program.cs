@@ -10,15 +10,19 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            Logger logger = new Logger();
+            Logger logger = Logger.GetInstance;
 
             LoggingManager loggingManager = new LoggingManager();
 
             logger.LogInformation("This is an Information Log");
 
-            logger.LogWarning("This is a Warning Log");
+            Logger logger2 = Logger.GetInstance;
 
-            logger.LogError("This is an Error Log");
+            logger2.LogWarning("This is a Warning Log");
+
+            Logger logger3 = Logger.GetInstance;
+
+            logger3.LogError("This is an Error Log");
 
             Console.ReadKey();
         }
