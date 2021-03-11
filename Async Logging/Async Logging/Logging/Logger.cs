@@ -15,13 +15,27 @@ namespace Producer
         private readonly IMessageProducer producer;
         private bool isDisposed = false;
         private int counter = 0;
+
+
         private static Logger instance = null;
+
+        private static readonly object padlock = new object();
+
         public static Logger GetInstance
         {
             get
             {
                 if (instance == null)
-                    instance = new Logger();
+                {
+                    lock (padlock)
+                    {
+                        if (instance == null)
+                        {
+
+                            instance = new Logger();
+                        }
+                    }
+                }
                 return instance;
             }
         }
@@ -40,11 +54,12 @@ namespace Producer
         }
         public bool Log(string message, LogLevel level, String dateTime)
         {
-            logObject.Message = message;
-            logObject.LevelLog = level;
-            logObject.Datetime = dateTime;
-            sendLog(logObject);
-            return true;
+            
+                logObject.Message = message;
+                logObject.LevelLog = level;
+                logObject.Datetime = dateTime;
+                sendLog(logObject);
+                return true;
         }
         public async Task LogAsync(string message, LogLevel level, String dateTime)
         {
@@ -56,6 +71,7 @@ namespace Producer
         }
         public void sendLog(LogObject log)
         {
+            
             if (!isDisposed)
             {
                 string json = JsonConvert.SerializeObject(log, Formatting.Indented);
