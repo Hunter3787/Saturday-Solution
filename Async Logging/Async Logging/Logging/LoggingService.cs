@@ -22,22 +22,41 @@ namespace Producer
         private static readonly object padlock = new object();
 
         // This function will be used to get the logger instance or create a new one if one has not been created.
-        public static LoggingService GetInstance 
+       
+        /// <summary>
+        /// simple version of singleton "thread saftey"
+        /// </summary>
+        public static Logger GetInstance 
         {
             get
             {
-                if (instance == null)
+                // there is a lock taken on the shared object
+                /**
+                 * in our case we are implementing a "thread 
+                 * saftey singleton" by locking the thread in the shared 
+                 * logger object. this takes care of the case if 
+                 * two different thread both checked " instance == null" 
+                 * and the result for both showed as true causing them both
+                 * to create instances, THIS VIOLATES THE SINGLETON PATTERn!!
+                 * 
+                 * now at to address that^ is with the use of a lock, 
+                 * problem with this is that it takes a hit on performance
+                 * because of the lock required each time...
+                 * 
+                 */
+
+                lock (padlock)
                 {
-                    lock (padlock)
+                    // then checks whether an instance has been created before 
+                    // creating the instance.
+                    // If there is no instance of logger, then a new one will be creates, and only one.
+                    if (instance == null)
                     {
-                        // If there is no instance of logger, then a new one will be creates, and only one.
-                        if (instance == null)
-                        {
-                            instance = new LoggingService();
-                        }
+                        instance = new Logger();
                     }
+
+                    return instance;
                 }
-                return instance;
             }
         }
         // Logger standard constructor, will establish connection when new logger is created.
