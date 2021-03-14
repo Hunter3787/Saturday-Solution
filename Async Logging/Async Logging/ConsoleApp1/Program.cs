@@ -8,7 +8,7 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            Logger logger = Logger.GetInstance;
+            Logger logger = Logger.GetInstance; 
 
             LoggingManager loggingManager = new LoggingManager();
 
