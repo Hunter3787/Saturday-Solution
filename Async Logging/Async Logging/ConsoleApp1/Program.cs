@@ -8,17 +8,17 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            Logger logger = Logger.GetInstance; 
+            LoggingService logger = LoggingService.GetInstance; 
 
             LoggingManager loggingManager = new LoggingManager();
 
             logger.LogInformation("This is an Information Log");
 
-            Logger logger2 = Logger.GetInstance;
+            LoggingService logger2 = LoggingService.GetInstance;
 
             logger2.LogWarning("This is a Warning Log");
 
-            Logger logger3 = Logger.GetInstance;
+            LoggingService logger3 = LoggingService.GetInstance;
 
             logger3.LogError("This is an Error Log");
 

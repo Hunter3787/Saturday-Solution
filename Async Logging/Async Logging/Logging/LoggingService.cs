@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Producer
 {
-    public sealed class Logger : ILogger //service
+    public sealed class LoggingService : ILogger //service
     {
         private LogObject logObject = new LogObject(); // Initializes a log object for storing and transfering data about a log.
         private readonly IConnectionFactory connectionFactory; // This acts as an entry point to client APIs in this case ActiveMQ.
@@ -17,12 +17,12 @@ namespace Producer
         private int counter = 0; // Counter int that will be incremented to keep track of the singleton.
 
 
-        private static Logger instance = null; // Initializes the logger object to zero, it has not been called yet.
+        private static LoggingService instance = null; // Initializes the logger object to zero, it has not been called yet.
 
         private static readonly object padlock = new object();
 
         // This function will be used to get the logger instance or create a new one if one has not been created.
-        public static Logger GetInstance 
+        public static LoggingService GetInstance 
         {
             get
             {
@@ -33,7 +33,7 @@ namespace Producer
                         // If there is no instance of logger, then a new one will be creates, and only one.
                         if (instance == null)
                         {
-                            instance = new Logger();
+                            instance = new LoggingService();
                         }
                     }
                 }
@@ -41,7 +41,7 @@ namespace Producer
             }
         }
         // Logger standard constructor, will establish connection when new logger is created.
-        private Logger() 
+        private LoggingService() 
         {
             this.connectionFactory = new ConnectionFactory("tcp://localhost:61616"); // Stores the connection string.
             this.connection = this.connectionFactory.CreateConnection(); // Creates a connection to the connection string destination path.
@@ -116,16 +116,16 @@ namespace Producer
     // This is a class for more descriptive Logs to be called at various log levels.
     public static class LoggerEx
     {
-        public static async void LogInformation(this Logger logger, string message) // Information log level, this is a variant of Logger.
+        public static async void LogInformation(this LoggingService logger, string message) // Information log level, this is a variant of Logger.
         {
             // Appends the date and time to the Log for easy info to query.
             await logger.LogAsync(message, LogLevel.Information, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF")); 
         }
-        public static async void LogWarning(this Logger logger, string message)
+        public static async void LogWarning(this LoggingService logger, string message)
         {
             await logger.LogAsync(message, LogLevel.Warning, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF"));
         }
-        public static async void LogError(this Logger logger, string message)
+        public static async void LogError(this LoggingService logger, string message)
         {
             await logger.LogAsync(message, LogLevel.Error, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF"));
         }
