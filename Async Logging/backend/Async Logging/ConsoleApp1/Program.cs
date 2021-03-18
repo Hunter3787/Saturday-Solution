@@ -22,7 +22,7 @@ namespace ConsoleApp1
 
             logger3.LogError("This is an Error Log");
 
-            Console.ReadKey();
+            Console.Read();
         }
     }
 }
