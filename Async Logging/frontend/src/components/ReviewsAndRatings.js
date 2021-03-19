@@ -27,7 +27,8 @@ function ReviewsAndRatings(){
                     <Col>
                         <Form.Group controlId="Select Rating">
                             <Form.Label>Select a Rating</Form.Label>
-                                <Form.Control as="select"
+                                <Form.Control
+                                as="select"
                                 useref={star.selection}
                                 type="text"
                                 onChange={e=> setStar({...star, selection: e.target.value})}>
@@ -42,10 +43,9 @@ function ReviewsAndRatings(){
                     </Col>
                     <Col>
                         <Form.Group controlId="WriteReview">
-                            <InputGroup.Prepend>
-                                <InputGroup.Text>Enter a Review</InputGroup.Text>
-                            </InputGroup.Prepend>
-                            <Form.Control as="textarea" 
+                            <Form.Label>Enter a Review</Form.Label>
+                            <Form.Control placeholder="type a review..."
+                            as="textarea" 
                             aria-label="With textarea"
                             useref={message.review}
                             type="text"
