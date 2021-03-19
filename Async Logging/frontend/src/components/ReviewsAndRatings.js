@@ -1,19 +1,19 @@
 import React, { useState } from "react";
-import {Container, Row, Col, Button, Form, InputGroup, ButtonGroup} from 'react-bootstrap';
+import {Container, Row, Col, Button, Form, InputGroup} from 'react-bootstrap';
 
 
 function ReviewsAndRatings(){
 
     const [message, setMessage] = useState({review: ''})
 
-    const [star, setStar] = useState({selection: 0})
+    const [star, setStar] = useState({selection: ''})
 
-    if(message.review === "Hello")
+    if(message.review > "")
     {
         document.cookie = "message="+message.review;
     }
 
-    if(star.selection === 1)
+    if(star.selection > 0)
     {
         document.cookie = "selection="+star.selection;
     }
@@ -25,29 +25,19 @@ function ReviewsAndRatings(){
             <Form>
                 <Row>
                     <Col>
-                        <Form.Group controlId="1to5">
-                            <ButtonGroup aria-label="1to5scale">
-                                <Button
+                        <Form.Group controlId="Select Rating">
+                            <Form.Label>Select a Rating</Form.Label>
+                                <Form.Control as="select"
                                 useref={star.selection}
-                                type="number"
-                                onClick={e => setStar({...star, selection: e.target.value = 1})}>1</Button>
-                                <Button
-                                useref={star.selection}
-                                type="number"
-                                onClick={e => setStar({...star, selection: e.target.value = 2})}>2</Button>
-                                <Button
-                                useref={star.selection}
-                                type="number"
-                                onClick={e => setStar({...star, selection: e.target.value = 3})}>3</Button>
-                                <Button
-                                useref={star.selection}
-                                type="number"
-                                onClick={e => setStar({...star, selection: e.target.value = 4})}>4</Button>
-                                <Button
-                                useref={star.selection}
-                                type="number"
-                                onClick={e => setStar({...star, selection: e.target.value = 5})}>5</Button>
-                            </ButtonGroup>
+                                type="text"
+                                onChange={e=> setStar({...star, selection: e.target.value})}>
+                                    <option value = "">Select a Rating</option>
+                                    <option value = "1">1</option>
+                                    <option value = "2">2</option>
+                                    <option value = "3">3</option>
+                                    <option value = "4">4</option>
+                                    <option value = "5">5</option>
+                                </Form.Control>
                         </Form.Group>
                     </Col>
                     <Col>
