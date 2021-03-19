@@ -11,9 +11,9 @@ function App(){
   return(
     <div className ="App">
       <NavBar />
-      <header className = "App-header">
-      <ReviewsAndRatings />
-      </header>     
+        <header className = "App-header">
+          <ReviewsAndRatings />
+        </header>     
     </div>
   );
 }

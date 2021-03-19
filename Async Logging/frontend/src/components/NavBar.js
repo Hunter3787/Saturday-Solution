@@ -5,7 +5,7 @@ function NavBar(){
     return(
         <div>
             <nav>
-                 <h2>Reviews and Ratings</h2>
+                Reviews and Ratings
             </nav>
         </div>
     );
