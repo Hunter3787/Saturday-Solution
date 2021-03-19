@@ -1,0 +1,22 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    color: whitesmoke;
+    font-size: 13pt;
+}
+
+nav {
+    height: 20%;
+    min-height: 100px;
+    max-height: 100px;
+    background-color: #FFB646;
+    color: black;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    text-align: center;
+    font-size: 1.8em;
+    /*padding: 5px 10px 5px 10px; */
+}
