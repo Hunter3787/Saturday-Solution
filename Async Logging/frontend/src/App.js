@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Component} from "react";
 import './App.css';
 import NavBar from './components/NavBar';
 import ReviewForm from './components/ReviewForm';
