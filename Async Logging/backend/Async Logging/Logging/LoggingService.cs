@@ -2,13 +2,14 @@
 using Apache.NMS.ActiveMQ;
 using Newtonsoft.Json;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Producer
 {
     public sealed class LoggingService : ILogger //service
     {
-        private LogObject logObject = new LogObject(); // Initializes a log object for storing and transfering data about a log.
+        private LogObject logObject; // Initializes a log object for storing and transfering data about a log.
         private readonly IConnectionFactory connectionFactory; // This acts as an entry point to client APIs in this case ActiveMQ.
         private readonly IConnection connection; // This allows us to establish a persistent connection between client and server.
         private readonly ISession session; // Stores a session which is essentially the shared context between participants in a communication exchange.
@@ -16,6 +17,7 @@ namespace Producer
         private bool isDisposed = false; // Bool to check if items have been disposed of, initialized to false because no items shall be pre-disposed.
         private int counter = 0; // Counter int that will be incremented to keep track of the singleton.
 
+        SemaphoreSlim semaphore = new SemaphoreSlim(2);
 
         private static LoggingService instance = null; // Initializes the logger object to zero, it has not been called yet.
 
@@ -62,7 +64,7 @@ namespace Producer
         // Logger standard constructor, will establish connection when new logger is created.
         private LoggingService() 
         {
-            this.connectionFactory = new ConnectionFactory("tcp://localhost:61616"); // Stores the connection string.
+            this.connectionFactory = new ConnectionFactory("tcp://localhost:61616?jms.UseAsyncSend=true"); // Stores the connection string.
             this.connection = this.connectionFactory.CreateConnection(); // Creates a connection to the connection string destination path.
             this.connection.Start(); // Begins the connection to the specified location.
             this.session = connection.CreateSession(); // Sets the shared context of the session into session.
@@ -83,24 +85,30 @@ namespace Producer
                 sendLog(logObject); // method used to send LogObject to the Queue.
                 return true;
         }
-        // Constructor for log and sets operations for log to be asynchnonously sent to the Queue.
-        // These will be asynchronusly sent to the Queue by starting a new thread.
+
+        // Constructor for log and sets operations for log to be asynchronously sent to the Queue.
+        // These will be asynchronously sent to the Queue by starting a new thread.
         public async Task LogAsync(string message, LogLevel level, String dateTime)
         {
+            logObject = new LogObject(); // store a new log object every time a new log is called.
+
             // stores log variables into the LogObject to be sent to the Queue.
             logObject.Message = message;
             logObject.LevelLog = level;
             logObject.Datetime = dateTime;
-            sendLog(logObject); // method used to send LogObject to the Queue.
-            await Task.Delay(2000);
+
+            await Task.Run(() => sendLog(logObject)); // method used to send LogObject to the Queue.
+            
+            Console.WriteLine("sent");
         }
-        public void sendLog(LogObject log)
+        public async Task sendLog(LogObject log)
         {
             // If the connection has not been disposed, then send the object to the Log.
             if (!isDisposed)
             {
+                await Task.Delay(5000);
                 string json = JsonConvert.SerializeObject(log, Formatting.Indented); // Serialize the log object into a JSON to be able to insterted clearly into the Queue.
-
+       
                 ITextMessage textMessage = session.CreateTextMessage(json); // This will get the message of the JSON log to be sent to the Queue.
                 producer.Send(textMessage); // This finally sends the serialized object to the Queue.
             }

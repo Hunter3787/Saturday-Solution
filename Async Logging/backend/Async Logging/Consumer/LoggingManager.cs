@@ -25,6 +25,7 @@ namespace Consumer
             this.connection = this.connectionFactory.CreateConnection(); // Creates a connection to the connection string destination path.
             this.connection.Start(); // Begins the connection to the specified location.
 
+
             // Sets the shared context of the session into session. AutoAcknowledge is an enum that assumes that the message was recieved successfully.
             this.session = connection.CreateSession(AcknowledgementMode.AutoAcknowledge);
 

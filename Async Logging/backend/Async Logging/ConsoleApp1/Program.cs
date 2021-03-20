@@ -22,6 +22,8 @@ namespace ConsoleApp1
 
             logger3.LogError("This is an Error Log");
 
+            Console.WriteLine("Hello");
+
             Console.Read();
         }
     }
