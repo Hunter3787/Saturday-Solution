@@ -2,7 +2,6 @@
 using Apache.NMS.ActiveMQ;
 using Newtonsoft.Json;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Producer
@@ -16,8 +15,6 @@ namespace Producer
         private readonly IMessageProducer producer; // This is the interface that a client uses to send messages to the ActiveMQ.
         private bool isDisposed = false; // Bool to check if items have been disposed of, initialized to false because no items shall be pre-disposed.
         private int counter = 0; // Counter int that will be incremented to keep track of the singleton.
-
-        SemaphoreSlim semaphore = new SemaphoreSlim(2);
 
         private static LoggingService instance = null; // Initializes the logger object to zero, it has not been called yet.
 
@@ -101,12 +98,11 @@ namespace Producer
             
             Console.WriteLine("sent");
         }
-        public async Task sendLog(LogObject log)
+        public void sendLog(LogObject log)
         {
             // If the connection has not been disposed, then send the object to the Log.
             if (!isDisposed)
             {
-                await Task.Delay(5000);
                 string json = JsonConvert.SerializeObject(log, Formatting.Indented); // Serialize the log object into a JSON to be able to insterted clearly into the Queue.
        
                 ITextMessage textMessage = session.CreateTextMessage(json); // This will get the message of the JSON log to be sent to the Queue.
