@@ -93,23 +93,30 @@ namespace APB.App.Services
             logObject = new LogObject(); // store a new log object every time a new log is called.
 
             // This will ensure that only one write operation is happening at a single moment.
-            await semaphore.WaitAsync(); 
-            try
-            {
-                logObject.Message = message;
-                logObject.LevelLog = level;
-                logObject.Datetime = dateTime;
-                sendLog(logObject); // Call function to send log object to the queue.
-            }
-            finally
-            {
-                semaphore.Release();
-            }
+
+            //await semaphore.WaitAsync();
+            //try
+            //{
+            //    logObject.Message = message;
+            //    logObject.LevelLog = level;
+            //    logObject.Datetime = dateTime;
+            //    sendLog(logObject); // Call function to send log object to the queue.
+            //    Thread.Sleep(2000);
+            //}
+            //finally
+            //{
+            //    semaphore.Release();
+            //}
+
             // stores log variables into the LogObject to be sent to the Queue.
 
 
-            //await Task.Run(() => sendLog(logObject)); // method used to send LogObject to the Queue.
-            
+            logObject.Message = message;
+            logObject.LevelLog = level;
+            logObject.Datetime = dateTime;
+            //sendLog(logObject);
+            await Task.Run(() => sendLog(logObject)); // method used to send LogObject to the Queue.
+
             Console.WriteLine("sent");
         }
         public void sendLog(LogObject log)
@@ -118,7 +125,6 @@ namespace APB.App.Services
             if (!isDisposed)
             {
                 string json = JsonConvert.SerializeObject(log, Formatting.Indented); // Serialize the log object into a JSON to be able to insterted clearly into the Queue.
-
                 ITextMessage textMessage = session.CreateTextMessage(json); // This will get the message of the JSON log to be sent to the Queue.
                 producer.Send(textMessage); // This finally sends the serialized object to the Queue.
             }
