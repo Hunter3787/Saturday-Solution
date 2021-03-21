@@ -1,5 +1,5 @@
-﻿using Consumer;
-using Producer;
+﻿using APB.App.Managers;
+using APB.App.Services;
 using System;
 
 namespace ConsoleApp1
@@ -8,11 +8,11 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            LoggingService logger = LoggingService.GetInstance; 
+            LoggingManager loggingManager = new LoggingManager(); 
 
-            LoggingManager loggingManager = new LoggingManager();
+            LoggingService logger1 = LoggingService.GetInstance;
 
-            logger.LogInformation("This is an Information Log");
+            logger1.LogInformation("This is an Information Log");
 
             LoggingService logger2 = LoggingService.GetInstance;
 

@@ -1,10 +1,10 @@
 ﻿using System;
-using Producer;
-using DataAccess;
 using System.Collections.Generic;
 using System.Text;
+using APB.App.Services;
+using APB.App.DataAccess;
 
-namespace Consumer
+namespace APB.App.Managers
 {
     public class ReviewsRatingsManager
     {
@@ -15,7 +15,7 @@ namespace Consumer
 
         public void ProcessReviewRatingObject(ReviewsRatingsObject reviewsRatingsObject)
         {
-            ReviewsRatingsDataAccess reviewsRatingsDataAccess = new ReviewsRatingsDataAccess("Server = localhost; Database = DB; Trusted_Connection = True;");
+            ReviewsRatingsDAO reviewsRatingsDataAccess = new ReviewsRatingsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
             reviewsRatingsDataAccess.CreateReviewRatingRecord(reviewsRatingsObject);
         }
     }

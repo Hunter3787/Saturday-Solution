@@ -1,25 +1,22 @@
-﻿using Producer;
+﻿using APB.App.Services;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Text;
 
-
-namespace DataAccess
+namespace APB.App.DataAccess
 {
-    public class ReviewsRatingsDataAccess
+    public class LoggerDAO
     {
         private String connection; // Stores connection string.
         private SqlDataAdapter adapter = new SqlDataAdapter(); // Allows the use to connect and use SQL statements and logic.
 
         // Establishes the connection with the connection string that is passed through. 
-        public ReviewsRatingsDataAccess(String connectionString)
+        public LoggerDAO(String connectionString)
         {
             this.connection = connectionString;
         }
         // Method that is used to create a log record in the logs table in the datastore.
-        public String CreateReviewRatingRecord(ReviewsRatingsObject reviewsRatingsObject)
+        public String CreateLogRecord(LogObject logObject)
         {
             // This will use the connection string initilized above.
             using (SqlConnection connection = new SqlConnection(this.connection))
@@ -34,11 +31,12 @@ namespace DataAccess
                     try
                     {
                         // Specifies the SQL command and parameters that will be used to send data to the database.
-                        String sql = "INSERT INTO reviews(message, star) VALUES(@MESSAGE,@STAR);";
+                        String sql = "INSERT INTO logs(message, loglevel, dateTime) VALUES(@MESSAGE,@LOGLEVEL,@DATETIME);"; 
 
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction); // Takes in the three parameters to be allowed to make SQL commands.
-                        adapter.InsertCommand.Parameters.Add("@MESSAGE", SqlDbType.VarChar).Value = reviewsRatingsObject.Msg; // Stores the log message.
-                        adapter.InsertCommand.Parameters.Add("@STAR", SqlDbType.VarChar).Value = reviewsRatingsObject.Star; // Stores the enum LogLevel.
+                        adapter.InsertCommand.Parameters.Add("@MESSAGE", SqlDbType.VarChar).Value = logObject.Message; // Stores the log message.
+                        adapter.InsertCommand.Parameters.Add("@LOGLEVEL", SqlDbType.VarChar).Value = logObject.LevelLog; // Stores the enum LogLevel.
+                        adapter.InsertCommand.Parameters.Add("@DATETIME", SqlDbType.VarChar).Value = logObject.Datetime; // Stores the DateTime of the log.
                         adapter.InsertCommand.ExecuteNonQuery(); // Executes a Transaction-centered SQL statement.
 
                         transaction.Commit(); // Commits the changes to the database,

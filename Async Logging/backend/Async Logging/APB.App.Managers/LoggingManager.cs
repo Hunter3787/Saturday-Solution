@@ -2,10 +2,10 @@
 using Apache.NMS;
 using Apache.NMS.ActiveMQ;
 using Newtonsoft.Json;
-using Producer;
-using DataAccess;
+using APB.App.Services;
+using APB.App.DataAccess;
 
-namespace Consumer
+namespace APB.App.Managers
 {
     public class LoggingManager : IDisposable // This will implement the IDisposable interface which is used to clean up and close connections.
     {
@@ -40,7 +40,7 @@ namespace Consumer
             LogObject logObject = JsonConvert.DeserializeObject<LogObject>(textMessage.Text); // This will deserialize JSON strings and re-store them as a LogObject.
 
             // Will initialize the LoggerDataAccess with a connection string.
-            LoggerDataAccess loggerDataAccess = new LoggerDataAccess("Server = localhost; Database = DB; Trusted_Connection = True;"); 
+            LoggerDAO loggerDataAccess = new LoggerDAO("Server = localhost; Database = DB; Trusted_Connection = True;"); 
             loggerDataAccess.CreateLogRecord(logObject); // send the log object through to be sent to the database.
         }
         // This method will simply close all connections and sessions and set the isDisposed bool to true to state that the connections have been closed.

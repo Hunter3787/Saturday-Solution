@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 //using static System.Net.Mime.MediaTypeNames;
 
-namespace Producer
+namespace APB.App.Services
 {
     class ReviewsRatingsService
     {

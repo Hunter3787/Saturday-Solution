@@ -6,9 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Consumer\Consumer.csproj" />
-    <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
-    <ProjectReference Include="..\Logging\Producer.csproj" />
+    <ProjectReference Include="..\APB.App.Managers\APB.App.Managers.csproj" />
+    <ProjectReference Include="..\APB.App.Services\APB.App.Services.csproj" />
   </ItemGroup>
 
 </Project>
