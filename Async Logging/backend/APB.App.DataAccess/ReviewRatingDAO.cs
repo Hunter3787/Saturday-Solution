@@ -35,11 +35,11 @@ namespace APB.App.DataAccess
 
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction); // Takes in the three parameters to be allowed to make SQL commands.
                         adapter.InsertCommand.Parameters.Add("@MESSAGE", SqlDbType.VarChar).Value = reviewRatingEntity.Message; // Stores the log message.
-                        adapter.InsertCommand.Parameters.Add("@STAR", SqlDbType.VarChar).Value = reviewRatingEntity.ReviewRatingTypeName; // Stores the enum LogLevel.
+                        adapter.InsertCommand.Parameters.Add("@STAR", SqlDbType.VarChar).Value = reviewRatingEntity.StarRatingValue; // Stores the enum LogLevel.
                         adapter.InsertCommand.ExecuteNonQuery(); // Executes a Transaction-centered SQL statement.
 
                         transaction.Commit(); // Commits the changes to the database,
-                        return "Successful Log creation"; // Returns a message that the log has been successfully created.
+                        return "Successful review creation"; // Returns a message that the log has been successfully created.
                     }
                     // If the SQL statement fails, it will throw an SQL Exception.
                     catch (SqlException ex)
@@ -55,7 +55,7 @@ namespace APB.App.DataAccess
                     {
                         connection.Close();
                     }
-                    return "Successful Log creation"; // Returns a success message.
+                    return "Successful review creation"; // Returns a success message.
                 }
             }
         }

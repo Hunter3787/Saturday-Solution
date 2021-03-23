@@ -2,7 +2,7 @@
 {
     public class ReviewRatingEntity
     {
-        public string ReviewRatingTypeName { get; set; }
+        public int StarRatingValue { get; set; }
 
         public string Message { get; set; }
     }

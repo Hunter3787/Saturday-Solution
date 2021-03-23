@@ -3,19 +3,29 @@ using APB.App.Services;
 
 namespace APB.App.Managers
 {
-    class ReviewsRatingsManager
+    public class ReviewRatingManager
     {
-        private ReviewRating reviewsRatingsObject;
+        ReviewRatingService reviewRatingService = new ReviewRatingService();
 
-        public bool ReviewsRatings(string message, StarType starType)
+        LoggingProducerService logger = LoggingProducerService.GetInstance;
+
+        private ReviewRating reviewRating;
+
+        public ReviewRatingManager()
         {
-            reviewsRatingsObject = new ReviewRating();
 
-            reviewsRatingsObject.Message = message;
-            reviewsRatingsObject.StarRating = starType;
+        }
+
+        public void ReviewRating(string message, StarType starType)
+        {
+            reviewRating = new ReviewRating();
+
+            logger.LogInformation("a review and rating has been entered");
+
+            reviewRating.Message = message;
+            reviewRating.StarRating = starType;
             //reviewsRatingsObject.Img = image;
-
-            return true;
+            reviewRatingService.CreateReviewRating(reviewRating);
         }
     }
 }

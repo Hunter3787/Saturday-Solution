@@ -6,9 +6,9 @@ using APB.App.DataAccess;
 using APB.App.Entities;
 using APB.App.DomainModels;
 
-namespace APB.App.Services
+namespace APB.App.Managers
 {
-    public class LoggingConsumerService : IDisposable // This will implement the IDisposable interface which is used to clean up and close connections.
+    public class LoggingConsumerManager : IDisposable // This will implement the IDisposable interface which is used to clean up and close connections.
     {
         private readonly IConnectionFactory connectionFactory; // This acts as an entry point to client APIs in this case ActiveMQ.
         private readonly IConnection connection; // This allows us to establish a persistent connection between client and server.
@@ -20,7 +20,7 @@ namespace APB.App.Services
         private const string DESTINATION = "LoggingQueue"; // Destination or the name of the Queue that the JSON strings are stored into.
 
         // Desfault constructor for the LoggingManager, will establish connections to the Queue.
-        public LoggingConsumerService()
+        public LoggingConsumerManager()
         {
             this.connectionFactory = new ConnectionFactory(URI); // Stores the connection string.
             this.connection = this.connectionFactory.CreateConnection(); // Creates a connection to the connection string destination path.

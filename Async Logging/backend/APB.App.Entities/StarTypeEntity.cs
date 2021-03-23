@@ -1,9 +1,11 @@
 ﻿namespace APB.App.Entities
 {
-    public class StarTypeEntity
+    public enum StarTypeEntity
     {
-        public string TypeName { get; set; }
-
-        public int TypeValue { get; set; }
+        Five_Stars = 5,
+        Four_Stars = 4,
+        Three_Stars = 3,
+        Two_Stars = 2,
+        One_Star = 1
     }
 }

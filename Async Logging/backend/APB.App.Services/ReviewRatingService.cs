@@ -6,7 +6,9 @@ namespace APB.App.Services
 {
     public class ReviewRatingService
     {
-        private ReviewRatingService()
+        LoggingProducerService logger = LoggingProducerService.GetInstance;
+
+        public ReviewRatingService()
         {
 
         }
@@ -17,11 +19,12 @@ namespace APB.App.Services
 
             var reviewRatingEntity = new ReviewRatingEntity()
             {
-                ReviewRatingTypeName = nameof(reviewRating.StarRating),
+                StarRatingValue = (int)reviewRating.StarRating,
                 Message = reviewRating.Message
             };
 
             reviewsRatingsDataAccess.CreateReviewRatingRecord(reviewRatingEntity);
+            logger.LogInformation("A new Review and Rating record has been created in the database");
         }
     }
 }
