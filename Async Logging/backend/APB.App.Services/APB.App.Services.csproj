@@ -10,4 +10,11 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\APB.App.DataAccess\APB.App.DataAccess.csproj" />
+    <ProjectReference Include="..\APB.App.DomainModels\APB.App.DomainModels.csproj" />
+    <ProjectReference Include="..\APB.App.Entities\APB.App.Entities.csproj" />
+    <ProjectReference Include="..\APB.DataStoreEntities\APB.DataStoreEntities.csproj" />
+  </ItemGroup>
+
 </Project>

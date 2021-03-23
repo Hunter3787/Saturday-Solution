@@ -9,7 +9,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\APB.App.Services\APB.App.Services.csproj" />
+    <ProjectReference Include="..\APB.App.Entities\APB.App.Entities.csproj" />
+    <ProjectReference Include="..\APB.DataStoreEntities\APB.DataStoreEntities.csproj" />
   </ItemGroup>
 
 </Project>

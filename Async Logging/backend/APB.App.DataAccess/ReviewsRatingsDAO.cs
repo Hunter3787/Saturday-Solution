@@ -1,9 +1,9 @@
-﻿using APB.App.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text;
+using APB.App.Entities;
 
 
 namespace APB.App.DataAccess
@@ -19,7 +19,7 @@ namespace APB.App.DataAccess
             this.connection = connectionString;
         }
         // Method that is used to create a log record in the logs table in the datastore.
-        public String CreateReviewRatingRecord(ReviewsRatingsObject reviewsRatingsObject)
+        public String CreateReviewRatingRecord(ReviewRatingEntity reviewRatingEntity)
         {
             // This will use the connection string initilized above.
             using (SqlConnection connection = new SqlConnection(this.connection))
@@ -37,8 +37,8 @@ namespace APB.App.DataAccess
                         String sql = "INSERT INTO reviews(message, star) VALUES(@MESSAGE,@STAR);";
 
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction); // Takes in the three parameters to be allowed to make SQL commands.
-                        adapter.InsertCommand.Parameters.Add("@MESSAGE", SqlDbType.VarChar).Value = reviewsRatingsObject.Msg; // Stores the log message.
-                        adapter.InsertCommand.Parameters.Add("@STAR", SqlDbType.VarChar).Value = reviewsRatingsObject.Star; // Stores the enum LogLevel.
+                        adapter.InsertCommand.Parameters.Add("@MESSAGE", SqlDbType.VarChar).Value = reviewRatingEntity.Message; // Stores the log message.
+                        adapter.InsertCommand.Parameters.Add("@STAR", SqlDbType.VarChar).Value = reviewRatingEntity.ReviewRatingTypeValue; // Stores the enum LogLevel.
                         adapter.InsertCommand.ExecuteNonQuery(); // Executes a Transaction-centered SQL statement.
 
                         transaction.Commit(); // Commits the changes to the database,

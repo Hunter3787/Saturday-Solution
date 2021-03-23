@@ -4,12 +4,13 @@ using Newtonsoft.Json;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using APB.App.DomainModels;
 
 namespace APB.App.Services
 {
-    public sealed class LoggingService : ILogger //service
+    public sealed class LoggingProducerService : ILogger //service
     {
-        private LogObject logObject; // Initializes a log object for storing and transfering data about a log.
+        private Logger logger; // Initializes a log object for storing and transfering data about a log.
         private readonly IConnectionFactory connectionFactory; // This acts as an entry point to client APIs in this case ActiveMQ.
         private readonly IConnection connection; // This allows us to establish a persistent connection between client and server.
         private readonly ISession session; // Stores a session which is essentially the shared context between participants in a communication exchange.
@@ -17,7 +18,7 @@ namespace APB.App.Services
         private bool isDisposed = false; // Bool to check if items have been disposed of, initialized to false because no items shall be pre-disposed.
         private int counter = 0; // Counter int that will be incremented to keep track of the singleton.
 
-        private static LoggingService instance = null; // Initializes the logger object to zero, it has not been called yet.
+        private static LoggingProducerService instance = null; // Initializes the logger object to zero, it has not been called yet.
 
         private static readonly object padlock = new object();
 
@@ -28,7 +29,7 @@ namespace APB.App.Services
         /// <summary>
         /// simple version of singleton "thread saftey"
         /// </summary>
-        public static Logger GetInstance 
+        public static LoggingProducerService GetInstance 
         {
             get
             {
@@ -54,7 +55,7 @@ namespace APB.App.Services
                     // If there is no instance of logger, then a new one will be creates, and only one.
                     if (instance == null)
                     {
-                        instance = new Logger();
+                        instance = new LoggingProducerService();
                     }
 
                     return instance;
@@ -62,7 +63,7 @@ namespace APB.App.Services
             }
         }
         // Logger standard constructor, will establish connection when new logger is created.
-        private LoggingService() 
+        private LoggingProducerService() 
         {
             this.connectionFactory = new ConnectionFactory("tcp://localhost:61616?jms.UseAsyncSend=true"); // Stores the connection string.
             this.connection = this.connectionFactory.CreateConnection(); // Creates a connection to the connection string destination path.
@@ -76,21 +77,21 @@ namespace APB.App.Services
             counter++; // Increments the count of the Logger to keep track of instances.
         }
         // Constructor for log and sets operations for log to be sent to the Queue.
-        public bool Log(string message, LogLevel level, String dateTime)
+        public bool Log(string message, LogType level, string dateTime)
         {
                 // stores log variables into the LogObject to be sent to the Queue.
-                logObject.Message = message; 
-                logObject.LevelLog = level;
-                logObject.Datetime = dateTime;
-                sendLog(logObject); // method used to send LogObject to the Queue.
+                logger.Message = message; 
+                logger.LogLevel = level;
+                logger.DateTime = dateTime;
+                sendLog(logger); // method used to send LogObject to the Queue.
                 return true;
         }
 
         // Constructor for log and sets operations for log to be asynchronously sent to the Queue.
         // These will be asynchronously sent to the Queue by starting a new thread.
-        public async Task LogAsync(string message, LogLevel level, String dateTime)
+        public async Task LogAsync(string message, LogType level, string dateTime)
         {
-            logObject = new LogObject(); // store a new log object every time a new log is called.
+            logger = new Logger(); // store a new log object every time a new log is called.
 
             // This will ensure that only one write operation is happening at a single moment.
 
@@ -111,15 +112,15 @@ namespace APB.App.Services
             // stores log variables into the LogObject to be sent to the Queue.
 
 
-            logObject.Message = message;
-            logObject.LevelLog = level;
-            logObject.Datetime = dateTime;
+            logger.Message = message;
+            logger.LogLevel = level;
+            logger.DateTime = dateTime;
             //sendLog(logObject);
-            await Task.Run(() => sendLog(logObject)); // method used to send LogObject to the Queue.
+            await Task.Run(() => sendLog(logger)); // method used to send LogObject to the Queue.
 
             Console.WriteLine("sent");
         }
-        public void sendLog(LogObject log)
+        public void sendLog(Logger log)
         {
             // If the connection has not been disposed, then send the object to the Log.
             if (!isDisposed)
@@ -146,45 +147,29 @@ namespace APB.App.Services
             }
         }
     }
-    // This is the LogObject class and the datatypes that it stores.
-    public class LogObject
-    {
-        private String message;
-        private LogLevel levelLog;
-        private String dateTime;
-        public String Message { get; set; }
-        public LogLevel LevelLog {get; set;}
-        public String Datetime { get; set; }
-    }
+
     // This is a class for more descriptive Logs to be called at various log levels.
     public static class LoggerEx
     {
-        public static async void LogInformation(this LoggingService logger, string message) // Information log level, this is a variant of Logger.
+        public static async void LogInformation(this LoggingProducerService logger, string message) // Information log level, this is a variant of Logger.
         {
             // Appends the date and time to the Log for easy info to query.
-            await logger.LogAsync(message, LogLevel.Information, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF")); 
+            await logger.LogAsync(message, LogType.Information, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF")); 
         }
-        public static async void LogWarning(this LoggingService logger, string message)
+        public static async void LogWarning(this LoggingProducerService logger, string message)
         {
-            await logger.LogAsync(message, LogLevel.Warning, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF"));
+            await logger.LogAsync(message, LogType.Warning, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF"));
         }
-        public static async void LogError(this LoggingService logger, string message)
+        public static async void LogError(this LoggingProducerService logger, string message)
         {
-            await logger.LogAsync(message, LogLevel.Error, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF"));
+            await logger.LogAsync(message, LogType.Error, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF"));
         }
     }
-    // Enumerated values for LogLevels.
-    public enum LogLevel
-    {
-        Information,
-        Warning,
-        Error,
-        None
-    }
+
     // This allows the ILogger to be an interface and able to be implemented by other classes.
     public interface ILogger
     {
-        bool Log(string message, LogLevel level, String dateTime);
-        Task LogAsync(string message, LogLevel level, String dateTime);
+        bool Log(string message, LogType level, string dateTime);
+        Task LogAsync(string message, LogType level, string dateTime);
     }
 }

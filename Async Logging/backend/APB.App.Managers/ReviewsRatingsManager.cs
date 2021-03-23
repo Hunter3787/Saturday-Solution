@@ -1,22 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using APB.App.Services;
-using APB.App.DataAccess;
+using APB.App.DomainModels;
+using APB.App.Entities;
+//using static System.Net.Mime.MediaTypeNames;
 
-namespace APB.App.Managers
+namespace APB.App.Services
 {
-    public class ReviewsRatingsManager
+    class ReviewsRatingsService
     {
-        private ReviewsRatingsManager()
-        {
+        private ReviewRating reviewsRatingsObject; 
 
-        }
-
-        public void ProcessReviewRatingObject(ReviewsRatingsObject reviewsRatingsObject)
+        public bool ReviewsRatings(string message, StarType starType)
         {
-            ReviewsRatingsDAO reviewsRatingsDataAccess = new ReviewsRatingsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
-            reviewsRatingsDataAccess.CreateReviewRatingRecord(reviewsRatingsObject);
+            reviewsRatingsObject = new ReviewRating();
+
+            reviewsRatingsObject.Message = message;
+            reviewsRatingsObject.StarRating = starType;
+            //reviewsRatingsObject.Img = image;
+
+            return true;
         }
     }
+
+
+
+
 }
