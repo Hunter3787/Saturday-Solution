@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace APB.App.DomainModels
+﻿namespace APB.App.DomainModels
 {
     public class Logger
     {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace APB.App.Entities
+﻿namespace APB.App.Entities
 {
     public class StarTypeEntity
     {

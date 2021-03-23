@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using APB.App.DomainModels;
-using APB.App.Entities;
-//using static System.Net.Mime.MediaTypeNames;
+﻿using APB.App.DomainModels;
 
 namespace APB.App.Services
 {

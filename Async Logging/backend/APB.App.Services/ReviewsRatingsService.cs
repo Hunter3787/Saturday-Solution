@@ -21,7 +21,7 @@ namespace APB.App.Managers
 
             var reviewRatingEntity = new ReviewRatingEntity()
             {
-                ReviewRatingTypeValue = nameof(reviewRating.StarRating),
+                ReviewRatingTypeName = nameof(reviewRating.StarRating),
                 Message = reviewRating.Message
             };
 

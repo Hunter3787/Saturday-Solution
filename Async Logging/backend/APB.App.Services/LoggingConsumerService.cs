@@ -2,7 +2,6 @@
 using Apache.NMS;
 using Apache.NMS.ActiveMQ;
 using Newtonsoft.Json;
-using APB.App.Services;
 using APB.App.DataAccess;
 using APB.App.Entities;
 using APB.App.DomainModels;
@@ -45,7 +44,7 @@ namespace APB.App.Managers
             var loggerEntity = new LoggerEntity()
             {
                 Message = logger.Message,
-                LogTypeValue = nameof(logger.LogLevel),
+                LogLevel = (LogTypeEntity)logger.LogLevel,
                 DateTime = logger.DateTime
             };
 

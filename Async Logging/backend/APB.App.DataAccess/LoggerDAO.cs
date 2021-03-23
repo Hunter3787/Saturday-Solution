@@ -1,5 +1,4 @@
 ﻿using APB.App.Entities;
-using System;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -35,7 +34,7 @@ namespace APB.App.DataAccess
 
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction); // Takes in the three parameters to be allowed to make SQL commands.
                         adapter.InsertCommand.Parameters.Add("@MESSAGE", SqlDbType.VarChar).Value = logger.Message; // Stores the log message.
-                        adapter.InsertCommand.Parameters.Add("@LOGLEVEL", SqlDbType.VarChar).Value = logger.LogTypeValue; // Stores the enum LogLevel.
+                        adapter.InsertCommand.Parameters.Add("@LOGLEVEL", SqlDbType.VarChar).Value = logger.LogLevel; // Stores the enum LogLevel.
                         adapter.InsertCommand.Parameters.Add("@DATETIME", SqlDbType.VarChar).Value = logger.DateTime; // Stores the DateTime of the log.
                         adapter.InsertCommand.ExecuteNonQuery(); // Executes a Transaction-centered SQL statement.
 
