@@ -6,7 +6,7 @@ using APB.App.DataAccess;
 using APB.App.Entities;
 using APB.App.DomainModels;
 
-namespace APB.App.Managers
+namespace APB.App.Services
 {
     public class LoggingConsumerService : IDisposable // This will implement the IDisposable interface which is used to clean up and close connections.
     {

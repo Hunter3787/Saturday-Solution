@@ -5,13 +5,13 @@ using APB.App.Entities;
 
 namespace APB.App.DataAccess
 {
-    public class ReviewsRatingsDAO
+    public class ReviewRatingDAO
     {
         private string connection; // Stores connection string.
         private SqlDataAdapter adapter = new SqlDataAdapter(); // Allows the use to connect and use SQL statements and logic.
 
         // Establishes the connection with the connection string that is passed through. 
-        public ReviewsRatingsDAO(string connectionString)
+        public ReviewRatingDAO(string connectionString)
         {
             this.connection = connectionString;
         }

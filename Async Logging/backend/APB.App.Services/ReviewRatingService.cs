@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using APB.App.Services;
-using APB.App.DataAccess;
+﻿using APB.App.DataAccess;
 using APB.App.Entities;
 using APB.App.DomainModels;
 
-namespace APB.App.Managers
+namespace APB.App.Services
 {
-    public class ReviewsRatingsService
+    public class ReviewRatingService
     {
-        private ReviewsRatingsService()
+        private ReviewRatingService()
         {
 
         }
 
         public void CreateReviewRating(ReviewRating reviewRating)
         {
-            ReviewsRatingsDAO reviewsRatingsDataAccess = new ReviewsRatingsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            ReviewRatingDAO reviewsRatingsDataAccess = new ReviewRatingDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
 
             var reviewRatingEntity = new ReviewRatingEntity()
             {

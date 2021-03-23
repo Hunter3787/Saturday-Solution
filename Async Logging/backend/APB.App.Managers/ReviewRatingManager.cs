@@ -1,10 +1,10 @@
 ﻿using APB.App.DomainModels;
 
-namespace APB.App.Services
+namespace APB.App.Managers
 {
-    class ReviewsRatingsService
+    class ReviewsRatingsManager
     {
-        private ReviewRating reviewsRatingsObject; 
+        private ReviewRating reviewsRatingsObject;
 
         public bool ReviewsRatings(string message, StarType starType)
         {
@@ -17,8 +17,4 @@ namespace APB.App.Services
             return true;
         }
     }
-
-
-
-
 }
