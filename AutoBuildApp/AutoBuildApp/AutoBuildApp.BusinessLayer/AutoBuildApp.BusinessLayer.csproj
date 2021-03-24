@@ -5,8 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Moq" Version="4.15.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\AutoBuildApp.DataAccess\AutoBuildApp.DataAccess.csproj" />
     <ProjectReference Include="..\AutoBuildApp.ServiceLayer\AutoBuildApp.ServiceLayer.csproj" />
+    <ProjectReference Include="..\Loggg\AutoBuildApp.Loggg.csproj" />
   </ItemGroup>
 
 </Project>

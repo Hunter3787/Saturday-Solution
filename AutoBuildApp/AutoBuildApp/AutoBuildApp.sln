@@ -35,6 +35,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		Configs.config = Configs.config
 	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoBuildApp.Loggg", "Loggg\AutoBuildApp.Loggg.csproj", "{2F658176-FA52-4F39-9CD3-0164F4B034E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -70,6 +71,10 @@ Global
 		{064CC6F8-BA81-42F7-9215-1BE3D1DC6A89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{064CC6F8-BA81-42F7-9215-1BE3D1DC6A89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{064CC6F8-BA81-42F7-9215-1BE3D1DC6A89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F658176-FA52-4F39-9CD3-0164F4B034E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F658176-FA52-4F39-9CD3-0164F4B034E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F658176-FA52-4F39-9CD3-0164F4B034E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F658176-FA52-4F39-9CD3-0164F4B034E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,6 +86,7 @@ Global
 		{3C325FAF-02DC-490A-9C74-FF51905C92DE} = {66A885B3-B566-42CA-82F1-AC511C72B037}
 		{AF678572-1D7D-4764-A6C3-BFA07AD8E8D4} = {36B4A509-E9BC-447A-8CF6-1E225993B3CD}
 		{064CC6F8-BA81-42F7-9215-1BE3D1DC6A89} = {384B395F-8154-40B4-9E95-1125EF23AE84}
+		{2F658176-FA52-4F39-9CD3-0164F4B034E8} = {384B395F-8154-40B4-9E95-1125EF23AE84}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9CA11C08-720B-4535-BCD6-DED2E1FBA8B0}
