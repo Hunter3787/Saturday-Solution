@@ -13,7 +13,7 @@ namespace APB.App.Services
 
         }
 
-        public void CreateReviewRating(ReviewRating reviewRating)
+        public bool CreateReviewRating(ReviewRating reviewRating)
         {
             ReviewRatingDAO reviewsRatingsDataAccess = new ReviewRatingDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
 
@@ -23,8 +23,9 @@ namespace APB.App.Services
                 Message = reviewRating.Message
             };
 
-            reviewsRatingsDataAccess.CreateReviewRatingRecord(reviewRatingEntity);
             logger.LogInformation("A new Review and Rating record has been created in the database");
+
+            return reviewsRatingsDataAccess.CreateReviewRatingRecord(reviewRatingEntity);
         }
     }
 }

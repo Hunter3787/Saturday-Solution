@@ -13,19 +13,12 @@ namespace ConsoleApp1
 
             ReviewRatingManager reviewRatingManager = new ReviewRatingManager();
 
-            reviewRatingManager.ReviewRating("Terrible build, very slow computer.", StarType.Five_Stars);
+            ReviewRating reviewRating = new ReviewRating();
 
-            reviewRatingManager.ReviewRating("Great build! I would but it again!", StarType.Five_Stars);
+            reviewRating.Message = "Hello";
+            reviewRating.StarRating = StarType.Five_Stars;
 
-            reviewRatingManager.ReviewRating("Very bad!", StarType.Two_Stars);
-
-            reviewRatingManager.ReviewRating("I cried", StarType.Four_Stars);
-
-            reviewRatingManager.ReviewRating("It broke", StarType.Three_Stars);
-
-            reviewRatingManager.ReviewRating("Very slow", StarType.One_Star);
-
-            reviewRatingManager.ReviewRating("very fast!!!!!!", StarType.Five_Stars);
+            reviewRatingManager.ReviewRating(reviewRating);
 
             LoggingProducerService logger1 = LoggingProducerService.GetInstance;
 

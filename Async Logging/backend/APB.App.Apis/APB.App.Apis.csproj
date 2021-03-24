@@ -4,5 +4,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\APB.App.Managers\APB.App.Managers.csproj" />
+    <ProjectReference Include="..\APB.App.Services\APB.App.Services.csproj" />
+  </ItemGroup>
+
 
 </Project>

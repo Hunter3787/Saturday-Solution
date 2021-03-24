@@ -9,23 +9,23 @@ namespace APB.App.Managers
 
         LoggingProducerService logger = LoggingProducerService.GetInstance;
 
-        private ReviewRating reviewRating;
+        //private ReviewRating reviewRating;
 
         public ReviewRatingManager()
         {
 
         }
 
-        public void ReviewRating(string message, StarType starType)
+        public bool ReviewRating(ReviewRating reviewRating)
         {
-            reviewRating = new ReviewRating();
+            //reviewRating = new ReviewRating();
 
             logger.LogInformation("a review and rating has been entered");
 
-            reviewRating.Message = message;
-            reviewRating.StarRating = starType;
+            //reviewRating.Message = message;
+            //reviewRating.StarRating = starType;
             //reviewsRatingsObject.Img = image;
-            reviewRatingService.CreateReviewRating(reviewRating);
+            return reviewRatingService.CreateReviewRating(reviewRating);
         }
     }
 }
