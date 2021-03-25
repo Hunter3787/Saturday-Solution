@@ -17,6 +17,7 @@ namespace APB.App.Apis.Controllers
     [Route("[controller]")]
     public class ReviewRatingController : ControllerBase
     {
+        LoggingConsumerManager loggingConsumerManager = new LoggingConsumerManager();
 
         [HttpOptions]
         public IActionResult PreflightRoute()
@@ -50,6 +51,7 @@ namespace APB.App.Apis.Controllers
 
             reviewRating.Message = "TERRIBLE REVIEW";
             reviewRating.StarRating = StarType.Four_Stars;
+            reviewRating.ImagePath = "C:/Users/Serge/Desktop/images/5.jpg";
 
             try
             {
