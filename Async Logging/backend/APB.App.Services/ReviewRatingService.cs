@@ -20,7 +20,8 @@ namespace APB.App.Services
             var reviewRatingEntity = new ReviewRatingEntity()
             {
                 StarRatingValue = (int)reviewRating.StarRating,
-                Message = reviewRating.Message
+                Message = reviewRating.Message,
+                ImagePath = reviewRating.ImagePath
             };
 
             logger.LogInformation("A new Review and Rating record has been created in the database");

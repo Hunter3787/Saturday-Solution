@@ -17,6 +17,7 @@ namespace ConsoleApp1
 
             reviewRating.Message = "Hello";
             reviewRating.StarRating = StarType.Five_Stars;
+            reviewRating.ImagePath = "C:\\Users\\Serge\\Desktop\\images\\5.jpg";
 
             reviewRatingManager.ReviewRating(reviewRating);
 

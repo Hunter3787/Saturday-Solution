@@ -5,5 +5,8 @@
         public int StarRatingValue { get; set; }
 
         public string Message { get; set; }
+
+        public string ImagePath { get; set; }
+
     }
 }
