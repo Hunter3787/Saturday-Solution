@@ -27,7 +27,7 @@ namespace APB.App.Apis.Controllers
         [HttpPost]
         public IActionResult CreateReviewRating(ReviewRating reviewRating)
         {
-            ReviewRatingService service = new ReviewRatingService();
+            //ReviewRatingService service = new ReviewRatingService();
             ReviewRatingManager manager = new ReviewRatingManager();
 
             var createResult = manager.ReviewRating(reviewRating);
@@ -43,8 +43,8 @@ namespace APB.App.Apis.Controllers
         [HttpGet]
         public IActionResult GetReviewRating()
         {
-            ReviewRatingService service = new ReviewRatingService();
-            ReviewRatingManager manager = new ReviewRatingManager();
+            //ReviewRatingService service = new ReviewRatingService();
+            //ReviewRatingManager manager = new ReviewRatingManager();
 
             ReviewRating reviewRating = new ReviewRating();
 
