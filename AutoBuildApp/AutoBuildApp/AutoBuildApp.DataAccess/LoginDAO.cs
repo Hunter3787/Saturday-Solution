@@ -16,7 +16,7 @@ namespace AutoBuildApp.DataAccess
             this._connection = connectionString;
         }
 
-        public String Match(String userName, String password)
+        public String MatchData(String userName, String password)
         {
             using (SqlConnection connection = new SqlConnection(this._connection))
             {

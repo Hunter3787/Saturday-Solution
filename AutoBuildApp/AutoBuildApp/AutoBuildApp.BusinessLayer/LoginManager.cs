@@ -1,23 +1,24 @@
 ﻿using System;
+using AutoBuildApp.DataAccess;
 using AutoBuildApp.Models;
 using AutoBuildApp.ServiceLayer;
 namespace AutoBuildApp.BusinessLayer
 {
     public class LoginManager
     {
-        private LoginService _LogService;
+        private LoginDAO _LoginDAO;
 
-        private String _cnnctString;
-        public LoginManager(String _cnnctString)
+        public LoginManager(String CnnctString)
         {
-            this._cnnctString = _cnnctString;
-            _LogService = new LoginService(_cnnctString);
+            // establish a connection to DB
+
+            _LoginDAO = new LoginDAO(CnnctString);
         }
 
 
-        public String DoesUserExist(UserAccount user)
+        public String LoginUser(UserAccount user)
         {
-                return _LogService.LoginUser(user);
+                return _LoginDAO.MatchData(user.UserName, user.passHash);
         }
     }
 }

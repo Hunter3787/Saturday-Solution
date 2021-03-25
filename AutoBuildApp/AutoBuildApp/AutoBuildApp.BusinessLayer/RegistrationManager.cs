@@ -6,19 +6,18 @@ using System.Text;
 using AutoBuildApp.Models;
 using System.Linq;
 using BC = BCrypt.Net.BCrypt;
+using AutoBuildApp.DataAccess;
 
 namespace AutoBuildApp.BusinessLayer
 {
     public class RegistrationManager
     {
 
-        private RegistrationService _RegService;
+        private RegistrationDAO _RegistrationDAO;
 
-        private String _cnnctString;
         public RegistrationManager(String _cnnctString)
         {
-            this._cnnctString = _cnnctString;
-            _RegService = new RegistrationService(_cnnctString);
+            _RegistrationDAO = new RegistrationDAO(_cnnctString);
         }
 
 
@@ -35,7 +34,7 @@ namespace AutoBuildApp.BusinessLayer
                 return "Invalid Input!";
             }
             user.passHash = BC.HashPassword(user.passHash, BC.GenerateSalt());
-            return _RegService.IsRegistrationValid(user);
+            return _RegistrationDAO.CreateUserRecord(user);
         }
 
         public bool ValidEmail(string email)
@@ -66,7 +65,5 @@ namespace AutoBuildApp.BusinessLayer
                 && !String.IsNullOrEmpty(user.LastName)
                 ;
         }
-
-
     }
 }
