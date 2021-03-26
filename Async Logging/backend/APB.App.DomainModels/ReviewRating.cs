@@ -31,7 +31,6 @@ namespace APB.App.DomainModels
             }
             set 
             {
-                image = Image.FromFile(filePath);
                 image = value;
             } 
         }
