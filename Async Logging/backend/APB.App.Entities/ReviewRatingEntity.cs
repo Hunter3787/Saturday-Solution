@@ -2,6 +2,8 @@
 {
     public class ReviewRatingEntity
     {
+        public string EntityId { get; set; }
+
         public string Username { get; set; }
 
         public int StarRatingValue { get; set; }

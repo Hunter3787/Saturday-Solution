@@ -13,20 +13,19 @@ namespace ConsoleApp1
         {
             LoggingConsumerManager loggingConsumerManager = new LoggingConsumerManager();
 
-            ReviewRatingDAO reviewRatingDAO = new ReviewRatingDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
-            ReviewRatingService reviewRatingService = new ReviewRatingService(reviewRatingDAO);
-            ReviewRatingManager reviewRatingManager = new ReviewRatingManager(reviewRatingService);
+            var dataAccess = new ReviewRatingDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            var reviewService = new ReviewRatingService(dataAccess);
+            var reviewRating = new ReviewRatingManager(reviewService);
 
-            ReviewRating reviewRating = new ReviewRating();
+            // Act
+            reviewRating.CreateReviewRating(new ReviewRating
+            {
+                Username = "Zee",
+                Message = "Hello",
+                StarRating = StarType.Four_Stars,
+                FilePath = "C:/Users/Serge/Desktop/images/3.jpg"
+            });
 
-            reviewRating.Username = "Zee";
-            reviewRating.Message = "Hello";
-            reviewRating.StarRating = StarType.Five_Stars;
-            reviewRating.FilePath = "C:/Users/Serge/Desktop/images/5.jpg";
-
-            reviewRatingManager.CreateReviewRating(reviewRating);
-
-            //reviewRatingManager.GetReviewsRatings("30004");
 
             Console.Read();
         }
