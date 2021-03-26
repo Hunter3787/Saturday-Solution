@@ -17,7 +17,6 @@ namespace ConsoleApp1
             var reviewService = new ReviewRatingService(dataAccess);
             var reviewRating = new ReviewRatingManager(reviewService);
 
-            // Act
             reviewRating.CreateReviewRating(new ReviewRating
             {
                 Username = "Zee",
