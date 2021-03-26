@@ -1,4 +1,6 @@
-﻿namespace APB.App.DomainModels
+﻿using System.Drawing;
+
+namespace APB.App.DomainModels
 {
     public class ReviewRating
     {
@@ -6,6 +8,6 @@
 
         public string Message { get; set; }
 
-        public string ImagePath { get; set; }
+        public Image Picture { get; set; }
     }
 }

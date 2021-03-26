@@ -6,7 +6,7 @@
 
         public string Message { get; set; }
 
-        public string ImagePath { get; set; }
+        public byte[] ImageBuffer { get; set; }
 
     }
 }

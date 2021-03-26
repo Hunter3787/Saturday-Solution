@@ -31,12 +31,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReviewsAndRatings.UnitTests", "ReviewRating.UnitTests\ReviewsAndRatings.UnitTests.csproj", "{7838A89F-2A9D-417B-8064-89AAB7AF281E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{0BD26E1D-EFB6-48BA-9E03-892AAE0B6A24}"
-	ProjectSection(SolutionItems) = preProject
-		..\..\..\..\..\Downloads\4kimage.jpg = ..\..\..\..\..\Downloads\4kimage.jpg
-		..\..\..\..\..\Desktop\test.jpg = ..\..\..\..\..\Desktop\test.jpg
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

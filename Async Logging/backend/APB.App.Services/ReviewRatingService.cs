@@ -1,6 +1,10 @@
 ﻿using APB.App.DataAccess;
 using APB.App.Entities;
 using APB.App.DomainModels;
+using System.IO;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System;
 
 namespace APB.App.Services
 {
@@ -17,12 +21,23 @@ namespace APB.App.Services
         {
             ReviewRatingDAO reviewsRatingsDataAccess = new ReviewRatingDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
 
+            ImageConverter imageConverter = new ImageConverter();
+
             var reviewRatingEntity = new ReviewRatingEntity()
             {
                 StarRatingValue = (int)reviewRating.StarRating,
                 Message = reviewRating.Message,
-                ImagePath = reviewRating.ImagePath
+                ImageBuffer = (byte[])imageConverter.ConvertTo(reviewRating.Picture, typeof(byte[]))
             };
+
+
+            //using (var streamBitmap = new MemoryStream(reviewRatingEntity.ImageBuffer))
+            //{
+            //    using (Image img = Image.FromStream(streamBitmap))
+            //    {
+            //        img.Save("C:\\Users\\Serge\\Desktop\\images\\test2.jpg");
+            //    }
+            //}
 
             logger.LogInformation("A new Review and Rating record has been created in the database");
 
