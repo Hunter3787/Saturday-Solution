@@ -25,11 +25,12 @@ namespace APB.App.Services
 
             var reviewRatingEntity = new ReviewRatingEntity()
             {
+                Username = reviewRating.Username,
                 StarRatingValue = (int)reviewRating.StarRating,
                 Message = reviewRating.Message,
-                ImageBuffer = (byte[])imageConverter.ConvertTo(reviewRating.Picture, typeof(byte[]))
+                ImageBuffer = (byte[])imageConverter.ConvertTo(reviewRating.Picture, typeof(byte[])),
+                DateTime = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF")
             };
-
 
             //using (var streamBitmap = new MemoryStream(reviewRatingEntity.ImageBuffer))
             //{

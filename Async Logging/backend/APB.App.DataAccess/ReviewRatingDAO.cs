@@ -31,13 +31,14 @@ namespace APB.App.DataAccess
                     try
                     {
                         // Specifies the SQL command and parameters that will be used to send data to the database.
-                        string sql = "INSERT INTO reviews(message, star, imagepath) VALUES(@MESSAGE, @STAR, @IMAGEPATH);";
+                        string sql = "INSERT INTO reviews(username, message, star, imagepath, datetime) VALUES(@USERNAME, @MESSAGE, @STAR, @IMAGEPATH, @DATETIME);";
 
-                        adapter.InsertCommand = new SqlCommand(sql, connection, transaction)
-                            ; // Takes in the three parameters to be allowed to make SQL commands.
+                        adapter.InsertCommand = new SqlCommand(sql, connection, transaction); // Takes in the three parameters to be allowed to make SQL commands.
+                        adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = reviewRatingEntity.Username; // Stores the log message.
                         adapter.InsertCommand.Parameters.Add("@MESSAGE", SqlDbType.VarChar).Value = reviewRatingEntity.Message; // Stores the log message.
                         adapter.InsertCommand.Parameters.Add("@STAR", SqlDbType.VarChar).Value = reviewRatingEntity.StarRatingValue; // Stores the enum LogLevel.
                         adapter.InsertCommand.Parameters.Add("@IMAGEPATH", SqlDbType.VarBinary).Value = reviewRatingEntity.ImageBuffer; // Stores the enum LogLevel.
+                        adapter.InsertCommand.Parameters.Add("@DATETIME", SqlDbType.VarChar).Value = reviewRatingEntity.DateTime; // Stores the log message.
 
                         adapter.InsertCommand.ExecuteNonQuery(); // Executes a Transaction-centered SQL statement.
 
