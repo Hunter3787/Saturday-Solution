@@ -17,6 +17,7 @@ namespace APB.App.Apis.Controllers
     [Route("[controller]")]
     public class ReviewRatingController : ControllerBase
     {
+        ReviewRatingDAO reviewRatingDAO = new ReviewRatingDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
         LoggingConsumerManager loggingConsumerManager = new LoggingConsumerManager();
 
         [HttpOptions]
@@ -28,10 +29,10 @@ namespace APB.App.Apis.Controllers
         [HttpPost]
         public IActionResult CreateReviewRating(ReviewRating reviewRating)
         {
-            //ReviewRatingService service = new ReviewRatingService();
-            ReviewRatingManager manager = new ReviewRatingManager();
+            ReviewRatingService reviewRatingService = new ReviewRatingService(reviewRatingDAO);
+            ReviewRatingManager reviewRatingManager = new ReviewRatingManager(reviewRatingService);
 
-            var createResult = manager.ReviewRating(reviewRating);
+            var createResult = reviewRatingManager.CreateReviewRating(reviewRating);
 
             if (createResult)
             {

@@ -1,22 +1,23 @@
 ﻿using APB.App.DomainModels;
 using APB.App.Services;
+using System.Collections.Generic;
 
 namespace APB.App.Managers
 {
     public class ReviewRatingManager
     {
-        ReviewRatingService reviewRatingService = new ReviewRatingService();
+        ReviewRatingService _reviewRatingService;
 
         LoggingProducerService logger = LoggingProducerService.GetInstance;
 
         //private ReviewRating reviewRating;
 
-        public ReviewRatingManager()
+        public ReviewRatingManager(ReviewRatingService reviewRatingService)
         {
-
+            _reviewRatingService = reviewRatingService;
         }
 
-        public bool ReviewRating(ReviewRating reviewRating)
+        public bool CreateReviewRating(ReviewRating reviewRating)
         {
             //reviewRating = new ReviewRating();
 
@@ -25,7 +26,17 @@ namespace APB.App.Managers
             //reviewRating.Message = message;
             //reviewRating.StarRating = starType;
             //reviewsRatingsObject.Img = image;
-            return reviewRatingService.CreateReviewRating(reviewRating);
+            return _reviewRatingService.CreateReviewRating(reviewRating);
+        }
+
+        public ISet<ReviewRating> GetReviewsRatings(string reviewId)
+        {
+            var reviewRating = new ReviewRating()
+            {
+                EntityId = reviewId
+            };
+
+            return _reviewRatingService.GetReviewsRatings(reviewRating);
         }
     }
 }

@@ -5,22 +5,22 @@ using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System;
+using System.Collections.Generic;
 
 namespace APB.App.Services
 {
     public class ReviewRatingService
     {
         LoggingProducerService logger = LoggingProducerService.GetInstance;
+        ReviewRatingDAO _reviewRatingDAO;
 
-        public ReviewRatingService()
+        public ReviewRatingService(ReviewRatingDAO reviewRatingDAO)
         {
-
+            _reviewRatingDAO = reviewRatingDAO;
         }
 
         public bool CreateReviewRating(ReviewRating reviewRating)
         {
-            ReviewRatingDAO reviewsRatingsDataAccess = new ReviewRatingDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
-
             ImageConverter imageConverter = new ImageConverter();
 
             var reviewRatingEntity = new ReviewRatingEntity()
@@ -36,13 +36,20 @@ namespace APB.App.Services
             //{
             //    using (Image img = Image.FromStream(streamBitmap))
             //    {
-            //        img.Save("C:\\Users\\Serge\\Desktop\\images\\test8.jpg");
+            //        img.Save("C:\\Users\\Serge\\Desktop\\images\\testttt.jpg");
             //    }
             //}
 
             logger.LogInformation("A new Review and Rating record has been created in the database");
 
-            return reviewsRatingsDataAccess.CreateReviewRatingRecord(reviewRatingEntity);
+            return _reviewRatingDAO.CreateReviewRatingRecord(reviewRatingEntity);
+        }
+
+        public ISet<ReviewRating> GetReviewsRatings(ReviewRating reviewRating)
+        {
+            var reviewEntities = _reviewRatingDAO.GetReviewsRatingsBy(reviewRating.EntityId);
+
+            return null;
         }
     }
 }

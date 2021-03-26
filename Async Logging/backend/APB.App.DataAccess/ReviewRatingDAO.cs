@@ -1,11 +1,13 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
+using APB.App.DataAccess.Interfaces;
 using APB.App.Entities;
 
 
 namespace APB.App.DataAccess
 {
-    public class ReviewRatingDAO
+    public class ReviewRatingDAO : IReviewsRatingsDAO
     {
         private string connection; // Stores connection string.
         private SqlDataAdapter adapter = new SqlDataAdapter(); // Allows the use to connect and use SQL statements and logic.
@@ -62,6 +64,11 @@ namespace APB.App.DataAccess
                     return true; // Returns a success message.
                 }
             }
+        }
+
+        public ISet<ReviewRatingEntity> GetReviewsRatingsBy(string reviewId)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

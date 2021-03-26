@@ -4,6 +4,8 @@ namespace APB.App.DomainModels
 {
     public class ReviewRating
     {
+        public string EntityId { get; set; }
+
         private string filePath;
 
         private Image image;
