@@ -29,7 +29,7 @@ namespace APB.App.Managers
             return _reviewRatingService.CreateReviewRating(reviewRating);
         }
 
-        public ISet<ReviewRating> GetReviewsRatings(string reviewId)
+        public ReviewRating GetReviewsRatings(string reviewId)
         {
             var reviewRating = new ReviewRating()
             {

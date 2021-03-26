@@ -35,5 +35,7 @@ namespace APB.App.DomainModels
                 image = value;
             } 
         }
+
+        public string DateTime { get; set; }
     }
 }

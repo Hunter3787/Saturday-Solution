@@ -26,6 +26,8 @@ namespace ConsoleApp1
 
             reviewRatingManager.CreateReviewRating(reviewRating);
 
+            //reviewRatingManager.GetReviewsRatings("30004");
+
             Console.Read();
         }
     }

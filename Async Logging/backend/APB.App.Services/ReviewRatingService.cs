@@ -45,11 +45,28 @@ namespace APB.App.Services
             return _reviewRatingDAO.CreateReviewRatingRecord(reviewRatingEntity);
         }
 
-        public ISet<ReviewRating> GetReviewsRatings(ReviewRating reviewRating)
+        public ReviewRating GetReviewsRatings(ReviewRating reviewRating)
         {
             var reviewEntities = _reviewRatingDAO.GetReviewsRatingsBy(reviewRating.EntityId);
 
-            return null;
+            var reviewRatings = new ReviewRating()
+            {
+                Username = reviewEntities.Username,
+                StarRating = (StarType)reviewEntities.StarRatingValue,
+                Message = reviewEntities.Message,
+                DateTime = reviewEntities.DateTime
+            };
+
+            using (var streamBitmap = new MemoryStream(reviewEntities.ImageBuffer))
+            {
+                using (Image img = Image.FromStream(streamBitmap))
+                {
+                    img.Save("C:\\Users\\Serge\\Desktop\\images\\testttt.jpg");
+                    reviewRatings.Picture = img;
+                }
+            }
+
+            return reviewRatings;
         }
     }
 }
