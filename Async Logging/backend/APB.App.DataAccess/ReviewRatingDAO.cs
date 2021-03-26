@@ -23,7 +23,7 @@ namespace APB.App.DataAccess
         // Method that is used to create a log record in the logs table in the datastore.
         public bool CreateReviewRatingRecord(ReviewRatingEntity reviewRatingEntity)
         {
-            reviewRatingEntity.EntityId = $"{ReviewTable}_{DateTime.UtcNow.ToString()}";
+            reviewRatingEntity.EntityId = $"{ReviewTable}_{DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}";
             
             using (var conn = new SqlConnection(_connectionString))
             {
