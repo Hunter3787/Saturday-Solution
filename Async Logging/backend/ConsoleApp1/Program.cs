@@ -19,7 +19,7 @@ namespace ConsoleApp1
             reviewRating.Username = "Zee";
             reviewRating.Message = "Hello";
             reviewRating.StarRating = StarType.Five_Stars;
-            reviewRating.Picture = Image.FromFile("C:/Users/Serge/Desktop/images/5.jpg");
+            reviewRating.FilePath = "C:/Users/Serge/Desktop/images/5.jpg";
 
             reviewRatingManager.ReviewRating(reviewRating);
 

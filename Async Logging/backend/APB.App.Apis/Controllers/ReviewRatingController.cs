@@ -49,9 +49,10 @@ namespace APB.App.Apis.Controllers
 
             ReviewRating reviewRating = new ReviewRating();
 
+
             reviewRating.Message = "TERRIBLE REVIEW";
             reviewRating.StarRating = StarType.Four_Stars;
-            reviewRating.ImagePath = "C:/Users/Serge/Desktop/images/5.jpg";
+            reviewRating.FilePath = "C:/Users/Serge/Desktop/images/5.jpg";
 
             try
             {
