@@ -64,8 +64,6 @@ namespace ReviewsAndRatings.UnitTests
             Assert.AreEqual(reviewRating.GetType(), result.GetType());
         }
 
-
-
         [Test]
         public void ReviewRating_GetReviewRating_ReturnsReviewRatingObjectWithAnEntityId()
         {
