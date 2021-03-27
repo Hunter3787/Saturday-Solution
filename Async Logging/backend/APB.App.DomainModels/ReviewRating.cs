@@ -27,6 +27,11 @@ namespace APB.App.DomainModels
         {
             get 
             {
+                if (filePath == null)
+                {
+                    return null;
+                }
+ 
                 image = Image.FromFile(filePath);
                 return image; 
             }

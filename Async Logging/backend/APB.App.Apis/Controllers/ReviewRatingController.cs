@@ -42,7 +42,7 @@ namespace APB.App.Apis.Controllers
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
 
-        [HttpGet]
+        [HttpGet("{reviewId}")]
         public IActionResult GetReviewRating(string reviewId)
         {
             ReviewRatingService reviewRatingService = new ReviewRatingService(reviewRatingDAO);
