@@ -43,21 +43,14 @@ namespace APB.App.Apis.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetReviewRating()
+        public IActionResult GetReviewRating(string reviewId)
         {
-            //ReviewRatingService service = new ReviewRatingService();
-            //ReviewRatingManager manager = new ReviewRatingManager();
-
-            ReviewRating reviewRating = new ReviewRating();
-
-
-            reviewRating.Message = "TERRIBLE REVIEW";
-            reviewRating.StarRating = StarType.Four_Stars;
-            reviewRating.FilePath = "C:/Users/Serge/Desktop/images/5.jpg";
+            ReviewRatingService reviewRatingService = new ReviewRatingService(reviewRatingDAO);
+            ReviewRatingManager reviewRatingManager = new ReviewRatingManager(reviewRatingService);
 
             try
             {
-                var accounts = reviewRating;
+                var accounts = reviewRatingManager.GetReviewsRatings(reviewId);
 
                 return Ok(accounts);
             }
