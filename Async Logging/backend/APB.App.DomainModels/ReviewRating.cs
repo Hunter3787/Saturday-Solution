@@ -45,7 +45,7 @@ namespace APB.App.DomainModels
 
         public override int GetHashCode()
         {
-            return this.EntityId.GetHashCode();
+            return EntityId.GetHashCode();
         }
 
         public bool Equals(ReviewRating other)
@@ -55,12 +55,12 @@ namespace APB.App.DomainModels
                 return false;
             }
 
-            return this.EntityId.Equals(other.EntityId);
+            return EntityId.Equals(other.EntityId);
         }
 
         public override string ToString()
         {
-            return $"{nameof(ReviewRating)} {this.EntityId}";
+            return $"{nameof(ReviewRating)} {EntityId}";
         }
     }
 }
