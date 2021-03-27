@@ -51,19 +51,28 @@ namespace APB.App.Services
 
             var reviewRatings = new ReviewRating()
             {
+                EntityId = reviewEntities.EntityId,
                 Username = reviewEntities.Username,
                 StarRating = (StarType)reviewEntities.StarRatingValue,
                 Message = reviewEntities.Message,
                 DateTime = reviewEntities.DateTime
             };
 
-            using (var streamBitmap = new MemoryStream(reviewEntities.ImageBuffer))
+            if (reviewEntities.ImageBuffer != null)
             {
-                using (Image img = Image.FromStream(streamBitmap))
+                using (var streamBitmap = new MemoryStream(reviewEntities.ImageBuffer))
                 {
-                    img.Save("C:\\Users\\Serge\\Desktop\\images\\test.jpg");
-                    reviewRatings.Picture = img;
+
+                    using (Image img = Image.FromStream(streamBitmap))
+                    {
+                        //img.Save("C:\\Users\\Serge\\Desktop\\images\\test.jpg");
+                        reviewRatings.Picture = img;
+                    }
                 }
+            }
+            else
+            {
+                reviewRatings.Picture = null;
             }
 
             return reviewRatings;

@@ -128,7 +128,7 @@ namespace APB.App.DataAccess
                     command.CommandType = CommandType.Text;
 
                     command.CommandText =
-                        "SELECT * from reviews where entityID = @v0;";
+                        "SELECT * from reviews where entityId = @v0;";
 
 
                     //SQL Command to retrieve by key: select* from reviews where reviewID = 30002;
@@ -142,10 +142,14 @@ namespace APB.App.DataAccess
                     {
                         while (oReader.Read())
                         {
+                            reviewRatingEntity.EntityId = (string)oReader["entityId"];
                             reviewRatingEntity.Username = (string)oReader["username"];
                             reviewRatingEntity.Message = (string)oReader["message"];
                             reviewRatingEntity.StarRatingValue = (int)oReader["star"];
-                            reviewRatingEntity.ImageBuffer = (byte[])oReader["imagepath"];
+                            if(oReader["imagepath"] != DBNull.Value)
+                            {
+                                reviewRatingEntity.ImageBuffer = (byte[])oReader["imagepath"];
+                            }
                             reviewRatingEntity.DateTime = (string)oReader["datetime"];
                         }
                     }

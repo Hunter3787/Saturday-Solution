@@ -25,9 +25,9 @@ namespace ConsoleApp1
                 FilePath = "C:/Users/Serge/Desktop/images/3.jpg"
             });
 
-            var returnedReview = reviewRating.GetReviewsRatings("ReviewRatingEntity_20210326_08_33_36_3336");
+            var returnedReview = reviewRating.GetReviewsRatings("ReviewRatingEntity_20210327_04_25_19_2519");
 
-            Console.WriteLine(returnedReview.Message);
+            Console.WriteLine(returnedReview.EntityId);
 
             Console.Read();
         }
