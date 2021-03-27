@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+Documents/Design Documents/.DS_Store
+Documents/Design Documents/Low-Level Design/.DS_Store
