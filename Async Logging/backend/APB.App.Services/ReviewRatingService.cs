@@ -65,7 +65,7 @@ namespace APB.App.Services
 
                     using (Image img = Image.FromStream(streamBitmap))
                     {
-                        //img.Save("C:\\Users\\Serge\\Desktop\\images\\test.jpg");
+                        img.Save("C:\\Users\\Serge\\Desktop\\images\\testttttt.jpg");
                         reviewRatings.Picture = img;
                     }
                 }

@@ -2,13 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using APB.App.Managers;
 using APB.App.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using APB.App.DataAccess;
 
 namespace APB.App.Apis.Controllers
