@@ -2,14 +2,15 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>To-do CRUD</title>
+    <title>Reviews and Ratings</title>
     <link rel="stylesheet" href="css/site.css" />
 </head>
 <body>
-    <h1>To-do CRUD</h1>
-    <h3>Add</h3>
+    <nav>
+        <h2>Reviews and Ratings</h2>
+    </nav>
     <form action="javascript:void(0);" method="POST" onsubmit="addItem()">
-        <label>Enter Username:</label><br />
+        <br /><label>Enter Username:</label><br />
         <input type="text" id="add-username" placeholder="username">
         <br />
         <br />
@@ -50,7 +51,7 @@
 
     <p id="counter"></p>
 
-    <table>
+    <table class="center">
         <tr>
             <th>Is Complete?</th>
             <th>Name</th>
