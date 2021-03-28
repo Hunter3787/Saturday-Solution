@@ -9,7 +9,7 @@ entityId varchar(50), -- PRIMARY KEY,
 --event Varchar(20), --example 192/168/1/1
 username Varchar(50),
 message TEXT, -- 
-star VARCHAR(20),
+star int,
 imagepath VARBINARY(MAX),
 datetime Varchar(50),
 
@@ -18,6 +18,6 @@ CONSTRAINT reviews_PK PRIMARY KEY(entityId),
 
 );
 
-INSERT INTO reviews(entityId, username, message, star, imagepath, datetime) VALUES (0,'Serge','THIS IS A TEST', '5', null,'2019');
+INSERT INTO reviews(entityId, username, message, star, imagepath, datetime) VALUES (52,'Serge','THIS IS A TEST', '5',CAST(null AS VARBINARY(MAX)),'2019');
 
 select * from reviews;
