@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>To-do CRUD</title>
+    <link rel="stylesheet" href="css/site.css" />
+</head>
+<body>
+    <h1>To-do CRUD</h1>
+    <h3>Add</h3>
+    <form action="javascript:void(0);" method="POST" onsubmit="addItem()">
+        <label>Enter Username:</label><br />
+        <input type="text" id="add-username" placeholder="username">
+        <br />
+        <br />
+        <label>Star Rating:</label><br />
+        <input type="radio" name="interview" id="1star" value="1">
+        <label for="1star">1 Star</label><br />
+        <input type="radio" name="interview" id="2star" value="2">
+        <label for="2star">2 Stars</label><br />
+        <input type="radio" name="interview" id="3star" value="3">
+        <label for="3star">3 Stars</label><br />
+        <input type="radio" name="interview" id="4star" value="4">
+        <label for="4star">4 Stars</label><br />
+        <input type="radio" name="interview" id="5star" value="5">
+        <label for="5star">5 Stars</label>
+        <br />
+        <br />
+        <label>Enter Review:</label><br />
+        <textarea id="add-message" rows="4" cols="50">Nick Hates This</textarea>
+        <br />
+        <br />
+        <label>Enter Path to image file:</label><br />
+        <input type="text" id="add-imagepath" placeholder="file path">
+        <br />
+        <br />
+        <input type="submit" value="Add">
+    </form>
+
+    <div id="editForm">
+        <h3>Edit</h3>
+        <form action="javascript:void(0);" onsubmit="updateItem()">
+            <input type="hidden" id="edit-id">
+            <input type="checkbox" id="edit-isComplete">
+            <input type="text" id="edit-name">
+            <input type="submit" value="Save">
+            <a onclick="closeInput()" aria-label="Close">&#10006;</a>
+        </form>
+    </div>
+
+    <p id="counter"></p>
+
+    <table>
+        <tr>
+            <th>Is Complete?</th>
+            <th>Name</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tbody id="todos"></tbody>
+    </table>
+
+    <script src="js/site.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        getItems();
+    </script>
+</body>
+</html>
