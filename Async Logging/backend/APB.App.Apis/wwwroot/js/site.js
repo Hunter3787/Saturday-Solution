@@ -9,11 +9,10 @@ function getItems() {
 }
 
 function addItem() {
-    var choices = [];
     var starValue;
     const addUserNameTextbox = document.getElementById('add-username');
     //const addStarTextbox = $("input[name='interview']:checked").val();
-    var ele = document.getElementsByName('interview');
+    var ele = document.getElementsByName('rate');
     for (var i = 0; i < ele.length; i++) {
         if (ele[i].checked) {
             //choices.push(ele[i].value);

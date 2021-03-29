@@ -65,8 +65,10 @@ namespace APB.App.Services
 
                     using (Image img = Image.FromStream(streamBitmap))
                     {
-                        img.Save("C:\\Users\\Serge\\Desktop\\images\\testttttt.jpg");
+                        img.Save($"C:\\Users\\Serge\\Desktop\\images\\{reviewEntities.Username}_{reviewEntities.EntityId}.jpg");
                         reviewRatings.Picture = img;
+
+                        //reviewRatingEntity.EntityId = $"{ReviewTable}_{DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}"
                     }
                 }
             }

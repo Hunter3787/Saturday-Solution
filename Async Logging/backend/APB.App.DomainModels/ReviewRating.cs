@@ -27,7 +27,7 @@ namespace APB.App.DomainModels
         {
             get 
             {
-                if (filePath == null)
+                if (filePath == null || filePath == "")
                 {
                     return null;
                 }

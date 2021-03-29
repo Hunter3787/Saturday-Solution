@@ -58,7 +58,7 @@ namespace ReviewsAndRatings.UnitTests
             var reviewRating = new ReviewRating();
 
             // Act
-            var result = reviewRatingManager.GetReviewsRatings("52");
+            var result = reviewRatingManager.GetReviewsRatings("30000");
 
             // Assert
             Assert.AreEqual(reviewRating.GetType(), result.GetType());
@@ -73,10 +73,10 @@ namespace ReviewsAndRatings.UnitTests
             var reviewRatingManager = new ReviewRatingManager(reviewService);
 
             // Act
-            var result = reviewRatingManager.GetReviewsRatings("52");
+            var result = reviewRatingManager.GetReviewsRatings("30000");
 
             // Assert
-            Assert.AreEqual("52", result.EntityId);
+            Assert.AreEqual("30000", result.EntityId);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace APB.App.DataAccess
         // Method that is used to create a log record in the logs table in the datastore.
         public bool CreateReviewRatingRecord(ReviewRatingEntity reviewRatingEntity)
         {
-            reviewRatingEntity.EntityId = $"{ReviewTable}_{DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}";
+            //reviewRatingEntity.EntityId = $"{ReviewTable}_{DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}";
             
             using (var conn = new SqlConnection(_connectionString))
             {
@@ -37,16 +37,15 @@ namespace APB.App.DataAccess
                     command.CommandType = CommandType.Text;
 
                     command.CommandText =
-                        "INSERT INTO reviews(entityid, username, message, star, imagepath, datetime)" +
-                        "SELECT @v0, @v1, @v2, @v3, @v4, @v5";
+                        "INSERT INTO reviews(username, message, star, imagepath, datetime)" +
+                        "SELECT @v0, @v1, @v2, @v3, @v4";
 
-                    var parameters = new SqlParameter[6];
-                    parameters[0] = new SqlParameter("@v0", reviewRatingEntity.EntityId);
-                    parameters[1] = new SqlParameter("@v1", reviewRatingEntity.Username);
-                    parameters[2] = new SqlParameter("@v2", reviewRatingEntity.Message);
-                    parameters[3] = new SqlParameter("@v3", reviewRatingEntity.StarRatingValue);
-                    parameters[4] = new SqlParameter("@v4", reviewRatingEntity.ImageBuffer);
-                    parameters[5] = new SqlParameter("@v5", reviewRatingEntity.DateTime);
+                    var parameters = new SqlParameter[5];
+                    parameters[0] = new SqlParameter("@v0", reviewRatingEntity.Username);
+                    parameters[1] = new SqlParameter("@v1", reviewRatingEntity.Message);
+                    parameters[2] = new SqlParameter("@v2", reviewRatingEntity.StarRatingValue);
+                    parameters[3] = new SqlParameter("@v3", reviewRatingEntity.ImageBuffer);
+                    parameters[4] = new SqlParameter("@v4", reviewRatingEntity.DateTime);
 
                     command.Parameters.AddRange(parameters);
 
@@ -138,19 +137,19 @@ namespace APB.App.DataAccess
 
                     command.Parameters.AddRange(parameters);
 
-                    using (SqlDataReader oReader = command.ExecuteReader())
+                    using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        while (oReader.Read())
+                        while (reader.Read())
                         {
-                            reviewRatingEntity.EntityId = (string)oReader["entityId"];
-                            reviewRatingEntity.Username = (string)oReader["username"];
-                            reviewRatingEntity.Message = (string)oReader["message"];
-                            reviewRatingEntity.StarRatingValue = (int)oReader["star"];
-                            if(oReader["imagepath"] != DBNull.Value)
+                            reviewRatingEntity.EntityId = reader["entityId"].ToString();
+                            reviewRatingEntity.Username = (string)reader["username"];
+                            reviewRatingEntity.Message = (string)reader["message"];
+                            reviewRatingEntity.StarRatingValue = (int)reader["star"];
+                            if(reader["imagepath"] != DBNull.Value)
                             {
-                                reviewRatingEntity.ImageBuffer = (byte[])oReader["imagepath"];
+                                reviewRatingEntity.ImageBuffer = (byte[])reader["imagepath"];
                             }
-                            reviewRatingEntity.DateTime = (string)oReader["datetime"];
+                            reviewRatingEntity.DateTime = (string)reader["datetime"];
                         }
                     }
 
