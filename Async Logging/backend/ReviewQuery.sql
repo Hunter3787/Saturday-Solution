@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS reviews;
 
 CREATE TABLE reviews(
 
-entityId INTEGER NOT NULL IDENTITY(0030000,2), -- PRIMARY KEY,
+entityId int NOT NULL IDENTITY(0030000,2), -- PRIMARY KEY,
 --creationDate DATETIME,
 --event Varchar(20), --example 192/168/1/1
 username Varchar(50),
