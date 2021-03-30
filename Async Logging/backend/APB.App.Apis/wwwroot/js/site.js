@@ -4,7 +4,6 @@ let todos = [];
 function getItems() {
     fetch('https://localhost:44317/reviewrating')
         .then(response => response.json())
-        .then(data => console.log(data))
         .then(data => _displayItems(data))
         .catch(error => console.error('Unable to get items.', error));
 }
@@ -102,40 +101,36 @@ function _displayCount(itemCount) {
 }
 
 function _displayItems(data) {
-    //console.log(data[Object.keys(data)[0]]);
-    console.log(data["username"]);
-    console.log(data["starRating"]);
-    console.log(data["message"]);
-    //console.log(data[Object.keys(data)[4]]);
-    //console.log(data[Object.keys(data)[5]]);
-    console.log(data["dateTime"]);
+
+    data.forEach(item => console.log(item["username"]));
 
   //const tBody = document.getElementById('todos');
     //tBody.innerHTML = '';
-    var stars = "";
-    var table = document.createElement("tr"); // grandparent
-    var para1 = document.createElement("td"); // parent
-    var node1 = document.createTextNode(data["username"]); // child
-    para1.appendChild(node1);
-    table.appendChild(para1);
-    var para2 = document.createElement("td") // parent
-    for (var i = 0; i < data["starRating"]; i++) {
-        stars += String.fromCharCode(9733);
-    }
-    var node2 = document.createTextNode(stars); // child
-    para2.appendChild(node2);
-    table.appendChild(para2);
-    var para3 = document.createElement("td") // parent
-    var node3 = document.createTextNode(data["message"]); // child
-    para3.appendChild(node3);
-    table.appendChild(para3);
-    var para4 = document.createElement("td") // parent
-    var node4 = document.createTextNode(data["dateTime"]); // child
-    para4.appendChild(node4);
-    table.appendChild(para4);
-    var element = document.getElementById("reviews-saved"); // great-grandparent
-    element.appendChild(table);
-
+    data.forEach(item => {
+        var stars = "";
+        var table = document.createElement("tr"); // grandparent
+        var para1 = document.createElement("td"); // parent
+        var node1 = document.createTextNode(item["username"]); // child
+        para1.appendChild(node1);
+        table.appendChild(para1);
+        var para2 = document.createElement("td") // parent
+        for (var i = 0; i < item["starRating"]; i++) {
+            stars += String.fromCharCode(9733);
+        }
+        var node2 = document.createTextNode(stars); // child
+        para2.appendChild(node2);
+        table.appendChild(para2);
+        var para3 = document.createElement("td") // parent
+        var node3 = document.createTextNode(item["message"]); // child
+        para3.appendChild(node3);
+        table.appendChild(para3);
+        var para4 = document.createElement("td") // parent
+        var node4 = document.createTextNode(item["dateTime"]); // child
+        para4.appendChild(node4);
+        table.appendChild(para4);
+        var element = document.getElementById("reviews-saved"); // great-grandparent
+        element.appendChild(table);
+    });
     // One grandparent appends many 1parent-1child groups
 
 
