@@ -4,7 +4,7 @@ using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Enumerations;
 
 /// <summary>
-/// Utilizes the Managers namespace. 
+/// Utilizes the Managers namespace for the Auto-build app. 
 /// </summary>
 namespace AutoBuildApp.Managers
 {
@@ -21,6 +21,7 @@ namespace AutoBuildApp.Managers
         private BuildType _buildType;
 
 
+        #region "Constructors"
         /// <summary>
         /// RecommendationManager default constructor.
         /// </summary>
@@ -51,6 +52,7 @@ namespace AutoBuildApp.Managers
             // Assign Enum BuildType to private variable.
             _buildType = buildType;
         }
+        #endregion
 
         /// <summary>
         /// Attempts to return a build recommendation using only a budget and

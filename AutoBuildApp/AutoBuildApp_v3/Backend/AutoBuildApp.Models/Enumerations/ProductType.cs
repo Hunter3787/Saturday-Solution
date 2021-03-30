@@ -19,8 +19,6 @@ namespace AutoBuildApp.Models.Enumerations
         Case,
         Cable,
         Battery,
-        HDD,
-        SSD,
-        NVMe
+        HDD
     }
 }

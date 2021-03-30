@@ -8,10 +8,10 @@ namespace AutoBuildApp.Models.Interfaces
 {
     public interface IComponent
     {
-        public string       modelNumber { get; set; }
-        public ProductType  productType { get; set; }
-        public string       productName { get; set; }
-        public string       manufacturerName { get; set; }
-        public int          quantity { get; set; }
+        public ProductType productType { get; set; }
+        public string modelNumber { get; set; }
+        public string productName { get; set; }
+        public string manufacturerName { get; set; }
+        public int quantity { get; set; }
     }
 }
