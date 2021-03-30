@@ -236,7 +236,7 @@ namespace APB.App.DataAccess
                     command.CommandType = CommandType.Text;
 
                     command.CommandText =
-                        "SELECT * from reviews;";
+                        "SELECT * from reviews ORDER BY dateTime DESC;";
 
 
                     //SQL Command to retrieve by key: select* from reviews where reviewID = 30002;
