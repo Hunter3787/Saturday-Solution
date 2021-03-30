@@ -4,11 +4,13 @@ using APB.App.Managers;
 using APB.App.Services;
 using Microsoft.AspNetCore.Http;
 using APB.App.DataAccess;
+using Microsoft.AspNetCore.Cors;
 
 namespace APB.App.Apis.Controllers
 {
-    [ApiController]
+    [EnableCors("CorsPolicy")]
     [Route("[controller]")]
+    [ApiController]
     public class ReviewRatingController : ControllerBase
     {
         ReviewRatingDAO reviewRatingDAO = new ReviewRatingDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
@@ -36,15 +38,33 @@ namespace APB.App.Apis.Controllers
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
 
-        [HttpGet("{reviewId}")]
-        public IActionResult GetReviewRating(string reviewId)
+        //[HttpGet("{reviewId}")]
+        //public IActionResult GetReviewRating(string reviewId)
+        //{
+        //    ReviewRatingService reviewRatingService = new ReviewRatingService(reviewRatingDAO);
+        //    ReviewRatingManager reviewRatingManager = new ReviewRatingManager(reviewRatingService);
+
+        //    try
+        //    {
+        //        var accounts = reviewRatingManager.GetReviewsRatings(reviewId);
+
+        //        return Ok(accounts);
+        //    }
+        //    catch
+        //    {
+        //        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+        //    }
+        //}
+
+        [HttpGet]
+        public IActionResult GetAllReviewRatings()
         {
             ReviewRatingService reviewRatingService = new ReviewRatingService(reviewRatingDAO);
             ReviewRatingManager reviewRatingManager = new ReviewRatingManager(reviewRatingService);
 
             try
             {
-                var accounts = reviewRatingManager.GetReviewsRatings(reviewId);
+                var accounts = reviewRatingManager.GetAllReviewsRatings();
 
                 return Ok(accounts);
             }

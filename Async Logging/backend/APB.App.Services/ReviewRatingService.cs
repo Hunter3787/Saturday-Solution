@@ -79,5 +79,44 @@ namespace APB.App.Services
 
             return reviewRatings;
         }
+
+        public List<ReviewRating> GetAllReviewsRatings()
+        {
+            var reviewEntities = _reviewRatingDAO.GetAllReviewsRatings();
+
+            var reviewRatingList = new List<ReviewRating>();
+            foreach(ReviewRatingEntity reviewRatingEntity in reviewEntities)
+            {
+                var reviewRatings = new ReviewRating()
+                {
+                    EntityId = reviewRatingEntity.EntityId,
+                    Username = reviewRatingEntity.Username,
+                    StarRating = (StarType)reviewRatingEntity.StarRatingValue,
+                    Message = reviewRatingEntity.Message,
+                    DateTime = reviewRatingEntity.DateTime
+                };
+
+                //if (reviewRatingEntity.ImageBuffer != null)
+                //{
+                //    using (var streamBitmap = new MemoryStream(reviewRatingEntity.ImageBuffer))
+                //    {
+
+                //        using (Image img = Image.FromStream(streamBitmap))
+                //        {
+                //            //img.Save($"C:\\Users\\Serge\\Desktop\\images\\{reviewRatingEntity.Username}_{reviewRatingEntity.EntityId}.jpg");
+                //            reviewRatings.Picture = null;
+
+                //            //reviewRatingEntity.EntityId = $"{ReviewTable}_{DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}"
+                //        }
+                //    }
+                //}
+                //else
+                //{
+                //    reviewRatings.Picture = null;
+                //}
+                reviewRatingList.Add(reviewRatings);
+            }
+            return reviewRatingList;
+        }
     }
 }

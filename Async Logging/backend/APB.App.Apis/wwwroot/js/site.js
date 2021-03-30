@@ -2,10 +2,11 @@ const uri = 'api/TodoItems';
 let todos = [];
 
 function getItems() {
-  fetch(uri)
-    .then(response => response.json())
-    .then(data => _displayItems(data))
-    .catch(error => console.error('Unable to get items.', error));
+    fetch('https://localhost:44317/reviewrating')
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .then(data => _displayItems(data))
+        .catch(error => console.error('Unable to get items.', error));
 }
 
 function addItem() {
@@ -101,42 +102,76 @@ function _displayCount(itemCount) {
 }
 
 function _displayItems(data) {
-  const tBody = document.getElementById('todos');
-  tBody.innerHTML = '';
+    //console.log(data[Object.keys(data)[0]]);
+    console.log(data["username"]);
+    console.log(data["starRating"]);
+    console.log(data["message"]);
+    //console.log(data[Object.keys(data)[4]]);
+    //console.log(data[Object.keys(data)[5]]);
+    console.log(data["dateTime"]);
 
-  _displayCount(data.length);
+  //const tBody = document.getElementById('todos');
+    //tBody.innerHTML = '';
+    var stars = "";
+    var table = document.createElement("tr"); // grandparent
+    var para1 = document.createElement("td"); // parent
+    var node1 = document.createTextNode(data["username"]); // child
+    para1.appendChild(node1);
+    table.appendChild(para1);
+    var para2 = document.createElement("td") // parent
+    for (var i = 0; i < data["starRating"]; i++) {
+        stars += String.fromCharCode(9733);
+    }
+    var node2 = document.createTextNode(stars); // child
+    para2.appendChild(node2);
+    table.appendChild(para2);
+    var para3 = document.createElement("td") // parent
+    var node3 = document.createTextNode(data["message"]); // child
+    para3.appendChild(node3);
+    table.appendChild(para3);
+    var para4 = document.createElement("td") // parent
+    var node4 = document.createTextNode(data["dateTime"]); // child
+    para4.appendChild(node4);
+    table.appendChild(para4);
+    var element = document.getElementById("reviews-saved"); // great-grandparent
+    element.appendChild(table);
 
-  const button = document.createElement('button');
+    // One grandparent appends many 1parent-1child groups
 
-  data.forEach(item => {
-    let isCompleteCheckbox = document.createElement('input');
-    isCompleteCheckbox.type = 'checkbox';
-    isCompleteCheckbox.disabled = true;
-    isCompleteCheckbox.checked = item.isComplete;
 
-    let editButton = button.cloneNode(false);
-    editButton.innerText = 'Edit';
-    editButton.setAttribute('onclick', `displayEditForm(${item.id})`);
+  //_displayCount(data.length);
 
-    let deleteButton = button.cloneNode(false);
-    deleteButton.innerText = 'Delete';
-    deleteButton.setAttribute('onclick', `deleteItem(${item.id})`);
+  //const button = document.createElement('button');
 
-    let tr = tBody.insertRow();
+  //data.forEach(item => {
+  //  let isCompleteCheckbox = document.createElement('input');
+  //  isCompleteCheckbox.type = 'checkbox';
+  //  isCompleteCheckbox.disabled = true;
+  //  isCompleteCheckbox.checked = item.isComplete;
+
+  //  let editButton = button.cloneNode(false);
+  //  editButton.innerText = 'Edit';
+  //  editButton.setAttribute('onclick', `displayEditForm(${item.id})`);
+
+  //  let deleteButton = button.cloneNode(false);
+  //  deleteButton.innerText = 'Delete';
+  //  deleteButton.setAttribute('onclick', `deleteItem(${item.id})`);
+
+  //  let tr = tBody.insertRow();
     
-    let td1 = tr.insertCell(0);
-    td1.appendChild(isCompleteCheckbox);
+  //  let td1 = tr.insertCell(0);
+  //  td1.appendChild(isCompleteCheckbox);
 
-    let td2 = tr.insertCell(1);
-    let textNode = document.createTextNode(item.name);
-    td2.appendChild(textNode);
+  //  let td2 = tr.insertCell(1);
+  //  let textNode = document.createTextNode(item.name);
+  //  td2.appendChild(textNode);
 
-    let td3 = tr.insertCell(2);
-    td3.appendChild(editButton);
+  //  let td3 = tr.insertCell(2);
+  //  td3.appendChild(editButton);
 
-    let td4 = tr.insertCell(3);
-    td4.appendChild(deleteButton);
-  });
+  //  let td4 = tr.insertCell(3);
+  //  td4.appendChild(deleteButton);
+  //});
 
-  todos = data;
+  //todos = data;
 }

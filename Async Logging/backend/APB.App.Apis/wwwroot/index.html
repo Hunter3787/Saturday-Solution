@@ -32,7 +32,7 @@
         <br />
         <br />
         <label>Enter Review:</label><br />
-        <input disabled maxlength="3" size="3" value="10000" id="counter" hidden="hidden">
+        <input disabled maxlength="3" size="3" value="10000" id="counter" >
         <textarea onkeyup="textCounter(this,'counter',10000);" id="add-message" rows="10" cols="100" placeholder="review"></textarea>
         <br />
         <br />
@@ -45,6 +45,15 @@
         <br />
         <input type="submit" value="Add" class="submit-btn">
     </form>
+
+    <table id="reviews-saved">
+        <tr>
+            <th>Username</th>
+            <th>Stars</th>
+            <th>Message</th>
+            <th>Date</th>
+        </tr>
+    </table>
 
     <div id="editForm">
         <h3>Edit</h3>

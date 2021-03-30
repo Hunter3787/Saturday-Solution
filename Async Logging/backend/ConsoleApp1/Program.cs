@@ -15,19 +15,23 @@ namespace ConsoleApp1
 
             var dataAccess = new ReviewRatingDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
             var reviewService = new ReviewRatingService(dataAccess);
-            var reviewRating = new ReviewRatingManager(reviewService);
+            var reviewRatingManager = new ReviewRatingManager(reviewService);
 
-            reviewRating.CreateReviewRating(new ReviewRating
-            {
-                Username = "Zee",
-                Message = "Hello",
-                StarRating = StarType.Four_Stars,
-                FilePath = "C:/Users/Serge/Desktop/images/3.jpg"
-            });
+            //reviewRatingManager.CreateReviewRating(new ReviewRating
+            //{
+            //    Username = "Zee",
+            //    Message = "Hello",
+            //    StarRating = StarType.Four_Stars,
+            //    FilePath = "C:/Users/Serge/Desktop/images/3.jpg"
+            //});
 
-            var returnedReview = reviewRating.GetReviewsRatings("30002");
+            //var returnedReview = reviewRatingManager.GetReviewsRatings("30002");
 
-            Console.WriteLine(returnedReview.Username);
+            //Console.WriteLine(returnedReview.Username);
+
+            reviewRatingManager.GetAllReviewsRatings();
+
+            //Console.WriteLine(reviewRatingManager.GetAllReviewsRatings().Count);
 
             Console.Read();
         }

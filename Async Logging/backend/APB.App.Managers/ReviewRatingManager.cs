@@ -38,5 +38,10 @@ namespace APB.App.Managers
 
             return _reviewRatingService.GetReviewsRatings(reviewRating);
         }
+
+        public List<ReviewRating> GetAllReviewsRatings()
+        {
+            return _reviewRatingService.GetAllReviewsRatings();
+        }
     }
 }
