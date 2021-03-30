@@ -34,7 +34,8 @@ function addItem() {
   };
 
     fetch('https://localhost:44317/ReviewRating', {
-    method: 'POST',
+        method: 'POST',
+        mode: 'cors',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
@@ -44,7 +45,6 @@ function addItem() {
     .then(response => response.json())
     .then(() => {
       getItems();
-      addNameTextbox.value = '';
     })
     .catch(error => console.error('Unable to add item.', error));
 }
@@ -168,5 +168,5 @@ function _displayItems(data) {
   //  td4.appendChild(deleteButton);
   //});
 
-  //todos = data;
+  todos = data;
 }
