@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 
 namespace APB.App.DomainModels
 {
@@ -27,13 +28,13 @@ namespace APB.App.DomainModels
         {
             get 
             {
-                if (filePath == null || filePath == "")
+                if (File.Exists(filePath))
                 {
-                    return null;
+                    image = Image.FromFile(filePath);
+                    return image;
                 }
- 
-                image = Image.FromFile(filePath);
-                return image; 
+
+                return null;
             }
             set 
             {
