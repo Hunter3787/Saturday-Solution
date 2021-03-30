@@ -32,9 +32,14 @@
         </div>
         <br />
         <br />
-        <label>Enter Review:</label><br />
-        <input disabled maxlength="3" size="3" value="10000" id="counter" >
+        <label>Enter Review:</label>
+        <br />
         <textarea onkeyup="textCounter(this,'counter',10000);" id="add-message" rows="10" cols="100" placeholder="review"></textarea>
+        <br />
+        <label>Word Count:</label>
+        <input disabled maxlength="3" size="3" value="10000" id="counter">
+        <br />
+        <br />
         <br />
         <br />
         <label>Enter Path to image file:</label><br />
@@ -47,6 +52,9 @@
         <input type="submit" value="Add" class="submit-btn">
     </form>
 
+    <br />
+    <br />
+
     <table id="reviews-saved">
         <tr>
             <th>Username</th>
@@ -55,6 +63,9 @@
             <th>Date</th>
         </tr>
     </table>
+
+    <br />
+    <br />
 
     <div id="editForm">
         <h3>Edit</h3>
@@ -69,16 +80,6 @@
 
 
     <p id="counter"></p>
-
-    <table class="center">
-        <tr>
-            <th>Is Complete?</th>
-            <th>Name</th>
-            <th></th>
-            <th></th>
-        </tr>
-        <tbody id="todos"></tbody>
-    </table>
 
     <script src="js/site.js" asp-append-version="true"></script>
     <script type="text/javascript">
