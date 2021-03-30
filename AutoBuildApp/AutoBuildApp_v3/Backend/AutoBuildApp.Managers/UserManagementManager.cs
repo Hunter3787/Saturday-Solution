@@ -1,13 +1,10 @@
 ﻿using AutoBuildApp.DataAccess;
-using AutoBuildApp.Models;
-using AutoBuildApp.ServiceLayer;
+using AutoBuildApp.Models.Users;
+using AutoBuildApp.Models.DTO;
+using AutoBuildApp.Services;
 using System;
-using AutoBuildApp.Loggg;
-//using Microsoft.Extensions.Options;
-//using Microsoft.Extensions.Logging;
-using Moq;
 
-namespace AutoBuildApp.BusinessLayer
+namespace AutoBuildApp.Managers
 {
     public class UserManagementManager
     {

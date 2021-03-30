@@ -3,7 +3,7 @@ using AutoBuildApp.DataAccess;
 using AutoBuildApp.Models.Users;
 using AutoBuildApp.Services;
 
-namespace AutoBuildApp.BusinessLayer
+namespace AutoBuildApp.Managers
 {
     public class LoginManager
     {

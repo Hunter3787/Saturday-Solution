@@ -1,6 +1,6 @@
-﻿using Models.Products.Interfaces;
+﻿using AutoBuildApp.Models.Interfaces;
 
-namespace ProductModels.Models
+namespace AutoBuildApp.Models.Products
 {
     public class CPU : IComponent
     {

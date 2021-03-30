@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\APB.App.Builder\APB.App.Builder.csproj" />
+    <ProjectReference Include="..\AutoBuildApp.Managers\AutoBuildApp.Managers.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Remove=".DS_Store" />

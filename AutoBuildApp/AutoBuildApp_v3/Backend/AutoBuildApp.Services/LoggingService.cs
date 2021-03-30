@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutoBuildApp.ServiceLayer
+namespace AutoBuildApp.Services
 {
     public class LoggingService : ILogger
     {

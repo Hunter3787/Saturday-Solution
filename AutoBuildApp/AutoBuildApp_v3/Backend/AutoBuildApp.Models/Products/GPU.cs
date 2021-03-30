@@ -1,11 +1,14 @@
-﻿/**
- * Abstract IComponent interface that should enforce
- * the minimum details to be entered for a component.
- */
-namespace Models.Products.Interfaces
+﻿using System;
+using AutoBuildApp.Models.Interfaces;
+
+namespace AutoBuildApp.Models.Products
 {
-    public interface IComponent
+    public class GPU : IComponent
     {
+        public GPU()
+        {
+        }
+
         public string modelNumber { get; set; }
         public string productType { get; set; }
         public string productName { get; set; }

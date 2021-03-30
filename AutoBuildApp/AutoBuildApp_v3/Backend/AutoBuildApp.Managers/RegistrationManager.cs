@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using AutoBuildApp.ServiceLayer;
+using AutoBuildApp.Services;
 using System.Text;
-using AutoBuildApp.Models;
+using AutoBuildApp.Models.Users;
 using System.Linq;
 using BC = BCrypt.Net.BCrypt;
 using AutoBuildApp.DataAccess;
 
-namespace AutoBuildApp.BusinessLayer
+namespace AutoBuildApp.Managers
 {
     public class RegistrationManager
     {

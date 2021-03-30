@@ -2,7 +2,7 @@
  * Product type enumeration to constrain products
  * to match the database stored types.
  */
-namespace Models.Products.Enumerations
+namespace AutoBuildApp.Models.Enumerations
 {
     public enum ProductType
     {
@@ -21,6 +21,6 @@ namespace Models.Products.Enumerations
         Battery,
         HDD,
         SSD,
-        M2
+        NVMe
     }
 }

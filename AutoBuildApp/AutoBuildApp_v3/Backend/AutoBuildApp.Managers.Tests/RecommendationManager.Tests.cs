@@ -1,5 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RecommendationManager;
+using AutoBuildApp.Managers;
 
 /**
  * Recommendation unit tests.
@@ -17,22 +17,11 @@ namespace RecommendationManager.Tests
 
         }
 
-        // Test the ability to save a build.
+        #region "Build Recommendation Tests"
+        // Test recommendation of build with no peripherals.
         [TestMethod]
-        public void SaveBuild_ShouldThrowArguement_IfBuildIsNull()
-        {
-            // Arrange
-
-            // Act
-
-            // Assert
-
-
-        }
-
-        // Test the ability to save a single item.
-        [TestMethod]
-        public void TestSaveItem()
+        public void
+            RecommendationManager_RecomendBuilds_ReturnDictionaryOfIComponentLists()
         {
             // Arrange
 
@@ -42,6 +31,71 @@ namespace RecommendationManager.Tests
 
         }
 
+        // No builds were able to be created. 
+        [TestMethod]
+        public void
+            RecommendationManager_RecommendBuilds_ReturnNullWithNoSuggestions()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+
+        }
+
+        // Successful return of recommended build with two duplicate monitor recommendations.
+        [TestMethod]
+        public void
+            RecommendManager_RecommendBuilds_ReturnRecommendationWithTwoDuplicateMonitors()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+
+        }
+
+        // No builds could be recommendedations could be found within budget.
+        [TestMethod]
+        public void
+            RecommendationManager_RecommendBuildsWithPeripherals_ReturnNullWithNoSuggestions()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+
+        }
+
+        // RecommendBuild passed an invalid value. 
+        [TestMethod]
+        public void RecommendationManager_RecommendBuilds_ThrowError()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+
+        }
+
+        // Build speed test.
+        [TestMethod]
+        public void RecommendationManager_RecommendBuilds_RecommendationCompletesUnder5Seconds()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+
+        }
+        #endregion
+
+        #region "Upgrade Recommendation Tests"
         // Test the recommend upgrade feature on a single item.
         [TestMethod]
         public void TestRecommendUpgrade()
@@ -65,10 +119,52 @@ namespace RecommendationManager.Tests
             // Assert
 
         }
+        #endregion
 
-        // Test recommendation of build with no peripherals.
+        #region "Save Recommendaiton Tests"
+        // Test the ability to save a build.
         [TestMethod]
-        public void TestRecommendBuild()
+        public void SaveBuild_ShouldThrowArguement_IfBuildIsNull()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+
+
+        }        
+
+        // Test the ability to save a single item.
+        [TestMethod]
+        public void TestSaveItem()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+
+        }
+        #endregion
+
+        #region "Request Component Tests"
+        [TestMethod]
+        public void RecommendationManager_RequestComponentByType()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+
+        }
+        #endregion
+
+        #region "Request Saved Builds Tests"
+        // Returns builds associated with the current logged in account, if any. 
+        [TestMethod]
+        public void RecommendationManager_RecommendBuilds_ReturnSavedBuilds()
         {
             // Arrange
 
@@ -78,9 +174,10 @@ namespace RecommendationManager.Tests
 
         }
 
-        // Test recommendation of build with multiple peripherals selected.
+
+        // Attempts to return builds without permission or a logged in user. 
         [TestMethod]
-        public void TestRecommendBuildWithPeripherals()
+        public void RecommendationManager_RecommendBuilds_ThrowsPermissionError()
         {
             // Arrange
 
@@ -89,5 +186,32 @@ namespace RecommendationManager.Tests
             // Assert
 
         }
+
+
+        // Returns no builds. 
+        [TestMethod]
+        public void RecommendationManager_RecommendBuilds_()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+
+        }
+        #endregion
+
+        #region "GenerateBuildKey Tests"
+        [TestMethod]
+        public void RecommendationManager_GenerateBuildKey_ReturnsBuildKeyStructure()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+
+        }
+        #endregion
     }
 }

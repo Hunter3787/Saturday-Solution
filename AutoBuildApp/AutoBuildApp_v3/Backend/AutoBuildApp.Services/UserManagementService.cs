@@ -1,9 +1,9 @@
 ﻿using AutoBuildApp.DataAccess;
 using AutoBuildApp.Models.Users;
-using AutoBuildApp.Models.DTO
+using AutoBuildApp.Models.DTO;
 using System;
 
-namespace AutoBuildApp.ServiceLayer
+namespace AutoBuildApp.Services
 {
     public class UserManagementService
     {
