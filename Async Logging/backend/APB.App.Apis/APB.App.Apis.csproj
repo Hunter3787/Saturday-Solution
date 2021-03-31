@@ -9,5 +9,9 @@
     <ProjectReference Include="..\APB.App.Services\APB.App.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
 
 </Project>

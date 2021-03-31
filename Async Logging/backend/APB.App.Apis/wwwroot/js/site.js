@@ -113,21 +113,28 @@ function _displayItems(data) {
         var node1 = document.createTextNode(item["username"]); // child
         para1.appendChild(node1);
         table.appendChild(para1);
-        var para2 = document.createElement("td") // parent
+        var para2 = document.createElement("td"); // parent
         for (var i = 0; i < item["starRating"]; i++) {
             stars += String.fromCharCode(9733);
         }
         var node2 = document.createTextNode(stars); // child
         para2.appendChild(node2);
         table.appendChild(para2);
-        var para3 = document.createElement("td") // parent
+        var para3 = document.createElement("td"); // parent
         var node3 = document.createTextNode(item["message"]); // child
         para3.appendChild(node3);
         table.appendChild(para3);
-        var para4 = document.createElement("td") // parent
+        var para4 = document.createElement("td"); // parent
         var node4 = document.createTextNode(item["dateTime"]); // child
         para4.appendChild(node4);
         table.appendChild(para4);
+
+        var para5 = document.createElement("td"); // parent
+        var img = document.createElement("img");
+        img.src = item["filePath"];
+        para5.appendChild(img);
+        table.appendChild(para5);
+
         var element = document.getElementById("reviews-saved"); // great-grandparent
         element.appendChild(table);
     });

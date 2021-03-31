@@ -66,6 +66,7 @@ namespace APB.App.Services
                     using (Image img = Image.FromStream(streamBitmap))
                     {
                         img.Save($"C:\\Users\\Serge\\Desktop\\images\\{reviewEntities.Username}_{reviewEntities.EntityId}.jpg");
+                        //img.Save($"C:\\Users\\Serge\\Code\\GitHub\\Saturday-Solution\\Async Logging\\backend\\APB.App.Apis\\wwwroot\\images\\{reviewEntities.Username}_{reviewEntities.EntityId}.jpg");
                         reviewRatings.Picture = img;
 
                         //reviewRatingEntity.EntityId = $"{ReviewTable}_{DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}"
@@ -96,24 +97,25 @@ namespace APB.App.Services
                     DateTime = reviewRatingEntity.DateTime
                 };
 
-                //if (reviewRatingEntity.ImageBuffer != null)
-                //{
-                //    using (var streamBitmap = new MemoryStream(reviewRatingEntity.ImageBuffer))
-                //    {
+                if (reviewRatingEntity.ImageBuffer != null)
+                {
+                    using (var streamBitmap = new MemoryStream(reviewRatingEntity.ImageBuffer))
+                    {
 
-                //        using (Image img = Image.FromStream(streamBitmap))
-                //        {
-                //            //img.Save($"C:\\Users\\Serge\\Desktop\\images\\{reviewRatingEntity.Username}_{reviewRatingEntity.EntityId}.jpg");
-                //            reviewRatings.Picture = null;
-
-                //            //reviewRatingEntity.EntityId = $"{ReviewTable}_{DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}"
-                //        }
-                //    }
-                //}
-                //else
-                //{
-                //    reviewRatings.Picture = null;
-                //}
+                        using (Image img = Image.FromStream(streamBitmap))
+                        {
+                            string filePath = $"C:\\Users\\Serge\\Code\\GitHub\\Saturday-Solution\\Async Logging\\backend\\APB.App.Apis\\wwwroot\\images\\{reviewRatingEntity.Username}_{reviewRatingEntity.EntityId}.jpg";
+                            img.Save(filePath);
+                            reviewRatings.Picture = img;
+                            reviewRatings.FilePath = $"images\\{ reviewRatingEntity.Username}_{ reviewRatingEntity.EntityId}.jpg";
+                            //reviewRatingEntity.EntityId = $"{ReviewTable}_{DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}"
+                        }
+                    }
+                }
+                else
+                {
+                    reviewRatings.Picture = null;
+                }
                 reviewRatingList.Add(reviewRatings);
             }
             return reviewRatingList;
