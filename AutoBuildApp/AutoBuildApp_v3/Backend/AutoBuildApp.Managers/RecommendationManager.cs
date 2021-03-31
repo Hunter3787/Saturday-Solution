@@ -70,7 +70,7 @@ namespace AutoBuildApp.Managers
         /// <returns>A list of IBuild representing the recommended builds.</returns>
         public List<IBuild>
             RecommendBuilds(BuildType buildType, double budget,
-                Dictionary<ProductType, int> peripherals, PowerSupplyType psuType,
+                Dictionary<ProductType, int> peripherals, PSUModularity psuType,
                     HardDriveType hddType, int hddCount)
         {   
 

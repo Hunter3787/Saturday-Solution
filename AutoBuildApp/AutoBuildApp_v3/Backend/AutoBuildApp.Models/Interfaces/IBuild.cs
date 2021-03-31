@@ -13,5 +13,9 @@ namespace AutoBuildApp.Models.Interfaces
         public GPU Gpu { get; set; }
         public CPU Cpu { get; set; }
         public RAM Ram { get; set; }
+        public ICooler CPUCooler { get; set; }
+
+        public bool AddHardDrive(IHardDrive add);
+        public bool RemoveHardDrive(IHardDrive remove);
     }
 }

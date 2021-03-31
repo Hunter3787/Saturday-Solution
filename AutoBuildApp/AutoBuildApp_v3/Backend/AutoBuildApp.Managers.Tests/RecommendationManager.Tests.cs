@@ -38,7 +38,7 @@ namespace AutoBuildApp.Managers.Tests
             BuildType buildType = BuildType.Gaming;
             double budget = 1700.00;
             Dictionary<ProductType, int> productTypes = null;
-            PowerSupplyType powerSupply = PowerSupplyType.Modular;
+            PSUModularity powerSupply = PSUModularity.FullyModular;
             HardDriveType hddType = HardDriveType.NVMe;
             int hardDriveCount = 3;
             
@@ -60,7 +60,7 @@ namespace AutoBuildApp.Managers.Tests
             double budget = 2500.00;
             Dictionary<ProductType, int> productTypes = new Dictionary<ProductType, int>();
             productTypes.Add(ProductType.Monitor, 2);
-            PowerSupplyType powerSupply = PowerSupplyType.Modular;
+            PSUModularity powerSupply = PSUModularity.FullyModular;
             HardDriveType hddType = HardDriveType.NVMe;
             int hardDriveCount = 3;
 
@@ -81,7 +81,7 @@ namespace AutoBuildApp.Managers.Tests
             BuildType buildType = BuildType.Gaming;
             double budget = 100.00;
             Dictionary<ProductType, int> productTypes = null;
-            PowerSupplyType powerSupply = PowerSupplyType.Modular;
+            PSUModularity powerSupply = PSUModularity.FullyModular;
             HardDriveType hddType = HardDriveType.NVMe;
             int hardDriveCount = 3;
 
@@ -103,7 +103,7 @@ namespace AutoBuildApp.Managers.Tests
             BuildType buildType = BuildType.Gaming;
             double budget = -100.00;
             Dictionary<ProductType, int> productTypes = null;
-            PowerSupplyType powerSupply = PowerSupplyType.None;
+            PSUModularity powerSupply = PSUModularity.None;
             HardDriveType hddType = HardDriveType.None;
             int hardDriveCount = 0;
 
