@@ -9,9 +9,9 @@ namespace AutoBuildApp.Models.Products
         {
         }
 
-        public string modelNumber { get; set; }
+        public string ModelNumber { get; set; }
         public string productType { get; set; }
-        public string productName { get; set; }
-        public string manufacturerName { get; set; }
+        public string ProductName { get; set; }
+        public string ManufacturerName { get; set; }
     }
 }

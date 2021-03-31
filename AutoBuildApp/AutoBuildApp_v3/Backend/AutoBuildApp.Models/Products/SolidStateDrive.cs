@@ -6,12 +6,12 @@ namespace AutoBuildApp.Models.Products
 {
     public class SolidStateDrive : IHardDrive, IComponent
     {
-        public HardDriveType hardDriveType { get; set; }
-        public string modelNumber { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public ProductType productType { get; set => throw new NotImplementedException(); }
-        public string productName { get; set; }
-        public string manufacturerName { get; set; }
-        public int quantity { get; set; }
+        public HardDriveType HardDriveType { get; set; }
+        public string ModelNumber { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public ProductType ProductType { get; set => throw new NotImplementedException(); }
+        public string ProductName { get; set; }
+        public string ManufacturerName { get; set; }
+        public int Quantity { get; set; }
 
         public SolidStateDrive()
         {

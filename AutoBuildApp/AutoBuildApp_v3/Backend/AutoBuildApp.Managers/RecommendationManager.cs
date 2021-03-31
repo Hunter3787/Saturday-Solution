@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Enumerations;
+using AutoBuildApp.Models.Products;
 
 /// <summary>
 /// Utilizes the Managers namespace for the Auto-build app. 
@@ -12,14 +13,13 @@ namespace AutoBuildApp.Managers
     /// Class that functions as the manager to the recommendation tool
     /// for the AutoBuildApp.
     /// </summary>
-    public class RecommendationManager
+    public class RecommendationManager : ArgumentOutOfRangeException
     {
         // Local constant for minimum budget.
         private const double MIN_BUDGET = 0.0;
 
         private double _budget;
         private BuildType _buildType;
-
 
         #region "Constructors"
         /// <summary>
@@ -46,7 +46,6 @@ namespace AutoBuildApp.Managers
             // If budget is below 0 set to 0.
             if (budget < MIN_BUDGET)
                 _budget = MIN_BUDGET;
-            // If budget is positive or 0 set it. 
             else
                 _budget = budget;
             // Assign Enum BuildType to private variable.
@@ -54,55 +53,64 @@ namespace AutoBuildApp.Managers
         }
         #endregion
 
+        #region "Build Recommendations"
         /// <summary>
-        /// Attempts to return a build recommendation using only a budget and
-        /// BuildType enumeration. If no budget is present the budget will be
-        /// unlimited. 
+        /// Recommend a computer build based off user defined parameters.
         /// </summary>
+        /// <param name="buildType">Type of Build based on Enum.</param>
+        /// <param name="budget">Double value representing the budget.</param>
+        /// <param name="peripherals">Dictionary of product types and how many
+        /// of each would be requested.(Optional)</param>
+        /// <param name="psuType">Power supply unit type requested by
+        /// the user.(Optional)</param>
+        /// <param name="hddType">Hard drive type
+        /// prioritized by user. (Optional)</param>
+        /// <param name="hddCount">Number of hard drives that the user
+        /// would like to be in their final build.(Optional)</param>
+        /// <returns>A list of IBuild representing the recommended builds.</returns>
+        public List<IBuild>
+            RecommendBuilds(BuildType buildType, double budget,
+                Dictionary<ProductType, int> peripherals, PowerSupplyType psuType,
+                    HardDriveType hddType, int hddCount)
+        {
+
+            
+
+
+
+
+
+            return null;
+        }
+        #endregion
+
+        #region "Upgrade Recommendations"
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="components"></param>
         /// <param name="buildType"></param>
         /// <param name="budget"></param>
         /// <returns></returns>
-        public Dictionary<int, List<IComponent>>
-            RecommendBuilds(BuildType buildType, double budget)
+        public List<IComponent> RecommendUpgrade(List<IComponent> components,
+            BuildType buildType, double budget)
         {
+
+
+
             return null;
         }
 
-
-        public Dictionary<int, List<IComponent>>
-            RecommendBuilds(BuildType buildType, double budget,
-                List<ProductType> peripherals, PowerSupplyType psuType,
-                    HardDriveType hddType, int hddCount)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="savedBuild"></param>
+        /// <returns></returns>
+        public List<IBuild> RecommendUpgrades(IBuild savedBuild)
         {
             return null;
         }
-
-        public List<IComponent> RecommendUpgrade()
-        {
-            return null;
-        }
-
-        public Dictionary<int,List<IComponent>> RecommendUpgrades()
-        {
-            return null;
-        }
-
-
-        public bool SaveRecommendation()
-        {
-            return false;
-        }
-
-
-        public List<IComponent> RequestComponentsByType()
-        {
-            return null;
-        }
-
-        public void RequestSavedBuilds()
-        {
-
-        }
+        #endregion
 
         #region "Private Methods"
         private void GenerateBuildKey()
@@ -130,7 +138,33 @@ namespace AutoBuildApp.Managers
 
         }
 
-        private void CompareBuilds()
+        private void ComponentCompare()
+        {
+
+        }
+
+
+        private void BuildCompare()
+        {
+
+        }
+        #endregion
+
+        #region "Out of Scope"
+        // Migrating to user garage.
+        public bool SaveRecommendation()
+        {
+            return false;
+        }
+
+        // Migrating to controller.
+        public List<IComponent> RequestComponentsByType()
+        {
+            return null;
+        }
+
+        // Migrating to controller.
+        public void RequestSavedBuilds()
         {
 
         }

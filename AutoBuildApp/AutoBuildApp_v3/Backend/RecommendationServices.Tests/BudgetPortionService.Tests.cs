@@ -1,10 +1,10 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using AutoBuildApp.DataAccess;
+using AutoBuildApp.Services;
 
-namespace RecommendationDAO.Tests
+namespace RecommendationServices.Tests
 {
     [TestClass]
-    public class UnitTest1
+    public class BudgetPortionServiceTests
     {
         [TestMethod]
         public void TestMethod1()

@@ -21,4 +21,7 @@
   <ItemGroup>
     <None Remove=".DS_Store" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Mock Classes\" />
+  </ItemGroup>
 </Project>

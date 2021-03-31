@@ -6,11 +6,12 @@ namespace AutoBuildApp.Models.Interfaces
 {
     public interface IBuild
     {
-        public List<IHardDrive> hardDrive { get; set; }
-        public Motherboard motherboard { get; set; }
-        public PowerSupplyUnit psu { get; set; }
-        public GPU gpu { get; set; }
-        public CPU cpu { get; set; }
-        public RAM ram { get; set; }
+        public List<IHardDrive> HardDrive { get; set; }
+        public ComputerCase Case { get; set; }
+        public Motherboard Mobo { get; set; }
+        public PowerSupplyUnit Psu { get; set; }
+        public GPU Gpu { get; set; }
+        public CPU Cpu { get; set; }
+        public RAM Ram { get; set; }
     }
 }

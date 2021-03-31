@@ -1,10 +1,10 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RecommendationServices;
+using AutoBuildApp.Services;
 
 namespace RecommendationServices.Tests
 {
     [TestClass]
-    public class UnitTest1
+    public class ComponentScoringServiceTests
     {
         [TestMethod]
         public void TestMethod1()

@@ -1,47 +1,53 @@
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using AutoBuildApp.Managers;
+using AutoBuildApp.Models.Interfaces;
+using AutoBuildApp.Models.Enumerations;
+using AutoBuildApp.Models.Builds;
+using System.Collections.Generic;
 
-/**
- * Recommendation unit tests.
- */
-namespace RecommendationManager.Tests
+/// <summary>
+/// Recommednation Manager Unit and integration Tests
+/// </summary>
+namespace AutoBuildApp.Managers.Tests
 {
     [TestClass]
     public class RecommendationManagerTests
     {
+        private RecommendationManager _manager;
+        private IBuild _build;
+        private List<IBuild> _gamingBuilds;
 
         // Initialize test class
         [TestInitialize]
         public void Initialize()
         {
-
+            _manager = new RecommendationManager();
+            _gamingBuilds = new List<IBuild>();
         }
 
         #region "Build Recommendation Tests"
-        // Test recommendation of build with no peripherals.
+        // Test recommendation for a gaming pc with $1700 budget
+        // requesting: no peripherals, 3 hard drives(prefering NVMe),
+        // and a modular power supply.
+        // Should return a List of Builds matching the criteria.
         [TestMethod]
         public void
-            RecommendationManager_RecomendBuilds_ReturnDictionaryOfIComponentLists()
+            RecommendationManager_RecomendBuilds_ReturnListOfGamingBuilds()
         {
             // Arrange
-
+            BuildType buildType = BuildType.Gaming;
+            double budget = 1700.00;
+            Dictionary<ProductType, int> productTypes = null;
+            PowerSupplyType powerSupply = PowerSupplyType.Modular;
+            HardDriveType hddType = HardDriveType.NVMe;
+            int hardDriveCount = 3;
+            
             // Act
+            List<IBuild> output = _manager.RecommendBuilds(buildType, budget,
+                productTypes, powerSupply, hddType, hardDriveCount);
 
             // Assert
-
-        }
-
-        // No builds were able to be created. 
-        [TestMethod]
-        public void
-            RecommendationManager_RecommendBuilds_ReturnNullWithNoSuggestions()
-        {
-            // Arrange
-
-            // Act
-
-            // Assert
-
+            Assert.IsNotNull(output);
         }
 
         // Successful return of recommended build with two duplicate monitor recommendations.
@@ -50,14 +56,65 @@ namespace RecommendationManager.Tests
             RecommendManager_RecommendBuilds_ReturnRecommendationWithTwoDuplicateMonitors()
         {
             // Arrange
+            BuildType buildType = BuildType.Gaming;
+            double budget = 2500.00;
+            Dictionary<ProductType, int> productTypes = new Dictionary<ProductType, int>();
+            productTypes.Add(ProductType.Monitor, 2);
+            PowerSupplyType powerSupply = PowerSupplyType.Modular;
+            HardDriveType hddType = HardDriveType.NVMe;
+            int hardDriveCount = 3;
 
             // Act
+            List<IBuild> output = _manager.RecommendBuilds(buildType, budget,
+                productTypes, powerSupply, hddType, hardDriveCount);
 
-            // Assert
-
+            // Assert 
+            Assert.IsNotNull(output);
         }
 
-        // No builds could be recommendedations could be found within budget.
+        // No builds were able to be created. 
+        [TestMethod]
+        public void
+            RecommendationManager_RecommendBuilds_ReturnNullWithNoSuggestions()
+        {
+            // Arrange
+            BuildType buildType = BuildType.Gaming;
+            double budget = 100.00;
+            Dictionary<ProductType, int> productTypes = null;
+            PowerSupplyType powerSupply = PowerSupplyType.Modular;
+            HardDriveType hddType = HardDriveType.NVMe;
+            int hardDriveCount = 3;
+
+            // Act
+            List<IBuild> output = _manager.RecommendBuilds(buildType, budget,
+                productTypes, powerSupply, hddType, hardDriveCount);
+
+            // Assert
+            Assert.IsNull(output);
+        }
+
+        // No builds were able to be created. 
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void
+            RecommendationManager_RecommendBuilds_ThrowsErrorForNegativeBudget()
+        {
+            // Arrange
+            BuildType buildType = BuildType.Gaming;
+            double budget = -100.00;
+            Dictionary<ProductType, int> productTypes = null;
+            PowerSupplyType powerSupply = PowerSupplyType.None;
+            HardDriveType hddType = HardDriveType.None;
+            int hardDriveCount = 0;
+
+            // Act
+            List<IBuild> output = _manager.RecommendBuilds(buildType, budget,
+                productTypes, powerSupply, hddType, hardDriveCount);
+
+            // Assert - Throws Argument out of Range, should be handled in Controller.
+        }
+
+        // No build recommendedations could be found within budget.
         [TestMethod]
         public void
             RecommendationManager_RecommendBuildsWithPeripherals_ReturnNullWithNoSuggestions()
@@ -96,9 +153,10 @@ namespace RecommendationManager.Tests
         #endregion
 
         #region "Upgrade Recommendation Tests"
-        // Test the recommend upgrade feature on a single item.
+        // Return list of components that will be an upgrade for the 
+        // passed component.
         [TestMethod]
-        public void TestRecommendUpgrade()
+        public void RecommendationMnaager_RecommendUpgrades_ReturnUpgradeList()
         {
             // Arrange
 
@@ -108,9 +166,74 @@ namespace RecommendationManager.Tests
 
         }
 
-        // Test the recommend upgrade feature on several items.
+        // No recommendatoins available for the component.
         [TestMethod]
-        public void TestRecommendMultipleUpgrades()
+        public void RecommendationManager_RecommendUpgrades_ReturnNull()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+
+        }
+
+        // 
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void RecommendationManger_RecommendUpgrades_ThrowsException()
+        {
+
+        }
+        #endregion
+
+        #region "Private Methods Tests"
+        [TestMethod]
+        public void RecommendationManager_GenerateBuildKey_ReturnsBuildKeyOfValues()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+
+        }
+
+        [TestMethod]
+        public void RecommendationManager_GenerateComponentList_ReturnsEmptyComponentList()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+
+        }
+
+        [TestMethod]
+        public void RecommendationManager_RemoveOverBudgetItems_ReturnsCroppedListOfComponents()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+
+        }
+
+        [TestMethod]
+        public void RecommendationManager_ScoreComponent_ScoresComponent()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+
+        }
+
+        [TestMethod]
+        public void RecommendationManager_CompareBuidls_ReturnsHigherScoredBuild()
         {
             // Arrange
 
@@ -121,47 +244,7 @@ namespace RecommendationManager.Tests
         }
         #endregion
 
-        #region "Save Recommendaiton Tests"
-        // Test the ability to save a build.
-        [TestMethod]
-        public void SaveBuild_ShouldThrowArguement_IfBuildIsNull()
-        {
-            // Arrange
-
-            // Act
-
-            // Assert
-
-
-        }        
-
-        // Test the ability to save a single item.
-        [TestMethod]
-        public void TestSaveItem()
-        {
-            // Arrange
-
-            // Act
-
-            // Assert
-
-        }
-        #endregion
-
-        #region "Request Component Tests"
-        [TestMethod]
-        public void RecommendationManager_RequestComponentByType()
-        {
-            // Arrange
-
-            // Act
-
-            // Assert
-
-        }
-        #endregion
-
-        #region "Request Saved Builds Tests"
+        #region "Request Saved Builds Tests(Out of Scope)"
         // Returns builds associated with the current logged in account, if any. 
         [TestMethod]
         public void RecommendationManager_RecommendBuilds_ReturnSavedBuilds()
@@ -201,17 +284,5 @@ namespace RecommendationManager.Tests
         }
         #endregion
 
-        #region "GenerateBuildKey Tests"
-        [TestMethod]
-        public void RecommendationManager_GenerateBuildKey_ReturnsBuildKeyStructure()
-        {
-            // Arrange
-
-            // Act
-
-            // Assert
-
-        }
-        #endregion
     }
 }

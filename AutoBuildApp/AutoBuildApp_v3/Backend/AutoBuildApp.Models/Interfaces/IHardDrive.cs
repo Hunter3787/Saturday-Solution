@@ -5,6 +5,6 @@ namespace AutoBuildApp.Models.Interfaces
 {
     public interface IHardDrive
     {
-        public HardDriveType hardDriveType { get; set; }
+        public HardDriveType HardDrive { get; set; }
     }
 }

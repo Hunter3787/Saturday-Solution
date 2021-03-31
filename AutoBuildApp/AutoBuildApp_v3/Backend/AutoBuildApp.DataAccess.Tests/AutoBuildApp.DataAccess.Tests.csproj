@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RecommendationDAO\RecommendationDAO.csproj" />
+    <ProjectReference Include="..\AutoBuildApp.DataAccess\AutoBuildApp.DataAccess.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Remove=".DS_Store" />
