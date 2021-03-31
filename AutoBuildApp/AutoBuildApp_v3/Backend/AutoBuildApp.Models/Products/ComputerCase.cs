@@ -22,7 +22,8 @@ namespace AutoBuildApp.Models.Products
         public int Quantity { get; set; }
         public List<byte[]> ProductImage { get; set; }
         public double Price { get; set; }
-        public List<FormFactor> MotherboardSupport { get; set; }
+        public double Budget { get; set; }
+        public List<MoboFormFactor> RAMSupport { get; set; }
         public TowerType TowerType { get; set; }
         public int ExpansionSlots { get; set; }
         public bool PsuShroud { get; set; }
@@ -40,53 +41,141 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         public ComputerCase()
         {
+        }
 
+        #region "Form Factor Add/Remove"
+        /// <summary>
+        /// Add a string representation of a color to the computer case color list.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>Boolean</returns>
+        public bool AddRAMSupport(MoboFormFactor input)
+        {
+            if (RAMSupport.Contains(input))
+                return false;
+
+            RAMSupport.Add(input);
+            return true;
         }
 
         /// <summary>
-        /// ComputerCase constructor to initialize all fields on creation.
+        /// String method to locate the index of the passed string.
+        /// Will call index variation to remove the element upon location.
         /// </summary>
-        /// <param name="productType"></param>
-        /// <param name="towerType"></param>
-        /// <param name="modelNumber"></param>
-        /// <param name="productName"></param>
-        /// <param name="manufacturerName"></param>
-        /// <param name="quantity"></param>
-        /// <param name="motherboardSupport"></param>
-        /// <param name="expansionSlots"></param>
-        /// <param name="psuShroud"></param>
-        /// <param name="sidePanel"></param>
-        /// <param name="color"></param>
-        /// <param name="twoInchBays"></param>
-        /// <param name="threeInchBays"></param>
-        /// <param name="frontPanel"></param>
-        /// <param name="maxGPULength"></param>
-        /// <param name="dimension"></param>
-        public ComputerCase(ProductType productType, TowerType towerType,
-            string modelNumber, string productName, string manufacturerName,
-                int quantity, List<FormFactor> motherboardSupport, int expansionSlots,
-                    bool psuShroud, string sidePanel, List<string> color, int twoInchDriveBays,
-                        int threeInchDriveBays, List<string> frontPanel, int maxGPULength,
-                            double[,,] dimension)
+        /// <param name="toRemove"></param>
+        /// <returns>Boolean</returns>
+        public bool RemoveRAMSupport(MoboFormFactor toRemove)
         {
-            this.ProductType = productType;
-            this.TowerType = towerType;
-            this.ModelNumber = modelNumber;
-            this.ProductName = productName;
-            this.ManufacturerName = manufacturerName;
-            this.Quantity = quantity;
-            this.MotherboardSupport = motherboardSupport;
-            this.ExpansionSlots = expansionSlots;
-            this.PsuShroud = psuShroud;
-            this.SidePanel = sidePanel;
-            this.Color = color;
-            this.TwoInchDriveBays = twoInchDriveBays;
-            this.ThreeInchDriveBays = threeInchDriveBays;
-            this.FrontPanel = frontPanel;
-            this.MaxGPULength = maxGPULength;
-            this.Dimension = dimension;
+            if (RAMSupport.Contains(toRemove))
+                return false;
+
+            return RemoveRAMSupport(RAMSupport.IndexOf(toRemove));
         }
 
+        /// <summary>
+        /// Index method to remove a color from the computer case color list.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns>Boolean</returns>
+        public bool RemoveRAMSupport(int index)
+        {
+            if (index > RAMSupport.Count || index < MIN_INDEX)
+                return false;
+
+            RAMSupport.RemoveAt(index);
+            return true;
+        }
+        #endregion
+
+        #region "Color Add/Remove"
+        /// <summary>
+        /// Add a string representation of a color to the computer case color list.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>Boolean</returns>
+        public bool AddColor(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input) || Color.Contains(input))
+                return false;
+
+            Color.Add(input);
+            return true;
+        }
+
+        /// <summary>
+        /// String method to locate the index of the passed string.
+        /// Will call index variation to remove the element upon location.
+        /// </summary>
+        /// <param name="toRemove"></param>
+        /// <returns>Boolean</returns>
+        public bool RemoveColor(string toRemove)
+        {
+            if (string.IsNullOrWhiteSpace(toRemove) || !Color.Contains(toRemove))
+                return false;
+
+            return RemoveColor(Color.IndexOf(toRemove));
+        }
+
+        /// <summary>
+        /// Index method to remove a color from the computer case color list.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns>Boolean</returns>
+        public bool RemoveColor(int index)
+        {
+            if (index > Color.Count || index < MIN_INDEX)
+                return false;
+
+            Color.RemoveAt(index);
+            return true;
+        }
+        #endregion
+
+        #region "Front Panel Add/Remove"
+        /// <summary>
+        /// Add a string representation of a front panel to the computer case
+        /// front panel list.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>Boolean</returns>
+        public bool AddFrontPanel(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input) || FrontPanel.Contains(input))
+                return false;
+
+            FrontPanel.Add(input);
+            return true;
+        }
+
+        /// <summary>
+        /// String method to locate the index of the passed string.
+        /// Will call index variation to remove the element upon location.
+        /// </summary>
+        /// <param name="toRemove"></param>
+        /// <returns>Boolean</returns>
+        public bool RemoveFrontPanel(string toRemove)
+        {
+            if (string.IsNullOrWhiteSpace(toRemove) || !FrontPanel.Contains(toRemove))
+                return false;
+
+            return RemoveFrontPanel(FrontPanel.IndexOf(toRemove));
+        }
+
+        /// <summary>
+        /// Index method to remove a front panel element from the computer case
+        /// front panel list.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns>Boolean</returns>
+        public bool RemoveFrontPanel(int index)
+        {
+            if (index > FrontPanel.Count || index < MIN_INDEX)
+                return false;
+
+            FrontPanel.RemoveAt(index);
+            return true;
+        }
+        #endregion
 
         #region "Interface Implementations"
         /// <summary>

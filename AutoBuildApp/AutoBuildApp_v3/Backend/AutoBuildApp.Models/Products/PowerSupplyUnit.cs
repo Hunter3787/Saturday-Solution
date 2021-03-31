@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Interfaces;
 
 namespace AutoBuildApp.Models.Products
 {
+    /// <summary>
+    /// Power Supply Unit class to represent the computers power source.
+    /// </summary>
     public class PowerSupplyUnit : IComponent
     {
         #region "Field Declarations, get; set;"
@@ -18,6 +20,7 @@ namespace AutoBuildApp.Models.Products
         public int Quantity { get; set; }
         public List<byte[]> ProductImage { get; set; }
         public double Price { get; set; }
+        public double Budget { get; set; }
         public string FormFactor { get; set; }
         public int Wattage { get; set; }
         public int Length { get; set; }
@@ -37,54 +40,6 @@ namespace AutoBuildApp.Models.Products
         {
 
         }
-
-        /// <summary>
-        /// PowerSupplyUnit 
-        /// </summary>
-        /// <param name="productType"></param>
-        /// <param name="modelNumber"></param>
-        /// <param name="productName"></param>
-        /// <param name="manufacturerName"></param>
-        /// <param name="quantity"></param>
-        /// <param name="productImage"></param>
-        /// <param name="price"></param>
-        /// <param name="formFactor"></param>
-        /// <param name="wattage"></param>
-        /// <param name="length"></param>
-        /// <param name="efficiencyRating"></param>
-        /// <param name="fanless"></param>
-        /// <param name="psuType"></param>
-        /// <param name="ePSConnectors"></param>
-        /// <param name="sataConnectors"></param>
-        /// <param name="molexConnectors"></param>
-        /// <param name="sixPlusTwoConnectors"></param>
-        public PowerSupplyUnit(ProductType productType, string modelNumber,
-            string productName, string manufacturerName, int quantity,
-                List<byte[]> productImage, double price, string formFactor,
-                    int wattage, int length, string efficiencyRating, bool fanless,
-                        PSUModularity psuType, int ePSConnectors, int sataConnectors,
-                            int molexConnectors, int sixPlusTwoConnectors)
-        {
-            ProductType = productType;
-            ModelNumber = modelNumber;
-            ProductName = productName;
-            ManufacturerName = manufacturerName;
-            Quantity = quantity;
-            ProductImage = productImage;
-            Price = price;
-            FormFactor = formFactor;
-            Wattage = wattage;
-            Length = length;
-            EfficiencyRating = efficiencyRating;
-            Fanless = fanless;
-            PsuType = psuType;
-            EPSConnectors = ePSConnectors;
-            SataConnectors = sataConnectors;
-            MolexConnectors = molexConnectors;
-            SixPlusTwoConnectors = sixPlusTwoConnectors;
-        }
-
-
 
         #region "Interface Implementations"
         /// <summary>

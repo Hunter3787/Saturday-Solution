@@ -3,7 +3,7 @@
 /// </summary>
 namespace AutoBuildApp.Models.Enumerations
 {
-    public enum FormFactor
+    public enum MoboFormFactor
     {
         StandardATX,
         ATX,
