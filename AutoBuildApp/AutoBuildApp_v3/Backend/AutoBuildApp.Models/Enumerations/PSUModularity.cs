@@ -1,10 +1,9 @@
 ﻿using System;
 namespace AutoBuildApp.Models.Enumerations
 {
-    public enum PowerSupplyType
+    public enum PSUModularity
     {
         SemiModular,
-        Modular,
         NonModular,
         FullyModular,
         None

@@ -21,12 +21,13 @@ namespace AutoBuildApp.Models.Products
         public string ManufacturerName { get; set; }
         public int Quantity { get; set; }
         public List<byte[]> ProductImage { get; set; }
+        public double Price { get; set; }
         public List<FormFactor> MotherboardSupport { get; set; }
         public TowerType TowerType { get; set; }
         public int ExpansionSlots { get; set; }
         public bool PsuShroud { get; set; }
         public string SidePanel { get; set; }
-        public string Color { get; set; }
+        public List<string> Color { get; set; }
         public int TwoInchDriveBays { get; set; }
         public int ThreeInchDriveBays { get; set; }
         public List<string> FrontPanel { get; set; }
@@ -43,7 +44,7 @@ namespace AutoBuildApp.Models.Products
         }
 
         /// <summary>
-        /// Constructor for filling in all fields on creation.
+        /// ComputerCase constructor to initialize all fields on creation.
         /// </summary>
         /// <param name="productType"></param>
         /// <param name="towerType"></param>
@@ -64,7 +65,7 @@ namespace AutoBuildApp.Models.Products
         public ComputerCase(ProductType productType, TowerType towerType,
             string modelNumber, string productName, string manufacturerName,
                 int quantity, List<FormFactor> motherboardSupport, int expansionSlots,
-                    bool psuShroud, string sidePanel, string color, int twoInchDriveBays,
+                    bool psuShroud, string sidePanel, List<string> color, int twoInchDriveBays,
                         int threeInchDriveBays, List<string> frontPanel, int maxGPULength,
                             double[,,] dimension)
         {
@@ -103,9 +104,9 @@ namespace AutoBuildApp.Models.Products
         }
 
         /// <summary>
-        /// Removes an 
+        /// Removes an image from the byte array at the provided index.
         /// </summary>
-        /// <param name="index"></param>
+        /// <param name="index">Position of the image intended to be deleted.</param>
         /// <returns></returns>
         public bool RemoveImage(int index)
         {

@@ -31,7 +31,6 @@ namespace AutoBuildApp.Managers
             _budget = 0;
             // Initialize buildType to none.
             _buildType = BuildType.None;
-
         }
 
         /// <summary>
@@ -48,6 +47,7 @@ namespace AutoBuildApp.Managers
                 _budget = MIN_BUDGET;
             else
                 _budget = budget;
+
             // Assign Enum BuildType to private variable.
             _buildType = buildType;
         }
@@ -72,7 +72,7 @@ namespace AutoBuildApp.Managers
             RecommendBuilds(BuildType buildType, double budget,
                 Dictionary<ProductType, int> peripherals, PowerSupplyType psuType,
                     HardDriveType hddType, int hddCount)
-        {
+        {   
 
             
 

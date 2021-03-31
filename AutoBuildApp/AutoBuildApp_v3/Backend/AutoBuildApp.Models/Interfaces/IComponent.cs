@@ -17,6 +17,7 @@ namespace AutoBuildApp.Models.Interfaces
         public string ManufacturerName { get; set; }
         public int Quantity { get; set; }
         public List<byte[]> ProductImage { get; set; }
+        public double Price { get; set; }
 
         /// <summary>
         /// Interface implementation of AddImage method.
