@@ -22,7 +22,7 @@ function addItem() {
     const addMessageTextbox = document.getElementById('add-message');
     const addFilePathTextbox = document.getElementById('add-imagepath');
 
-    console.log(starValue);
+    //console.log(starValue);
 
   const item = {
       //isComplete: false,
@@ -31,7 +31,8 @@ function addItem() {
       //starRating: parseInt(addStarTextbox.value),
       message: addMessageTextbox.value.trim(),
       filePath: addFilePathTextbox.value
-  };
+    };
+
 
     fetch('https://localhost:44317/ReviewRating', {
         method: 'POST',
@@ -51,31 +52,43 @@ function addItem() {
 
 function deleteItem(id) {
     fetch(`${uri}/${id}`, {
-    method: 'DELETE'
+        method: 'DELETE',
+        mode: 'cors',
   })
   //.then(() => getItems())
   .catch(error => console.error('Unable to delete item.', error));
 }
 
 function displayEditForm(id) {
-  const item = todos.find(item => item.id === id);
-  
-  document.getElementById('edit-name').value = item.name;
-  document.getElementById('edit-id').value = item.id;
-  document.getElementById('edit-isComplete').checked = item.isComplete;
-  document.getElementById('editForm').style.display = 'block';
+
+    const item = todos.find(item => item["entityId"] === id.toString());
+
+    document.getElementById('edit-id').value = item.entityId;
+    document.getElementById('edit-message').value = item.message;
+    document.getElementById('edit-starRating').value = item.starRating;
+    document.getElementById('edit-filePath').value = item.filePath;
+    document.getElementById('editForm').style.display = 'block';
 }
 
 function updateItem() {
-  const itemId = document.getElementById('edit-id').value;
-  const item = {
-    id: parseInt(itemId, 10),
-    isComplete: document.getElementById('edit-isComplete').checked,
-    name: document.getElementById('edit-name').value.trim()
+    const itemId = document.getElementById('edit-id').value;
+
+    const item = {
+        //entityId: parseInt(itemId),
+        //starRating: parseInt(document.getElementById('edit-starRating').value),
+        //message: document.getElementById('edit-message').value.trim(),
+        //filePath: document.getElementById('edit-filePath').value
+        entityId: "30000",
+        starRating: 5,
+        message: "WORKS",
+        filePath: null
   };
 
-  fetch(`${uri}/${itemId}`, {
-    method: 'PUT',
+    console.log(item);
+
+    fetch('https://localhost:44317/ReviewRating', {
+        method: 'PUT',
+        mode: 'cors',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
@@ -102,7 +115,9 @@ function _displayCount(itemCount) {
 
 function _displayItems(data) {
 
-    data.forEach(item => console.log(item["username"]));
+    const tBody = document.getElementById('todos');
+    tBody.innerHTML = '';
+    //data.forEach(item => console.log(item["username"]));
 
   //const tBody = document.getElementById('todos');
     //tBody.innerHTML = '';
@@ -141,6 +156,14 @@ function _displayItems(data) {
         deleteButton.setAttribute('onclick', `deleteItem(${item.entityId})`);
         para6.appendChild(deleteButton);
         table.appendChild(para6);
+
+        var para7 = document.createElement("td");
+        var editButton = document.createElement("button");
+        editButton.innerText = 'Edit';
+        editButton.setAttribute('onclick', `displayEditForm(${item.entityId})`);
+        para7.appendChild(editButton);
+        table.appendChild(para7);
+
 
         var element = document.getElementById("reviews-saved"); // great-grandparent
         element.appendChild(table);

@@ -62,8 +62,10 @@
             <th>Message</th>
             <th>Date</th>
             <th>Photo</th>
-            <th>Edit / Delete</th>
+            <th>Delete</th>
+            <th>Edit</th>
         </tr>
+        <tbody id="todos"></tbody>
     </table>
 
     <br />
@@ -73,8 +75,10 @@
         <h3>Edit</h3>
         <form action="javascript:void(0);" onsubmit="updateItem()">
             <input type="hidden" id="edit-id">
-            <input type="checkbox" id="edit-isComplete">
-            <input type="text" id="edit-name">
+            <input type="text" id="edit-message">
+            <input type="text" id="edit-starRating">
+            <input type="text" id="edit-filePath">
+
             <input type="submit" value="Save">
             <a onclick="closeInput()" aria-label="Close">&#10006;</a>
         </form>

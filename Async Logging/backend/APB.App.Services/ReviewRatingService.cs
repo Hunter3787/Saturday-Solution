@@ -107,7 +107,7 @@ namespace APB.App.Services
                             string filePath = $"C:\\Users\\Serge\\Code\\GitHub\\Saturday-Solution\\Async Logging\\backend\\APB.App.Apis\\wwwroot\\images\\{reviewRatingEntity.Username}_{reviewRatingEntity.EntityId}.jpg";
                             img.Save(filePath);
                             reviewRatings.Picture = img;
-                            reviewRatings.FilePath = $"images\\{ reviewRatingEntity.Username}_{ reviewRatingEntity.EntityId}.jpg";
+                            reviewRatings.FilePath = $"images/{ reviewRatingEntity.Username}_{ reviewRatingEntity.EntityId}.jpg";
                             //reviewRatingEntity.EntityId = $"{ReviewTable}_{DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}"
                         }
                     }

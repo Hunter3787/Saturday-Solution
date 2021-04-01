@@ -89,5 +89,21 @@ namespace APB.App.Apis.Controllers
 
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
+
+        [HttpPut]
+        public IActionResult EditReviewRating(ReviewRating reviewRating)
+        {
+            ReviewRatingService reviewRatingService = new ReviewRatingService(reviewRatingDAO);
+            ReviewRatingManager reviewRatingManager = new ReviewRatingManager(reviewRatingService);
+
+            var createResult = reviewRatingManager.EditReviewRating(reviewRating);
+
+            if (createResult)
+            {
+                return Ok();
+            }
+
+            return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+        }
     }
 }
