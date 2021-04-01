@@ -102,13 +102,21 @@ namespace APB.App.Services
                     using (var streamBitmap = new MemoryStream(reviewRatingEntity.ImageBuffer))
                     {
 
-                        using (Image img = Image.FromStream(streamBitmap))
+                        try
                         {
-                            string filePath = $"C:\\Users\\Serge\\Code\\GitHub\\Saturday-Solution\\Async Logging\\backend\\APB.App.Apis\\wwwroot\\images\\{reviewRatingEntity.Username}_{reviewRatingEntity.EntityId}.jpg";
-                            img.Save(filePath);
-                            reviewRatings.Picture = img;
-                            reviewRatings.FilePath = $"images/{ reviewRatingEntity.Username}_{ reviewRatingEntity.EntityId}.jpg";
-                            //reviewRatingEntity.EntityId = $"{ReviewTable}_{DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}"
+                            using (Image img = Image.FromStream(streamBitmap))
+                            {
+                                string filePath = $"C:\\Users\\Serge\\Code\\GitHub\\Saturday-Solution\\Async Logging\\backend\\APB.App.Apis\\wwwroot\\images\\{reviewRatingEntity.Username}_{reviewRatingEntity.EntityId}.jpg";
+                                img.Save(filePath);
+                                reviewRatings.Picture = img;
+                                reviewRatings.FilePath = $"images/{ reviewRatingEntity.Username}_{ reviewRatingEntity.EntityId}.jpg";
+                                //reviewRatingEntity.EntityId = $"{ReviewTable}_{DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}"
+                            }
+                        }
+                        catch(ArgumentException)
+                        {
+                            reviewRatings.Picture = null;
+                            reviewRatings.FilePath = null;
                         }
                     }
                 }

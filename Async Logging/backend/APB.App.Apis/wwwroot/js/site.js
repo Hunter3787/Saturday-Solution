@@ -74,14 +74,14 @@ function updateItem() {
     const itemId = document.getElementById('edit-id').value;
 
     const item = {
-        //entityId: parseInt(itemId),
-        //starRating: parseInt(document.getElementById('edit-starRating').value),
-        //message: document.getElementById('edit-message').value.trim(),
-        //filePath: document.getElementById('edit-filePath').value
-        entityId: "30000",
-        starRating: 5,
-        message: "WORKS",
-        filePath: null
+        entityId: itemId.toString(),
+        starRating: parseInt(document.getElementById('edit-starRating').value),
+        message: document.getElementById('edit-message').value.trim(),
+        filePath: document.getElementById('edit-filePath').value
+        //entityId: "30000",
+        //starRating: 5,
+        //message: "WORKS",
+        //filePath: null
   };
 
     console.log(item);
@@ -95,7 +95,7 @@ function updateItem() {
     },
     body: JSON.stringify(item)
   })
-  .then(() => getItems())
+  //.then(() => getItems())
   .catch(error => console.error('Unable to update item.', error));
 
   closeInput();
