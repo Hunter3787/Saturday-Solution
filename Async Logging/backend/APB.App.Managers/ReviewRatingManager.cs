@@ -29,11 +29,6 @@ namespace APB.App.Managers
             return _reviewRatingService.CreateReviewRating(reviewRating);
         }
 
-        public bool DeleteReviewRating(string reviewId)
-        {
-            return _reviewRatingService.DeleteReviewRating(reviewId);
-        }
-
         public ReviewRating GetReviewsRatings(string reviewId)
         {
             var reviewRating = new ReviewRating()

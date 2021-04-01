@@ -45,16 +45,6 @@ namespace APB.App.Services
             return _reviewRatingDAO.CreateReviewRatingRecord(reviewRatingEntity);
         }
 
-        public bool DeleteReviewRating(string reviewId)
-        {
-            var reviewRatingEntity = new ReviewRatingEntity()
-            {
-                EntityId = reviewId
-            };
-
-            return _reviewRatingDAO.DeleteReviewRatingById(reviewRatingEntity.EntityId);
-        }
-
         public ReviewRating GetReviewsRatings(ReviewRating reviewRating)
         {
             var reviewEntities = _reviewRatingDAO.GetReviewsRatingsBy(reviewRating.EntityId);
