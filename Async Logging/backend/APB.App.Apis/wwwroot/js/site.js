@@ -1,4 +1,4 @@
-const uri = 'api/TodoItems';
+const uri = 'https://localhost:44317/reviewrating';
 let todos = [];
 
 function getItems() {
@@ -50,10 +50,10 @@ function addItem() {
 }
 
 function deleteItem(id) {
-  fetch(`${uri}/${id}`, {
+    fetch(`${uri}/${id}`, {
     method: 'DELETE'
   })
-  .then(() => getItems())
+  //.then(() => getItems())
   .catch(error => console.error('Unable to delete item.', error));
 }
 
@@ -134,6 +134,13 @@ function _displayItems(data) {
         img.src = item["filePath"];
         para5.appendChild(img);
         table.appendChild(para5);
+
+        var para6 = document.createElement("td");
+        var deleteButton = document.createElement("button");
+        deleteButton.innerText = 'Delete';
+        deleteButton.setAttribute('onclick', `deleteItem(${item.entityId})`);
+        para6.appendChild(deleteButton);
+        table.appendChild(para6);
 
         var element = document.getElementById("reviews-saved"); // great-grandparent
         element.appendChild(table);

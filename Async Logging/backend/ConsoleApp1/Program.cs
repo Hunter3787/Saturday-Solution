@@ -17,19 +17,25 @@ namespace ConsoleApp1
             var reviewService = new ReviewRatingService(dataAccess);
             var reviewRatingManager = new ReviewRatingManager(reviewService);
 
-            //reviewRatingManager.CreateReviewRating(new ReviewRating
-            //{
-            //    Username = "Zee",
-            //    Message = "Hello",
-            //    StarRating = StarType.Four_Stars,
-            //    FilePath = "C:/Users/Serge/Desktop/images/3.jpg"
-            //});
+            reviewRatingManager.CreateReviewRating(new ReviewRating
+            {
+                Username = "Nick",
+                Message = "Hello",
+                StarRating = StarType.Four_Stars,
+                FilePath = "C:/Users/Serge/Desktop/images/3.jpg"
+            });
 
             //var returnedReview = reviewRatingManager.GetReviewsRatings("30002");
 
             //Console.WriteLine(returnedReview.Username);
 
-            reviewRatingManager.GetAllReviewsRatings();
+
+            var list = reviewRatingManager.GetAllReviewsRatings();
+
+            foreach (var review in list)
+            {
+                Console.WriteLine(review.Username);
+            }
 
             //Console.WriteLine(reviewRatingManager.GetAllReviewsRatings().Count);
 

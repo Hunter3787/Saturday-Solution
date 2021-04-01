@@ -73,5 +73,21 @@ namespace APB.App.Apis.Controllers
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpDelete("{reviewId}")]
+        public IActionResult DeleteReviewRating(string reviewId)
+        {
+            ReviewRatingService reviewRatingService = new ReviewRatingService(reviewRatingDAO);
+            ReviewRatingManager reviewRatingManager = new ReviewRatingManager(reviewRatingService);
+
+            var createResult = reviewRatingManager.DeleteReviewRating(reviewId);
+
+            if (createResult)
+            {
+                return Ok();
+            }
+
+            return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+        }
     }
 }

@@ -324,5 +324,38 @@ namespace APB.App.DataAccess
             //}
             #endregion
         }
+
+        public bool DeleteReviewRatingById(string entityId)
+        {
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                using (var command = new SqlCommand())
+                {
+                    command.Transaction = conn.BeginTransaction();
+                    command.Connection = conn;
+                    command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
+                    command.CommandType = CommandType.Text;
+
+                    command.CommandText =
+                        "DELETE FROM reviews WHERE entityId = @v0";
+
+                    var parameters = new SqlParameter[1];
+                    parameters[0] = new SqlParameter("@v0", entityId);
+
+                    command.Parameters.AddRange(parameters);
+
+                    var rowsDeleted = command.ExecuteNonQuery();
+
+                    if (rowsDeleted == 1)
+                    {
+                        command.Transaction.Commit();
+                        return true;
+                    }
+                    return false;
+                }
+            }
+        }
     }
 }

@@ -120,5 +120,15 @@ namespace APB.App.Services
             }
             return reviewRatingList;
         }
+
+        public bool DeleteReviewRating(string reviewId)
+        {
+            var reviewRatingEntity = new ReviewRatingEntity()
+            {
+                EntityId = reviewId
+            };
+
+            return _reviewRatingDAO.DeleteReviewRatingById(reviewRatingEntity.EntityId);
+        }
     }
 }
