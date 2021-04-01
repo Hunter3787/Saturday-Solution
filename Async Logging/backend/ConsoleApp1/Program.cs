@@ -29,7 +29,7 @@ namespace ConsoleApp1
 
             //Console.WriteLine(returnedReview.Username);
 
-            reviewRatingManager.GetAllReviewsRatings();
+            reviewRatingManager.DeleteReviewRating("30004");
 
             //Console.WriteLine(reviewRatingManager.GetAllReviewsRatings().Count);
 
