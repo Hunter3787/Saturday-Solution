@@ -48,5 +48,10 @@ namespace APB.App.Managers
         {
             return _reviewRatingService.DeleteReviewRating(reviewId);
         }
+
+        public bool EditReviewRating(ReviewRating reviewRating)
+        {
+            return _reviewRatingService.EditReviewRating(reviewRating);
+        }
     }
 }

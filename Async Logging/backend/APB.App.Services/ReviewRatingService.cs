@@ -130,5 +130,20 @@ namespace APB.App.Services
 
             return _reviewRatingDAO.DeleteReviewRatingById(reviewRatingEntity.EntityId);
         }
+
+        public bool EditReviewRating(ReviewRating reviewRating)
+        {
+            ImageConverter imageConverter = new ImageConverter();
+
+            var reviewRatingEntity = new ReviewRatingEntity()
+            {
+                EntityId = reviewRating.EntityId,
+                StarRatingValue = (int)reviewRating.StarRating,
+                Message = reviewRating.Message,
+                ImageBuffer = (byte[])imageConverter.ConvertTo(reviewRating.Picture, typeof(byte[])),
+            };
+
+            return _reviewRatingDAO.EditReviewRatingRecord(reviewRatingEntity);
+        }
     }
 }

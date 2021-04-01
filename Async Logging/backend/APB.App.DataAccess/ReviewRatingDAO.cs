@@ -357,5 +357,50 @@ namespace APB.App.DataAccess
                 }
             }
         }
+
+        public bool EditReviewRatingRecord(ReviewRatingEntity reviewRatingEntity)
+        {
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                using (var command = new SqlCommand())
+                {
+                    command.Transaction = conn.BeginTransaction();
+                    command.Connection = conn;
+                    command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
+                    command.CommandType = CommandType.Text;
+
+                    command.CommandText =
+                        "UPDATE reviews " +
+                        "SET star=@v0, message=@v1, imagepath=@v2 " +
+                        "WHERE entityId = @v3";
+
+
+                    //var s =
+                    //    "update reviews " +
+                    //    "SET star = 4, message = 'HAHAHAHA', imagepath = null " +
+                    //    "where entityId = 30000";
+
+                    var parameters = new SqlParameter[4];
+                    parameters[0] = new SqlParameter("@v0", reviewRatingEntity.StarRatingValue);
+                    parameters[1] = new SqlParameter("@v1", reviewRatingEntity.Message);
+                    parameters[2] = new SqlParameter("@v2", reviewRatingEntity.ImageBuffer);
+                    parameters[3] = new SqlParameter("@v3", reviewRatingEntity.EntityId);
+
+                    command.Parameters.AddRange(parameters);
+
+                    command.ExecuteNonQuery();
+                    command.Transaction.Commit();
+
+                    //if (rowsUpdated == 1)
+                    //{
+                    //    command.Transaction.Commit();
+                    //    return true;
+                    //}
+                    return true;
+                }
+            }
+        }
     }
 }
