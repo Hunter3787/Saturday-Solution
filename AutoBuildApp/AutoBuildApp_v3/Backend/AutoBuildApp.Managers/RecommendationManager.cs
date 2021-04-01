@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Products;
+using AutoBuildApp.Services;
 
 /// <summary>
 /// Utilizes the Managers namespace for the Auto-build app. 
@@ -72,11 +73,15 @@ namespace AutoBuildApp.Managers
             RecommendBuilds(BuildType buildType, double budget,
                 Dictionary<ProductType, int> peripherals, PSUModularity psuType,
                     HardDriveType hddType, int hddCount)
-        {   
+        {
+            if (peripherals is null)
+            {
+                return null;
+            }
+
+            IBuild build = BuildFactory.Build(buildType);
 
             
-
-
 
 
 

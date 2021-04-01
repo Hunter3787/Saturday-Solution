@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace AutoBuildApp.Models.Interfaces
 {
+    /// <summary>
+    /// Generic build type interface. 
+    /// </summary>
     public interface IBuild
     {
         public List<IHardDrive> HardDrive { get; set; }
@@ -14,8 +17,11 @@ namespace AutoBuildApp.Models.Interfaces
         public CPU Cpu { get; set; }
         public RAM Ram { get; set; }
         public ICooler CPUCooler { get; set; }
+        public List<IComponent> Peripheral { get; set; }
 
         public bool AddHardDrive(IHardDrive add);
         public bool RemoveHardDrive(IHardDrive remove);
+        public bool AddPeripheral(IComponent add);
+        public bool RemovePeripheral(IComponent remove);
     }
 }
