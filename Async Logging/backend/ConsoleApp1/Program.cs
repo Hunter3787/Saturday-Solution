@@ -41,13 +41,13 @@ namespace ConsoleApp1
             //    FilePath = "C:/Users/Serge/Desktop/images/3.jpg"
             //});
 
-            //reviewRatingManager.CreateReviewRating(new ReviewRating
-            //{
-            //    Username = "Sam",
-            //    Message = "bro",
-            //    StarRating = StarType.Four_Stars,
-            //    FilePath = "C:/Users/Serge/Desktop/images/4.jpg"
-            //});
+            reviewRatingManager.CreateReviewRating(new ReviewRating
+            {
+                Username = "Sam",
+                Message = "bro",
+                StarRating = StarType.Four_Stars,
+                FilePath = null
+            });
 
             //reviewRatingManager.CreateReviewRating(new ReviewRating
             //{

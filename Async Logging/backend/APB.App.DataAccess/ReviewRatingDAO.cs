@@ -44,7 +44,15 @@ namespace APB.App.DataAccess
                     parameters[0] = new SqlParameter("@v0", reviewRatingEntity.Username);
                     parameters[1] = new SqlParameter("@v1", reviewRatingEntity.Message);
                     parameters[2] = new SqlParameter("@v2", reviewRatingEntity.StarRatingValue);
-                    parameters[3] = new SqlParameter("@v3", reviewRatingEntity.ImageBuffer);
+                    if(reviewRatingEntity.ImageBuffer != null)
+                    {
+                        parameters[3] = new SqlParameter("@v3", reviewRatingEntity.ImageBuffer);
+                    }
+                    else
+                    {
+                        parameters[3] = new SqlParameter("@v3", SqlDbType.VarBinary, -1);
+                        parameters[3].Value = DBNull.Value;
+                    }
                     parameters[4] = new SqlParameter("@v4", reviewRatingEntity.DateTime);
 
                     command.Parameters.AddRange(parameters);
@@ -385,7 +393,15 @@ namespace APB.App.DataAccess
                     var parameters = new SqlParameter[4];
                     parameters[0] = new SqlParameter("@v0", reviewRatingEntity.StarRatingValue);
                     parameters[1] = new SqlParameter("@v1", reviewRatingEntity.Message);
-                    parameters[2] = new SqlParameter("@v2", reviewRatingEntity.ImageBuffer);
+                    if (reviewRatingEntity.ImageBuffer != null)
+                    {
+                        parameters[2] = new SqlParameter("@v2", reviewRatingEntity.ImageBuffer);
+                    }
+                    else
+                    {
+                        parameters[2] = new SqlParameter("@v2", SqlDbType.VarBinary, -1);
+                        parameters[2].Value = DBNull.Value;
+                    }
                     parameters[3] = new SqlParameter("@v3", reviewRatingEntity.EntityId);
 
                     command.Parameters.AddRange(parameters);

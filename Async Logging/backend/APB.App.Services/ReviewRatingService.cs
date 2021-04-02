@@ -21,17 +21,30 @@ namespace APB.App.Services
 
         public bool CreateReviewRating(ReviewRating reviewRating)
         {
-            ImageConverter imageConverter = new ImageConverter();
+            //System.Drawing.ImageConverter imageConverter = new ImageConverter();
 
             var reviewRatingEntity = new ReviewRatingEntity()
             {
                 Username = reviewRating.Username,
                 StarRatingValue = (int)reviewRating.StarRating,
                 Message = reviewRating.Message,
-                ImageBuffer = (byte[])imageConverter.ConvertTo(reviewRating.Picture, typeof(byte[])),
+                //ImageBuffer = (byte[])imageConverter.ConvertTo(reviewRating.Picture, typeof(byte[])),
                 DateTime = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF")
             };
 
+
+            using (var ms = new MemoryStream())
+            {
+                if (reviewRating.Picture == null)
+                {
+                    reviewRatingEntity.ImageBuffer = null;
+                }
+                else
+                {
+                    reviewRating.Picture.Save(ms, reviewRating.Picture.RawFormat);
+                    reviewRatingEntity.ImageBuffer = ms.ToArray();
+                }
+            }
             //using (var streamBitmap = new MemoryStream(reviewRatingEntity.ImageBuffer))
             //{
             //    using (Image img = Image.FromStream(streamBitmap))
@@ -141,17 +154,31 @@ namespace APB.App.Services
 
         public bool EditReviewRating(ReviewRating reviewRating)
         {
-            ImageConverter imageConverter = new ImageConverter();
+            //ImageConverter imageConverter = new ImageConverter();
 
             var reviewRatingEntity = new ReviewRatingEntity()
             {
                 EntityId = reviewRating.EntityId,
                 StarRatingValue = (int)reviewRating.StarRating,
                 Message = reviewRating.Message,
-                ImageBuffer = (byte[])imageConverter.ConvertTo(reviewRating.Picture, typeof(byte[])),
+                //ImageBuffer = (byte[])imageConverter.ConvertTo(reviewRating.Picture, typeof(byte[])),
             };
+
+            using (var ms = new MemoryStream())
+            {
+                if (reviewRating.Picture == null)
+                {
+                    reviewRatingEntity.ImageBuffer = null;
+                }
+                else
+                {
+                    reviewRating.Picture.Save(ms, reviewRating.Picture.RawFormat);
+                    reviewRatingEntity.ImageBuffer = ms.ToArray();
+                }
+            }
 
             return _reviewRatingDAO.EditReviewRatingRecord(reviewRatingEntity);
         }
+
     }
 }
