@@ -11,11 +11,11 @@ namespace APB.App.DomainModels
     /// </summary>
     public class ReviewRating : IEquatable<ReviewRating>
     {
+        private string _filePath;
+
+        private Image _image;
+
         public string EntityId { get; set; }
-
-        private string filePath;
-
-        private Image image;
 
         public string Username { get; set; }
 
@@ -26,8 +26,8 @@ namespace APB.App.DomainModels
         // getter and setter for the filepath variable
         public string FilePath 
         { 
-            get { return filePath; } 
-            set { filePath = value; }
+            get { return _filePath; } 
+            set { _filePath = value; }
         }
 
         /// <summary>
@@ -39,17 +39,17 @@ namespace APB.App.DomainModels
             {
                 // Checks if the filepath exists, if it's invalid then it will return null
                 // if it is valid then it will store it as the Image.
-                if (File.Exists(filePath))
+                if (File.Exists(_filePath))
                 {
-                    image = Image.FromFile(filePath);
-                    return image;
+                    _image = Image.FromFile(_filePath);
+                    return _image;
                 }
 
                 return null;
             }
             set 
             {
-                image = value;
+                _image = value;
             } 
         }
 

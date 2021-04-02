@@ -15,8 +15,8 @@ namespace APB.App.Services
     /// </summary>
     public class ReviewRatingService
     {
-        LoggingProducerService logger = LoggingProducerService.GetInstance; // This will get the logger so it can be used.
-        ReviewRatingDAO _reviewRatingDAO; // this sets an instance of the DAO connection so that it can be used without starting a new connection every time.
+        private readonly LoggingProducerService _logger = LoggingProducerService.GetInstance; // This will get the logger so it can be used.
+        private readonly ReviewRatingDAO _reviewRatingDAO; // this sets an instance of the DAO connection so that it can be used without starting a new connection every time.
 
         /// <summary>
         /// This will initialize the DAO with the same DAO that is passed in.

@@ -10,24 +10,21 @@ namespace APB.App.Services
 {
     public sealed class LoggingProducerService : ILogger //service
     {
-        private Logger logger; // Initializes a log object for storing and transfering data about a log.
-        private readonly IConnectionFactory connectionFactory; // This acts as an entry point to client APIs in this case ActiveMQ.
-        private readonly IConnection connection; // This allows us to establish a persistent connection between client and server.
-        private readonly ISession session; // Stores a session which is essentially the shared context between participants in a communication exchange.
-        private readonly IMessageProducer producer; // This is the interface that a client uses to send messages to the ActiveMQ.
-        private bool isDisposed = false; // Bool to check if items have been disposed of, initialized to false because no items shall be pre-disposed.
-        private int counter = 0; // Counter int that will be incremented to keep track of the singleton.
-
-        private static LoggingProducerService instance = null; // Initializes the logger object to zero, it has not been called yet.
-
-        private static readonly object padlock = new object();
+        private Logger _logger; // Initializes a log object for storing and transfering data about a log.
+        private readonly IConnectionFactory _connectionFactory; // This acts as an entry point to client APIs in this case ActiveMQ.
+        private readonly IConnection _connection; // This allows us to establish a persistent connection between client and server.
+        private readonly ISession _session; // Stores a session which is essentially the shared context between participants in a communication exchange.
+        private readonly IMessageProducer _producer; // This is the interface that a client uses to send messages to the ActiveMQ.
+        private bool _isDisposed = false; // Bool to check if items have been disposed of, initialized to false because no items shall be pre-disposed.
+        private int _counter = 0; // Counter int that will be incremented to keep track of the singleton.
+        private static LoggingProducerService _instance = null; // Initializes the logger object to zero, it has not been called yet.
+        private static readonly object _padlock = new object();
 
         SemaphoreSlim semaphore = new SemaphoreSlim(1);
 
-        // This function will be used to get the logger instance or create a new one if one has not been created.
-       
         /// <summary>
         /// simple version of singleton "thread saftey"
+        /// This function will be used to get the logger instance or create a new one if one has not been created.
         /// </summary>
         public static LoggingProducerService GetInstance 
         {
@@ -48,42 +45,42 @@ namespace APB.App.Services
                  * 
                  */
 
-                lock (padlock)
+                lock (_padlock)
                 {
                     // then checks whether an instance has been created before 
                     // creating the instance.
                     // If there is no instance of logger, then a new one will be creates, and only one.
-                    if (instance == null)
+                    if (_instance == null)
                     {
-                        instance = new LoggingProducerService();
+                        _instance = new LoggingProducerService();
                     }
 
-                    return instance;
+                    return _instance;
                 }
             }
         }
         // Logger standard constructor, will establish connection when new logger is created.
         private LoggingProducerService() 
         {
-            this.connectionFactory = new ConnectionFactory("tcp://localhost:61616?jms.UseAsyncSend=true"); // Stores the connection string.
-            this.connection = this.connectionFactory.CreateConnection(); // Creates a connection to the connection string destination path.
-            this.connection.Start(); // Begins the connection to the specified location.
-            this.session = connection.CreateSession(); // Sets the shared context of the session into session.
+            this._connectionFactory = new ConnectionFactory("tcp://localhost:61616?jms.UseAsyncSend=true"); // Stores the connection string.
+            this._connection = this._connectionFactory.CreateConnection(); // Creates a connection to the connection string destination path.
+            this._connection.Start(); // Begins the connection to the specified location.
+            this._session = _connection.CreateSession(); // Sets the shared context of the session into session.
 
-            IDestination destination = session.GetQueue("LoggingQueue"); // Gets the name of the Queue used and sets it to the destination.
+            IDestination destination = _session.GetQueue("LoggingQueue"); // Gets the name of the Queue used and sets it to the destination.
 
-            this.producer = this.session.CreateProducer(destination); // This sets up for messages to be sent to the location of LoggingQueue.
+            this._producer = this._session.CreateProducer(destination); // This sets up for messages to be sent to the location of LoggingQueue.
 
-            counter++; // Increments the count of the Logger to keep track of instances.
+            _counter++; // Increments the count of the Logger to keep track of instances.
         }
         // Constructor for log and sets operations for log to be sent to the Queue.
         public bool Log(string message, LogType level, string dateTime)
         {
                 // stores log variables into the LogObject to be sent to the Queue.
-                logger.Message = message; 
-                logger.LogLevel = level;
-                logger.DateTime = dateTime;
-                sendLog(logger); // method used to send LogObject to the Queue.
+                _logger.Message = message; 
+                _logger.LogLevel = level;
+                _logger.DateTime = dateTime;
+                sendLog(_logger); // method used to send LogObject to the Queue.
                 return true;
         }
 
@@ -91,7 +88,7 @@ namespace APB.App.Services
         // These will be asynchronously sent to the Queue by starting a new thread.
         public async Task LogAsync(string message, LogType level, string dateTime)
         {
-            logger = new Logger(); // store a new log object every time a new log is called.
+            _logger = new Logger(); // store a new log object every time a new log is called.
 
             // This will ensure that only one write operation is happening at a single moment.
 
@@ -112,22 +109,22 @@ namespace APB.App.Services
             // stores log variables into the LogObject to be sent to the Queue.
 
 
-            logger.Message = message;
-            logger.LogLevel = level;
-            logger.DateTime = dateTime;
+            _logger.Message = message;
+            _logger.LogLevel = level;
+            _logger.DateTime = dateTime;
             //sendLog(logObject);
-            await Task.Run(() => sendLog(logger)); // method used to send LogObject to the Queue.
+            await Task.Run(() => sendLog(_logger)); // method used to send LogObject to the Queue.
 
             Console.WriteLine("sent");
         }
         public void sendLog(Logger log)
         {
             // If the connection has not been disposed, then send the object to the Log.
-            if (!isDisposed)
+            if (!_isDisposed)
             {
                 string json = JsonConvert.SerializeObject(log, Formatting.Indented); // Serialize the log object into a JSON to be able to insterted clearly into the Queue.
-                ITextMessage textMessage = session.CreateTextMessage(json); // This will get the message of the JSON log to be sent to the Queue.
-                producer.Send(textMessage); // This finally sends the serialized object to the Queue.
+                ITextMessage textMessage = _session.CreateTextMessage(json); // This will get the message of the JSON log to be sent to the Queue.
+                _producer.Send(textMessage); // This finally sends the serialized object to the Queue.
             }
             else
             {
@@ -138,12 +135,12 @@ namespace APB.App.Services
         public void Dispose()
         {
             // Will dispose if not already disposed.
-            if (!this.isDisposed)
+            if (!this._isDisposed)
             {
-                this.producer.Dispose();
-                this.session.Dispose();
-                this.connection.Dispose();
-                this.isDisposed = true;
+                this._producer.Dispose();
+                this._session.Dispose();
+                this._connection.Dispose();
+                this._isDisposed = true;
             }
         }
     }

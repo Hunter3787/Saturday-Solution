@@ -11,8 +11,7 @@ namespace APB.App.DataAccess
     /// </summary>
     public class ReviewRatingDAO
     {
-        private string _connectionString; // Stores connection string.
-        private SqlDataAdapter adapter = new SqlDataAdapter(); // Allows the use to connect and use SQL statements and logic.
+        private readonly string _connectionString; // Stores connection string.
 
         /// <summary>
         /// Establishes the connection with the connection string that is passed through. 

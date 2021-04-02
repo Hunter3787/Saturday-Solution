@@ -9,9 +9,9 @@ namespace APB.App.Managers
     /// </summary>
     public class ReviewRatingManager
     {
-        ReviewRatingService _reviewRatingService; // this sets an instance of the DAO connection so that it can be used without starting a new connection every time.
+        private readonly ReviewRatingService _reviewRatingService; // this sets an instance of the DAO connection so that it can be used without starting a new connection every time.
 
-        LoggingProducerService logger = LoggingProducerService.GetInstance; // gets the logger instance so that it can be used.
+        private readonly LoggingProducerService _logger = LoggingProducerService.GetInstance; // gets the logger instance so that it can be used.
 
         /// <summary>
         /// This method initialized the service.
