@@ -6,6 +6,7 @@ using AutoBuildApp.Models.Products;
 using AutoBuildApp.Services.FactoryServices;
 using AutoBuildApp.Services;
 using System.Reflection;
+using System.Collections;
 
 
 /// <summary>
@@ -108,11 +109,6 @@ namespace AutoBuildApp.Managers
 
             }
 
-
-
-
-
-
             return null;
         }
         #endregion
@@ -151,22 +147,35 @@ namespace AutoBuildApp.Managers
         /// <returns></returns>
         public List<IComponent> CreateComponentList(IBuild build)
         {
+            // Null check for early dismissal.
             if (build == null)
                 return null;
 
+            // Set components list for on method completion.
             var compList = new List<IComponent>();
 
-            FieldInfo[] fieldInfos = typeof(IBuild).GetFields(BindingFlags.Public |
-                BindingFlags.Instance);
-
-            foreach (FieldInfo info in fieldInfos)
+            // For each loop using the properties of the build class type
+            // to iterate through each dynamic property.
+            foreach(var element in build.GetType().GetProperties())
             {
-                Console.Write(info + "\n");
+                // Stores the value (class) of each property. 
+                var item = element.GetValue(build);
+
+                // Check that the item is of the list type and not null.
+                if (item is IList && item != null)
+                    // Used the dynamic cast to assure the compiler that the item
+                    // is in fact of the expected type of List<IComponent>.
+                    foreach (var component in (dynamic)item)
+                        compList.Add(component);
+                else
+                    if (item != null)
+                        compList.Add((IComponent)item);
             }
+
             return compList;
         }
 
-        private bool BudgetComponents(List<IComponent> components,
+        public bool BudgetComponents(List<IComponent> components,
             BuildType type, double budget)
         {
             // Early exit and failure criteria.

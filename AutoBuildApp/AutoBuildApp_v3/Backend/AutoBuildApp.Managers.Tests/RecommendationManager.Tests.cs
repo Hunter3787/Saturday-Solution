@@ -16,8 +16,6 @@ namespace AutoBuildApp.Managers.Tests
     public class RecommendationManagerTests
     {
         private RecommendationManager _manager;
-        private IBuild _build;
-        private List<IBuild> _gamingBuilds;
         private NVMeDrive _hd1;
         private NVMeDrive _hd2;
         private ComputerCase _compCase;
@@ -28,16 +26,15 @@ namespace AutoBuildApp.Managers.Tests
         private RAM _ram;
         private ICooler _cooler;
         private List<IComponent> _periphs;
-
+        private IBuild _gamingBuild;
 
         // Initialize test class
         [TestInitialize]
         public void Initialize()
         {
             _manager = new RecommendationManager();
-            _gamingBuilds = new List<IBuild>();
             // Arrange
-            IBuild gamingBuild = BuildFactory.CreateBuild(BuildType.Gaming);
+            _gamingBuild = BuildFactory.CreateBuild(BuildType.Gaming);
             _hd1 = new NVMeDrive
             {
                 HardDrive = HardDriveType.NVMe,
@@ -233,16 +230,16 @@ namespace AutoBuildApp.Managers.Tests
             {
                 _hd2, _hd2
             };
-            gamingBuild.AddHardDrive(_hd1);
-            gamingBuild.AddHardDrive(_hd2);
-            gamingBuild.Case =_compCase;
-            gamingBuild.Mobo =_mobo;
-            gamingBuild.Psu = _psu;
-            gamingBuild.Gpu = _graphics;
-            gamingBuild.Cpu = _processor;
-            gamingBuild.Ram = _ram;
-            gamingBuild.CPUCooler = _cooler;
-            gamingBuild.Peripheral = _periphs;
+            _gamingBuild.AddHardDrive(_hd1);
+            _gamingBuild.AddHardDrive(_hd2);
+            _gamingBuild.Case = _compCase;
+            _gamingBuild.Mobo = _mobo;
+            _gamingBuild.Psu = _psu;
+            _gamingBuild.Gpu = _graphics;
+            _gamingBuild.Cpu = _processor;
+            _gamingBuild.Ram = _ram;
+            _gamingBuild.CPUCooler = _cooler;
+            _gamingBuild.Peripheral = _periphs;
 
         }
 
@@ -413,16 +410,33 @@ namespace AutoBuildApp.Managers.Tests
         public void RecommendationManager_CreateComponentList_ReturnsComponentListParsedFromBuild()
         {
             // Arrange
-            IBuild build = BuildFactory.CreateBuild(BuildType.Gaming);
             var buildList = new List<IComponent> {
-
+                _hd1, _hd2, _compCase, _mobo, _psu, _graphics, _processor,
+                _ram, _cooler, _hd2, _hd2
             };
-            var expected = null;
+            var expected = buildList;
             // Act
-            var actual = _manager.CreateComponentList(build);
+            var actual = _manager.CreateComponentList(_gamingBuild);
 
             // Assert
-            Assert.AreEqual(actual, expected);
+            CollectionAssert.AreEqual(actual, expected);
+        }
+
+        [TestMethod]
+        public void RecommendationManager_CreateComponentList_ReturnsOnlyNonnullComponentsList()
+        {
+            // Arrange
+            var expected = new List<IComponent> {
+                _hd1, _hd2, _mobo, _psu, _graphics, _processor,
+                _ram, _cooler
+            };
+            _gamingBuild.Peripheral = null;
+            _gamingBuild.Case = null;
+
+            // Act
+            var actual = _manager.CreateComponentList(_gamingBuild);
+            // Assert
+            CollectionAssert.AreEqual(actual, expected);
         }
 
         [TestMethod]
