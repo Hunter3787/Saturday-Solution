@@ -6,6 +6,11 @@ using APB.App.DataAccess;
 using APB.App.Entities;
 using APB.App.DomainModels;
 
+/// <summary>
+/// References used from file: Solution Items/References.txt 
+/// [1,10,12,13]
+/// </summary>
+
 namespace APB.App.Managers
 {
     public class LoggingConsumerManager : IDisposable // This will implement the IDisposable interface which is used to clean up and close connections.

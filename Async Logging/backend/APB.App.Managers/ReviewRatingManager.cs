@@ -2,6 +2,11 @@
 using APB.App.Services;
 using System.Collections.Generic;
 
+/// <summary>
+/// References used from file: Solution Items/References.txt 
+/// [1]
+/// </summary>
+
 namespace APB.App.Managers
 {
     /// <summary>

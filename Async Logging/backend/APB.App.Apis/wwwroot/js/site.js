@@ -1,3 +1,8 @@
+/// <summary>
+/// References used from file: Solution Items/References.txt 
+/// [2-6]
+/// </summary>
+
 const uri = 'https://localhost:44317/reviewrating';
 let reviews = [];
 

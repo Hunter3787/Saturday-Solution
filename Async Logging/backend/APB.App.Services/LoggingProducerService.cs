@@ -6,6 +6,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using APB.App.DomainModels;
 
+/// <summary>
+/// References used from file: Solution Items/References.txt 
+/// [1,7-13]
+/// </summary>
+
 namespace APB.App.Services
 {
     public sealed class LoggingProducerService : ILogger //service

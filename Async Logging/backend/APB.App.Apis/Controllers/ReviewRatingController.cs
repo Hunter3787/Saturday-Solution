@@ -6,6 +6,11 @@ using Microsoft.AspNetCore.Http;
 using APB.App.DataAccess;
 using Microsoft.AspNetCore.Cors;
 
+/// <summary>
+/// References used from file: Solution Items/References.txt 
+/// [1,3-5]
+/// </summary>
+
 namespace APB.App.Apis.Controllers
 {
     /// <summary>

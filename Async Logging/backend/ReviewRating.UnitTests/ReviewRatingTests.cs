@@ -5,6 +5,11 @@ using APB.App.DataAccess;
 using NUnit.Framework;
 using System.Collections.Generic;
 
+/// <summary>
+/// References used from file: Solution Items/References.txt 
+/// [14]
+/// </summary>
+
 namespace ReviewsAndRatings.UnitTests
 {
     /// <summary>

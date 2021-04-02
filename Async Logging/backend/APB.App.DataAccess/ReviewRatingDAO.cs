@@ -4,6 +4,11 @@ using System.Data;
 using System.Data.SqlClient;
 using APB.App.Entities;
 
+/// <summary>
+/// References used from file: Solution Items/References.txt 
+/// [1,15]
+/// </summary>
+
 namespace APB.App.DataAccess
 {
     /// <summary>

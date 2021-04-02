@@ -7,6 +7,11 @@ using System.Drawing.Imaging;
 using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// References used from file: Solution Items/References.txt 
+/// [1,16,17]
+/// </summary>
+
 namespace APB.App.Services
 {
     /// <summary>

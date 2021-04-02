@@ -1,4 +1,8 @@
-﻿namespace APB.App.DomainModels
+﻿/// <summary>
+/// References used from file: Solution Items/References.txt 
+/// [1]
+/// </summary>
+namespace APB.App.DomainModels
 {
     /// <summary>
     /// This is the DTO for a logger object, transfers data through the layers 

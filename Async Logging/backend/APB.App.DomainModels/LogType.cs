@@ -1,4 +1,8 @@
-﻿namespace APB.App.DomainModels
+﻿/// <summary>
+/// References used from file: Solution Items/References.txt 
+/// [1]
+/// </summary>
+namespace APB.App.DomainModels
 {
     /// <summary>
     /// This is the enumeration class to differetiate between log levels.

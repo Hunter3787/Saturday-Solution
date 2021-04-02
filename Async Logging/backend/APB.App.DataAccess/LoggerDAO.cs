@@ -2,6 +2,11 @@
 using System.Data;
 using System.Data.SqlClient;
 
+/// <summary>
+/// References used from file: Solution Items/References.txt 
+/// N/A: Zeinab's code reformatted for specificity.
+/// </summary>
+
 namespace APB.App.DataAccess
 {
     public class LoggerDAO

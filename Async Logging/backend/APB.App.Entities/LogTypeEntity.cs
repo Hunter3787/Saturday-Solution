@@ -1,4 +1,8 @@
-﻿namespace APB.App.Entities
+﻿/// <summary>
+/// References used from file: Solution Items/References.txt 
+/// [1]
+/// </summary>
+namespace APB.App.Entities
 {
     /// <summary>
     /// This is the enumeration class to differetiate between log levels.

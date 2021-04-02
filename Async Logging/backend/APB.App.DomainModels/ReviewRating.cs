@@ -2,6 +2,11 @@
 using System.Drawing;
 using System.IO;
 
+/// <summary>
+/// References used from file: Solution Items/References.txt 
+/// [1,18]
+/// </summary>
+
 namespace APB.App.DomainModels
 {
     /// <summary>
