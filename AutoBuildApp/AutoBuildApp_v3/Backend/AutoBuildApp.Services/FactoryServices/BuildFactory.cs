@@ -3,6 +3,11 @@ using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Builds;
 
+/**
+ * Build factory that returns a new IBuild based 
+ * on the passed Enum of BuildType.
+ * @Author Nick Marshall-Eminger
+ */
 namespace AutoBuildApp.Services.FactoryServices
 {
     /// <summary>

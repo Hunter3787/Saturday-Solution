@@ -1,4 +1,7 @@
-﻿using System;
+﻿/**
+ * Memory type enumeration, standard DDR Ram.
+ * @Author Nick Marshall-Eminger
+ */
 namespace AutoBuildApp.Models.Enumerations
 {
     public enum MemoryType

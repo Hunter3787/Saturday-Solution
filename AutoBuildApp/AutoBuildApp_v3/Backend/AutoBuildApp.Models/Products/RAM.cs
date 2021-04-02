@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Interfaces;
 
+/**
+ * Random Access Memory class that invokes the IComonent interface.
+ * @Author Nick Marshall-Eminger
+ */
 namespace AutoBuildApp.Models.Products
 {
     /// <summary>
@@ -11,15 +15,15 @@ namespace AutoBuildApp.Models.Products
     public class RAM : IComponent
     {
         #region "Field Declarations, get; set;"
-        private const int MIN_LIST_SIZE = 1;
-        private const int MIN_INDEX = 0;
+        public readonly int MIN_LIST_SIZE = 1;
+        public readonly int MIN_INDEX = 0;
 
         public ProductType ProductType { get; set; }
         public string ModelNumber { get; set; }
         public string ProductName { get; set; }
         public string ManufacturerName { get; set; }
         public int Quantity { get; set; }
-        public List<byte[]> ProductImage { get; set; }
+        public List<byte[]> ProductImages { get; set; }
         public double Price { get; set; }
         public string FormFactor { get; set; }
         public List<string> Color { get; set; }
@@ -35,56 +39,10 @@ namespace AutoBuildApp.Models.Products
 
         public RAM()
         {
-            ProductImage = new List<byte[]>();
+            ProductImages = new List<byte[]>();
             Color = new List<string>();
             Timing = new List<int>();
         }
-
-        /// <summary>
-        /// Random Access Memory constructor to initialize all fields on creation.
-        /// </summary>
-        /// <param name="productType"></param>
-        /// <param name="modelNumber"></param>
-        /// <param name="productName"></param>
-        /// <param name="manufacturerName"></param>
-        /// <param name="quantity"></param>
-        /// <param name="productImage"></param>
-        /// <param name="price"></param>
-        /// <param name="formFactor"></param>
-        /// <param name="color"></param>
-        /// <param name="firstWordLat"></param>
-        /// <param name="cASLat"></param>
-        /// <param name="voltage"></param>
-        /// <param name="timing"></param>
-        /// <param name="errCorrctionCode"></param>
-        /// <param name="registered"></param>
-        /// <param name="heatSpreader"></param>
-        public RAM(ProductType productType, string modelNumber, string productName,
-            string manufacturerName, int quantity, List<byte[]> productImage,
-                double price, string formFactor, List<string> color,
-                    string firstWordLat, string cASLat, double voltage,
-                        List<int> timing, string errCorrctionCode,
-                            string registered, bool heatSpreader)
-        {
-            ProductType = productType;
-            ModelNumber = modelNumber;
-            ProductName = productName;
-            ManufacturerName = manufacturerName;
-            Quantity = quantity;
-            ProductImage = productImage;
-            Price = price;
-            FormFactor = formFactor;
-            Color = color;
-            FirstWordLat = firstWordLat;
-            CASLat = cASLat;
-            Voltage = voltage;
-            Timing = timing;
-            ErrCorrctionCode = errCorrctionCode;
-            Registered = registered;
-            HeatSpreader = heatSpreader;
-        }
-
-
 
         #region "Interface Implementations"
         /// <summary>
@@ -97,7 +55,7 @@ namespace AutoBuildApp.Models.Products
             if (image == null)
                 return false;
 
-            ProductImage.Add(image);
+            ProductImages.Add(image);
             return true;
         }
 
@@ -108,13 +66,16 @@ namespace AutoBuildApp.Models.Products
         /// <returns></returns>
         public bool RemoveImage(int index)
         {
-            var success = false;
-            var endOfList = ProductImage.Count - 1;
+            if (ProductImages == null)
+                return false;
 
-            if (index >= MIN_INDEX && ProductImage.Count >= MIN_LIST_SIZE
+            var success = false;
+            var endOfList = ProductImages.Count - 1;
+
+            if (index >= MIN_INDEX && ProductImages.Count >= MIN_LIST_SIZE
                 && index <= endOfList)
             {
-                ProductImage.RemoveAt(index);
+                ProductImages.RemoveAt(index);
                 success = true;
             }
 

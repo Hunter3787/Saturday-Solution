@@ -1,4 +1,7 @@
-﻿using System;
+﻿/**
+ * Enumeration of Hard drive types and disk spin speeds.
+ * @Author Nick Marshall-Eminger
+ */
 namespace AutoBuildApp.Models.Enumerations
 {
     public enum HardDriveType

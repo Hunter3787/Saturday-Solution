@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 /**
  * Abstract IComponent interface that should enforce
- * the minimum details to define a speicfic component. 
+ * the minimum details to define a speicfic component.
+ * @Author Nick Marshall-Eminger
  */
 namespace AutoBuildApp.Models.Interfaces
 {
@@ -16,7 +17,7 @@ namespace AutoBuildApp.Models.Interfaces
         string ProductName { get; set; }
         string ManufacturerName { get; set; }
         int Quantity { get; set; }
-        List<byte[]> ProductImage { get; set; }
+        List<byte[]> ProductImages { get; set; }
         double Price { get; set; }
         double Budget { get; set; }
 

@@ -1,7 +1,11 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AutoBuildApp.Services;
 
-namespace RecommendationServices.Tests
+/**
+ * Component scoring service tests.
+ * @Author Nick Marshall-Eminger
+ */
+namespace AutoBuildApp.Services.Tests
 {
     [TestClass]
     public class ComponentScoringServiceTests

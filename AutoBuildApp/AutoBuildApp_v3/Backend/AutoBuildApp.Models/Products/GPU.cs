@@ -3,19 +3,24 @@ using System.Collections.Generic;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Interfaces;
 
+/**
+ * Graphics Processing Unit class for use with AutoBuild App
+ * that implements the IComponent interface.
+ * @Author Nick Marshall-Eminger
+ */
 namespace AutoBuildApp.Models.Products
 {
     public class GPU : IComponent
     {
         #region "Field Declarations, get; set;"
-        private const int MIN_LIST_SIZE = 1;
-        private const int MIN_INDEX = 0;
+        public readonly int MIN_LIST_SIZE = 1;
+        public readonly int MIN_INDEX = 0;
 
         public ProductType ProductType { get; set; }
         public string ModelNumber { get; set; }
         public string ProductName { get; set; }
         public string ManufacturerName { get; set; }
-        public List<byte[]> ProductImage { get; set; }
+        public List<byte[]> ProductImages { get; set; }
         public double Price { get; set; }
         public string Chipset { get; set; }
         public string Memory { get; set; }
@@ -44,7 +49,7 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         public GPU()
         {
-            ProductImage = new List<byte[]>();
+            ProductImages = new List<byte[]>();
         }
 
         #region "Interface Implementations"
@@ -58,7 +63,7 @@ namespace AutoBuildApp.Models.Products
             if (image == null)
                 return false;
 
-            ProductImage.Add(image);
+            ProductImages.Add(image);
             return true;
         }
 
@@ -70,12 +75,12 @@ namespace AutoBuildApp.Models.Products
         public bool RemoveImage(int index)
         {
             var success = false;
-            var endOfList = ProductImage.Count - 1;
+            var endOfList = ProductImages.Count - 1;
 
-            if (index >= MIN_INDEX && ProductImage.Count >= MIN_LIST_SIZE
+            if (index >= MIN_INDEX && ProductImages.Count >= MIN_LIST_SIZE
                 && index <= endOfList)
             {
-                ProductImage.RemoveAt(index);
+                ProductImages.RemoveAt(index);
                 success = true;
             }
 

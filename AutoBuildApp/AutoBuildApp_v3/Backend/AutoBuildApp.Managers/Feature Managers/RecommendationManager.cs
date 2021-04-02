@@ -5,13 +5,11 @@ using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Products;
 using AutoBuildApp.Services.FactoryServices;
 using AutoBuildApp.Services;
-using System.Reflection;
-using System.Collections;
 
-
-/// <summary>
-/// Utilizes the Managers namespace for the Auto-build app. 
-/// </summary>
+/** Recommendation Manager includes business logic
+*   and directs the recommendation process.
+*   @Author Nick Marshall-Eminger
+*/
 namespace AutoBuildApp.Managers
 {
     /// <summary>
@@ -21,8 +19,10 @@ namespace AutoBuildApp.Managers
     public class RecommendationManager : ArgumentOutOfRangeException
     {
         // Local constant for minimum budget.
-        private const double MAX_BUDGET = double.MaxValue;
-        private const double MIN_VALUE = 0.0;
+        public readonly double MAX_BUDGET = double.MaxValue;
+        public readonly double MIN_BUDGET = 0.0;
+        public readonly int MIN_INDEX = 0;
+        public readonly int MIN_INTEGER_VALUE = 0;
 
         private double _budget;
         private BuildType _buildType;
@@ -49,8 +49,8 @@ namespace AutoBuildApp.Managers
         public RecommendationManager(BuildType buildType, double budget)
         {
             // If budget is below 0 set to 0.
-            if (budget < MIN_VALUE)
-                _budget = MIN_VALUE;
+            if (budget < MIN_BUDGET)
+                _budget = MIN_BUDGET;
             else
                 _budget = budget;
 
@@ -80,7 +80,7 @@ namespace AutoBuildApp.Managers
                     HardDriveType hddType, int hddCount)
         {
    
-            if ( budget < MIN_VALUE || hddCount < MIN_VALUE )
+            if ( budget < MIN_BUDGET || hddCount < MIN_INTEGER_VALUE )
                 return null;
 
             var tempBudget = budget;
@@ -89,17 +89,17 @@ namespace AutoBuildApp.Managers
 
             if (peripherals != null)
             {
-                build.Peripheral = peripherals;
-                foreach (IComponent extras in build.Peripheral)
+                build.Peripherals = peripherals;
+                foreach (IComponent extras in build.Peripherals)
                     tempBudget -= extras.GetTotalcost();
             }
 
             // Early kick out if no budget.
-            if (tempBudget < MIN_VALUE)
+            if (tempBudget < MIN_BUDGET)
                 return null;
 
             if (hddType != HardDriveType.None ||
-                hddCount > MIN_VALUE || psuType != PSUModularity.None)
+                hddCount > MIN_INTEGER_VALUE || psuType != PSUModularity.None)
                 return null;
                 // Advanced option build thing.
             else
@@ -140,46 +140,11 @@ namespace AutoBuildApp.Managers
         #endregion
 
         #region "Private Methods"
-        /// <summary>
-        /// Generate a list of Compnents from a Build.
-        /// </summary>
-        /// <param name="build"></param>
-        /// <returns></returns>
-        public List<IComponent> CreateComponentList(IBuild build)
-        {
-            // Null check for early dismissal.
-            if (build == null)
-                return null;
-
-            // Set components list for on method completion.
-            var compList = new List<IComponent>();
-
-            // For each loop using the properties of the build class type
-            // to iterate through each dynamic property.
-            foreach(var element in build.GetType().GetProperties())
-            {
-                // Stores the value (class) of each property. 
-                var item = element.GetValue(build);
-
-                // Check that the item is of the list type and not null.
-                if (item is IList && item != null)
-                    // Used the dynamic cast to assure the compiler that the item
-                    // is in fact of the expected type of List<IComponent>.
-                    foreach (var component in (dynamic)item)
-                        compList.Add(component);
-                else
-                    if (item != null)
-                        compList.Add((IComponent)item);
-            }
-
-            return compList;
-        }
-
         public bool BudgetComponents(List<IComponent> components,
             BuildType type, double budget)
         {
             // Early exit and failure criteria.
-            if (budget < MIN_VALUE || components == null)
+            if (budget < MIN_BUDGET || components == null)
                 return false;
 
             double tempBudget;

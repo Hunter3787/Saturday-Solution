@@ -3,21 +3,26 @@ using System.Collections.Generic;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Interfaces;
 
+/**
+ * Monitor class for the AutoBuild App that implements 
+ * the IComponent interface.
+ * @Author Nick Marshall-Eminger
+ */
 namespace AutoBuildApp.Models.Products
 {
     public class Monitor : IComponent
     {
         #region "Field Declarations, get; set;"
-        private const int MIN_LIST_SIZE = 1;
-        private const int MIN_INDEX = 0;
-        private const int MIN_VALUE = 0;
+        public readonly int MIN_LIST_SIZE = 1;
+        public readonly int MIN_INDEX = 0;
+        public readonly int MIN_VALUE = 0;
 
         public ProductType ProductType { get; set; }
         public string ModelNumber { get; set; }
         public string ProductName { get; set; }
         public string ManufacturerName { get; set; }
         public int Quantity { get; set; }
-        public List<byte[]> ProductImage { get; set; }
+        public List<byte[]> ProductImages { get; set; }
         public double Price { get; set; }
         public double Budget { get; set; }
         public double ScreenSize { get; set; }
@@ -38,7 +43,7 @@ namespace AutoBuildApp.Models.Products
 
         public Monitor()
         {
-            ProductImage = new List<byte[]>();
+            ProductImages = new List<byte[]>();
             Color = new List<string>();
             InterfacePort = new List<string>();
             FrameSync = new List<string>();
@@ -68,7 +73,7 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveColor(string toRemove)
         {
-            if (string.IsNullOrWhiteSpace(toRemove) || !Color.Contains(toRemove))
+            if (Color == null || string.IsNullOrWhiteSpace(toRemove) || !Color.Contains(toRemove))
                 return false;
 
             return RemoveColor(Color.IndexOf(toRemove));
@@ -81,7 +86,7 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveColor(int index)
         {
-            if (index > Color.Count || index < MIN_INDEX)
+            if (Color == null || index > Color.Count || index < MIN_INDEX)
                 return false;
 
             Color.RemoveAt(index);
@@ -113,7 +118,7 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveInterfacePort(string toRemove)
         {
-            if (string.IsNullOrWhiteSpace(toRemove) || !InterfacePort.Contains(toRemove))
+            if (InterfacePort == null || string.IsNullOrWhiteSpace(toRemove) || !InterfacePort.Contains(toRemove))
                 return false;
 
             return RemoveInterfacePort(InterfacePort.IndexOf(toRemove));
@@ -126,7 +131,7 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveInterfacePort(int index)
         {
-            if (index > InterfacePort.Count || index < MIN_INDEX)
+            if (InterfacePort == null || index > InterfacePort.Count || index < MIN_INDEX)
                 return false;
 
             InterfacePort.RemoveAt(index);
@@ -158,7 +163,7 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveFrameSync(string toRemove)
         {
-            if (string.IsNullOrWhiteSpace(toRemove) || !FrameSync.Contains(toRemove))
+            if (FrameSync == null || string.IsNullOrWhiteSpace(toRemove) || !FrameSync.Contains(toRemove))
                 return false;
 
             return RemoveFrameSync(FrameSync.IndexOf(toRemove));
@@ -171,7 +176,7 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveFrameSync(int index)
         {
-            if (index > FrameSync.Count || index < MIN_INDEX)
+            if (FrameSync == null || index > FrameSync.Count || index < MIN_INDEX)
                 return false;
 
             FrameSync.RemoveAt(index);
@@ -206,7 +211,7 @@ namespace AutoBuildApp.Models.Products
         public bool SetDisplayPortCount(string input, int value)
         {
 
-            if (string.IsNullOrWhiteSpace(input) || value < MIN_VALUE)
+            if (DisplayPortCount == null || string.IsNullOrWhiteSpace(input) || value < MIN_VALUE)
                 return false;
 
             // If display port does not yet contain the key, call add for convenience.
@@ -224,7 +229,7 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveDisplayPort(string toRemove)
         {
-            if (string.IsNullOrWhiteSpace(toRemove) ||
+            if (DisplayPortCount == null || string.IsNullOrWhiteSpace(toRemove) ||
                     !DisplayPortCount.ContainsKey(toRemove))
                 return false;
             return DisplayPortCount.Remove(toRemove);
@@ -242,7 +247,7 @@ namespace AutoBuildApp.Models.Products
             if (image == null)
                 return false;
 
-            ProductImage.Add(image);
+            ProductImages.Add(image);
             return true;
         }
 
@@ -253,13 +258,15 @@ namespace AutoBuildApp.Models.Products
         /// <returns></returns>
         public bool RemoveImage(int index)
         {
+            if (ProductImages == null)
+                return false;
             var success = false;
-            var endOfList = ProductImage.Count - 1;
+            var endOfList = ProductImages.Count - 1;
 
-            if (index >= MIN_INDEX && ProductImage.Count >= MIN_LIST_SIZE
+            if (index >= MIN_INDEX && ProductImages.Count >= MIN_LIST_SIZE
                 && index <= endOfList)
             {
-                ProductImage.RemoveAt(index);
+                ProductImages.RemoveAt(index);
                 success = true;
             }
 

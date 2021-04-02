@@ -2,20 +2,24 @@
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Interfaces;
 
+/**
+ * Central Processing unit class that implments the IComponent interface.
+ * @Author Nick Marshall-Eminger
+ */
 namespace AutoBuildApp.Models.Products
 {
     public class CPU : IComponent
     {
         #region "Field Declarations, get; set;"
-        private const int MIN_LIST_SIZE = 1;
-        private const int MIN_INDEX = 0;
+        public readonly int MIN_LIST_SIZE = 1;
+        public readonly int MIN_INDEX = 0;
 
         public ProductType ProductType { get; set; }
         public string ModelNumber { get; set; }
         public string ProductName { get; set; }
         public string ManufacturerName { get; set; }
         public int Quantity { get; set; }
-        public List<byte[]> ProductImage { get; set; }
+        public List<byte[]> ProductImages { get; set; }
         public double Price { get; set; }
         public int CoreCount { get; set; }
         public string CoreClock { get; set; }
@@ -42,7 +46,7 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         public CPU()
         {
-            ProductImage = new List<byte[]>();
+            ProductImages = new List<byte[]>();
             L1Cache = new List<string>();
             L2Cache = new List<string>();
             L3Cache = new List<string>();
@@ -59,7 +63,7 @@ namespace AutoBuildApp.Models.Products
             if (image == null)
                 return false;
 
-            ProductImage.Add(image);
+            ProductImages.Add(image);
             return true;
         }
 
@@ -70,13 +74,16 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Success of removal from object.</returns>
         public bool RemoveImage(int index)
         {
-            var success = false;
-            var endOfList = ProductImage.Count - 1;
+            if (ProductImages == null)
+                return false;
 
-            if (index >= MIN_INDEX && ProductImage.Count >= MIN_LIST_SIZE
+            var success = false;
+            var endOfList = ProductImages.Count - 1;
+
+            if (index >= MIN_INDEX && ProductImages.Count >= MIN_LIST_SIZE
                 && index <= endOfList)
             {
-                ProductImage.RemoveAt(index);
+                ProductImages.RemoveAt(index);
                 success = true;
             }
 

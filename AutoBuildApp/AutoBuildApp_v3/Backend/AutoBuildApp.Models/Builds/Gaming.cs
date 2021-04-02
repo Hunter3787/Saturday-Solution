@@ -1,8 +1,12 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
 using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Products;
 
+/**
+ * Gaming build 
+ * @Author Nick Marshall-Eminger
+ */
 namespace AutoBuildApp.Models.Builds
 {
     public class Gaming : IBuild
@@ -10,7 +14,7 @@ namespace AutoBuildApp.Models.Builds
         private const int MIN_VALUE = 0;
         private const int INCREMENT_VALUE = 1;
 
-        public List<IHardDrive> HardDrive { get; set; }
+        public List<IHardDrive> HardDrives { get; set; }
         public ComputerCase Case { get; set; }
         public Motherboard Mobo { get; set; }
         public PowerSupplyUnit Psu { get; set; }
@@ -18,13 +22,15 @@ namespace AutoBuildApp.Models.Builds
         public CPU Cpu { get; set; }
         public RAM Ram { get; set; }
         public ICooler CPUCooler { get; set; }
-        public List<IComponent> Peripheral { get; set; }
+        public List<IComponent> Peripherals { get; set; }
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public Gaming()
         {
+            HardDrives = new List<IHardDrive>();
+            Peripherals = new List<IComponent>();
         }
 
 
@@ -39,16 +45,16 @@ namespace AutoBuildApp.Models.Builds
         {
             if (add == null)
                 return false;
-            if(HardDrive == null)
-                HardDrive = new List<IHardDrive>();
+            if(HardDrives == null)
+                HardDrives = new List<IHardDrive>();
 
-            if (HardDrive.Contains(add))
+            if (HardDrives.Contains(add))
             {
-                var index = HardDrive.IndexOf(add);
-                HardDrive[index].Quantity += INCREMENT_VALUE;
+                var index = HardDrives.IndexOf(add);
+                HardDrives[index].Quantity += INCREMENT_VALUE;
             }
             else
-                HardDrive.Add(add);
+                HardDrives.Add(add);
 
             return true;
         }
@@ -61,17 +67,17 @@ namespace AutoBuildApp.Models.Builds
         /// <returns></returns>
         public bool RemoveHardDrive(IHardDrive remove)
         {
-            if (remove == null || !HardDrive.Contains(remove))
+            if (remove == null || HardDrives == null || !HardDrives.Contains(remove))
                 return false;
 
             var success = false;
-            var index = HardDrive.IndexOf(remove);
+            var index = HardDrives.IndexOf(remove);
 
 
-            if (HardDrive[index].Quantity > MIN_VALUE)
-                HardDrive[index].Quantity -= INCREMENT_VALUE;
+            if (HardDrives[index].Quantity > MIN_VALUE)
+                HardDrives[index].Quantity -= INCREMENT_VALUE;
             else
-                HardDrive.Remove(remove);
+                HardDrives.Remove(remove);
 
             return success;
         }
@@ -83,10 +89,10 @@ namespace AutoBuildApp.Models.Builds
         /// <returns></returns>
         public bool DeleteHardDrive(IHardDrive delete)
         {
-            if (delete == null || !HardDrive.Contains(delete))
+            if (delete == null || HardDrives == null || !HardDrives.Contains(delete))
                 return false;
 
-            return HardDrive.Remove(delete);
+            return HardDrives.Remove(delete);
         }
 
         #endregion
@@ -103,16 +109,16 @@ namespace AutoBuildApp.Models.Builds
             if (add == null)
                 return false;
 
-            if(Peripheral == null)
-                Peripheral = new List<IComponent>();
+            if(Peripherals == null)
+                Peripherals = new List<IComponent>();
 
-            if (Peripheral.Contains(add))
+            if (Peripherals.Contains(add))
             {
-                var index = Peripheral.IndexOf(add);
-                Peripheral[index].Quantity += INCREMENT_VALUE;
+                var index = Peripherals.IndexOf(add);
+                Peripherals[index].Quantity += INCREMENT_VALUE;
             }
             else
-                Peripheral.Add(add);
+                Peripherals.Add(add);
 
             return true;
         }
@@ -125,17 +131,17 @@ namespace AutoBuildApp.Models.Builds
         /// <returns></returns>
         public bool RemovePeripheral(IComponent remove)
         {
-            if (remove == null || !Peripheral.Contains(remove))
+            if (remove == null || Peripherals == null || !Peripherals.Contains(remove))
                 return false;
 
             var success = false;
-            var index = Peripheral.IndexOf(remove);
+            var index = Peripherals.IndexOf(remove);
 
 
-            if (Peripheral[index].Quantity > MIN_VALUE)
-                Peripheral[index].Quantity -= INCREMENT_VALUE;
+            if (Peripherals[index].Quantity > MIN_VALUE)
+                Peripherals[index].Quantity -= INCREMENT_VALUE;
             else
-                Peripheral.Remove(remove);
+                Peripherals.Remove(remove);
 
             return success;
         }
@@ -147,10 +153,10 @@ namespace AutoBuildApp.Models.Builds
         /// <returns></returns>
         public bool DeletePeripheral(IComponent delete)
         {
-            if (delete is null || !Peripheral.Contains(delete))
+            if (delete == null || Peripherals == null || !Peripherals.Contains(delete))
                 return false;
 
-            return Peripheral.Remove(delete);
+            return Peripherals.Remove(delete);
         }
         #endregion
 
@@ -162,12 +168,12 @@ namespace AutoBuildApp.Models.Builds
         {
             double total = 0;
 
-            if (HardDrive != null)
-                foreach (IHardDrive hdd in HardDrive)
+            if (HardDrives != null)
+                foreach (IHardDrive hdd in HardDrives)
                     total += hdd.GetTotalcost();
 
-            if (Peripheral != null)
-                foreach (IComponent peri in Peripheral)
+            if (Peripherals != null)
+                foreach (IComponent peri in Peripherals)
                     total += peri.GetTotalcost();
 
             if (CPUCooler != null)
@@ -190,7 +196,33 @@ namespace AutoBuildApp.Models.Builds
 
             if (Case != null)
                 total += Case.GetTotalcost();
-            
+
+            // This version returns true on tests however results in an error
+            // "Missing Compiler required member 'microsoft.csharp.runtimebinder..."
+            //// Set components list for on method completion.
+            //var compList = new List<IComponent>();
+
+            //// For each loop using the properties of the build class type
+            //// to iterate through each dynamic property.
+            //foreach (var element in this.GetType().GetProperties())
+            //{
+            //    // Stores the value (class) of each property. 
+            //    var item = element.GetValue(this);
+
+            //    // Check that the item is of the list type and not null.
+            //    if (item is IList && item != null)
+            //        // Used the dynamic cast to assure the compiler that the item
+            //        // is in fact of the expected type of List<IComponent>.
+            //        foreach (var component in (dynamic)item)
+            //            compList.Add(component);
+            //    else
+            //        if (item != null)
+            //        compList.Add((IComponent)item);
+            //}
+
+            //foreach (var item in compList)
+            //    total += item.GetTotalcost();
+
             return total;
         }
     }

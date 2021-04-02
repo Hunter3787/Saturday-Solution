@@ -2,20 +2,24 @@
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Interfaces;
 
+/**
+ * Motherboard class that Implements the IComponent interface.
+ * @Author Nick Marshall-Eminger
+ */
 namespace AutoBuildApp.Models.Products
 {
     public class Motherboard : IComponent
     {
         #region "Field Declarations, get; set;"
-        private const int MIN_LIST_SIZE = 1;
-        private const int MIN_INDEX = 0;
+        public readonly int MIN_LIST_SIZE = 1;
+        public readonly int MIN_INDEX = 0;
 
         public ProductType ProductType { get; set; }
         public string ModelNumber { get; set; }
         public string ProductName { get; set; }
         public string ManufacturerName { get; set; }
         public int Quantity { get; set; }
-        public List<byte[]> ProductImage { get; set; }
+        public List<byte[]> ProductImages { get; set; }
         public double Price { get; set; }
         public double Budget { get; set; }
         public string Socket { get; set; }
@@ -49,7 +53,7 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         public Motherboard()
         {
-            ProductImage = new List<byte[]>();
+            ProductImages = new List<byte[]>();
             SupportedMemory = new List<string>();
             Color = new List<string>();
             M2Slots = new List<string>();
@@ -123,7 +127,7 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveColor(string toRemove)
         {
-            if (string.IsNullOrWhiteSpace(toRemove) || !Color.Contains(toRemove))
+            if (Color == null || string.IsNullOrWhiteSpace(toRemove) || !Color.Contains(toRemove))
                 return false;
 
             return RemoveColor(Color.IndexOf(toRemove));
@@ -136,7 +140,7 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveColor(int index)
         {
-            if (index > Color.Count || index < MIN_INDEX)
+            if (Color == null || index > Color.Count || index < MIN_INDEX)
                 return false;
 
             Color.RemoveAt(index);
@@ -167,7 +171,7 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveM2Slot(string toRemove)
         {
-            if (string.IsNullOrWhiteSpace(toRemove) || !M2Slots.Contains(toRemove))
+            if (M2Slots == null || string.IsNullOrWhiteSpace(toRemove) || !M2Slots.Contains(toRemove))
                 return false;
 
             return RemoveM2Slot(M2Slots.IndexOf(toRemove));
@@ -180,7 +184,7 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveM2Slot(int index)
         {
-            if (index > M2Slots.Count || index < MIN_INDEX)
+            if (M2Slots == null || index > M2Slots.Count || index < MIN_INDEX)
                 return false;
 
             M2Slots.RemoveAt(index);
@@ -197,7 +201,7 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool AddOnboardEthernet(string input)
         {
-            if (string.IsNullOrWhiteSpace(input) || OnboardEthernet.Contains(input))
+            if (OnboardEthernet == null || string.IsNullOrWhiteSpace(input) || OnboardEthernet.Contains(input))
                 return false;
 
             OnboardEthernet.Add(input);
@@ -212,7 +216,7 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveOnboardEthernet(string toRemove)
         {
-            if (string.IsNullOrWhiteSpace(toRemove) || !OnboardEthernet.Contains(toRemove))
+            if (OnboardEthernet == null || string.IsNullOrWhiteSpace(toRemove) || !OnboardEthernet.Contains(toRemove))
                 return false;
 
             return RemoveOnboardEthernet(OnboardEthernet.IndexOf(toRemove));
@@ -226,7 +230,7 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveOnboardEthernet(int index)
         {
-            if (index > OnboardEthernet.Count || index < MIN_INDEX)
+            if (OnboardEthernet == null || index > OnboardEthernet.Count || index < MIN_INDEX)
                 return false;
 
             OnboardEthernet.RemoveAt(index);
@@ -245,7 +249,7 @@ namespace AutoBuildApp.Models.Products
             if (image == null)
                 return false;
 
-            ProductImage.Add(image);
+            ProductImages.Add(image);
             return true;
         }
 
@@ -256,13 +260,16 @@ namespace AutoBuildApp.Models.Products
         /// <returns></returns>
         public bool RemoveImage(int index)
         {
-            var success = false;
-            var endOfList = ProductImage.Count - 1;
+            if (ProductImages == null)
+                return false;
 
-            if (index >= MIN_INDEX && ProductImage.Count >= MIN_LIST_SIZE
+            var success = false;
+            var endOfList = ProductImages.Count - 1;
+
+            if (index >= MIN_INDEX && ProductImages.Count >= MIN_LIST_SIZE
                 && index <= endOfList)
             {
-                ProductImage.RemoveAt(index);
+                ProductImages.RemoveAt(index);
                 success = true;
             }
 

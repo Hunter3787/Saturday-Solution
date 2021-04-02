@@ -12,15 +12,15 @@ namespace AutoBuildApp.Models.Products
     public class ComputerCase : IComponent
     {
         #region "Field Declarations, get; set;"
-        private const int MIN_LIST_SIZE = 1;
-        private const int MIN_INDEX = 0;
+        public readonly int MIN_LIST_SIZE = 1;
+        public readonly int MIN_INDEX = 0;
 
         public ProductType ProductType { get; set; }
         public string ModelNumber { get; set; }
         public string ProductName { get; set; }
         public string ManufacturerName { get; set; }
         public int Quantity { get; set; }
-        public List<byte[]> ProductImage { get; set; }
+        public List<byte[]> ProductImages { get; set; }
         public double Price { get; set; }
         public double Budget { get; set; }
         public List<MoboFormFactor> MoboFormSupport { get; set; }
@@ -41,7 +41,7 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         public ComputerCase()
         {
-            ProductImage = new List<byte[]>();
+            ProductImages = new List<byte[]>();
             MoboFormSupport = new List<MoboFormFactor>();
             Color = new List<string>();
             FrontPanel = new List<string>();
@@ -54,7 +54,7 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         /// <param name="input">MoboFormFactor of Type Enumeration</param>
         /// <returns>Boolean</returns>
-        public bool AddRAMSupport(MoboFormFactor input)
+        public bool AddFormFactorSupport(MoboFormFactor input)
         {
             if (MoboFormSupport.Contains(input))
                 return false;
@@ -69,12 +69,13 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         /// <param name="toRemove"></param>
         /// <returns>Boolean</returns>
-        public bool RemoveRAMSupport(MoboFormFactor toRemove)
+        public bool RemoveFormFactorSupport(MoboFormFactor toRemove)
         {
-            if (MoboFormSupport.Contains(toRemove))
+            if (MoboFormSupport == null)
                 return false;
 
-            return RemoveRAMSupport(MoboFormSupport.IndexOf(toRemove));
+
+            return RemoveFormFactorSupport(MoboFormSupport.IndexOf(toRemove));
         }
 
         /// <summary>
@@ -82,7 +83,7 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         /// <param name="index"></param>
         /// <returns>Boolean</returns>
-        public bool RemoveRAMSupport(int index)
+        public bool RemoveFormFactorSupport(int index)
         {
             if (index > MoboFormSupport.Count || index < MIN_INDEX)
                 return false;
@@ -115,6 +116,9 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveColor(string toRemove)
         {
+            if (Color == null)
+                return false;
+
             if (string.IsNullOrWhiteSpace(toRemove) || !Color.Contains(toRemove))
                 return false;
 
@@ -128,6 +132,9 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveColor(int index)
         {
+            if (Color == null)
+                return false;
+
             if (index > Color.Count || index < MIN_INDEX)
                 return false;
 
@@ -160,6 +167,9 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveFrontPanel(string toRemove)
         {
+            if (FrontPanel == null)
+                return false;
+
             if (string.IsNullOrWhiteSpace(toRemove) || !FrontPanel.Contains(toRemove))
                 return false;
 
@@ -174,6 +184,9 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveFrontPanel(int index)
         {
+            if (FrontPanel == null)
+                return false;
+
             if (index > FrontPanel.Count || index < MIN_INDEX)
                 return false;
 
@@ -193,7 +206,7 @@ namespace AutoBuildApp.Models.Products
             if (image == null)
                 return false;
             
-            ProductImage.Add(image);
+            ProductImages.Add(image);
             return true;
         }
 
@@ -204,13 +217,16 @@ namespace AutoBuildApp.Models.Products
         /// <returns></returns>
         public bool RemoveImage(int index)
         {
-            var success = false;
-            var endOfList = ProductImage.Count - 1;
+            if (ProductImages == null)
+                return false;
 
-            if(index >= MIN_INDEX && ProductImage.Count >= MIN_LIST_SIZE
+            var success = false;
+            var endOfList = ProductImages.Count - 1;
+
+            if(index >= MIN_INDEX && ProductImages.Count >= MIN_LIST_SIZE
                 && index <= endOfList)
             {
-                ProductImage.RemoveAt(index);
+                ProductImages.RemoveAt(index);
                 success =  true;
             }
 

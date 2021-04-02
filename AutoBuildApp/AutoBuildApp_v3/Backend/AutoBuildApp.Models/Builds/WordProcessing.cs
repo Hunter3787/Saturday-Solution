@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Products;
 
+/**
+ * Currently a duplicate of gaming build. Not yet implemented.
+ * @Author Nick Marshall-Eminger
+ */
 namespace AutoBuildApp.Models.Builds
 {
     public class WordProcessing : IBuild
@@ -11,7 +15,7 @@ namespace AutoBuildApp.Models.Builds
         {
         }
 
-        public List<IHardDrive> HardDrive { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public List<IHardDrive> HardDrives { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public ComputerCase Case { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public Motherboard Mobo { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public PowerSupplyUnit Psu { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -19,7 +23,7 @@ namespace AutoBuildApp.Models.Builds
         public CPU Cpu { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public RAM Ram { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public ICooler CPUCooler { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public List<IComponent> Peripheral { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public List<IComponent> Peripherals { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public bool AddHardDrive(IHardDrive add)
         {

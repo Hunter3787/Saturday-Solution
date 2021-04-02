@@ -1,7 +1,11 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AutoBuildApp.Services;
 
-namespace RecommendationServices.Tests
+/**
+ * Tests for the BudgetPortionService.
+ * @Author Nick Marshall-Eminger
+ */
+namespace AutoBuildApp.Services.Tests
 {
     [TestClass]
     public class BudgetPortionServiceTests
