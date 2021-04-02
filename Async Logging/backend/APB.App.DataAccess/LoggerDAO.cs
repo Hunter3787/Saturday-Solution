@@ -20,7 +20,7 @@ namespace APB.App.DataAccess
             _connection = connectionString;
         }
         // Method that is used to create a log record in the logs table in the datastore.
-        public string CreateLogRecord(LoggerEntity logger)
+        public bool CreateLogRecord(LoggerEntity logger)
         {
             // This will use the connection string initilized above.
             using (SqlConnection connection = new SqlConnection(_connection))
@@ -44,7 +44,7 @@ namespace APB.App.DataAccess
                         _adapter.InsertCommand.ExecuteNonQuery(); // Executes a Transaction-centered SQL statement.
 
                         transaction.Commit(); // Commits the changes to the database,
-                        return "Successful Log creation"; // Returns a message that the log has been successfully created.
+                        return true; // Returns a message that the log has been successfully created.
                     }
                     // If the SQL statement fails, it will throw an SQL Exception.
                     catch (SqlException ex)
@@ -52,7 +52,7 @@ namespace APB.App.DataAccess
                         if (ex.Number == -2)
                         {
                             transaction.Rollback(); // The transaction will be rolled back to before the try block.
-                            return ("Data store has timed out."); // Returns the error message.
+                            return false; // Returns the error message.
                         }
                     }
                     // Closes the connection at the end of the try and catch block.
@@ -60,7 +60,7 @@ namespace APB.App.DataAccess
                     {
                         connection.Close();
                     }
-                    return "Successful Log creation"; // Returns a success message.
+                    return true; // Returns a success message.
                 }
             }
         }

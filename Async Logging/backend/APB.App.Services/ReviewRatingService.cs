@@ -3,7 +3,6 @@ using APB.App.Entities;
 using APB.App.DomainModels;
 using System.IO;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System;
 using System.Collections.Generic;
 
@@ -39,6 +38,8 @@ namespace APB.App.Services
         /// <returns>returns a success-state bool</returns>
         public bool CreateReviewRating(ReviewRating reviewRating)
         {
+            _logger.LogInformation($"Review Rating Service CreateReviewRating was called for User:{reviewRating.Username}");
+
             // this converts a ReviewRating object into a ReviewRatingEntity object.
             var reviewRatingEntity = new ReviewRatingEntity()
             {
@@ -76,6 +77,8 @@ namespace APB.App.Services
         /// <returns></returns>
         public ReviewRating GetReviewsRatings(ReviewRating reviewRating)
         {
+            _logger.LogInformation($"Review Rating Service GetReviewRating was called for ID:{reviewRating.EntityId}");
+
             // stores the entity retrieved locally so that it may be edited.
             var reviewEntity = _reviewRatingDAO.GetReviewsRatingsBy(reviewRating.EntityId);
 
@@ -119,6 +122,8 @@ namespace APB.App.Services
         /// <returns>Returns a list of ReviewRatings</returns>
         public List<ReviewRating> GetAllReviewsRatings()
         {
+            _logger.LogInformation("Review Rating Service GetAllReviews was called.");
+
             // stores the entities retrieved locally so that it may be edited.
             var reviewEntities = _reviewRatingDAO.GetAllReviewsRatings();
 
@@ -154,8 +159,10 @@ namespace APB.App.Services
                                 reviewRatings.FilePath = $"images/{ reviewRatingEntity.Username}_{ reviewRatingEntity.EntityId}.jpg"; // file path that is accessible by the UI.
                             }
                         }
-                        catch(ArgumentException)
+                        catch(ArgumentException ex)
                         {
+                            _logger.LogInformation($"Service GetAllReviews was called with {ex}");
+
                             reviewRatings.Picture = null;
                             reviewRatings.FilePath = null;
                         }
@@ -177,6 +184,8 @@ namespace APB.App.Services
         /// <returns>This will return a success-state bool</returns>
         public bool DeleteReviewRating(string reviewId)
         {
+            _logger.LogInformation($"Review Rating Service DeleteReviewRating was called for ID:{reviewId}");
+
             // store the entity id so that it may be passed to the DB.
             var reviewRatingEntity = new ReviewRatingEntity()
             {
@@ -194,6 +203,8 @@ namespace APB.App.Services
         /// <returns>returns a success-state bool</returns>
         public bool EditReviewRating(ReviewRating reviewRating)
         {
+            _logger.LogInformation($"Review Rating Service EditReviewRating was called for ID:{reviewRating.EntityId}");
+
             // Create and entity with the values that are to be updated with.
             var reviewRatingEntity = new ReviewRatingEntity()
             {

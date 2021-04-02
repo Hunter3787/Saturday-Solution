@@ -61,7 +61,7 @@ namespace ReviewsAndRatings.UnitTests
             });
 
             // Assert
-            Assert.That(result, Is.True);
+            Assert.IsTrue(result);
         }
 
         /// <summary>

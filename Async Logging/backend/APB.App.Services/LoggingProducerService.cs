@@ -89,16 +89,17 @@ namespace APB.App.Services
                 _logger.Message = message; 
                 _logger.LogLevel = level;
                 _logger.DateTime = dateTime;
-                sendLog(_logger); // method used to send LogObject to the Queue.
+                SendLog(_logger); // method used to send LogObject to the Queue.
                 return true;
         }
 
         // Constructor for log and sets operations for log to be asynchronously sent to the Queue.
         // These will be asynchronously sent to the Queue by starting a new thread.
-        public async Task LogAsync(string message, LogType level, string dateTime)
+        public async Task<bool> LogAsync(string message, LogType level, string dateTime)
         {
             _logger = new Logger(); // store a new log object every time a new log is called.
 
+            #region Logging write lock implementation
             // This will ensure that only one write operation is happening at a single moment.
 
             //await semaphore.WaitAsync();
@@ -116,17 +117,16 @@ namespace APB.App.Services
             //}
 
             // stores log variables into the LogObject to be sent to the Queue.
-
+            #endregion
 
             _logger.Message = message;
             _logger.LogLevel = level;
             _logger.DateTime = dateTime;
-            //sendLog(logObject);
-            await Task.Run(() => sendLog(_logger)); // method used to send LogObject to the Queue.
+            var result = await Task.Run(() => SendLog(_logger)); // method used to send LogObject to the Queue.
 
-            Console.WriteLine("sent");
+            return result;
         }
-        public void sendLog(Logger log)
+        public bool SendLog(Logger log)
         {
             // If the connection has not been disposed, then send the object to the Log.
             if (!_isDisposed)
@@ -134,6 +134,7 @@ namespace APB.App.Services
                 string json = JsonConvert.SerializeObject(log, Formatting.Indented); // Serialize the log object into a JSON to be able to insterted clearly into the Queue.
                 ITextMessage textMessage = _session.CreateTextMessage(json); // This will get the message of the JSON log to be sent to the Queue.
                 _producer.Send(textMessage); // This finally sends the serialized object to the Queue.
+                return true;
             }
             else
             {
@@ -176,6 +177,6 @@ namespace APB.App.Services
     public interface ILogger
     {
         bool Log(string message, LogType level, string dateTime);
-        Task LogAsync(string message, LogType level, string dateTime);
+        Task<bool> LogAsync(string message, LogType level, string dateTime);
     }
 }

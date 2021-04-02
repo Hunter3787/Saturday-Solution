@@ -22,10 +22,12 @@ namespace APB.App.Apis.Controllers
     public class ReviewRatingController : ControllerBase
     {
         // Initializes the DAO that will be used for review ratings.
-        ReviewRatingDAO reviewRatingDAO = new ReviewRatingDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+        private readonly ReviewRatingDAO _reviewRatingDAO = new ReviewRatingDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
 
         // This will start the logging consumer manager in the background so that logs may be sent to the DB.
-        LoggingConsumerManager loggingConsumerManager = new LoggingConsumerManager();
+        private LoggingConsumerManager _loggingConsumerManager = new LoggingConsumerManager();
+
+        private LoggingProducerService _logger = LoggingProducerService.GetInstance;
 
         /// <summary>
         /// This class will show no contend if fetch Options is made.
@@ -34,6 +36,7 @@ namespace APB.App.Apis.Controllers
         [HttpOptions]
         public IActionResult PreflightRoute()
         {
+            _logger.LogInformation("HttpOptions was called");
             return NoContent();
         }
 
@@ -45,8 +48,10 @@ namespace APB.App.Apis.Controllers
         [HttpPost]
         public IActionResult CreateReviewRating(ReviewRating reviewRating)
         {
+            _logger.LogInformation("CreateReviewRating was fetched.");
+
             // This will start a service when a post fetch is called. and pass in the DAO that will be used.
-            ReviewRatingService reviewRatingService = new ReviewRatingService(reviewRatingDAO);
+            ReviewRatingService reviewRatingService = new ReviewRatingService(_reviewRatingDAO);
 
             // This will start a manager and pass in the service.
             ReviewRatingManager reviewRatingManager = new ReviewRatingManager(reviewRatingService);
@@ -57,9 +62,11 @@ namespace APB.App.Apis.Controllers
             // if true, it will return OK, else it will return status code error of 500
             if (createResult)
             {
+                _logger.LogInformation("CreateReviewRating was a success.");
                 return Ok();
             }
 
+            _logger.LogInformation("CreateReviewRating was not successfully fetched.");
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
 
@@ -70,8 +77,10 @@ namespace APB.App.Apis.Controllers
         [HttpGet]
         public IActionResult GetAllReviewRatings()
         {
+            _logger.LogInformation("GettAllReviewRatings was fetched.");
+
             // This will start a service when a post fetch is called. and pass in the DAO that will be used.
-            ReviewRatingService reviewRatingService = new ReviewRatingService(reviewRatingDAO);
+            ReviewRatingService reviewRatingService = new ReviewRatingService(_reviewRatingDAO);
 
             // This will start a manager and pass in the service.
             ReviewRatingManager reviewRatingManager = new ReviewRatingManager(reviewRatingService);
@@ -81,10 +90,12 @@ namespace APB.App.Apis.Controllers
             {
                 var reviewRatings = reviewRatingManager.GetAllReviewsRatings(); // calls the manager to get all reviews.
 
+                _logger.LogInformation("GettAllReviewRatings was sucessfully fetched.");
                 return Ok(reviewRatings); // sends the review list through the OK to be read from the front end fetch request.
             }
             catch
             {
+                _logger.LogWarning("GettAllReviewRatings was not sucessfully fetched.");
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
         }
@@ -97,8 +108,10 @@ namespace APB.App.Apis.Controllers
         [HttpDelete("{reviewId}")]
         public IActionResult DeleteReviewRating(string reviewId)
         {
+            _logger.LogInformation("DeleteReviewRating was fetched.");
+
             // This will start a service when a post fetch is called. and pass in the DAO that will be used.
-            ReviewRatingService reviewRatingService = new ReviewRatingService(reviewRatingDAO);
+            ReviewRatingService reviewRatingService = new ReviewRatingService(_reviewRatingDAO);
 
             // This will start a manager and pass in the service.
             ReviewRatingManager reviewRatingManager = new ReviewRatingManager(reviewRatingService);
@@ -109,9 +122,11 @@ namespace APB.App.Apis.Controllers
             // if true, it will return OK, else it will return status code error of 500
             if (createResult)
             {
+                _logger.LogInformation("DeleteReviewRating was successfully fetched.");
                 return Ok();
             }
 
+            _logger.LogInformation("DeleteReviewRating was not successfully fetched.");
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
 
@@ -123,8 +138,10 @@ namespace APB.App.Apis.Controllers
         [HttpPut]
         public IActionResult EditReviewRating(ReviewRating reviewRating)
         {
+            _logger.LogInformation("EditReviewRating was fetched.");
+
             // This will start a service when a post fetch is called. and pass in the DAO that will be used.
-            ReviewRatingService reviewRatingService = new ReviewRatingService(reviewRatingDAO);
+            ReviewRatingService reviewRatingService = new ReviewRatingService(_reviewRatingDAO);
 
             // This will start a manager and pass in the service.
             ReviewRatingManager reviewRatingManager = new ReviewRatingManager(reviewRatingService);
@@ -135,9 +152,11 @@ namespace APB.App.Apis.Controllers
             // if true, it will return OK, else it will return status code error of 500
             if (createResult)
             {
+                _logger.LogInformation("EditReviewRating was successfully fetched.");
                 return Ok();
             }
 
+            _logger.LogInformation("EditReviewRating was not successfully fetched.");
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }

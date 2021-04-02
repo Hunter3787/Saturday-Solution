@@ -34,6 +34,7 @@ namespace APB.App.Managers
         /// <returns>boolean success-state</returns>
         public bool CreateReviewRating(ReviewRating reviewRating)
         {
+            _logger.LogInformation($"Review Rating Manager CreateReviewRating was called for User:{reviewRating.Username}");
             return _reviewRatingService.CreateReviewRating(reviewRating); // returns the boolean success state.
         }
 
@@ -44,6 +45,7 @@ namespace APB.App.Managers
         /// <returns>returns the object of the string ID that is in the DB.</returns>
         public ReviewRating GetReviewsRatings(string reviewId)
         {
+            _logger.LogInformation($"Review Rating Manager GetReviewRating was called for ID:{reviewId}");
             // creates a new ReviewRating with the id passed in.
             var reviewRating = new ReviewRating()
             {
@@ -59,6 +61,7 @@ namespace APB.App.Managers
         /// <returns>returns the list ReviewRatings</returns>
         public List<ReviewRating> GetAllReviewsRatings()
         {
+            _logger.LogInformation("Review Rating Manager GetAllReviews was called.");
             return _reviewRatingService.GetAllReviewsRatings(); // gets the list that is created in the service layer.
         }
 
@@ -69,6 +72,7 @@ namespace APB.App.Managers
         /// <returns>bool success-state</returns>
         public bool DeleteReviewRating(string reviewId)
         {
+            _logger.LogInformation($"Review Rating Manager DeleteReviewRating was called for ID:{reviewId}");
             return _reviewRatingService.DeleteReviewRating(reviewId); // returns the bool of the service method.
         }
 
@@ -79,6 +83,7 @@ namespace APB.App.Managers
         /// <returns>bool success state.</returns>
         public bool EditReviewRating(ReviewRating reviewRating)
         {
+            _logger.LogInformation($"Review Rating Service EditReviewRating was called for ID:{reviewRating.EntityId}");
             return _reviewRatingService.EditReviewRating(reviewRating); // returns the boolean of the service method.
         }
     }
