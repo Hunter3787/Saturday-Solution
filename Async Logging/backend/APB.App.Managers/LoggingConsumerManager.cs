@@ -13,6 +13,10 @@ using APB.App.DomainModels;
 
 namespace APB.App.Managers
 {
+    /// <summary>
+    /// This class acts as the consumer for the logging Objects, will be consumed from the
+    /// queue and uploaded to the database from this class.
+    /// </summary>
     public class LoggingConsumerManager : IDisposable // This will implement the IDisposable interface which is used to clean up and close connections.
     {
         private readonly IConnectionFactory _connectionFactory; // This acts as an entry point to client APIs in this case ActiveMQ.

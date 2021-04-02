@@ -13,6 +13,10 @@ using APB.App.DomainModels;
 
 namespace APB.App.Services
 {
+    /// <summary>
+    /// This class will be used to send logs to a Queue, this is the producer end that will
+    /// produce the queue with logs.
+    /// </summary>
     public sealed class LoggingProducerService : ILogger //service
     {
         private Logger _logger; // Initializes a log object for storing and transfering data about a log.
