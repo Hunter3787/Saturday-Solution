@@ -34,6 +34,7 @@ namespace AutoBuildApp.Models.Products
         public List<string> L3Cache { get; set; }
         public string Lithograph { get; set; }
         public string HyperThreading { get; set; }
+        public double Budget { get; set; }
         #endregion
 
         /// <summary>
@@ -42,70 +43,6 @@ namespace AutoBuildApp.Models.Products
         public CPU()
         {
 
-        }
-
-        /// <summary>
-        /// Central Processing Unit class constructor that accepts all
-        /// parameters for initialization. 
-        /// </summary>
-        /// <param name="productType">Enumeration of ProductType</param>
-        /// <param name="modelNumber">String representation of products model number.</param>
-        /// <param name="productName">String representation of product name.</param>
-        /// <param name="manufacturerName">String representation of product manufacturer(maker).</param>
-        /// <param name="quantity">Integer value of how many of the defined component
-        /// this class represents.</param>
-        /// <param name="productImage">List of byte arrays representing associated images.</param>
-        /// <param name="coreCount">Integer value representing the cores
-        /// count of processor.</param>
-        /// <param name="coreClock"></param>
-        /// <param name="boostClock"></param>
-        /// <param name="powerDraw"></param>
-        /// <param name="series"></param>
-        /// <param name="microrArchitecture"></param>
-        /// <param name="coreFamily"></param>
-        /// <param name="socket"></param>
-        /// <param name="integratedGraphics"></param>
-        /// <param name="maxRam"></param>
-        /// <param name="errCorrectionCodeSupport"></param>
-        /// <param name="packaging"></param>
-        /// <param name="l1Cache"></param>
-        /// <param name="l2Cache"></param>
-        /// <param name="l3Cache"></param>
-        /// <param name="lithograph"></param>
-        /// <param name="hyperThreading"></param>
-        public CPU(ProductType productType, string modelNumber, string productName,
-            string manufacturerName, int quantity, List<byte[]> productImage,
-                int coreCount, string coreClock, string boostClock, string powerDraw,
-                    string series, string microrArchitecture, string coreFamily,
-                        string socket, string integratedGraphics, string maxRam,
-                            string errCorrectionCodeSupport, string packaging,
-                                List<string> l1Cache, List<string> l2Cache,
-                                    List<string> l3Cache, string lithograph,
-                                        string hyperThreading)
-        {
-            ProductType = productType;
-            ModelNumber = modelNumber;
-            ProductName = productName;
-            ManufacturerName = manufacturerName;
-            Quantity = quantity;
-            ProductImage = productImage;
-            CoreCount = coreCount;
-            CoreClock = coreClock;
-            BoostClock = boostClock;
-            PowerDraw = powerDraw;
-            Series = series;
-            MicrorArchitecture = microrArchitecture;
-            CoreFamily = coreFamily;
-            Socket = socket;
-            IntegratedGraphics = integratedGraphics;
-            MaxRam = maxRam;
-            ErrCorrectionCodeSupport = errCorrectionCodeSupport;
-            Packaging = packaging;
-            L1Cache = l1Cache;
-            L2Cache = l2Cache;
-            L3Cache = l3Cache;
-            Lithograph = lithograph;
-            HyperThreading = hyperThreading;
         }
 
         #region "Interface Implementations"
@@ -141,6 +78,15 @@ namespace AutoBuildApp.Models.Products
             }
 
             return success;
+        }
+
+        /// <summary>
+        /// Total cost of components based on quantity and price.
+        /// </summary>
+        /// <returns>Double</returns>
+        public double GetTotalcost()
+        {
+            return Price * Quantity;
         }
         #endregion
     }

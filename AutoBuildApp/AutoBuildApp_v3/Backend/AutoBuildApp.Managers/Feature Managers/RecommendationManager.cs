@@ -17,6 +17,7 @@ namespace AutoBuildApp.Managers
     public class RecommendationManager : ArgumentOutOfRangeException
     {
         // Local constant for minimum budget.
+        private const double MAX_BUDGET = double.MaxValue;
         private const double MIN_BUDGET = 0.0;
 
         private double _budget;
@@ -71,15 +72,19 @@ namespace AutoBuildApp.Managers
         /// <returns>A list of IBuild representing the recommended builds.</returns>
         public List<IBuild>
             RecommendBuilds(BuildType buildType, double budget,
-                Dictionary<ProductType, int> peripherals, PSUModularity psuType,
+                List<IComponent> peripherals, PSUModularity psuType,
                     HardDriveType hddType, int hddCount)
         {
-            if (peripherals is null)
-            {
+            if ( budget < MIN_BUDGET )
                 return null;
-            }
 
-            IBuild build = BuildFactory.Build(buildType);
+            IBuild build = BuildFactory.CreateBuild(buildType);
+
+            if ( peripherals is not null )
+                build.Peripheral = peripherals;
+
+            if (!BudgetComponents(build, buildType, budget))
+                return null;
 
             
 
@@ -118,7 +123,7 @@ namespace AutoBuildApp.Managers
         #endregion
 
         #region "Private Methods"
-        private void GenerateBuildKey()
+        private void GenerateBuildKey(BuildType type, double budget)
         {
 
         }
@@ -128,9 +133,30 @@ namespace AutoBuildApp.Managers
 
         }
 
-        private void BudgetCompopnents()
+        private bool BudgetComponents(IBuild build, BuildType type, double budget)
         {
+            // Early exit and failure criteria.
+            if (budget < MIN_BUDGET)
+                return false;
 
+            double tempBudget;
+
+            // If budget is not set price is no object.
+            if (budget == 0)
+                tempBudget = MAX_BUDGET;
+            else
+                tempBudget = budget;
+
+            GenerateBuildKey(type, tempBudget);
+
+
+
+
+
+
+            BudgetPortionService portionService = new BudgetPortionService();
+
+            return true;
         }
 
         private void RemoveOverBudgetItems()

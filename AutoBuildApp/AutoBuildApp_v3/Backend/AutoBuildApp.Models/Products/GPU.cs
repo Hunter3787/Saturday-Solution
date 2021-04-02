@@ -36,6 +36,7 @@ namespace AutoBuildApp.Models.Products
         public int ExpansionSlotWidth { get; set; }
         public int Cooling { get; set; }
         public string ExternalPower { get; set; }
+        public double Budget { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         #endregion
 
         /// <summary>
@@ -43,73 +44,7 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         public GPU()
         {
-
         }
-
-        /// <summary>
-        /// Graphic Processing Unit constructor to set all parameters.
-        /// </summary>
-        /// <param name="productType"></param>
-        /// <param name="modelNumber"></param>
-        /// <param name="productName"></param>
-        /// <param name="manufacturerName"></param>
-        /// <param name="productImage"></param>
-        /// <param name="chipset"></param>
-        /// <param name="memory"></param>
-        /// <param name="coreClock"></param>
-        /// <param name="boostClock"></param>
-        /// <param name="effctvMemoryClcok"></param>
-        /// <param name="interface"></param>
-        /// <param name="color"></param>
-        /// <param name="frameSync"></param>
-        /// <param name="powerDraw"></param>
-        /// <param name="length"></param>
-        /// <param name="quantity"></param>
-        /// <param name="dVIPorts"></param>
-        /// <param name="hDMIPorts"></param>
-        /// <param name="miniHDMIPorts"></param>
-        /// <param name="displayPortPorts"></param>
-        /// <param name="miniDisplayPortPorts"></param>
-        /// <param name="expansionSlotWidth"></param>
-        /// <param name="cooling"></param>
-        /// <param name="externalPower"></param>
-        public GPU(ProductType productType, string modelNumber, string productName,
-            string manufacturerName, List<byte[]> productImage, string chipset,
-                string memory, string coreClock, string boostClock,
-                    string effctvMemoryClcok, string @interface, string color,
-                        string frameSync, string powerDraw, int length, int quantity,
-                            int dVIPorts, int hDMIPorts, int miniHDMIPorts,
-                                int displayPortPorts, int miniDisplayPortPorts,
-                                    int expansionSlotWidth, int cooling,
-                                        string externalPower)
-        {
-            ProductType = productType;
-            ModelNumber = modelNumber;
-            ProductName = productName;
-            ManufacturerName = manufacturerName;
-            ProductImage = productImage;
-            Chipset = chipset;
-            Memory = memory;
-            CoreClock = coreClock;
-            BoostClock = boostClock;
-            EffctvMemoryClcok = effctvMemoryClcok;
-            Interface = @interface;
-            Color = color;
-            FrameSync = frameSync;
-            PowerDraw = powerDraw;
-            Length = length;
-            Quantity = quantity;
-            DVIPorts = dVIPorts;
-            HDMIPorts = hDMIPorts;
-            MiniHDMIPorts = miniHDMIPorts;
-            DisplayPortPorts = displayPortPorts;
-            MiniDisplayPortPorts = miniDisplayPortPorts;
-            ExpansionSlotWidth = expansionSlotWidth;
-            Cooling = cooling;
-            ExternalPower = externalPower;
-        }
-
-
 
         #region "Interface Implementations"
         /// <summary>
@@ -144,6 +79,15 @@ namespace AutoBuildApp.Models.Products
             }
 
             return success;
+        }
+
+        /// <summary>
+        /// Total cost of components based on quantity and price.
+        /// </summary>
+        /// <returns>Double</returns>
+        public double GetTotalcost()
+        {
+            return Price * Quantity;
         }
         #endregion
     }

@@ -22,6 +22,7 @@ namespace AutoBuildApp.Models.Products
         {
         }
 
+        #region "Interface Implementation"
         public bool AddImage(byte[] image)
         {
             throw new NotImplementedException();
@@ -31,5 +32,15 @@ namespace AutoBuildApp.Models.Products
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Total cost of components based on quantity and price.
+        /// </summary>
+        /// <returns>Double</returns>
+        public double GetTotalcost()
+        {
+            return Price * Quantity;
+        }
+        #endregion
     }
 }

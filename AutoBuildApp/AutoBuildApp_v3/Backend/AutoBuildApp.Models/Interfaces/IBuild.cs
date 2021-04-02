@@ -23,5 +23,6 @@ namespace AutoBuildApp.Models.Interfaces
         public bool RemoveHardDrive(IHardDrive remove);
         public bool AddPeripheral(IComponent add);
         public bool RemovePeripheral(IComponent remove);
+        public double GetTotalCost();
     }
 }

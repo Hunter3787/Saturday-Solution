@@ -2,7 +2,7 @@
 
 namespace AutoBuildApp.Models.Interfaces
 {
-    public interface ICooler
+    public interface ICooler : IComponent
     {
     }
 }

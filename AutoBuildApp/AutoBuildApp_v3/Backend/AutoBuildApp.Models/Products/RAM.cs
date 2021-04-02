@@ -30,6 +30,7 @@ namespace AutoBuildApp.Models.Products
         public string ErrCorrctionCode { get; set; }
         public string Registered { get; set; }
         public bool HeatSpreader { get; set; }
+        public double Budget { get; set; }
         #endregion
 
         public RAM()
@@ -116,6 +117,15 @@ namespace AutoBuildApp.Models.Products
             }
 
             return success;
+        }
+
+        /// <summary>
+        /// Total cost of components based on quantity and price.
+        /// </summary>
+        /// <returns>Double</returns>
+        public double GetTotalcost()
+        {
+            return Price * Quantity;
         }
         #endregion
     }

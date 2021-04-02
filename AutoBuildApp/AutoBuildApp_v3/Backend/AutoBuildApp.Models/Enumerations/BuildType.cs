@@ -3,9 +3,9 @@ namespace AutoBuildApp.Models.Enumerations
 {
     public enum BuildType
     {
-        GraphicIntensive,
+        GraphicArtist,
         Gaming,
-        Work,
+        WordProcessing,
         None
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Collections.Generic;
 using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Products;
@@ -148,5 +149,22 @@ namespace AutoBuildApp.Models.Builds
             return Peripheral.Remove(delete);
         }
         #endregion
+
+        /// <summary>
+        /// Computes total cost of all components and returns as a double.
+        /// </summary>
+        /// <returns>Double</returns>
+        public double GetTotalCost()
+        {
+            double total = 0;
+
+            foreach (IHardDrive hdd in HardDrive)
+                if(hdd != null)
+                    total += hdd.GetTotalcost();
+
+            
+
+            return total;
+        }
     }
 }

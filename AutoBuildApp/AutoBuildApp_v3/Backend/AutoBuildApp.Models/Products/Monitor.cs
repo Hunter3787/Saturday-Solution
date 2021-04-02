@@ -34,11 +34,6 @@ namespace AutoBuildApp.Models.Products
         public Dictionary<string, int> DisplayPortCount { get; set; }
         public bool Speakers { get; set; }
         public string ViewingAngle { get; set; }
-
-
-
-
-
         #endregion
 
         public Monitor()
@@ -264,6 +259,15 @@ namespace AutoBuildApp.Models.Products
             }
 
             return success;
+        }
+
+        /// <summary>
+        /// Total cost of components based on quantity and price.
+        /// </summary>
+        /// <returns>Double</returns>
+        public double GetTotalcost()
+        {
+            return Price * Quantity;
         }
         #endregion
     }

@@ -1,8 +1,9 @@
 ﻿using System;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Interfaces;
+using AutoBuildApp.Models.Builds;
 
-namespace AutoBuildApp.Models.Builds
+namespace AutoBuildApp.Services
 {
     /// <summary>
     /// Build Factory to output the type of computer to be created per a switch
@@ -10,12 +11,12 @@ namespace AutoBuildApp.Models.Builds
     /// </summary>
     public static class BuildFactory
     {
-        public static IBuild Build(BuildType buildType)
+        public static IBuild CreateBuild(BuildType buildType)
         {
             switch(buildType){
-                case BuildType.GraphicIntensive:
+                case BuildType.GraphicArtist:
                     return new GraphicArtist();
-                case BuildType.Work:
+                case BuildType.WordProcessing:
                     return new WordProcessing();
                 default:
                     return new Gaming();

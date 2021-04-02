@@ -24,14 +24,20 @@ namespace AutoBuildApp.Models.Interfaces
         /// Interface implementation of AddImage method.
         /// </summary>
         /// <param name="image"></param>
-        /// <returns></returns>
+        /// <returns>Boolean</returns>
         public bool AddImage(byte[] image);
 
         /// <summary>
         /// Interface implementation of RemoveImage method.
         /// </summary>
         /// <param name="index"></param>
-        /// <returns></returns>
+        /// <returns>Boolean</returns>
         public bool RemoveImage(int index);
+
+        /// <summary>
+        /// Compute the total cost based of quanitity and price.
+        /// </summary>
+        /// <returns>Double</returns>
+        public double GetTotalcost();
     }
 }

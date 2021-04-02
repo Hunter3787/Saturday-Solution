@@ -68,6 +68,15 @@ namespace AutoBuildApp.Models.Products
 
             return success;
         }
+
+        /// <summary>
+        /// Total cost of components based on quantity and price.
+        /// </summary>
+        /// <returns>Double</returns>
+        public double GetTotalcost()
+        {
+            return Price * Quantity;
+        }
         #endregion
     }
 }

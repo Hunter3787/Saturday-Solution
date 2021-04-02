@@ -23,7 +23,7 @@ namespace AutoBuildApp.Models.Products
         public List<byte[]> ProductImage { get; set; }
         public double Price { get; set; }
         public double Budget { get; set; }
-        public List<MoboFormFactor> RAMSupport { get; set; }
+        public List<MoboFormFactor> MoboFormSupport { get; set; }
         public TowerType TowerType { get; set; }
         public int ExpansionSlots { get; set; }
         public bool PsuShroud { get; set; }
@@ -33,7 +33,7 @@ namespace AutoBuildApp.Models.Products
         public int ThreeInchDriveBays { get; set; }
         public List<string> FrontPanel { get; set; }
         public int MaxGPULength { get; set; }
-        public double[,,] Dimension { get; set; }
+        public List<double> Dimensions { get; set; }
         #endregion
 
         /// <summary>
@@ -45,44 +45,44 @@ namespace AutoBuildApp.Models.Products
 
         #region "Form Factor Add/Remove"
         /// <summary>
-        /// Add a string representation of a color to the computer case color list.
+        /// Add a form factor to the supported form factor list.
         /// </summary>
-        /// <param name="input"></param>
+        /// <param name="input">MoboFormFactor of Type Enumeration</param>
         /// <returns>Boolean</returns>
         public bool AddRAMSupport(MoboFormFactor input)
         {
-            if (RAMSupport.Contains(input))
+            if (MoboFormSupport.Contains(input))
                 return false;
 
-            RAMSupport.Add(input);
+            MoboFormSupport.Add(input);
             return true;
         }
 
         /// <summary>
-        /// String method to locate the index of the passed string.
-        /// Will call index variation to remove the element upon location.
+        /// Passes an Enum of motherboard form factor to locate
+        /// and remove from the list.
         /// </summary>
         /// <param name="toRemove"></param>
         /// <returns>Boolean</returns>
         public bool RemoveRAMSupport(MoboFormFactor toRemove)
         {
-            if (RAMSupport.Contains(toRemove))
+            if (MoboFormSupport.Contains(toRemove))
                 return false;
 
-            return RemoveRAMSupport(RAMSupport.IndexOf(toRemove));
+            return RemoveRAMSupport(MoboFormSupport.IndexOf(toRemove));
         }
 
         /// <summary>
-        /// Index method to remove a color from the computer case color list.
+        /// Remove Motherboard form factor support.
         /// </summary>
         /// <param name="index"></param>
         /// <returns>Boolean</returns>
         public bool RemoveRAMSupport(int index)
         {
-            if (index > RAMSupport.Count || index < MIN_INDEX)
+            if (index > MoboFormSupport.Count || index < MIN_INDEX)
                 return false;
 
-            RAMSupport.RemoveAt(index);
+            MoboFormSupport.RemoveAt(index);
             return true;
         }
         #endregion
@@ -210,6 +210,15 @@ namespace AutoBuildApp.Models.Products
             }
 
             return success;
+        }
+
+        /// <summary>
+        /// Total cost of components based on quantity and price.
+        /// </summary>
+        /// <returns>Double</returns>
+        public double GetTotalcost()
+        {
+            return Price * Quantity;
         }
         #endregion
     }

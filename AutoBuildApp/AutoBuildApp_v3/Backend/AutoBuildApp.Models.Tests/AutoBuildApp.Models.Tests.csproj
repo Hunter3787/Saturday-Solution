@@ -2,19 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Properties\" />
-    <Folder Include="User Managers\" />
-    <Folder Include="Feature Managers\" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
+    <PackageReference Include="coverlet.collector" Version="1.2.0" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\AutoBuildApp.Models\AutoBuildApp.Models.csproj" />
     <ProjectReference Include="..\AutoBuildApp.Services\AutoBuildApp.Services.csproj" />
-    <ProjectReference Include="..\AutoBuildApp.DataAccess\AutoBuildApp.DataAccess.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove=".DS_Store" />
   </ItemGroup>
 </Project>
