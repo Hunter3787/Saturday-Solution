@@ -80,7 +80,7 @@ namespace AutoBuildApp.Managers
 
             IBuild build = BuildFactory.CreateBuild(buildType);
 
-            if ( peripherals is not null )
+            if ( peripherals != null )
                 build.Peripheral = peripherals;
 
             if (!BudgetComponents(build, buildType, budget))

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using System.Collections.Generic;
 using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Products;
@@ -38,8 +37,10 @@ namespace AutoBuildApp.Models.Builds
         /// <returns></returns>
         public bool AddHardDrive(IHardDrive add)
         {
-            if (add is null)
+            if (add == null)
                 return false;
+            if(HardDrive == null)
+                HardDrive = new List<IHardDrive>();
 
             if (HardDrive.Contains(add))
             {
@@ -60,7 +61,7 @@ namespace AutoBuildApp.Models.Builds
         /// <returns></returns>
         public bool RemoveHardDrive(IHardDrive remove)
         {
-            if (remove is null || !HardDrive.Contains(remove))
+            if (remove == null || !HardDrive.Contains(remove))
                 return false;
 
             var success = false;
@@ -82,7 +83,7 @@ namespace AutoBuildApp.Models.Builds
         /// <returns></returns>
         public bool DeleteHardDrive(IHardDrive delete)
         {
-            if (delete is null || !HardDrive.Contains(delete))
+            if (delete == null || !HardDrive.Contains(delete))
                 return false;
 
             return HardDrive.Remove(delete);
@@ -99,8 +100,11 @@ namespace AutoBuildApp.Models.Builds
         /// <returns></returns>
         public bool AddPeripheral(IComponent add)
         {
-            if (add is null)
+            if (add == null)
                 return false;
+
+            if(Peripheral == null)
+                Peripheral = new List<IComponent>();
 
             if (Peripheral.Contains(add))
             {
@@ -121,7 +125,7 @@ namespace AutoBuildApp.Models.Builds
         /// <returns></returns>
         public bool RemovePeripheral(IComponent remove)
         {
-            if (remove is null || !Peripheral.Contains(remove))
+            if (remove == null || !Peripheral.Contains(remove))
                 return false;
 
             var success = false;
@@ -158,8 +162,8 @@ namespace AutoBuildApp.Models.Builds
         {
             double total = 0;
 
-            foreach (IHardDrive hdd in HardDrive)
-                if(hdd != null)
+            if (HardDrive != null)
+                foreach (IHardDrive hdd in HardDrive)
                     total += hdd.GetTotalcost();
 
             

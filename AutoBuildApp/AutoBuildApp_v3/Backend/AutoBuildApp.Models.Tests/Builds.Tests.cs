@@ -110,7 +110,18 @@ namespace AutoBuildApp.Models.Tests
             {
 
             };
-            List<IHardDrive> hdd = new List<IHardDrive>() { hd1, hd2 };
+            gamingBuild.AddHardDrive(hd1);
+            gamingBuild.AddHardDrive(hd2);
+            gamingBuild.Case = compCase;
+            gamingBuild.Mobo = mobo;
+            gamingBuild.Psu = psu;
+            gamingBuild.Gpu = graphics;
+            gamingBuild.Cpu = processor;
+            gamingBuild.Ram = ram;
+            gamingBuild.CPUCooler = cooler;
+            gamingBuild.Peripheral = periphs;
+
+
             var expected = 1384.63;
 
 

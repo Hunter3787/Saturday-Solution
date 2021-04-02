@@ -9,20 +9,20 @@ namespace AutoBuildApp.Models.Interfaces
     /// </summary>
     public interface IBuild
     {
-        public List<IHardDrive> HardDrive { get; set; }
-        public ComputerCase Case { get; set; }
-        public Motherboard Mobo { get; set; }
-        public PowerSupplyUnit Psu { get; set; }
-        public GPU Gpu { get; set; }
-        public CPU Cpu { get; set; }
-        public RAM Ram { get; set; }
-        public ICooler CPUCooler { get; set; }
-        public List<IComponent> Peripheral { get; set; }
+         List<IHardDrive> HardDrive { get; set; }
+         ComputerCase Case { get; set; }
+         Motherboard Mobo { get; set; }
+         PowerSupplyUnit Psu { get; set; }
+         GPU Gpu { get; set; }
+         CPU Cpu { get; set; }
+         RAM Ram { get; set; }
+         ICooler CPUCooler { get; set; }
+         List<IComponent> Peripheral { get; set; }
 
-        public bool AddHardDrive(IHardDrive add);
-        public bool RemoveHardDrive(IHardDrive remove);
-        public bool AddPeripheral(IComponent add);
-        public bool RemovePeripheral(IComponent remove);
-        public double GetTotalCost();
+         bool AddHardDrive(IHardDrive add);
+         bool RemoveHardDrive(IHardDrive remove);
+         bool AddPeripheral(IComponent add);
+         bool RemovePeripheral(IComponent remove);
+         double GetTotalCost();
     }
 }

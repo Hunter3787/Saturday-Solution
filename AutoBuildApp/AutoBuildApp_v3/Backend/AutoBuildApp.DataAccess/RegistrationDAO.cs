@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
-using AutoBuildApp.Models;
+using AutoBuildApp.Models.Users;
 using Microsoft.Data.SqlClient;
-using Microsoft.Data.Sqlite;
 
 namespace AutoBuildApp.DataAccess
 {

@@ -8,7 +8,10 @@ namespace AutoBuildApp.Services
     {
         public BudgetPortionService()
         {
+
         }
+        
+        
 
         public List<IComponent> BudgetComponents(List<IComponent> input)
         {
@@ -17,7 +20,6 @@ namespace AutoBuildApp.Services
             return null;
         }
 
-        public 
 
     }
 }
