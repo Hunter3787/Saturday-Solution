@@ -1,5 +1,12 @@
-﻿namespace APB.App.Entities
+﻿/// <summary>
+/// References used from file: Solution Items/References.txt 
+/// [1]
+/// </summary>
+namespace APB.App.Entities
 {
+    /// <summary>
+    /// enumeration class that sets values for every star rating.
+    /// </summary>
     public enum StarTypeEntity
     {
         Five_Stars = 5,
