@@ -18,8 +18,4 @@
     <ProjectReference Include="..\APB.DataStoreEntities\APB.DataStoreEntities.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ReviewRating\" />
-  </ItemGroup>
-
 </Project>

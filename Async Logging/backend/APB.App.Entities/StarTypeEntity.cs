@@ -1,5 +1,8 @@
 ﻿namespace APB.App.Entities
 {
+    /// <summary>
+    /// enumeration class that sets values for every star rating.
+    /// </summary>
     public enum StarTypeEntity
     {
         Five_Stars = 5,
