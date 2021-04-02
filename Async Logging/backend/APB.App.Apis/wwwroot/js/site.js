@@ -111,7 +111,7 @@ function closeInput() {
 // This function will displat all the items in the fetch GET method.
 function _displayItems(data) {
 
-    const tBody = document.getElementById('todos'); // This will get the id of the form from the HTML.
+    const tBody = document.getElementById('reviews'); // This will get the id of the form from the HTML.
     tBody.innerHTML = ''; // appends a null value to the inner HTML, as is not required.
 
     // This function will create a table, and append values for each column and iterate to the next row of items.
