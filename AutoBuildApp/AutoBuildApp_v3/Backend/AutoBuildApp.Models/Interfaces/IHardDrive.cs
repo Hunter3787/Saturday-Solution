@@ -8,6 +8,8 @@ namespace AutoBuildApp.Models.Interfaces
 {
     public interface IHardDrive : IComponent
     {
-        HardDriveType HardDrive { get; set; }
+        HardDriveType DriveType { get; set; }
+        string Capacity { get; set; }
+        string Cache { get; set; }
     }
 }

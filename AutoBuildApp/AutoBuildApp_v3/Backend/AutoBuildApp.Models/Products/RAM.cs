@@ -23,6 +23,8 @@ namespace AutoBuildApp.Models.Products
         public string ProductName { get; set; }
         public string ManufacturerName { get; set; }
         public int Quantity { get; set; }
+        public int NumOfModules { get; set; }
+        public int ModuleSize { get; set; }
         public List<byte[]> ProductImages { get; set; }
         public double Price { get; set; }
         public string FormFactor { get; set; }

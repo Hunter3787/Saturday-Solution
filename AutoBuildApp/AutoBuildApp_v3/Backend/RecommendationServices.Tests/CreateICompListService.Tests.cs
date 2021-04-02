@@ -35,7 +35,7 @@ namespace AutoBuildApp.Services.Tests
             _gamingBuild = BuildFactory.CreateBuild(BuildType.Gaming);
             _hd1 = new NVMeDrive
             {
-                HardDrive = HardDriveType.NVMe,
+                DriveType = HardDriveType.NVMe,
                 ProductType = ProductType.HDD,
                 ModelNumber = "1234",
                 ProductName = "HardDrive1",
@@ -50,7 +50,7 @@ namespace AutoBuildApp.Services.Tests
             };
             _hd2 = new NVMeDrive
             {
-                HardDrive = HardDriveType.NVMe,
+                DriveType = HardDriveType.NVMe,
                 ProductType = ProductType.HDD,
                 ModelNumber = "1234-2",
                 ProductName = "HardDrive2",
@@ -148,10 +148,10 @@ namespace AutoBuildApp.Services.Tests
                 Price = 499.98,
                 Quantity = 2,
                 Chipset = "Really good",
-                Memory = "200GB",
+                MemoryType = "200GB",
                 CoreClock = "3.4 ZGHZ",
                 BoostClock = "5 ZGHZ",
-                EffctvMemoryClcok = "220GB",
+                EffectiveMemClock = "220GB",
                 Interface = "PCI-E",
                 Color = "Black",
                 FrameSync = "G-Sync",
@@ -183,7 +183,7 @@ namespace AutoBuildApp.Services.Tests
                 Socket = "1300",
                 IntegratedGraphics = "It has graphics",
                 MaxRam = "A lot of RAM",
-                ErrCorrectionCodeSupport = "It doesn't correc errors",
+                ErrCorrectionCodeSupport = false,
                 Packaging = "Very pretty",
                 L1Cache = new List<string> { "L1", "Cache", "series" },
                 L2Cache = new List<string> { "L2", "Cache", "series" },
@@ -222,7 +222,7 @@ namespace AutoBuildApp.Services.Tests
                 NoiseVolume = "34 dB",
                 CompatableSocket = new List<string> { "Many", "different", "Sockets" },
                 Fanless = false,
-                WaterCooling = "No"
+                WaterCooling = false
             };
             _periphs = new List<IComponent>()
             {

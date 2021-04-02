@@ -24,9 +24,10 @@ namespace AutoBuildApp.Models.Products
         public double Price { get; set; }
         public string Chipset { get; set; }
         public string Memory { get; set; }
+        public string MemoryType { get; set; }
         public string CoreClock { get; set; }
         public string BoostClock { get; set; }
-        public string EffctvMemoryClcok { get; set; }
+        public string EffectiveMemClock { get; set; }
         public string Interface { get; set; }
         public string Color { get; set; }
         public string FrameSync { get; set; }

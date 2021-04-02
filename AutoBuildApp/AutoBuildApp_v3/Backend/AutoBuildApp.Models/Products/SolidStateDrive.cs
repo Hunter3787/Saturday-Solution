@@ -25,7 +25,9 @@ namespace AutoBuildApp.Models.Products
         public List<byte[]> ProductImages { get; set; }
         public double Price { get; set; }
         public double Budget { get; set; }
-        public HardDriveType HardDrive { get; set; }
+        public HardDriveType DriveType { get; set; }
+        public string Capacity { get; set; }
+        public string Cache { get; set; }
         #endregion
 
         public SolidStateDrive()

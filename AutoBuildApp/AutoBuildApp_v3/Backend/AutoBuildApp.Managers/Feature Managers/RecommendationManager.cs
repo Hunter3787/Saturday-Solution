@@ -4,7 +4,7 @@ using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Products;
 using AutoBuildApp.Services.FactoryServices;
-using AutoBuildApp.Services;
+using AutoBuildApp.Services.RecommendatIonServices;
 
 /** Recommendation Manager includes business logic
 *   and directs the recommendation process.
@@ -64,7 +64,7 @@ namespace AutoBuildApp.Managers
         /// Recommend a computer build based off user defined parameters.
         /// </summary>
         /// <param name="buildType">Type of Build based on Enum.</param>
-        /// <param name="budget">Double value representing the budget.</param>
+        /// <param name="principal">Double value representing the budget.</param>
         /// <param name="peripherals">Dictionary of product types and how many
         /// of each would be requested.(Optional)</param>
         /// <param name="psuType">Power supply unit type requested by
@@ -75,41 +75,47 @@ namespace AutoBuildApp.Managers
         /// would like to be in their final build.(Optional)</param>
         /// <returns>A list of IBuild representing the recommended builds.</returns>
         public List<IBuild>
-            RecommendBuilds(BuildType buildType, double budget,
+            RecommendBuilds(BuildType buildType, double principal,
                 List<IComponent> peripherals, PSUModularity psuType,
                     HardDriveType hddType, int hddCount)
         {
-   
-            if ( budget < MIN_BUDGET || hddCount < MIN_INTEGER_VALUE )
+            // Early escapes.
+            if ( principal < MIN_BUDGET || hddCount < MIN_INTEGER_VALUE )
                 return null;
 
-            var tempBudget = budget;
-
+            var budget = principal;
+            // Buid factor passses type and returns a specific build.
             IBuild build = BuildFactory.CreateBuild(buildType);
 
+            // If peripherals were selected we remove their
+            // cost from the total budget.
             if (peripherals != null)
             {
                 build.Peripherals = peripherals;
                 foreach (IComponent extras in build.Peripherals)
-                    tempBudget -= extras.GetTotalcost();
+                    budget -= extras.GetTotalcost();
             }
 
-            // Early kick out if no budget.
-            if (tempBudget < MIN_BUDGET)
+            // Early kick out if budget has been reduced too low for items
+            // by peripheral selection.
+            if (budget <= MIN_BUDGET && principal > MIN_BUDGET)
                 return null;
 
+            // Advanced settings. 
             if (hddType != HardDriveType.None ||
                 hddCount > MIN_INTEGER_VALUE || psuType != PSUModularity.None)
+            {
                 return null;
-                // Advanced option build thing.
+            }
             else
             {
-               // var result = BudgetComponents(build, buildType, tempBudget);
+                // Create component list using service. 
+                var compList = CreateICompListService.CreateComponentList(build);
+                var budgetList = BudgetPortionService.BudgetComponents(compList, buildType, budget);
 
 
+                return null;
             }
-
-            return null;
         }
         #endregion
 
@@ -140,50 +146,6 @@ namespace AutoBuildApp.Managers
         #endregion
 
         #region "Private Methods"
-        public bool BudgetComponents(List<IComponent> components,
-            BuildType type, double budget)
-        {
-            // Early exit and failure criteria.
-            if (budget < MIN_BUDGET || components == null)
-                return false;
-
-            double tempBudget;
-
-            // If budget is not set price is no object.
-            if (budget == 0)
-                tempBudget = MAX_BUDGET;
-            else
-                tempBudget = budget;
-
-            // Dictionary of key value pairs representing
-            // the weights of each component.
-            var budgetWeight = KeyFactory.CreateKey(type);
-
-            foreach (var test in budgetWeight.Keys)
-            {
-                bool found = false;
-                foreach (var part in components)
-                {
-                    if (part.ProductType == test)
-                    {
-                        found = true;
-                        break;
-                    }
-                }
-
-                if(!found)
-                    budgetWeight.Remove(test);
-            }
-
-
-
-            BudgetPortionService portionService = new BudgetPortionService();
-            //portionService.BudgetComponents(componentsList, tempBudget);
-
-
-            return true;
-        }
-
         private void RemoveOverBudgetItems()
         {
 

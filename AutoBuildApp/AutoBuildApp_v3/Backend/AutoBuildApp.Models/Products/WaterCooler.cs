@@ -24,11 +24,16 @@ namespace AutoBuildApp.Models.Products
         public List<byte[]> ProductImages { get; set; }
         public double Price { get; set; }
         public double Budget { get; set; }
+        public string FanRPM { get; set; }
+        public string NoiseVolume { get; set; }
+        public List<string> CompatableSocket { get; set; }
+        public bool Fanless { get; set; }
         #endregion
 
         public WaterCooler()
         {
             ProductImages = new List<byte[]>();
+            CompatableSocket = new List<string>();
         }
 
         #region "Interface Implementations"

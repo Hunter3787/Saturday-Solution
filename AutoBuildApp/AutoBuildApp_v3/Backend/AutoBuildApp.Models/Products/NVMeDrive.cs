@@ -15,7 +15,7 @@ namespace AutoBuildApp.Models.Products
         public readonly int MIN_LIST_SIZE = 1;
         public readonly int MIN_INDEX = 0;
 
-        public HardDriveType HardDrive { get; set; }
+        public HardDriveType DriveType { get; set; }
         public ProductType ProductType { get; set; }
         public string ModelNumber { get; set; }
         public string ProductName { get; set; }

@@ -31,7 +31,7 @@ namespace AutoBuildApp.Models.Products
         public string Socket { get; set; }
         public string IntegratedGraphics { get; set; }
         public string MaxRam { get; set; }
-        public string ErrCorrectionCodeSupport { get; set; }
+        public bool ErrCorrectionCodeSupport { get; set; }
         public string Packaging { get; set; }
         public List<string> L1Cache { get; set; }
         public List<string> L2Cache { get; set; }

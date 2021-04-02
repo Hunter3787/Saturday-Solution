@@ -18,7 +18,8 @@ namespace AutoBuildApp.Services.FactoryServices
     {
         public static IBuild CreateBuild(BuildType buildType)
         {
-            switch(buildType){
+            switch(buildType)
+            {
                 case BuildType.GraphicArtist:
                     return new GraphicArtist();
                 case BuildType.WordProcessing:

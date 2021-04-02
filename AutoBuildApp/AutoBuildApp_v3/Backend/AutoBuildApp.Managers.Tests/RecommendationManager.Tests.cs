@@ -6,6 +6,7 @@ using AutoBuildApp.Models.Builds;
 using AutoBuildApp.Models.Products;
 using System.Collections.Generic;
 using AutoBuildApp.Services.FactoryServices;
+using AutoBuildApp.Services.RecommendatIonServices;
 
 /**
  * Recommendation Manager Unit and integration Tests.
@@ -37,7 +38,7 @@ namespace AutoBuildApp.Managers.Tests
             _gamingBuild = BuildFactory.CreateBuild(BuildType.Gaming);
             _hd1 = new NVMeDrive
             {
-                HardDrive = HardDriveType.NVMe,
+                DriveType = HardDriveType.NVMe,
                 ProductType = ProductType.HDD,
                 ModelNumber = "1234",
                 ProductName = "HardDrive1",
@@ -52,7 +53,7 @@ namespace AutoBuildApp.Managers.Tests
             };
             _hd2 = new NVMeDrive
             {
-                HardDrive = HardDriveType.NVMe,
+                DriveType = HardDriveType.NVMe,
                 ProductType = ProductType.HDD,
                 ModelNumber = "1234-2",
                 ProductName = "HardDrive2",
@@ -149,24 +150,25 @@ namespace AutoBuildApp.Managers.Tests
                 ManufacturerName = "This",
                 Price = 499.98,
                 Quantity = 2,
-                Chipset = "Really good",
-                Memory = "200GB",
-                CoreClock = "3.4 ZGHZ",
-                BoostClock = "5 ZGHZ",
-                EffctvMemoryClcok = "220GB",
-                Interface = "PCI-E",
+                Chipset = "GeForce RTX 3070",
+                Memory = "8 GB",
+                MemoryType = "GDDR 6",
+                CoreClock = "1500 MHz",
+                BoostClock = "1730 MHz",
+                EffectiveMemClock = "16000 MH",
+                Interface = "PCIe x16",
                 Color = "Black",
                 FrameSync = "G-Sync",
-                PowerDraw = 123,
-                Length = 165,
-                DVIPorts = 1,
-                HDMIPorts = 3,
-                MiniHDMIPorts = 1,
-                DisplayPortPorts = 2,
-                MiniDisplayPortPorts = 1,
-                ExpansionSlotWidth = 10,
-                Cooling = 5,
-                ExternalPower = "The Sun",
+                PowerDraw = 220,
+                Length = 242,
+                DVIPorts = 0,
+                HDMIPorts = 1,
+                MiniHDMIPorts = 0,
+                DisplayPortPorts = 3,
+                MiniDisplayPortPorts = 0,
+                ExpansionSlotWidth = 2,
+                Cooling = 2,
+                ExternalPower = "1 PCIe 12-pin"
             };
             _processor = new CPU
             {
@@ -185,7 +187,7 @@ namespace AutoBuildApp.Managers.Tests
                 Socket = "1300",
                 IntegratedGraphics = "It has graphics",
                 MaxRam = "A lot of RAM",
-                ErrCorrectionCodeSupport = "It doesn't correc errors",
+                ErrCorrectionCodeSupport = false,
                 Packaging = "Very pretty",
                 L1Cache = new List<string> { "L1", "Cache", "series" },
                 L2Cache = new List<string> { "L2", "Cache", "series" },
@@ -224,7 +226,7 @@ namespace AutoBuildApp.Managers.Tests
                 NoiseVolume = "34 dB",
                 CompatableSocket = new List<string> { "Many", "different", "Sockets" },
                 Fanless = false,
-                WaterCooling = "No"
+                WaterCooling = false
             };
             _periphs = new List<IComponent>()
             {
@@ -249,16 +251,9 @@ namespace AutoBuildApp.Managers.Tests
         // and a modular power supply.
         // Should return a List of Builds matching the criteria.
         [TestMethod]
-        public void
-            RecommendationManager_RecomendBuilds_ReturnListOfGamingBuilds()
+        public void RecommendationManager_RecomendBuilds_ReturnListOfGamingBuilds()
         {
-            // Arrange
-            BuildType buildType = BuildType.Gaming;
-            double budget = 1700.00;
-            Dictionary<ProductType, int> productTypes = null;
-            PSUModularity powerSupply = PSUModularity.FullyModular;
-            HardDriveType hddType = HardDriveType.NVMe;
-            int hardDriveCount = 3;
+            
 
             // Act
             //List<IBuild> output = _manager.RecommendBuilds(buildType, budget,
@@ -274,13 +269,7 @@ namespace AutoBuildApp.Managers.Tests
             RecommendManager_RecommendBuilds_ReturnRecommendationWithTwoDuplicateMonitors()
         {
             // Arrange
-            BuildType buildType = BuildType.Gaming;
-            double budget = 2500.00;
-            Dictionary<ProductType, int> productTypes = new Dictionary<ProductType, int>();
-            productTypes.Add(ProductType.Monitor, 2);
-            PSUModularity powerSupply = PSUModularity.FullyModular;
-            HardDriveType hddType = HardDriveType.NVMe;
-            int hardDriveCount = 3;
+            
 
             // Act
             //List<IBuild> output = _manager.RecommendBuilds(buildType, budget,
@@ -296,12 +285,7 @@ namespace AutoBuildApp.Managers.Tests
             RecommendationManager_RecommendBuilds_ReturnNullWithNoSuggestions()
         {
             // Arrange
-            BuildType buildType = BuildType.Gaming;
-            double budget = 100.00;
-            Dictionary<ProductType, int> productTypes = null;
-            PSUModularity powerSupply = PSUModularity.FullyModular;
-            HardDriveType hddType = HardDriveType.NVMe;
-            int hardDriveCount = 3;
+            
 
             // Act
             //List<IBuild> output = _manager.RecommendBuilds(buildType, budget,
@@ -318,12 +302,7 @@ namespace AutoBuildApp.Managers.Tests
             RecommendationManager_RecommendBuilds_ThrowsErrorForNegativeBudget()
         {
             // Arrange
-            BuildType buildType = BuildType.Gaming;
-            double budget = -100.00;
-            Dictionary<ProductType, int> productTypes = null;
-            PSUModularity powerSupply = PSUModularity.None;
-            HardDriveType hddType = HardDriveType.None;
-            int hardDriveCount = 0;
+
 
             // Act
             //List<IBuild> output = _manager.RecommendBuilds(buildType, budget,
@@ -414,17 +393,31 @@ namespace AutoBuildApp.Managers.Tests
             // Act
 
             // Assert
-
         }
 
         [TestMethod]
-        public void RecommendationManager_ScoreComponent_ScoresComponent()
+        public void RecommendationManager_ScoreBuild_ReturnsGraphicsCardScore()
         {
             // Arrange
+            var service = new ComponentScoringService();
+            double[] weights = { -1.75, 1.1, 1.3, 1.1, 1.15, -1.4 };
+            var bonus = 100;
+            var priceAfterWeight = weights[0] * 499.98;
+            var memScore = weights[1] * 8 * 100;
+            var coreScore = weights[2] * 1500;
+            var boostScore = weights[3] * 1730;
+            var effctScore = weights[4] * 16000;
+            var pwerDraw = weights[5] * 220;
+            var expected = bonus + priceAfterWeight +
+                memScore + coreScore + boostScore + effctScore + pwerDraw;
+
+            expected = Math.Round(expected, MidpointRounding.AwayFromZero);
 
             // Act
+            var actual = service.ScoreComponent(_graphics, BuildType.Gaming);
 
             // Assert
+            Assert.AreEqual(expected, actual);
 
         }
 

@@ -27,8 +27,9 @@ namespace AutoBuildApp.Models.Products
         public string FanRPM { get; set; }
         public string NoiseVolume { get; set; }
         public List<string> CompatableSocket { get; set; }
+        public int FanSize { get; set; }
         public bool Fanless { get; set; }
-        public string WaterCooling { get; set; }
+        public bool WaterCooling { get; set; }
         #endregion
 
         public Fan()
