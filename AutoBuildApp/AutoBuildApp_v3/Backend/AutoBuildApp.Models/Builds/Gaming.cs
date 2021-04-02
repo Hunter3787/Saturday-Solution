@@ -166,8 +166,31 @@ namespace AutoBuildApp.Models.Builds
                 foreach (IHardDrive hdd in HardDrive)
                     total += hdd.GetTotalcost();
 
-            
+            if (Peripheral != null)
+                foreach (IComponent peri in Peripheral)
+                    total += peri.GetTotalcost();
 
+            if (CPUCooler != null)
+                total += CPUCooler.GetTotalcost();
+
+            if (Ram != null)
+                total += Ram.GetTotalcost();
+
+            if (Cpu != null)
+                total += Cpu.GetTotalcost();
+
+            if (Gpu != null)
+                total += Gpu.GetTotalcost();
+
+            if (Psu != null)
+                total += Psu.GetTotalcost();
+
+            if (Mobo != null)
+                total += Mobo.GetTotalcost();
+
+            if (Case != null)
+                total += Case.GetTotalcost();
+            
             return total;
         }
     }

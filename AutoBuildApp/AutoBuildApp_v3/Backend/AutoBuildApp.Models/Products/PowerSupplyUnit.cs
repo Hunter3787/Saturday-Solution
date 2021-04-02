@@ -38,7 +38,7 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         public PowerSupplyUnit()
         {
-
+            ProductImage = new List<byte[]>();
         }
 
         #region "Interface Implementations"

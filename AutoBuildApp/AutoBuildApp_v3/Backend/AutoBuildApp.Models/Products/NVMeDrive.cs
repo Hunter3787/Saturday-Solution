@@ -32,6 +32,7 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         public NVMeDrive()
         {
+            ProductImage = new List<byte[]>();
         }
 
         #region "Interface Implementations"

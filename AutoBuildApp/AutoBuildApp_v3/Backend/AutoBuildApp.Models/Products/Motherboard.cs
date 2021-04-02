@@ -49,7 +49,12 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         public Motherboard()
         {
-        }
+            ProductImage = new List<byte[]>();
+            SupportedMemory = new List<string>();
+            Color = new List<string>();
+            M2Slots = new List<string>();
+            OnboardEthernet = new List<string>();
+       }
 
         #region "Supported Memory Add/Remove"
         /// <summary>

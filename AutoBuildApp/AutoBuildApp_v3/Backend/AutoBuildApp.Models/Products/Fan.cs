@@ -30,6 +30,9 @@ namespace AutoBuildApp.Models.Products
 
         public Fan()
         {
+            ProductImage = new List<byte[]>();
+            Color = new List<string>();
+            CompatableSocket = new List<string>();
         }
 
         #region "Color Add/Remove"

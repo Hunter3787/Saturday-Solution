@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Products;
+using AutoBuildApp.Services.FactoryServices;
 using AutoBuildApp.Services;
+using System.Reflection;
+
 
 /// <summary>
 /// Utilizes the Managers namespace for the Auto-build app. 
@@ -18,7 +21,7 @@ namespace AutoBuildApp.Managers
     {
         // Local constant for minimum budget.
         private const double MAX_BUDGET = double.MaxValue;
-        private const double MIN_BUDGET = 0.0;
+        private const double MIN_VALUE = 0.0;
 
         private double _budget;
         private BuildType _buildType;
@@ -45,8 +48,8 @@ namespace AutoBuildApp.Managers
         public RecommendationManager(BuildType buildType, double budget)
         {
             // If budget is below 0 set to 0.
-            if (budget < MIN_BUDGET)
-                _budget = MIN_BUDGET;
+            if (budget < MIN_VALUE)
+                _budget = MIN_VALUE;
             else
                 _budget = budget;
 
@@ -75,18 +78,38 @@ namespace AutoBuildApp.Managers
                 List<IComponent> peripherals, PSUModularity psuType,
                     HardDriveType hddType, int hddCount)
         {
-            if ( budget < MIN_BUDGET )
+   
+            if ( budget < MIN_VALUE || hddCount < MIN_VALUE )
                 return null;
+
+            var tempBudget = budget;
 
             IBuild build = BuildFactory.CreateBuild(buildType);
 
-            if ( peripherals != null )
+            if (peripherals != null)
+            {
                 build.Peripheral = peripherals;
+                foreach (IComponent extras in build.Peripheral)
+                    tempBudget -= extras.GetTotalcost();
+            }
 
-            if (!BudgetComponents(build, buildType, budget))
+            // Early kick out if no budget.
+            if (tempBudget < MIN_VALUE)
                 return null;
 
-            
+            if (hddType != HardDriveType.None ||
+                hddCount > MIN_VALUE || psuType != PSUModularity.None)
+                return null;
+                // Advanced option build thing.
+            else
+            {
+               // var result = BudgetComponents(build, buildType, tempBudget);
+
+
+            }
+
+
+
 
 
 
@@ -106,8 +129,6 @@ namespace AutoBuildApp.Managers
             BuildType buildType, double budget)
         {
 
-
-
             return null;
         }
 
@@ -123,20 +144,33 @@ namespace AutoBuildApp.Managers
         #endregion
 
         #region "Private Methods"
-        private void GenerateBuildKey(BuildType type, double budget)
+        /// <summary>
+        /// Generate a list of Compnents from a Build.
+        /// </summary>
+        /// <param name="build"></param>
+        /// <returns></returns>
+        public List<IComponent> CreateComponentList(IBuild build)
         {
+            if (build == null)
+                return null;
 
+            var compList = new List<IComponent>();
+
+            FieldInfo[] fieldInfos = typeof(IBuild).GetFields(BindingFlags.Public |
+                BindingFlags.Instance);
+
+            foreach (FieldInfo info in fieldInfos)
+            {
+                Console.Write(info + "\n");
+            }
+            return compList;
         }
 
-        private void GenerateComponentList()
-        {
-
-        }
-
-        private bool BudgetComponents(IBuild build, BuildType type, double budget)
+        private bool BudgetComponents(List<IComponent> components,
+            BuildType type, double budget)
         {
             // Early exit and failure criteria.
-            if (budget < MIN_BUDGET)
+            if (budget < MIN_VALUE || components == null)
                 return false;
 
             double tempBudget;
@@ -147,14 +181,31 @@ namespace AutoBuildApp.Managers
             else
                 tempBudget = budget;
 
-            GenerateBuildKey(type, tempBudget);
+            // Dictionary of key value pairs representing
+            // the weights of each component.
+            var budgetWeight = KeyFactory.CreateKey(type);
 
+            foreach (var test in budgetWeight.Keys)
+            {
+                bool found = false;
+                foreach (var part in components)
+                {
+                    if (part.ProductType == test)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
 
-
+                if(!found)
+                    budgetWeight.Remove(test);
+            }
 
 
 
             BudgetPortionService portionService = new BudgetPortionService();
+            //portionService.BudgetComponents(componentsList, tempBudget);
+
 
             return true;
         }

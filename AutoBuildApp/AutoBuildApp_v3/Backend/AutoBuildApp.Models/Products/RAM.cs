@@ -35,7 +35,9 @@ namespace AutoBuildApp.Models.Products
 
         public RAM()
         {
-
+            ProductImage = new List<byte[]>();
+            Color = new List<string>();
+            Timing = new List<int>();
         }
 
         /// <summary>

@@ -41,6 +41,11 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         public ComputerCase()
         {
+            ProductImage = new List<byte[]>();
+            MoboFormSupport = new List<MoboFormFactor>();
+            Color = new List<string>();
+            FrontPanel = new List<string>();
+            Dimensions = new List<double>();
         }
 
         #region "Form Factor Add/Remove"

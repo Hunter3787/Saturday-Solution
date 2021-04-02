@@ -42,7 +42,10 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         public CPU()
         {
-
+            ProductImage = new List<byte[]>();
+            L1Cache = new List<string>();
+            L2Cache = new List<string>();
+            L3Cache = new List<string>();
         }
 
         #region "Interface Implementations"

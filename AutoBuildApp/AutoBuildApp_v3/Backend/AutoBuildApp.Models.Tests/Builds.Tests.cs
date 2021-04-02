@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AutoBuildApp.Models.Builds;
-using AutoBuildApp.Services;
+using AutoBuildApp.Services.FactoryServices;
 using AutoBuildApp.Models.Interfaces;
 using System.Collections.Generic;
 using AutoBuildApp.Models.Products;
@@ -19,6 +19,10 @@ namespace AutoBuildApp.Models.Tests
         }
 
 
+        /// <summary>
+        /// Test GetTotalCost method in Gaming builds, tests
+        /// the GetTotalCost method in each called class in the build.
+        /// </summary>
         [TestMethod]
         public void Gaming_GetTotalCost_TotalCostOfBuild()
         {
@@ -108,7 +112,7 @@ namespace AutoBuildApp.Models.Tests
             };
             List<IComponent> periphs = new List<IComponent>()
             {
-
+                hd2, hd2
             };
             gamingBuild.AddHardDrive(hd1);
             gamingBuild.AddHardDrive(hd2);
@@ -121,8 +125,7 @@ namespace AutoBuildApp.Models.Tests
             gamingBuild.CPUCooler = cooler;
             gamingBuild.Peripheral = periphs;
 
-
-            var expected = 1384.63;
+            var expected = 2074.41;
 
 
             // Act

@@ -36,7 +36,7 @@ namespace AutoBuildApp.Models.Products
         public int ExpansionSlotWidth { get; set; }
         public int Cooling { get; set; }
         public string ExternalPower { get; set; }
-        public double Budget { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double Budget { get; set; }
         #endregion
 
         /// <summary>
@@ -44,6 +44,7 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         public GPU()
         {
+            ProductImage = new List<byte[]>();
         }
 
         #region "Interface Implementations"

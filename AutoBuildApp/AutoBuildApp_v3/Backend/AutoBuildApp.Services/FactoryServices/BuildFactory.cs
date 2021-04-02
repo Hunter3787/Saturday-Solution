@@ -3,7 +3,7 @@ using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Builds;
 
-namespace AutoBuildApp.Services
+namespace AutoBuildApp.Services.FactoryServices
 {
     /// <summary>
     /// Build Factory to output the type of computer to be created per a switch

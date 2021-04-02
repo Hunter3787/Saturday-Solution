@@ -38,6 +38,11 @@ namespace AutoBuildApp.Models.Products
 
         public Monitor()
         {
+            ProductImage = new List<byte[]>();
+            Color = new List<string>();
+            InterfacePort = new List<string>();
+            FrameSync = new List<string>();
+            DisplayPortCount = new Dictionary<string, int>();
         }
 
         #region "Color Add/Remove"

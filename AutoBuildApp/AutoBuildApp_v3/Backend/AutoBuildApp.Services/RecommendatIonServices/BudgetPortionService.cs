@@ -10,10 +10,11 @@ namespace AutoBuildApp.Services
         {
 
         }
-        
-        
 
-        public List<IComponent> BudgetComponents(List<IComponent> input)
+
+
+        public List<IComponent>
+            BudgetComponents(List<IComponent> input, double budget)
         {
 
 
