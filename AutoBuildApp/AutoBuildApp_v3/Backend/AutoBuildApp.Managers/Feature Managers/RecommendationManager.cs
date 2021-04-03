@@ -24,38 +24,12 @@ namespace AutoBuildApp.Managers
         public readonly int MIN_INDEX = 0;
         public readonly int MIN_INTEGER_VALUE = 0;
 
-        private double _budget;
-        private BuildType _buildType;
-
         #region "Constructors"
         /// <summary>
         /// RecommendationManager default constructor.
         /// </summary>
         public RecommendationManager()
         {
-            // Initialize budget to 0.
-            _budget = 0;
-            // Initialize buildType to none.
-            _buildType = BuildType.None;
-        }
-
-        /// <summary>
-        /// Constructor that takes in a BuildType(Enumeration)
-        /// and a budget amount(double). 
-        /// </summary>
-        /// <param name="buildType"></param>
-        /// <param name="budget"></param>
-        /** Speculating this is not necessary */
-        public RecommendationManager(BuildType buildType, double budget)
-        {
-            // If budget is below 0 set to 0.
-            if (budget < MIN_BUDGET)
-                _budget = MIN_BUDGET;
-            else
-                _budget = budget;
-
-            // Assign Enum BuildType to private variable.
-            _buildType = buildType;
         }
         #endregion
 
@@ -64,7 +38,7 @@ namespace AutoBuildApp.Managers
         /// Recommend a computer build based off user defined parameters.
         /// </summary>
         /// <param name="buildType">Type of Build based on Enum.</param>
-        /// <param name="principal">Double value representing the budget.</param>
+        /// <param name="initial">Double value representing the budget.</param>
         /// <param name="peripherals">Dictionary of product types and how many
         /// of each would be requested.(Optional)</param>
         /// <param name="psuType">Power supply unit type requested by
@@ -75,15 +49,15 @@ namespace AutoBuildApp.Managers
         /// would like to be in their final build.(Optional)</param>
         /// <returns>A list of IBuild representing the recommended builds.</returns>
         public List<IBuild>
-            RecommendBuilds(BuildType buildType, double principal,
+            RecommendBuilds(BuildType buildType, double initial,
                 List<IComponent> peripherals, PSUModularity psuType,
                     HardDriveType hddType, int hddCount)
         {
             // Early escapes.
-            if ( principal < MIN_BUDGET || hddCount < MIN_INTEGER_VALUE )
+            if ( initial < MIN_BUDGET || hddCount < MIN_INTEGER_VALUE )
                 return null;
 
-            double budget = principal;
+            double budget = initial;
             // Buid factor passses type and returns a specific build.
             IBuild build = BuildFactory.CreateBuild(buildType);
 
@@ -98,7 +72,7 @@ namespace AutoBuildApp.Managers
 
             // Early kick out if budget has been reduced too low for items
             // by peripheral selection.
-            if (budget <= MIN_BUDGET && principal > MIN_BUDGET)
+            if (budget <= MIN_BUDGET && initial > MIN_BUDGET)
                 return null;
 
             // Advanced settings to be implemented. 
