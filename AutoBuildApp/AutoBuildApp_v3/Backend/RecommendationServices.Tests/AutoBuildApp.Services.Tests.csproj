@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AutoBuildApp.DataAccess\AutoBuildApp.DataAccess.csproj" />
     <ProjectReference Include="..\AutoBuildApp.Services\AutoBuildApp.Services.csproj" />
   </ItemGroup>
   <ItemGroup>
