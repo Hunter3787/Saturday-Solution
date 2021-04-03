@@ -17,7 +17,7 @@ namespace AutoBuildApp.Models
      * 
      * 
      * this our data model
-     * this is our bussiness object 
+     * this is our business object 
      */
     public class UserAccount
     {
