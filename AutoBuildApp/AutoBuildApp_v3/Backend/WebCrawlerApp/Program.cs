@@ -9,7 +9,6 @@ namespace WebCrawlerApp
     {
         public static void Main(string[] args)
         {
-            string x = "hey";
             List<string> newEggBlackList = new List<string>();
             newEggBlackList.Add("ComboDealDetails");
             newEggBlackList.Add("/p/");
@@ -20,7 +19,6 @@ namespace WebCrawlerApp
             WebCrawlerService wcs = new WebCrawlerService("Server = localhost; Database = DB; Trusted_Connection = True;");
 
             List<string> allLinks = wcs.grabHrefLinksFromPage("https://www.newegg.com/Processors-Desktops/SubCategory/ID-343?Tid=7671", "Page-", ".item-cell .item-title", "", newEggBlackList);
-            Console.WriteLine("\n\n\n\nherreeeee " + allLinks.Count);
             for(int i = 0; i < allLinks.Count; i++)
             {
                 wcs.getAllInformationFromPage(allLinks[i], "new egg", "cpu", ".product-title", ".product-pane .price-current strong",

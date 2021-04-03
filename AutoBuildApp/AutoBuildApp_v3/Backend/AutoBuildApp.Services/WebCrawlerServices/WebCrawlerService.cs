@@ -118,38 +118,15 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                 //create product
                 Product product = new Product(price != null, companyName, url, specsValues.ElementAt(modelNumberIndex).InnerText.Trim(), title.InnerText.Trim(), productType, specsValues.ElementAt(brandIndex).InnerText.Trim(), specsDictionary);
                 webCrawlerDAO.PostProductToDatabase(product);
+                break;
                 //add attributes
 
-                //webCrawlerDAO.PostSpecsOfProductsToDatabase(product);
 
             }
-        }
-
-        public int getRating(string rating)
-        {
-            int length = rating.Length;
-            for (int i = 0; i < length; i++)
-            {
-                switch (rating[i] - '0')
-                {
-                    case 1:
-                        return 1;
-                    case 2:
-                        return 2;
-                    case 3:
-                        return 3;
-                    case 4:
-                        return 4;
-                    case 5:
-                        return 5;
-                }
-            }
-            return 0;
         }
 
         public string getHtml(string url)
         {
-            Console.WriteLine("getHtml");
             bool successfulProxy = false;
             while (!successfulProxy)
             {
@@ -159,6 +136,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                     request.Timeout = 2000;
                     request.Proxy = (currentProxy == null) ? null : new WebProxy(currentProxy.IPAddress, currentProxy.Port);
                     request.AutomaticDecompression = DecompressionMethods.GZip;
+                    if (currentProxy != null) Console.WriteLine(currentProxy.Country + " - " + currentProxy.IPAddress + " - " + currentProxy.Port);
                     using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                     {
                         using (Stream stream = response.GetResponseStream())
@@ -166,7 +144,6 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                             using (StreamReader reader = new StreamReader(stream))
                             {
                                 Console.WriteLine("Successful proxy");
-                                if (currentProxy != null) Console.WriteLine(currentProxy.Country + " - " + currentProxy.IPAddress + " - " + currentProxy.Port);
                                 url = reader.ReadToEnd();
                                 successfulProxy = true;
                             }
@@ -203,10 +180,8 @@ namespace AutoBuildApp.Services.WebCrawlerServices
         {
             if (allProxies != null)
             {
-                Console.WriteLine("total proxies remaining = " + allProxies.Count);
                 allProxies.Remove(currentProxy);
 
-                // if it gets 
                 if (allProxies.Count == 10)
                 {
                     // use my proxy to give a better chance at successfully getting all proxies.
