@@ -129,7 +129,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                 Product product = new Product(price != null, companyName, url, specsValues.ElementAt(modelNumberIndex).InnerText, title.InnerText.Trim(), productType, specsValues.ElementAt(brandIndex).InnerText, specsDictionary);
                 webCrawlerDAO.PostProductToDatabase(product);
                 //add attributes
-
+                 
 
                 // new egg good
                 //var availability = htmlDocument.DocumentNode.QuerySelectorAll(availabilityQuerySelector);
