@@ -86,17 +86,19 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                                                 string specsValuesQuerySelector, string reviewerNameQuerySelector, string reviewDateQuerySelector,
                                                 string ratingsContentQuerySelector, string avgStarRatingQuerySelector, string totalRatingsQuerySelector, string addToCartText)
         {
+            int y = 1;
             bool x = true;
             while (x)
             {
-
                 //TODO individual star rating
                 htmlDocument.LoadHtml(getHtml(url));
-                var title = htmlDocument.DocumentNode.QuerySelector(titleQuerySelector).InnerHtml;
+                var title = htmlDocument.DocumentNode.QuerySelector(titleQuerySelector);
                 var price = htmlDocument.DocumentNode.QuerySelector(priceQuerySelector);
+
                 if (price == null)
                 {
-                    Console.WriteLine("no price");
+                    rotateProxy();
+                    continue;
                 }
                 else
                 {
@@ -222,7 +224,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                 try
                 {
                     HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                    request.Timeout = 1000;
+                    request.Timeout = 2000;
                     request.Proxy = (currentProxy == null) ? null : new WebProxy(currentProxy.IPAddress, currentProxy.Port);
                     //request.Proxy = new WebProxy("168.119.137.56", 3128);
                     //request.Proxy = new WebProxy("122.49.77.175", 3128);
@@ -262,10 +264,10 @@ namespace AutoBuildApp.Services.WebCrawlerServices
 
             foreach (var link in links)
             {
-                if (link.ChildNodes[3].InnerHtml == "United States")
-                {
+                //if (link.ChildNodes[3].InnerHtml == "United States")
+                //{
                     proxies.Add(new Proxy(link.ChildNodes[0].InnerHtml, Int32.Parse(link.ChildNodes[1].InnerHtml), link.ChildNodes[3].InnerHtml));
-                }
+                //}
             }
             return proxies;
         }
@@ -275,12 +277,17 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             if (allProxies != null)
             {
                 Console.WriteLine("total proxies remaining = " + allProxies.Count);
-                if (allProxies.Count == 1)
+                allProxies.Remove(currentProxy);
+
+                if (allProxies.Count == 10)
                 {
+                    // use my proxy to give a better chance at successfully getting all proxies.
+                    currentProxy = null;
                     allProxies.AddRange(getAllProxies(PROXY_WEBSITE, PROXY_WEBSITE_XPATH));
                 }
-                allProxies.Remove(currentProxy);
                 currentProxy = allProxies[0];
+
+
             }
 
         }
