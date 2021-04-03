@@ -182,7 +182,7 @@ namespace APB.App.DataAccess
                             reviewRatingEntity.StarRatingValue = (int)reader["star"]; // store the star value int as an int in StarRatingValue.
 
                             // checks if the image path is not null, if not it will return the imagepath, if not null then it wont.
-                            if(reader["imagepath"] != DBNull.Value)
+                            if(reader["imagebuffer"] != DBNull.Value)
                             {
                                 reviewRatingEntity.ImageBuffer = (byte[])reader["imagebuffer"];
                             }

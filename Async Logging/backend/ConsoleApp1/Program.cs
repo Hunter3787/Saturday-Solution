@@ -17,6 +17,8 @@ namespace ConsoleApp1
 
             reviewRatingManager.GetAllReviewsRatings();
 
+            var result = reviewRatingManager.GetReviewsRatings("30000");
+
             Console.WriteLine("Hello World");
 
             Console.Read();
