@@ -37,7 +37,7 @@ namespace AutoBuildApp.DataAccess
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                Dictionary<ProductType, List<IComponent>> output = new();
+                Dictionary<ProductType, List<IComponent>> output = new Dictionary<ProductType, List<IComponent>>();
 
                 var stored = "Search_ProductBudget";
                 using ( var command = new SqlCommand())
