@@ -26,7 +26,7 @@ namespace AutoBuildApp.BusinessLayer
         // is the string empty
         // is the password of certain length -> min 8 char, upper and lower case REQUIRED, at least one digit
 
-
+        // check inputs, hash password
         public String RegisterUser(UserAccount user)
         {   
             if(!IsInformationValid(user))
@@ -37,16 +37,19 @@ namespace AutoBuildApp.BusinessLayer
             return _RegistrationDAO.CreateUserRecord(user);
         }
 
+        // checks email
         public bool ValidEmail(string email)
         {
             return email.Contains("@") && email.Contains(".") && !String.IsNullOrEmpty(email);
         }
 
+        // checks username
         public bool ValidUserName(string username)
         {
             return !String.IsNullOrEmpty(username) && username.Length >= 4 && username.Length <= 20;
         }
 
+        // checks password
         public bool IsPasswordValid(string password)
         {
             return !String.IsNullOrEmpty(password)

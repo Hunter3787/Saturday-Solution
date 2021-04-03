@@ -1,10 +1,15 @@
-﻿using System;
-using AutoBuildApp.Models.Enumerations;
+﻿using AutoBuildApp.Models.Enumerations;
 
+/**
+ * IHardDrive interface for AuotBuild App
+ * @Author Nick Marshall-Eminger
+ */
 namespace AutoBuildApp.Models.Interfaces
 {
-    public interface IHardDrive
+    public interface IHardDrive : IComponent
     {
-        public HardDriveType HardDrive { get; set; }
+        HardDriveType DriveType { get; set; }
+        string Capacity { get; set; }
+        string Cache { get; set; }
     }
 }

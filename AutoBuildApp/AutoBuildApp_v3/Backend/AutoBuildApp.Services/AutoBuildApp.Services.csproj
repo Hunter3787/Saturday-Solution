@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,5 +10,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove=".DS_Store" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="FactoryServices\" />
+    <Folder Include="UserServices\" />
+    <Folder Include="RecommendatIonServices\" />
   </ItemGroup>
 </Project>

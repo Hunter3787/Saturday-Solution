@@ -12,26 +12,28 @@ namespace AutoBuildApp.Models.Products
     public class ComputerCase : IComponent
     {
         #region "Field Declarations, get; set;"
-        private const int MIN_LIST_SIZE = 1;
-        private const int MIN_INDEX = 0;
+        public readonly int MIN_LIST_SIZE = 1;
+        public readonly int MIN_INDEX = 0;
 
         public ProductType ProductType { get; set; }
         public string ModelNumber { get; set; }
         public string ProductName { get; set; }
         public string ManufacturerName { get; set; }
         public int Quantity { get; set; }
-        public List<byte[]> ProductImage { get; set; }
-        public List<FormFactor> MotherboardSupport { get; set; }
+        public List<byte[]> ProductImages { get; set; }
+        public double Price { get; set; }
+        public double Budget { get; set; }
+        public List<MoboFormFactor> MoboFormSupport { get; set; }
         public TowerType TowerType { get; set; }
         public int ExpansionSlots { get; set; }
         public bool PsuShroud { get; set; }
         public string SidePanel { get; set; }
-        public string Color { get; set; }
+        public List<string> Color { get; set; }
         public int TwoInchDriveBays { get; set; }
         public int ThreeInchDriveBays { get; set; }
         public List<string> FrontPanel { get; set; }
         public int MaxGPULength { get; set; }
-        public double[,,] Dimension { get; set; }
+        public List<double> Dimensions { get; set; }
         #endregion
 
         /// <summary>
@@ -39,53 +41,159 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         public ComputerCase()
         {
+            ProductImages = new List<byte[]>();
+            MoboFormSupport = new List<MoboFormFactor>();
+            Color = new List<string>();
+            FrontPanel = new List<string>();
+            Dimensions = new List<double>();
+        }
 
+        #region "Form Factor Add/Remove"
+        /// <summary>
+        /// Add a form factor to the supported form factor list.
+        /// </summary>
+        /// <param name="input">MoboFormFactor of Type Enumeration</param>
+        /// <returns>Boolean</returns>
+        public bool AddFormFactorSupport(MoboFormFactor input)
+        {
+            if (MoboFormSupport.Contains(input))
+                return false;
+
+            MoboFormSupport.Add(input);
+            return true;
         }
 
         /// <summary>
-        /// Constructor for filling in all fields on creation.
+        /// Passes an Enum of motherboard form factor to locate
+        /// and remove from the list.
         /// </summary>
-        /// <param name="productType"></param>
-        /// <param name="towerType"></param>
-        /// <param name="modelNumber"></param>
-        /// <param name="productName"></param>
-        /// <param name="manufacturerName"></param>
-        /// <param name="quantity"></param>
-        /// <param name="motherboardSupport"></param>
-        /// <param name="expansionSlots"></param>
-        /// <param name="psuShroud"></param>
-        /// <param name="sidePanel"></param>
-        /// <param name="color"></param>
-        /// <param name="twoInchBays"></param>
-        /// <param name="threeInchBays"></param>
-        /// <param name="frontPanel"></param>
-        /// <param name="maxGPULength"></param>
-        /// <param name="dimension"></param>
-        public ComputerCase(ProductType productType, TowerType towerType,
-            string modelNumber, string productName, string manufacturerName,
-                int quantity, List<FormFactor> motherboardSupport, int expansionSlots,
-                    bool psuShroud, string sidePanel, string color, int twoInchDriveBays,
-                        int threeInchDriveBays, List<string> frontPanel, int maxGPULength,
-                            double[,,] dimension)
+        /// <param name="toRemove"></param>
+        /// <returns>Boolean</returns>
+        public bool RemoveFormFactorSupport(MoboFormFactor toRemove)
         {
-            this.ProductType = productType;
-            this.TowerType = towerType;
-            this.ModelNumber = modelNumber;
-            this.ProductName = productName;
-            this.ManufacturerName = manufacturerName;
-            this.Quantity = quantity;
-            this.MotherboardSupport = motherboardSupport;
-            this.ExpansionSlots = expansionSlots;
-            this.PsuShroud = psuShroud;
-            this.SidePanel = sidePanel;
-            this.Color = color;
-            this.TwoInchDriveBays = twoInchDriveBays;
-            this.ThreeInchDriveBays = threeInchDriveBays;
-            this.FrontPanel = frontPanel;
-            this.MaxGPULength = maxGPULength;
-            this.Dimension = dimension;
+            if (MoboFormSupport == null)
+                return false;
+
+
+            return RemoveFormFactorSupport(MoboFormSupport.IndexOf(toRemove));
         }
 
+        /// <summary>
+        /// Remove Motherboard form factor support.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns>Boolean</returns>
+        public bool RemoveFormFactorSupport(int index)
+        {
+            if (index > MoboFormSupport.Count || index < MIN_INDEX)
+                return false;
+
+            MoboFormSupport.RemoveAt(index);
+            return true;
+        }
+        #endregion
+
+        #region "Color Add/Remove"
+        /// <summary>
+        /// Add a string representation of a color to the computer case color list.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>Boolean</returns>
+        public bool AddColor(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input) || Color.Contains(input))
+                return false;
+
+            Color.Add(input);
+            return true;
+        }
+
+        /// <summary>
+        /// String method to locate the index of the passed string.
+        /// Will call index variation to remove the element upon location.
+        /// </summary>
+        /// <param name="toRemove"></param>
+        /// <returns>Boolean</returns>
+        public bool RemoveColor(string toRemove)
+        {
+            if (Color == null)
+                return false;
+
+            if (string.IsNullOrWhiteSpace(toRemove) || !Color.Contains(toRemove))
+                return false;
+
+            return RemoveColor(Color.IndexOf(toRemove));
+        }
+
+        /// <summary>
+        /// Index method to remove a color from the computer case color list.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns>Boolean</returns>
+        public bool RemoveColor(int index)
+        {
+            if (Color == null)
+                return false;
+
+            if (index > Color.Count || index < MIN_INDEX)
+                return false;
+
+            Color.RemoveAt(index);
+            return true;
+        }
+        #endregion
+
+        #region "Front Panel Add/Remove"
+        /// <summary>
+        /// Add a string representation of a front panel to the computer case
+        /// front panel list.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>Boolean</returns>
+        public bool AddFrontPanel(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input) || FrontPanel.Contains(input))
+                return false;
+
+            FrontPanel.Add(input);
+            return true;
+        }
+
+        /// <summary>
+        /// String method to locate the index of the passed string.
+        /// Will call index variation to remove the element upon location.
+        /// </summary>
+        /// <param name="toRemove"></param>
+        /// <returns>Boolean</returns>
+        public bool RemoveFrontPanel(string toRemove)
+        {
+            if (FrontPanel == null)
+                return false;
+
+            if (string.IsNullOrWhiteSpace(toRemove) || !FrontPanel.Contains(toRemove))
+                return false;
+
+            return RemoveFrontPanel(FrontPanel.IndexOf(toRemove));
+        }
+
+        /// <summary>
+        /// Index method to remove a front panel element from the computer case
+        /// front panel list.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns>Boolean</returns>
+        public bool RemoveFrontPanel(int index)
+        {
+            if (FrontPanel == null)
+                return false;
+
+            if (index > FrontPanel.Count || index < MIN_INDEX)
+                return false;
+
+            FrontPanel.RemoveAt(index);
+            return true;
+        }
+        #endregion
 
         #region "Interface Implementations"
         /// <summary>
@@ -98,28 +206,40 @@ namespace AutoBuildApp.Models.Products
             if (image == null)
                 return false;
             
-            ProductImage.Add(image);
+            ProductImages.Add(image);
             return true;
         }
 
         /// <summary>
-        /// Removes an 
+        /// Removes an image from the byte array at the provided index.
         /// </summary>
-        /// <param name="index"></param>
+        /// <param name="index">Position of the image intended to be deleted.</param>
         /// <returns></returns>
         public bool RemoveImage(int index)
         {
-            var success = false;
-            var endOfList = ProductImage.Count - 1;
+            if (ProductImages == null)
+                return false;
 
-            if(index >= MIN_INDEX && ProductImage.Count >= MIN_LIST_SIZE
+            var success = false;
+            var endOfList = ProductImages.Count - 1;
+
+            if(index >= MIN_INDEX && ProductImages.Count >= MIN_LIST_SIZE
                 && index <= endOfList)
             {
-                ProductImage.RemoveAt(index);
+                ProductImages.RemoveAt(index);
                 success =  true;
             }
 
             return success;
+        }
+
+        /// <summary>
+        /// Total cost of components based on quantity and price.
+        /// </summary>
+        /// <returns>Double</returns>
+        public double GetTotalcost()
+        {
+            return Price * Quantity;
         }
         #endregion
     }

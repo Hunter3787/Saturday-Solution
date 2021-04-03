@@ -1,7 +1,9 @@
-﻿using AutoBuildApp.Models.Users;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using System.Text;
+using AutoBuildApp.Models.Users;
+using Microsoft.Data.SqlClient;
 
 namespace AutoBuildApp.DataAccess
 {
