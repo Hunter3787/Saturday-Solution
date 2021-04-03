@@ -40,7 +40,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B856A8D9-9146-4455-873E-BFC95BFC4CC3}"
 	ProjectSection(SolutionItems) = preProject
 		AuthReferences.txt = AuthReferences.txt
-		..\..\..\..\..\..\Desktop\Async Logging\backend\References.txt = ..\..\..\..\..\..\Desktop\Async Logging\backend\References.txt
+		References.txt = References.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoBuildApp.DomainModels", "AutoBuildApp.DomainModels\AutoBuildApp.DomainModels.csproj", "{C11D721B-C231-4BED-ACA0-CE1FAF088C8A}"
@@ -55,8 +55,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoBuildApp.ConsoleApp", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Queries", "Queries", "{4708FC6F-3262-40EF-A08E-ED167EBBF131}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\..\..\..\..\Desktop\Async Logging\backend\LogQuery.sql = ..\..\..\..\..\..\Desktop\Async Logging\backend\LogQuery.sql
-		..\..\..\..\..\..\Desktop\Async Logging\backend\ReviewQuery.sql = ..\..\..\..\..\..\Desktop\Async Logging\backend\ReviewQuery.sql
+		Logging.sql = Logging.sql
+		Reviews.sql = Reviews.sql
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoBuildApp.WebCrawlerApp", "WebCrawlerApp\AutoBuildApp.WebCrawlerApp.csproj", "{5B3501B3-5D16-4552-99F3-2E36F9C02C63}"

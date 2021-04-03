@@ -1,0 +1,20 @@
+References:
+
+1. Professor Vong's Github Code: https://github.com/v-vong3/csulb
+2. Basic Fetch Requests Demo: https://docs.microsoft.com/en-us/aspnet/core/tutorials/web-api-javascript?view=aspnetcore-5.0
+3. Converting input to byte[]: https://stackoverflow.com/questions/37134433/convert-input-file-to-byte-array
+4. Getting Image from front end: https://stackoverflow.com/questions/32556664/getting-byte-array-through-input-type-file/32556944
+5. Convert file to byte stream: https://stackoverflow.com/questions/56338154/howto-convert-file-to-byte-stream-in-javascript
+6. Dynamically add and delete HTML: http://talkerscode.com/webtricks/add-edit-and-delete-rows-from-table-dynamically-using-javascript.php
+7. Singleton Pattern: https://dotnetcoretutorials.com/2019/06/11/singleton-pattern-in-net-core/
+8. Singleton Thread-Safe: https://dotnettutorials.net/lesson/thread-safe-singleton-design-pattern/
+9. Singleton Pattern (2): https://www.c-sharpcorner.com/UploadFile/8911c4/singleton-design-pattern-in-C-Sharp/
+10. ActiveMQ implementation: https://www.pmichaels.net/2016/10/13/acknowledging-a-message-in-active-mq/
+11. Async programming: https://www.dotnetperls.com/async
+12. ActiveMQ documentation: https://activemq.apache.org/components/nms/msdoc/1.6.0/vs2005/Output/html/N_Apache_NMS.htm
+13. ActiveMQ implementation (2): https://remark.wordpress.com/articles/messaging-with-net-and-activemq/
+14: Unit Testing: https://www.youtube.com/watch?v=HYrXogLj7vg
+15: SqlCommand Documentation: https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlcommand?view=dotnet-plat-ext-5.0
+16: Convert image to byte[]: https://stackoverflow.com/questions/9468929/if-convert-from-byte-array-to-bitmap-object-return-null-value-why
+17: Convert image to byte[](2): https://stackoverflow.com/questions/12659800/converting-image-into-byte-array-gives-null-exception
+18: Check if File Exists: https://docs.microsoft.com/en-us/dotnet/api/system.io.file.exists?view=net-5.0
