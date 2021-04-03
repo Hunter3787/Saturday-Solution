@@ -1,4 +1,5 @@
-﻿using AutoBuildApp.Services.WebCrawlerServices;
+﻿using AutoBuildApp.Models.Web_Crawler;
+using AutoBuildApp.Services.WebCrawlerServices;
 using System;
 using System.Collections.Generic;
 
@@ -17,8 +18,11 @@ namespace WebCrawlerApp
             //amazonBlackList.Add("picassoRedirect");
 
             WebCrawlerService wcs = new WebCrawlerService("Server = localhost; Database = DB; Trusted_Connection = True;");
+            //Product product = new Product(false, "f", "f", "model", "name", "pr", "f", null);
+            //wcs.testService(product);
             //wcs.testService();
             ////new egg
+            //wcs.grabHrefLinksFromPage("https://www.amazon.com/b?node=229189&ref=sr_nr_n_1")
             //wcs.getAllInformationFromPage("https://www.newegg.com/amd-ryzen-7-3800xt-ryzen-7-3rd-gen/p/N82E16819113652", ".product-title", ".product-pane .price-current strong",
             //    ".product-buy-box #ProductBuy", ".table-horizontal tr th", ".table-horizontal tr td", ".comments-name", ".comments-title .comments-text",
             //    ".comments-content", "plusminusadd to cart");

@@ -36,8 +36,9 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             allProxies = getAllProxies(PROXY_WEBSITE, PROXY_WEBSITE_XPATH);
             currentProxy = allProxies[0];
         }
-        public void testService()
+        public void testService(Product product)
         {
+            webCrawlerDAO.PostProductToDatabase(product);
         }
 
         public WebCrawlerService(string connectionString, List<String> listOfLinks)
@@ -53,11 +54,9 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             int pageNumber = 1;
             for (int i = 0; i < NUMBER_OF_PAGES_TO_CRAWL; i++)
             {
-                string html = getHtml(url);
-                htmlDocument.LoadHtml(html);
+                htmlDocument.LoadHtml(getHtml(url));
                 var links = htmlDocument.DocumentNode.QuerySelectorAll(querySelectorString);
-                // Somet
-                if (links == null || !links.Any())
+                if (!links.Any())
                 {
                     rotateProxy();
                     i--;
@@ -126,7 +125,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
 
 
                 //create product
-                Product product = new Product(price != null, companyName, url, specsValues.ElementAt(modelNumberIndex).InnerText, title.InnerText.Trim(), productType, specsValues.ElementAt(brandIndex).InnerText, specsDictionary);
+                Product product = new Product(price != null, companyName, url, specsValues.ElementAt(modelNumberIndex).InnerText.Trim(), title.InnerText.Trim(), productType, specsValues.ElementAt(brandIndex).InnerText.Trim(), specsDictionary);
                 webCrawlerDAO.PostProductToDatabase(product);
                 //add attributes
                  
