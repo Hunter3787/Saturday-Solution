@@ -18,6 +18,9 @@
     <ProjectReference Include="..\AutoBuildApp.Managers\AutoBuildApp.Managers.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
+    <ProjectReference Include="..\AutoBuildApp.DomainModels\AutoBuildApp.DomainModels.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="wwwroot\" />
