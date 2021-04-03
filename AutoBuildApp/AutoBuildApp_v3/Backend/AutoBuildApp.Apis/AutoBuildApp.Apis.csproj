@@ -6,4 +6,9 @@
 
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Apis' " />
+
+
+  <ItemGroup>
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
+  </ItemGroup>
 </Project>

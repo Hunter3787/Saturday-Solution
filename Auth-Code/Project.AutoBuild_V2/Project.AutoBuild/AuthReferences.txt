@@ -1,0 +1,71 @@
+References for the Authentication/Authorization JWT Feature:
+
+other:
+1- https://dev.to/loopdelicious/using-jwt-to-authenticate-and-authorize-requests-in-postman-3a5h
+
+
+namespace Project.WebApi: 
+Startup Class:
+1- Enable Cross-Origin Requests (CORS)  : 
+https://docs.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-5.0
+           
+2- 
+
+namespace Project.WebApi.HelperFunctions - 
+CustomErrorHandlerHelper Class:
+
+1- Folloewed this tutorial in ATTEMPT to Create a custom ErrorHandlerMiddleware function 
+https://andrewlock.net/creating-a-custom-error-handler-middleware-function/
+2- ProblemDetails is an industry standard way of returning machine-readable
+details of errors in a HTTP response, Problem Details for HTTP APIs
+https://tools.ietf.org/html/rfc7807
+3- Handle errors in ASP.NET Core web APIs
+https://docs.microsoft.com/en-us/aspnet/core/web-api/handle-errors?view=aspnetcore-5.0
+
+4- https://www.connectionstrings.com/store-and-read-connection-string-in-appsettings-json/
+
+5- https://stackoverflow.com/questions/45796776/get-connectionstring-from-appsettings-json-instead-of-being-hardcoded-in-net-co 
+
+6- https://www.youtube.com/watch?v=dTIHgVUOlak
+
+2-
+
+namespace Project.WebApi.Controllers
+AuthenticationController class :
+
+1- OAuth 2.0 Bearer Token Usage, gave a nice 'Absrat protocol flow' 
+of the authorization client server request and token grant
+https://tools.ietf.org/html/rfc6750#section-1.2
+
+2- 
+namespace Project.Security.Models
+JWT class : 
+
+1-Introduction to JSON Web Tokens:
+ https://jwt.io/introduction
+
+2- JSON Web Token Claims (i really liked this linked)
+https://auth0.com/docs/tokens/json-web-tokens/json-web-token-claims
+
+3. How I learned to hash in c#: C# HMAC SHA256
+https://www.jokecamp.com/blog/examples-of-creating-base64-hashes-using-hmac-sha256-in-different-languages/#csharp
+
+4. JWT Security Best Practices
+https://curity.io/resources/learn/jwt-best-practices/
+
+5. learning about the Base64UrlEncoder Class (regarding Encode(bytes[]))
+https://docs.microsoft.com/en-us/dotnet/api/microsoft.identitymodel.tokens.base64urlencoder?view=azure-dotnet
+
+
+6. 
+
+namespace Project.WebApi.HelperFunctions
+ConnectionManager Class 
+
+1- turtorial followed to understand access of
+connection string from the appsettings.json
+ https://www.youtube.com/watch?v=dTIHgVUOlak
+
+ 2- 
+
+
