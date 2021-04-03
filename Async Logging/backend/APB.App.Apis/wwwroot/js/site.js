@@ -74,7 +74,7 @@ function displayEditForm(id) {
     document.getElementById('edit-id').value = item.entityId // sets the table id value equal to the value specified.
     document.getElementById('edit-message').value = item.message; // sets the table message value equal to the value specified.
     document.getElementById('edit-starRating').value = item.starRating; // sets the table starRating value equal to the value specified.
-    document.getElementById('edit-filePath').value = item.filePath; // sets the table filepath value equal to the value specified.
+    document.getElementById('edit-filePath').value = item.imagePath; // sets the table filepath value equal to the value specified.
     document.getElementById('editForm').style.display = 'block'; // sets the table dispaly value to block.
 }
 

@@ -46,7 +46,8 @@ namespace APB.App.Services
                 Username = reviewRating.Username,
                 StarRatingValue = (int)reviewRating.StarRating, // casts the enum into a boolean for easier storage and query in DB.
                 Message = reviewRating.Message,
-                DateTime = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF") // takes the current time and appends it to the object.
+                DateTime = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF"), // takes the current time and appends it to the object.
+                FilePath = reviewRating.FilePath
             };
 
             // starts a new memory stream that will be used as long as the using block is active.
@@ -89,7 +90,8 @@ namespace APB.App.Services
                 Username = reviewEntity.Username,
                 StarRating = (StarType)reviewEntity.StarRatingValue,
                 Message = reviewEntity.Message,
-                DateTime = reviewEntity.DateTime
+                DateTime = reviewEntity.DateTime,
+                FilePath = reviewEntity.FilePath
             };
 
             // This will verify that the byte array is not null, if null, it will return null.
@@ -137,7 +139,8 @@ namespace APB.App.Services
                     Username = reviewRatingEntity.Username,
                     StarRating = (StarType)reviewRatingEntity.StarRatingValue,
                     Message = reviewRatingEntity.Message,
-                    DateTime = reviewRatingEntity.DateTime
+                    DateTime = reviewRatingEntity.DateTime,
+                    ImagePath = reviewRatingEntity.FilePath
                 };
 
                 // This will verify that the byte array is not null, if null, it will return null.
@@ -155,8 +158,8 @@ namespace APB.App.Services
                                 // this will dynamically store the image based on usename and entity id for ease of access.
                                 string filePath = $"C:\\Users\\Serge\\Code\\GitHub\\Saturday-Solution\\Async Logging\\backend\\APB.App.Apis\\wwwroot\\images\\{reviewRatingEntity.Username}_{reviewRatingEntity.EntityId}.jpg";
                                 img.Save(filePath);
-                                reviewRatings.Picture = img;
                                 reviewRatings.FilePath = $"images/{ reviewRatingEntity.Username}_{ reviewRatingEntity.EntityId}.jpg"; // file path that is accessible by the UI.
+                                //reviewRatings.FilePath = $"C:/Users/Serge/Code/GitHub/Saturday-Solution/Async Logging/backend/APB.App.Apis/wwwroot/images/{reviewRatingEntity.Username}_{reviewRatingEntity.EntityId}.jpg";
                             }
                         }
                         catch(ArgumentException ex)
@@ -211,6 +214,7 @@ namespace APB.App.Services
                 EntityId = reviewRating.EntityId,
                 StarRatingValue = (int)reviewRating.StarRating,
                 Message = reviewRating.Message,
+                FilePath = reviewRating.FilePath
             };
 
             // starts a new memory stream that will be used as long as the using block is active.

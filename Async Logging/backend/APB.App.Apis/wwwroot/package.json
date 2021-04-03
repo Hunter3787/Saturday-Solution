@@ -1,0 +1,22 @@
+{
+  "name": "wwwroot",
+  "version": "1.0.0",
+  "description": "Cypress e2e for ReviewsRatings",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "cypress:open": "cypress open"
+  },
+  "keywords": [
+    "e2e",
+    "tests",
+    "cypress",
+    "automation",
+    "frameworks"
+  ],
+  "author": "Sirage El-Jawhari",
+  "license": "ISC",
+  "devDependencies": {
+    "cypress": "^6.8.0"
+  }
+}
