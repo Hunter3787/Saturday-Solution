@@ -57,6 +57,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Queries", "Queries", "{4708
 	ProjectSection(SolutionItems) = preProject
 		..\..\..\..\..\..\Desktop\Async Logging\backend\LogQuery.sql = ..\..\..\..\..\..\Desktop\Async Logging\backend\LogQuery.sql
 		..\..\..\..\..\..\Desktop\Async Logging\backend\ReviewQuery.sql = ..\..\..\..\..\..\Desktop\Async Logging\backend\ReviewQuery.sql
+		..\..\..\..\MSSQL_1433\schemeToSecurityIntegration\SQLQuerySecurityProcedures.sql = ..\..\..\..\MSSQL_1433\schemeToSecurityIntegration\SQLQuerySecurityProcedures.sql
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoBuildApp.WebCrawlerApp", "WebCrawlerApp\AutoBuildApp.WebCrawlerApp.csproj", "{5B3501B3-5D16-4552-99F3-2E36F9C02C63}"
