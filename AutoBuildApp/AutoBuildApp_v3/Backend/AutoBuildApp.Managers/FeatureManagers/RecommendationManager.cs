@@ -121,6 +121,8 @@ namespace AutoBuildApp.Managers
             BuildType buildType, double budget)
         {
 
+
+
             return null;
         }
 
@@ -129,48 +131,12 @@ namespace AutoBuildApp.Managers
         /// </summary>
         /// <param name="savedBuild"></param>
         /// <returns></returns>
-        public List<IBuild> RecommendUpgrades(IBuild savedBuild)
+        public List<IBuild> RecommendUpgrades(IBuild savedBuild,
+            BuildType buildType, double budget)
         {
+
+
             return null;
-        }
-        #endregion
-
-        #region "Private Methods"
-
-        private void ScoreComponent()
-        {
-
-        }
-
-        private void ComponentCompare()
-        {
-
-        }
-
-
-        private void BuildCompare()
-        {
-
-        }
-        #endregion
-
-        #region "Out of Scope"
-        // Migrating to user garage.
-        public bool SaveRecommendation()
-        {
-            return false;
-        }
-
-        // Migrating to controller.
-        public List<IComponent> RequestComponentsByType()
-        {
-            return null;
-        }
-
-        // Migrating to controller.
-        public void RequestSavedBuilds()
-        {
-
         }
         #endregion
     }

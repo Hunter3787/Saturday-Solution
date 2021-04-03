@@ -1,7 +1,9 @@
-﻿using AutoBuildApp.Models.Interfaces;
+﻿using AutoBuildApp.DomainModels;
+using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Enumerations;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
+using System.Data;
 using System;
 /**
 * This Data Access Object will handle collection and transformation of 
@@ -37,34 +39,51 @@ namespace AutoBuildApp.DataAccess
                 connection.Open();
                 Dictionary<ProductType, List<IComponent>> output = new();
 
-                using( var command = new SqlCommand())
+                var stored = "Search_ProductBudget";
+                using ( var command = new SqlCommand())
                 {
                     command.Transaction = connection.BeginTransaction();
                     command.Connection = connection;
                     command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = stored;
 
-                    // send query
+                    DataTable pair = new DataTable();
+                    DataColumn column = new DataColumn();
+                    column.ColumnName = "productType";
+                    column.DataType = typeof(string);
+                    pair.Columns.Add(column);
+                    column.ColumnName = "productPrice";
+                    column.DataType = typeof(double);
+                    pair.Columns.Add(column);
+
+                    DataRow row;
+                    foreach (var elements in input)
+                    {
+                        row = pair.NewRow();
+                        row["productType"] = elements.ProductType;
+                        row["productPrice"] = elements.Budget;
+                        pair.Rows.Add(row);
+                    }
+
+                    SqlParameter param = command
+                        .Parameters
+                        .AddWithValue("@TYPEBUDGET", pair);
+
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
+                        if (reader.HasRows == false)
+                            return null;
+
                         while (reader.Read())
                         {
-
+                            var key = reader.GetString(0);
+                            var value = reader.GetFloat(1);
                         }
                     }
-                    command.ExecuteNonQuery();
                     command.Transaction.Commit();
-
                 }
-
-
-
-                Dictionary<ProductType, double> querystuff =
-                    new Dictionary<ProductType, double>();
-
-                foreach (var item in input)
-                    querystuff.Add(item.ProductType, item.Budget);
-
 
                 return output;
             }
