@@ -9,7 +9,7 @@ using System;
  * https://devblogs.microsoft.com/dotnet/introducing-the-new-microsoftdatasqlclient/
  */
 using AutoBuildApp.Models.Users;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using AutoBuildApp.Models;
 
 namespace AutoBuildApp.DataAccess
@@ -32,14 +32,14 @@ namespace AutoBuildApp.DataAccess
             this.connection = connectionString;
         }
 
-        public bool SaveComponentToUser(string component, UserAccount user) 
-        { 
+        //public bool SaveComponentToUser(string component, UserAccount user) 
+        //{ 
             
-        }
+        //}
 
-        public ComponentDetails GetComponentDetails(string component) 
-        { 
+        //public ComponentDetails GetComponentDetails(string component) 
+        //{ 
         
-        }
+        //}
     }
 }

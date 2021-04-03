@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Text;
 
 namespace AutoBuildApp.Models.DTO
@@ -35,7 +35,7 @@ namespace AutoBuildApp.Models.DTO
 
                         transaction.Commit();
                         connection.Close();
-                        return result != 0;
+                        return null;
                     }
                     catch (SqlException ex)
                     {
@@ -43,7 +43,7 @@ namespace AutoBuildApp.Models.DTO
                         Console.WriteLine(ex.Source);
 
                     }
-                    return Flag;
+                    return null;
                 }
             }
         }
