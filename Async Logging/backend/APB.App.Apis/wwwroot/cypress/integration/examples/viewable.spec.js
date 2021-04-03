@@ -1,11 +1,5 @@
 /// <reference types="cypress" />
 
-/// <summary>
-/// References used from file: Solution Items/References.txt 
-/// N/A: some examples were referenced from the examples provided by cypress' default files.
-/// </summary>
-
-// These tests will verify that the view page is correct.
 context('Viewable Components', () => {
     beforeEach(() => {
       cy.visit('https://localhost:44317/')

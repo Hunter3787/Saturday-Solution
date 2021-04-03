@@ -1,11 +1,5 @@
 /// <reference types="cypress" />
 
-/// <summary>
-/// References used from file: Solution Items/References.txt 
-/// N/A: some examples were referenced from the examples provided by cypress' default files.
-/// </summary>
-
-// This test block will test basic commands in the browser view
 context('Actions', () => {
     beforeEach(() => {
       cy.visit('https://localhost:44317/')

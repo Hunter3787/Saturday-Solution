@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace APB.App.Apis.Rev
+namespace APB.App.Apis
 {
     public class Program
     {
