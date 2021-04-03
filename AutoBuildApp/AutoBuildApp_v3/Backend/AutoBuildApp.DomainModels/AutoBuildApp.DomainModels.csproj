@@ -5,13 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Products\" />
-    <Folder Include="Enumerations\" />
-    <Folder Include="Interfaces\" />
-    <Folder Include="Builds\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
   </ItemGroup>
+
 </Project>

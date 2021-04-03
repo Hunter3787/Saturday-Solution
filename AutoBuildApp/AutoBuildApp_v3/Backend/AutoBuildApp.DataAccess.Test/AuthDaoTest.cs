@@ -1,21 +1,19 @@
 ﻿using Microsoft.Data.SqlClient;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Project.DataAccess.Entities;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using AutoBuildApp.DataAccess.Entities;
 
-namespace Project.DataAccess.Tests
+namespace AutoBuildApp.DataAccess.Test
 {
     [TestClass]
-    public class AuthDAOTest
+    public class AuthDaoTest
     {
         private static AuthDAO _authDAO = new AuthDAO("Data Source=localhost;Initial Catalog=DB;Integrated Security=True");
-        private string connectionString = GetConnectionStringByName("ConnectionString");
         //this is the valid connection string
         /// this is the common respone object for authentication
         private static CommonReponseAuth _CRAuth = new CommonReponseAuth();
-    
+
 
         private static IEnumerable<object[]> getcheckConnectionData()
         {
@@ -43,7 +41,7 @@ namespace Project.DataAccess.Tests
             };
 
         }
-        
+
         [TestMethod]
         [DataTestMethod]
         [DynamicData(nameof(getcheckConnectionData), DynamicDataSourceType.Method)]
@@ -55,7 +53,7 @@ namespace Project.DataAccess.Tests
             bool actualBool = _CRAuth.Equals(ExpectedReponseAuth);
             //Assert:
             Assert.AreEqual(true, actualBool);
-            
+
         }
 
         private static IEnumerable<object[]> getUserCredentialsData()
@@ -91,8 +89,8 @@ namespace Project.DataAccess.Tests
         [DynamicData(nameof(getUserCredentialsData), DynamicDataSourceType.Method)]
         public void AuthDAO_RetrieveUserInformation_ReturnCorrectCommonResponse(UserCredentials user, CommonReponseAuth commonResponseExpected)
         {
-             _CRAuth = (CommonReponseAuth)_authDAO.RetrieveUserInformation(user);
-     
+            _CRAuth = (CommonReponseAuth)_authDAO.RetrieveUserInformation(user);
+
             Assert.AreEqual(commonResponseExpected.Equals(_CRAuth), true);
 
         }
@@ -101,7 +99,7 @@ namespace Project.DataAccess.Tests
         private static IEnumerable<object[]> getNullPayload()
         {
             AuthDAO authDAONull = null;
-            AuthDAO authDAONULLParam =  new AuthDAO(null);
+            AuthDAO authDAONULLParam = new AuthDAO(null);
             AuthDAO authDAOEmptyString = new AuthDAO("    ");
             return new List<object[]>()
             {
@@ -116,7 +114,8 @@ namespace Project.DataAccess.Tests
         [DynamicData(nameof(getNullPayload), DynamicDataSourceType.Method)]
         public void AuthDAO_Null_Object_ReturnNullException(AuthDAO obj, string expectedParamName)
         {
-            try{ 
+            try
+            {
                 AuthDAO authDAO = (AuthDAO)obj;
             }
             //Assert:
@@ -129,23 +128,7 @@ namespace Project.DataAccess.Tests
 
 
 
-        /// <summary>
-        /// this method retriieves the connection string 
-        /// from the app.config file
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        private static string GetConnectionStringByName(string name)
-        {
-            string retVal = null;
-
-            ConnectionStringSettings settings = ConfigurationManager.ConnectionStrings[name];
-            // If found, return the connection string.
-            if (settings != null)
-                retVal = settings.ConnectionString;
-            return retVal;
-        }
-
+        
 
 
 

@@ -1,11 +1,9 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Text;
 
-namespace AutoBuildApp.DataAccess
-{
+namespace AutoBuildApp.DataAccess 
+{ 
     public class LoginDAO
     {
         private String _connection;
