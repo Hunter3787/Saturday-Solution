@@ -13,5 +13,6 @@
 
   <ItemGroup>
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
+    <PackageReference Include="System.Collections" Version="4.3.0" />
   </ItemGroup>
 </Project>

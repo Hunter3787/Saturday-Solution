@@ -84,7 +84,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
 
         public void getAllInformationFromPage(string url, string titleQuerySelector, string priceQuerySelector, string availabilityQuerySelector, string specsKeysQuerySelector,
                                                 string specsValuesQuerySelector, string reviewerNameQuerySelector, string reviewDateQuerySelector,
-                                                string ratingsContentQuerySelector, string avgStarRatingQuerySelector, string totalRatingsQuerySelector, string addToCartText)
+                                                string ratingsContentQuerySelector, string addToCartText)
         {
             int y = 1;
             bool x = true;
@@ -94,23 +94,28 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                 htmlDocument.LoadHtml(getHtml(url));
                 var title = htmlDocument.DocumentNode.QuerySelector(titleQuerySelector);
                 var price = htmlDocument.DocumentNode.QuerySelector(priceQuerySelector);
-
-                if (price == null)
+                var specsKeys = htmlDocument.DocumentNode.QuerySelectorAll(specsKeysQuerySelector);
+                if (specsKeys == null || !specsKeys.Any())
                 {
                     rotateProxy();
                     continue;
                 }
-                else
-                {
-                    Console.WriteLine(price.InnerText);
-                }
-                var specsKeys = htmlDocument.DocumentNode.QuerySelectorAll(specsKeysQuerySelector);
+                title.InnerText.Trim();
                 var specsValues = htmlDocument.DocumentNode.QuerySelectorAll(specsValuesQuerySelector);
                 var ratingsReviewerName = htmlDocument.DocumentNode.QuerySelectorAll(reviewerNameQuerySelector);
                 var ratingsDate = htmlDocument.DocumentNode.QuerySelectorAll(reviewDateQuerySelector);
                 var ratingsContent = htmlDocument.DocumentNode.QuerySelectorAll(ratingsContentQuerySelector);
+
+                Dictionary<string, string> specsDictionary = new Dictionary<string, string>();
+                int keyCount = specsKeys.Count();
+                for (int i = 0; i < keyCount; i++)
+                {
+                    specsDictionary.Add(specsKeys.ElementAt(i).InnerText, specsValues.ElementAt(i).InnerText);
+
+                }
+                //Product product = new Product(url, getModelNumber();
                 //var avgStarRating = htmlDocument.DocumentNode.QuerySelectorAll(avgStarRatingQuerySelector);
-                var totalNumberOfRatings = htmlDocument.DocumentNode.QuerySelectorAll(totalRatingsQuerySelector);
+                //var totalNumberOfRatings = htmlDocument.DocumentNode.QuerySelectorAll(totalRatingsQuerySelector);
 
 
                 //Console.Write(avgStarRating.Split(' ')[0]);
