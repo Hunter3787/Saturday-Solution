@@ -1,7 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using AutoBuildApp.DataAccess;
 
-namespace RecommendationDAO.Tests
+namespace AutoBuildApp.DataAccess.Test
 {
     [TestClass]
     public class UnitTest1

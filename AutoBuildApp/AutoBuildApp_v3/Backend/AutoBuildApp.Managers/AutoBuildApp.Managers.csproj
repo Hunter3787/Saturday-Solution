@@ -17,4 +17,7 @@
   <ItemGroup>
     <None Remove=".DS_Store" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
+  </ItemGroup>
 </Project>
