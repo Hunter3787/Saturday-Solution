@@ -1,5 +1,4 @@
-﻿using AutoBuildApp.DomainModels;
-using AutoBuildApp.Models.Interfaces;
+﻿using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Enumerations;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;

@@ -11,4 +11,12 @@
   <ItemGroup>
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AutoBuildApp.Managers\AutoBuildApp.Managers.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\AutoBuildApp.DomainModels\AutoBuildApp.DomainModels.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
