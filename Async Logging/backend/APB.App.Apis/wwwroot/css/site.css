@@ -1,0 +1,169 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    color: rgb(0, 0, 0);
+    font-size: 13pt;
+    background: whitesmoke;
+}
+
+label{
+    font-family:Arial, Helvetica, sans-serif;
+    font-size: 1.2em;
+}
+
+input[type='submit'], button, [aria-label] {
+    cursor: pointer;
+}
+
+#editForm {
+    display: none;
+}
+
+nav {
+    height: 20%;
+    min-height: 100px;
+    max-height: 100px;
+    background-color: #FFB646;
+    color: black;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    text-align: center;
+    font-size: 1.8em;
+    /*padding: 5px 10px 5px 10px; */
+}
+
+form {
+    text-align: center;
+}
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+.centerStar {
+    display: flex;
+    justify-content: center;
+  }
+
+.centerStar .stars{
+    height: 150px;
+    width: 500px;
+    text-align: center;
+}
+
+.stars input {
+    display: none;
+}
+
+.stars label{
+    float: right;
+    font-size: 100px;
+    color: lightgrey;
+    margin: 0 5px;
+    text-shadow: 1px 1px #bbb;
+}
+
+.stars label::before{
+    content: '★';
+}
+
+.stars input:checked ~ label {
+    color: gold;
+    text-shadow: 1px 1px #c60;
+}
+
+.stars:not(:checked) > label:hover,
+.stars:not(:checked) > label:hover ~ label{
+    color:gold;
+}
+
+.stars input:checked > label:hover,
+.stars input:checked > label:hover ~ label{
+    color:gold;
+    text-shadow: 1px 1px goldenrod;
+}
+
+input {
+    border: none;
+    appearance: none;
+    background: #f2f2f2;
+    padding: 12px;
+    border-radius: 3px;
+    width: 250px;
+    outline: none;
+    border: 2px solid #ccc
+}
+
+.submit-btn {
+    width: 50%;
+    padding: 10px;
+    cursor: pointer;
+    display: block;
+    margin-top: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+    background: lightgrey;
+    border: 0;
+    outline: none;
+    border-radius: 50px;
+    color:rgb(47, 72, 79);
+    font-size: 18px;
+    font-weight: lighter;
+}
+  
+.submit-btn:hover {
+    color: black;
+    font-weight: bold;
+    box-shadow: 0 0 20px 9px #01168f1f;
+    background: #3ab759;
+}
+
+textarea{
+    resize: none;
+    background-color: #f8f8f8;
+    border-radius: 4px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    box-sizing: border-box;
+    padding: 12px 20px;
+    width: 75%;
+    height: 150px;
+}
+
+#reviews-saved {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+    #reviews-saved td, #reviews-saved th {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    #reviews-saved tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    #reviews-saved tr:hover {
+        background-color: #ddd;
+    }
+
+    #reviews-saved th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #4CAF50;
+        color: white;
+    }
+
+img{
+    height: 100px;
+    width: 100px;
+}

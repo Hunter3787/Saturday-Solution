@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AutoBuildApp.Models\AutoBuildApp.Models.csproj" />
+    <ProjectReference Include="..\AutoBuildApp.DataAccess\AutoBuildApp.DataAccess.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove=".DS_Store" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="FactoryServices\" />
+    <Folder Include="UserServices\" />
+    <Folder Include="RecommendatIonServices\" />
+  </ItemGroup>
+</Project>
