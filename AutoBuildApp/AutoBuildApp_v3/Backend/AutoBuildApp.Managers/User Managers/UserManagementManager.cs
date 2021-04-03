@@ -100,11 +100,12 @@
 
 //        public bool IsInformationValid(UpdateUserDTO user)
 //        {
-//            if(!String.IsNullOrEmpty(user.UserEmail))
+//            if (!String.IsNullOrEmpty(user.UserEmail))
 //            {
 //                return ValidEmail(user.UserEmail);
 //            }
-//            else if(!String.IsNullOrEmpty(user.UserName)) {
+//            else if (!String.IsNullOrEmpty(user.UserName))
+//            {
 //                return ValidUserName(user.UserName);
 //            }
 //            return true;

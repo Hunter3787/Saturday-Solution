@@ -9,6 +9,7 @@ namespace AutoBuildApp.DataAccess
     {
         public RecommendationDAO()
         {
+
         }
     }
 }

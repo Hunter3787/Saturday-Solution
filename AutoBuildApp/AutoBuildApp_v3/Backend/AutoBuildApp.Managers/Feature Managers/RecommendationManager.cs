@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Enumerations;
-using AutoBuildApp.Models.Products;
 using AutoBuildApp.Services.FactoryServices;
 using AutoBuildApp.Services.RecommendationServices;
 
@@ -84,7 +83,7 @@ namespace AutoBuildApp.Managers
             if ( principal < MIN_BUDGET || hddCount < MIN_INTEGER_VALUE )
                 return null;
 
-            var budget = principal;
+            double budget = principal;
             // Buid factor passses type and returns a specific build.
             IBuild build = BuildFactory.CreateBuild(buildType);
 
@@ -112,12 +111,15 @@ namespace AutoBuildApp.Managers
             {
                 // Create component list using service. 
                 var compList = CreateICompListService.CreateComponentList(build);
-                var budgetedList = BudgetPortionService.BudgetComponents(compList,buildType, budget);
+                var budgetedList =
+                    BudgetPortionService.BudgetComponents(compList, buildType, budget);
 
                 // Get elements from DB by using the budgeted List
 
                 // 
 
+
+                
 
                 return null;
             }
@@ -151,10 +153,6 @@ namespace AutoBuildApp.Managers
         #endregion
 
         #region "Private Methods"
-        private void RemoveOverBudgetItems()
-        {
-
-        }
 
         private void ScoreComponent()
         {
