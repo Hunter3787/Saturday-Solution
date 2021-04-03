@@ -51,12 +51,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoBuildApp.DataAccess.Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoBuildApp.Reviews.Apis", "AutoBuildApp.Reviews.Apis\AutoBuildApp.Reviews.Apis.csproj", "{C71BA827-94B6-4201-AD2D-ADD6378C451B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoBuildApp.ConsoleApp", "AutoBuildApp.ConsoleApp\AutoBuildApp.ConsoleApp.csproj", "{46DD329C-4EBD-41A9-B4AD-D904584AF2FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoBuildApp.ConsoleApp", "AutoBuildApp.ConsoleApp\AutoBuildApp.ConsoleApp.csproj", "{46DD329C-4EBD-41A9-B4AD-D904584AF2FC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Queries", "Queries", "{4708FC6F-3262-40EF-A08E-ED167EBBF131}"
 	ProjectSection(SolutionItems) = preProject
 		..\..\..\..\..\..\Desktop\Async Logging\backend\LogQuery.sql = ..\..\..\..\..\..\Desktop\Async Logging\backend\LogQuery.sql
 		..\..\..\..\..\..\Desktop\Async Logging\backend\ReviewQuery.sql = ..\..\..\..\..\..\Desktop\Async Logging\backend\ReviewQuery.sql
+		..\..\..\..\..\MSSQL_1433\schemeToSecurityIntegration\SQLQuerySecurityProcedures.sql = ..\..\..\..\..\MSSQL_1433\schemeToSecurityIntegration\SQLQuerySecurityProcedures.sql
 	EndProjectSection
 EndProject
 Global
