@@ -6,9 +6,9 @@ namespace AutoBuildApp.Models.Enumerations
 {
     public enum BuildType
     {
-        GraphicArtist,
-        Gaming,
-        WordProcessing,
-        None
+        GraphicArtist = 1,
+        Gaming = 2,
+        WordProcessing = 3,
+        None = 0
     }
 }

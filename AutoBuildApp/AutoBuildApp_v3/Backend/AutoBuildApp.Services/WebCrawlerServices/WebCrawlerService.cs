@@ -36,9 +36,9 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             allProxies = getAllProxies(PROXY_WEBSITE, PROXY_WEBSITE_XPATH);
             currentProxy = allProxies[0];
         }
-        public void testService()
+        public void testService(Product product)
         {
-            webCrawlerDAO.test();
+            webCrawlerDAO.PostProductToDatabase(product);
         }
 
         public WebCrawlerService(string connectionString, List<String> listOfLinks)
@@ -54,11 +54,9 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             int pageNumber = 1;
             for (int i = 0; i < NUMBER_OF_PAGES_TO_CRAWL; i++)
             {
-                string html = getHtml(url);
-                htmlDocument.LoadHtml(html);
+                htmlDocument.LoadHtml(getHtml(url));
                 var links = htmlDocument.DocumentNode.QuerySelectorAll(querySelectorString);
-                // Somet
-                if (links == null || !links.Any())
+                if (!links.Any())
                 {
                     rotateProxy();
                     i--;
@@ -82,37 +80,55 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             return allHrefLinks;
         }
 
-        public void getAllInformationFromPage(string url, string titleQuerySelector, string priceQuerySelector, string availabilityQuerySelector, string specsKeysQuerySelector,
+        public void getAllInformationFromPage(string url, string companyName, string productType, string titleQuerySelector, string priceQuerySelector, string availabilityQuerySelector, string specsKeysQuerySelector,
                                                 string specsValuesQuerySelector, string reviewerNameQuerySelector, string reviewDateQuerySelector,
-                                                string ratingsContentQuerySelector, string avgStarRatingQuerySelector, string totalRatingsQuerySelector, string addToCartText)
+                                                string ratingsContentQuerySelector, string addToCartText)
         {
             bool x = true;
             while (x)
             {
-
                 //TODO individual star rating
                 htmlDocument.LoadHtml(getHtml(url));
-                var title = htmlDocument.DocumentNode.QuerySelector(titleQuerySelector).InnerHtml;
+                var title = htmlDocument.DocumentNode.QuerySelector(titleQuerySelector);
                 var price = htmlDocument.DocumentNode.QuerySelector(priceQuerySelector);
-                if (price == null)
-                {
-                    Console.WriteLine("no price");
-                }
-                else
-                {
-                    Console.WriteLine(price.InnerText);
-                }
                 var specsKeys = htmlDocument.DocumentNode.QuerySelectorAll(specsKeysQuerySelector);
                 var specsValues = htmlDocument.DocumentNode.QuerySelectorAll(specsValuesQuerySelector);
                 var ratingsReviewerName = htmlDocument.DocumentNode.QuerySelectorAll(reviewerNameQuerySelector);
                 var ratingsDate = htmlDocument.DocumentNode.QuerySelectorAll(reviewDateQuerySelector);
                 var ratingsContent = htmlDocument.DocumentNode.QuerySelectorAll(ratingsContentQuerySelector);
-                //var avgStarRating = htmlDocument.DocumentNode.QuerySelectorAll(avgStarRatingQuerySelector);
-                var totalNumberOfRatings = htmlDocument.DocumentNode.QuerySelectorAll(totalRatingsQuerySelector);
+
+                // if any of these variables are empty, then we know something went wrong with the html read. Most likely, the proxy was flagged and thus the page was a catcha page.
+                if (!specsKeys.Any() || !specsValues.Any() || !ratingsReviewerName.Any() || !ratingsDate.Any() || !ratingsContent.Any())
+                {
+                    rotateProxy();
+                    continue;
+                }
+
+                Dictionary<string, string> specsDictionary = new Dictionary<string, string>();
+                int keyCount = specsKeys.Count();
+                int modelNumberIndex = 0;
+                int brandIndex = 0;
+                for (int i = 0; i < keyCount; i++)
+                {
+                    string key = specsKeys.ElementAt(i).InnerText;
+                    string value = specsKeys.ElementAt(i).InnerText;
+                    if (key.ToLower().Contains("model"))
+                    {
+                        modelNumberIndex = i;
+                    }
+                    if (key.ToLower().Contains("brand"))
+                    {
+                        brandIndex = i;
+                    }
+                    specsDictionary.Add(specsKeys.ElementAt(i).InnerText, specsValues.ElementAt(i).InnerText);
+                }
 
 
-                //Console.Write(avgStarRating.Split(' ')[0]);
-
+                //create product
+                Product product = new Product(price != null, companyName, url, specsValues.ElementAt(modelNumberIndex).InnerText.Trim(), title.InnerText.Trim(), productType, specsValues.ElementAt(brandIndex).InnerText.Trim(), specsDictionary);
+                webCrawlerDAO.PostProductToDatabase(product);
+                //add attributes
+                 
 
                 // new egg good
                 //var availability = htmlDocument.DocumentNode.QuerySelectorAll(availabilityQuerySelector);
@@ -222,7 +238,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                 try
                 {
                     HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                    request.Timeout = 1000;
+                    request.Timeout = 2000;
                     request.Proxy = (currentProxy == null) ? null : new WebProxy(currentProxy.IPAddress, currentProxy.Port);
                     //request.Proxy = new WebProxy("168.119.137.56", 3128);
                     //request.Proxy = new WebProxy("122.49.77.175", 3128);
@@ -262,10 +278,10 @@ namespace AutoBuildApp.Services.WebCrawlerServices
 
             foreach (var link in links)
             {
-                if (link.ChildNodes[3].InnerHtml == "United States")
-                {
+                //if (link.ChildNodes[3].InnerHtml == "United States")
+                //{
                     proxies.Add(new Proxy(link.ChildNodes[0].InnerHtml, Int32.Parse(link.ChildNodes[1].InnerHtml), link.ChildNodes[3].InnerHtml));
-                }
+                //}
             }
             return proxies;
         }
@@ -275,12 +291,17 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             if (allProxies != null)
             {
                 Console.WriteLine("total proxies remaining = " + allProxies.Count);
-                if (allProxies.Count == 1)
+                allProxies.Remove(currentProxy);
+
+                if (allProxies.Count == 10)
                 {
+                    // use my proxy to give a better chance at successfully getting all proxies.
+                    currentProxy = null;
                     allProxies.AddRange(getAllProxies(PROXY_WEBSITE, PROXY_WEBSITE_XPATH));
                 }
-                allProxies.Remove(currentProxy);
                 currentProxy = allProxies[0];
+
+
             }
 
         }
