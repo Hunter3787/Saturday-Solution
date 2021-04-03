@@ -2,9 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Cors;
 using AutoBuildApp.Managers;
-using AutoBuildApp.Models.Enumerations;
-using AutoBuildApp.Models.Interfaces;
-using System.Collections.Generic;
+using AutoBuildApp.DomainModels;
 
 /**
 * AutoBuild Recommendation Tool Controller.
@@ -20,6 +18,7 @@ namespace AutoBuildApp.Controllers
     [EnableCors("CorsPolicy")]
     public class RecommendationController : ControllerBase
     {
+        private readonly string _connectionString = "Server = localhost; Database = DB; Trusted_Connection = True;";
 
         /// <summary>
         /// Get a full build recommendation from the system.
@@ -32,27 +31,17 @@ namespace AutoBuildApp.Controllers
         /// <param name="hardDriveCount"></param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult GetFullBuildRecommend(BuildType build,
-            double initial, List<IComponent> peripherals, PSUModularity psuType,
-                HardDriveType hardDriveType, int hardDriveCount)
+        public IActionResult GetFullBuildRecommend(UserRequestParameters requests)
         {
-            RecommendationManager manager = new RecommendationManager();
+            RecommendationManager manager = new RecommendationManager(_connectionString);
 
-            var builds = manager.RecommendBuilds(build, initial, peripherals,
-                psuType, hardDriveType, hardDriveCount);
+            var builds = manager.RecommendBuilds(requests.Build, requests.Budget,
+                requests.List,requests.Psu, requests.HddType, requests.HddCount);
 
-            if (builds != null)
+            if (builds == null)
                 return Ok(builds);
 
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
-        }
-
-
-        [HttpPost]
-        public IActionResult GetUpgradeRecommendation()
-        {
-
-            return Ok();
         }
     }
 }

@@ -2,6 +2,7 @@
 using AutoBuildApp.Models.Enumerations;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
+using System;
 /**
 * This Data Access Object will handle collection and transformation of 
 * infromation coming from the database to be usable inside the Builder.
@@ -28,37 +29,45 @@ namespace AutoBuildApp.DataAccess
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public Dictionary<ProductType, List<IComponent>> GetBudgetedList(List<IComponent> input)
+        public Dictionary<ProductType, List<IComponent>>
+            GetComponentDictionary(List<IComponent> input)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
+                Dictionary<ProductType, List<IComponent>> output = new();
 
                 using( var command = new SqlCommand())
                 {
+                    command.Transaction = connection.BeginTransaction();
+                    command.Connection = connection;
+                    command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
 
-                    using (SqlDataReader reader = command.ExecuteReader()){
+                    // send query
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
                         while (reader.Read())
                         {
 
                         }
                     }
                     command.ExecuteNonQuery();
-
                     command.Transaction.Commit();
 
-                    return null;
                 }
+
+
+
+                Dictionary<ProductType, double> querystuff =
+                    new Dictionary<ProductType, double>();
+
+                foreach (var item in input)
+                    querystuff.Add(item.ProductType, item.Budget);
+
+
+                return output;
             }
-
-
-                //Dictionary<ProductType, double> querystuff =
-                //    new Dictionary<ProductType, double>();
-
-            //foreach (var item in input)
-            //    querystuff.Add(item.ProductType, item.Budget);
-
-
         }
     }
 }

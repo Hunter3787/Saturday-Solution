@@ -7,6 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AutoBuildApp.Models\AutoBuildApp.Models.csproj" />
     <ProjectReference Include="..\AutoBuildApp.Security\AutoBuildApp.Security.csproj" />
+    <ProjectReference Include="..\AutoBuildApp.DomainModels\AutoBuildApp.DomainModels.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Remove=".DS_Store" />

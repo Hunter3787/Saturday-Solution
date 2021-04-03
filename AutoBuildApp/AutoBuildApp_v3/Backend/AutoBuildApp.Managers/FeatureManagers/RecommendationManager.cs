@@ -4,6 +4,7 @@ using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Services.FactoryServices;
 using AutoBuildApp.Services.RecommendationServices;
+using AutoBuildApp.DataAccess;
 
 /**
  * Recommendation Manager includes business logic
@@ -23,6 +24,7 @@ namespace AutoBuildApp.Managers
         public readonly double MIN_BUDGET = 0.0;
         public readonly int MIN_INDEX = 0;
         public readonly int MIN_INTEGER_VALUE = 0;
+        private readonly string _connectionString;
 
         #region "Constructors"
         /// <summary>
@@ -30,6 +32,15 @@ namespace AutoBuildApp.Managers
         /// </summary>
         public RecommendationManager()
         {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="_connectionString"></param>
+        public RecommendationManager(string connectionString)
+        {
+            _connectionString = connectionString;
         }
         #endregion
 
@@ -88,12 +99,10 @@ namespace AutoBuildApp.Managers
                 var budgetedList =
                     BudgetPortionService.BudgetComponents(compList, buildType, budget);
 
-                // Get elements from DB by using the budgeted List
-
-                // 
+                RecommendationDAO dao = new RecommendationDAO(_connectionString);
 
 
-                
+                // recieve elements, for loop passing each component and return an int.
 
                 return null;
             }
