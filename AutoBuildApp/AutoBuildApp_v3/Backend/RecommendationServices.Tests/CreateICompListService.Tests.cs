@@ -5,7 +5,7 @@ using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Products;
 using System.Collections.Generic;
 using AutoBuildApp.Services.FactoryServices;
-using AutoBuildApp.Services.RecommendatIonServices;
+using AutoBuildApp.Services.RecommendationServices;
 
 /**
  * Create IComponent List Service tests.

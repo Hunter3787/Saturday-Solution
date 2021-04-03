@@ -7,7 +7,7 @@ using AutoBuildApp.Models.Interfaces;
  * Null elements will not be added to the IComponent list.
  * @Author Nick Marshall-Eminger
  */
-namespace AutoBuildApp.Services.RecommendatIonServices
+namespace AutoBuildApp.Services.RecommendationServices
 {
     /// <summary>
     /// Static class service that takes in a build to return a components list.

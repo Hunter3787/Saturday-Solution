@@ -10,41 +10,40 @@ using AutoBuildApp.Models.Enumerations;
  * components.
  * @Author Nick Marshall-Eminger
  */
-namespace AutoBuildApp.Services.RecommendatIonServices
+namespace AutoBuildApp.Services.RecommendationServices
 {
     public class ComponentScoringService
     {
         public readonly int BONUS_VALUE = 100;
         public readonly double[] GAMING_GPU_WEIGHTS = { -1.75, 1.1, 1.3, 1.1, 1.15, -1.4 };
-        public readonly double[] GAMING_CPU_WEIGHTS = { -1.75 };
-        public readonly double[] GAMING_PSU_WEIGHTS = { -1.75 };
-        public readonly double[] GAMING_RAM_WEIGHTS = { -1.75 };
-        public readonly double[] GAMING_CASE_WEIGHTS = { -1.75 };
-        public readonly double[] GAMING_COOLER_WEIGHTS = { -1.75 };
-        public readonly double[] GAMING_MONITOR_WEIGHTS = { -1.75 };
-        public readonly double[] GAMING_MOTHERBOARD_WEIGHTS = { -1.75 };
-        public readonly double[] GAMING_HARDDRIVE_WEIGHTS = { -1.75, 2 };
+        public readonly double[] GAMING_CPU_WEIGHTS = { -1.75, 1.5, -1.3 };
+        public readonly double[] GAMING_PSU_WEIGHTS = { -1.75, 1.4 };
+        public readonly double[] GAMING_RAM_WEIGHTS = { -1.75, 1.3, -2 };
+        public readonly double[] GAMING_CASE_WEIGHTS = { -1.75, 1, 1 };
+        public readonly double[] GAMING_COOLER_WEIGHTS = { -1.75, 1.3, 1 };
+        //public readonly double[] GAMING_MONITOR_WEIGHTS = { -1.75 };
+        public readonly double[] GAMING_MOTHERBOARD_WEIGHTS = { -1.75, 2 };
+        public readonly double[] GAMING_HARDDRIVE_WEIGHTS = { -1.75, 2, 1.1 };
 
+        public readonly double[] ARTIST_GPU_WEIGHTS = { -1.75, 1.3, 1.1, 1.1, 1.15, -1.4 };
+        public readonly double[] ARTIST_CPU_WEIGHTS = { -1.75, 1.6 , -1.3 };
+        public readonly double[] ARTIST_PSU_WEIGHTS = { -1.75, 1.4 };
+        public readonly double[] ARTIST_RAM_WEIGHTS = { -1.75, 1.3, -1.2 };
+        public readonly double[] ARTIST_CASE_WEIGHTS = { -1.75, 1, 1.2 };
+        public readonly double[] ARTIST_COOLER_WEIGHTS = { -1.75, 1.2, -1.1 };
+        //public readonly double[] ARTIST_MONITOR_WEIGHTS = { -1.75 };
+        public readonly double[] ARTIST_MOTHERBOARD_WEIGHTS = { -1.75, 2 };
+        public readonly double[] ARTIST_HARDDRIVE_WEIGHTS = { -1.75, 2, 2 };
 
-        public readonly double[] ARTIST_GPU_WEIGHTS = { -1.75 };
-        public readonly double[] ARTIST_CPU_WEIGHTS = { -1.75 };
-        public readonly double[] ARTIST_PSU_WEIGHTS = { -1.75 };
-        public readonly double[] ARTIST_RAM_WEIGHTS = { -1.75 };
-        public readonly double[] ARTIST_CASE_WEIGHTS = { -1.75 };
-        public readonly double[] ARTIST_COOLER_WEIGHTS = { -1.75 };
-        public readonly double[] ARTIST_MONITOR_WEIGHTS = { -1.75 };
-        public readonly double[] ARTIST_MOTHERBOARD_WEIGHTS = { -1.75 };
-        public readonly double[] ARTIST_HARDDRIVE_WEIGHTS = { -1.75, 2 };
-
-        public readonly double[] WORK_GPU_WEIGHTS = { -1.75 };
-        public readonly double[] WORK_CPU_WEIGHTS = { -1.75 };
-        public readonly double[] WORK_PSU_WEIGHTS = { -1.75 };
-        public readonly double[] WORK_RAM_WEIGHTS = { -1.75 };
-        public readonly double[] WORK_CASE_WEIGHTS = { -1.75 };
-        public readonly double[] WORK_COOLER_WEIGHTS = { -1.75 };
-        public readonly double[] WORK_MONITOR_WEIGHTS = {-1.75 };
-        public readonly double[] WORK_MOTHERBOARD_WEIGHTS = { -1.75 };
-        public readonly double[] WORK_HARDDRIVE_WEIGHTS = { -1.75, 2 };
+        public readonly double[] WORK_GPU_WEIGHTS = { -1.75, 1.1, 1, .8, 1, -1.5};
+        public readonly double[] WORK_CPU_WEIGHTS = { -1.75, 1.5, -1.5};
+        public readonly double[] WORK_PSU_WEIGHTS = { -1.75, 1 };
+        public readonly double[] WORK_RAM_WEIGHTS = { -1.75, 1.4, -1 };
+        public readonly double[] WORK_CASE_WEIGHTS = { -1.75, .8, 1.2 };
+        public readonly double[] WORK_COOLER_WEIGHTS = { -1.75, .8, -1.2 };
+        //public readonly double[] WORK_MONITOR_WEIGHTS = {-1.75 };
+        public readonly double[] WORK_MOTHERBOARD_WEIGHTS = { -1.75, 2 };
+        public readonly double[] WORK_HARDDRIVE_WEIGHTS = { -1.75, 2, 1 };
 
         public ComponentScoringService()
         {
@@ -100,7 +99,6 @@ namespace AutoBuildApp.Services.RecommendatIonServices
         }
 
         #region "Private Overload Methods"
-        // 6 Elements
         /// <summary>
         /// Overloaded methods that take in a product and build type
         /// to determine a score based off of stat weights. 
@@ -170,7 +168,6 @@ namespace AutoBuildApp.Services.RecommendatIonServices
             return (int)Math.Round(scoreTotal, MidpointRounding.AwayFromZero);
         }
 
-        // 3 Elements
         private int OverloadedScore(CPU input, BuildType type)
         {
             if (input.Price == 0 || input.CoreCount == 0 || input.CoreClock == null ||
@@ -217,7 +214,6 @@ namespace AutoBuildApp.Services.RecommendatIonServices
             return (int)Math.Round(scoreTotal, MidpointRounding.AwayFromZero);
         }
 
-        // 2 Elements
         private int OverloadedScore(PowerSupplyUnit input, BuildType type)
         {
             if (input.Price == 0 || input.Wattage == 0 || input.EfficiencyRating == null)
@@ -262,7 +258,6 @@ namespace AutoBuildApp.Services.RecommendatIonServices
             return (int)Math.Round(scoreTotal, MidpointRounding.AwayFromZero);
         }
 
-        // 4 elements
         private int OverloadedScore(RAM input, BuildType type)
         {
             if (input.Price == 0 || input.NumOfModules == 0 || input.ModuleSize == 0
@@ -281,21 +276,18 @@ namespace AutoBuildApp.Services.RecommendatIonServices
             {
                 case BuildType.GraphicArtist:
                     scoreTotal = price * ARTIST_RAM_WEIGHTS[0] +
-                        moduleSize / firstWord * ARTIST_RAM_WEIGHTS[1] +
-                        numOfModules * ARTIST_RAM_WEIGHTS[2] +
-                        casLat * ARTIST_RAM_WEIGHTS[3];
+                        numOfModules * moduleSize / firstWord * ARTIST_RAM_WEIGHTS[1] +
+                        casLat * ARTIST_RAM_WEIGHTS[2];
                     break;
                 case BuildType.WordProcessing:
                     scoreTotal = price * WORK_RAM_WEIGHTS[0] +
-                        moduleSize / firstWord * WORK_RAM_WEIGHTS[1] +
-                        numOfModules * WORK_RAM_WEIGHTS[2] +
-                        casLat * WORK_RAM_WEIGHTS[3];
+                        numOfModules * moduleSize / firstWord * WORK_RAM_WEIGHTS[1] +
+                        casLat * WORK_RAM_WEIGHTS[2];
                     break;
                 case BuildType.Gaming:
                     scoreTotal = price * GAMING_RAM_WEIGHTS[0] +
-                        moduleSize / firstWord * GAMING_RAM_WEIGHTS[1] +
-                        numOfModules * GAMING_RAM_WEIGHTS[2] +
-                        casLat * ARTIST_RAM_WEIGHTS[3];
+                        numOfModules * moduleSize / firstWord * GAMING_RAM_WEIGHTS[1] +
+                        casLat * ARTIST_RAM_WEIGHTS[2];
                     break;
                 default:
                     break;
@@ -304,7 +296,6 @@ namespace AutoBuildApp.Services.RecommendatIonServices
             return (int)Math.Round(scoreTotal, MidpointRounding.AwayFromZero);
         }
 
-        // 3 Elements
         private int OverloadedScore(ComputerCase input, BuildType type)
         {
             if (input.Price == 0)
@@ -345,7 +336,6 @@ namespace AutoBuildApp.Services.RecommendatIonServices
             return (int)Math.Round(scoreTotal, MidpointRounding.AwayFromZero);
         }
 
-        // 2 elements
         private int OverloadedScore(ICooler input, BuildType type)
         {
             if (input.Price == 0 || input.FanRPM == null || input.NoiseVolume == null)
@@ -405,7 +395,6 @@ namespace AutoBuildApp.Services.RecommendatIonServices
         //    return (int)Math.Round(scoreTotal, MidpointRounding.AwayFromZero);
         //}
 
-        // 3 elements
         private int OverloadedScore(IHardDrive input, BuildType type)
         {
             if (input.Price == 0 || input.Capacity == null)
@@ -445,7 +434,6 @@ namespace AutoBuildApp.Services.RecommendatIonServices
             return (int)Math.Round(scoreTotal, MidpointRounding.AwayFromZero);
         }
 
-        // 2 Elements
         private int OverloadedScore(Motherboard input, BuildType type)
         {
             if(input.Price == 0 || input.Socket == null || input.MaxMemory == null ||

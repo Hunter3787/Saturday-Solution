@@ -4,12 +4,13 @@ using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Products;
 using AutoBuildApp.Services.FactoryServices;
-using AutoBuildApp.Services.RecommendatIonServices;
+using AutoBuildApp.Services.RecommendationServices;
 
-/** Recommendation Manager includes business logic
-*   and directs the recommendation process.
-*   @Author Nick Marshall-Eminger
-*/
+/**
+ * Recommendation Manager includes business logic
+ * and directs the recommendation process.
+ * @Author Nick Marshall-Eminger
+ */
 namespace AutoBuildApp.Managers
 {
     /// <summary>
@@ -101,7 +102,7 @@ namespace AutoBuildApp.Managers
             if (budget <= MIN_BUDGET && principal > MIN_BUDGET)
                 return null;
 
-            // Advanced settings. 
+            // Advanced settings to be implemented. 
             if (hddType != HardDriveType.None ||
                 hddCount > MIN_INTEGER_VALUE || psuType != PSUModularity.None)
             {
@@ -111,7 +112,11 @@ namespace AutoBuildApp.Managers
             {
                 // Create component list using service. 
                 var compList = CreateICompListService.CreateComponentList(build);
-                var budgetList = BudgetPortionService.BudgetComponents(compList, buildType, budget);
+                var budgetedList = BudgetPortionService.BudgetComponents(compList,buildType, budget);
+
+                // Get elements from DB by using the budgeted List
+
+                // 
 
 
                 return null;
