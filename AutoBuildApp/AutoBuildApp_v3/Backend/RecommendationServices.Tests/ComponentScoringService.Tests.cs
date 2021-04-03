@@ -1,5 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using AutoBuildApp.Services.RecommendatIonServices;
+using AutoBuildApp.Services.RecommendationServices;
 using AutoBuildApp.Models.Products;
 using AutoBuildApp.Models.Enumerations;
 using System;

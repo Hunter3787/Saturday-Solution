@@ -6,7 +6,7 @@ using AutoBuildApp.Models.Builds;
 using AutoBuildApp.Models.Products;
 using System.Collections.Generic;
 using AutoBuildApp.Services.FactoryServices;
-using AutoBuildApp.Services.RecommendatIonServices;
+using AutoBuildApp.Services.RecommendationServices;
 
 /**
  * Recommendation Manager Unit and integration Tests.

@@ -7,9 +7,9 @@ using AutoBuildApp.Services.FactoryServices;
 /**
  * The Budget Portion Service designed to portion out the total budget
  * to each component passed through in the IComponent list.
- * @Author Nick Marshall-Eminger
+ * @Author Nick Marshall-Eminger, assissted by Sirage El-jawhari.
  */
-namespace AutoBuildApp.Services.RecommendatIonServices
+namespace AutoBuildApp.Services.RecommendationServices
 {
     public static class BudgetPortionService
     {
@@ -27,23 +27,28 @@ namespace AutoBuildApp.Services.RecommendatIonServices
                 return null;
 
             double tempBudget;
-
             // If budget is not set price is no object.
             if (budget == 0)
                 tempBudget = MAX_BUDGET;
             else
                 tempBudget = budget;
-
             // Dictionary of key value pairs representing
             // the weights of each component.
-            var budgetWeight = KeyFactory.CreateKey(type);
+            var budgetWeights = KeyFactory.CreateKey(type);
+            // Initial key reiterated to allow for comparison
+            // when items are missing.
+            var inital = KeyFactory.CreateKey(type);
+            var outputList = input;
 
-            foreach (var test in budgetWeight.Keys)
+            foreach (var key in budgetWeights.Keys)
             {
                 bool found = false;
                 foreach (var part in input)
                 {
-                    if (part.ProductType == test)
+                    if (part == null)
+                        continue; 
+
+                    if (part.ProductType == key)
                     {
                         found = true;
                         break;
@@ -51,14 +56,24 @@ namespace AutoBuildApp.Services.RecommendatIonServices
                 }
 
                 if (!found)
-                    budgetWeight.Remove(test);
+                    budgetWeights.Remove(key);
             }
 
-            // Stuck
+            double remainingWeight = 0;
+            foreach (var key in budgetWeights.Keys)
+                remainingWeight += budgetWeights[key];
+
+            remainingWeight = Math.Round(remainingWeight, 2, MidpointRounding.AwayFromZero);
+
+            foreach(var component in outputList)
+            {
+                var t = component.ProductType;
+                component.Budget = (budgetWeights[t] / remainingWeight) * budget;
+
+            }
 
 
-
-            return null;
+            return outputList;
         }
     }
 }
