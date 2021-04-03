@@ -29,17 +29,15 @@ namespace AutoBuildApp.Security.Tests
 
         };
         // these are from JWT.io
-        private static string expectedJWTSignatureOne = "xZPE6hkhN8xfCqBvD2VZ69GtEz5OsVHYxMm0EgHnzUc";
-        private static string expectedJWTSignatureDefault = "peD4NAb8LE098RGdReDzpdX2Hpl731GPn2YsZmwtmpc";
-
+        private static string expectedJWTSignatureOne = "SZVVsDKPyk5BKSz7PgSQbxD7W9yCkMQsP-FpD61gs0k";
 
         private static IEnumerable<object[]> getJWTData()
         {
             return new List<object[]>()
             {
                 // here I instatiate objects that carry the secret key, the JWTHeader object and the JWTPayload object
-                new object[]{SecurityKey,_payloadOne, _headerDefault ,expectedJWTSignatureOne},
-                new object[]{SecurityKey,_payloadEmpty, _headerDefault, expectedJWTSignatureDefault}
+                new object[]{SecurityKey,_payloadOne, _headerDefault ,expectedJWTSignatureOne}
+                //new object[]{SecurityKey,_payloadEmpty, _headerDefault, expectedJWTSignatureDefault}
                 };
         }
 
@@ -51,10 +49,10 @@ namespace AutoBuildApp.Security.Tests
             //Arrange:
             JWT jwtGenerator = new JWT(secret, jWTPayload, jWTHeader);
             //Act:
-            jwtGenerator.GenerateJWTSignature();
+            string actualJWTSignature = jwtGenerator.GenerateJWTSignature();
             //Assert:
-            string actualJWTSignature = jwtGenerator.JWTSignature;
             Assert.AreEqual(expectedJWTSignature, actualJWTSignature);
+
 
         }
 
@@ -67,7 +65,7 @@ namespace AutoBuildApp.Security.Tests
             {
                 // here I instatiate objects that carry the secret key, the JWTHeader object and the JWTPayload object
                 new object[]{"Secret" , jWTPayloadNull,_headerDefault,"NULL OBJECT PROVIDED"},
-                new object[]{"Sercret",_payloadEmpty,  jWTHeaderNull, "NULL OBJECT PROVIDED"},
+                new object[]{"Secret",_payloadEmpty,  jWTHeaderNull, "NULL OBJECT PROVIDED"},
                 new object[]{null, jWTPayloadNull,  jWTHeaderNull, "NULL OBJECT PROVIDED"}
 
             };
