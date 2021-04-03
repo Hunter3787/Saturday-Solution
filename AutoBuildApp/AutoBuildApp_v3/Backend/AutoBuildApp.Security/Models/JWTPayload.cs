@@ -34,11 +34,6 @@ namespace AutoBuildApp.Security.Models
             try
             {
 
-                if (    subject == null      || issuer == null
-                || audience == null     || username == null
-                || expiration == null   || nbf == null
-                || DOBofJWTToken == null)
-         
 
                 this.sub = subject; // in our context "Autobuild User"
                 this.iss = issuer; // in our context "Autobuild"
