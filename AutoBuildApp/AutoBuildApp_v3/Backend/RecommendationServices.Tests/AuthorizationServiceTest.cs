@@ -8,6 +8,7 @@ using System.Threading;
 
 namespace AutoBuildApp.Services.Tests
 {
+    [TestClass]
     public class AuthorizationServiceTest
     {
 
