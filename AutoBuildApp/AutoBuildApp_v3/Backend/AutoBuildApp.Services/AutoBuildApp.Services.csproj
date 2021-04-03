@@ -1,12 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AutoBuildApp.DomainModels\AutoBuildApp.DomainModels.csproj" />
     <ProjectReference Include="..\AutoBuildApp.Models\AutoBuildApp.Models.csproj" />
     <ProjectReference Include="..\AutoBuildApp.DataAccess\AutoBuildApp.DataAccess.csproj" />
+    
   </ItemGroup>
   <ItemGroup>
     <None Remove=".DS_Store" />
@@ -15,5 +17,11 @@
     <Folder Include="FactoryServices\" />
     <Folder Include="UserServices\" />
     <Folder Include="RecommendatIonServices\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Apache.NMS" Version="1.8.0" />
+    <PackageReference Include="Apache.NMS.ActiveMQ" Version="1.8.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 </Project>

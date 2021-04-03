@@ -10,14 +10,15 @@ entityId int NOT NULL IDENTITY(0030000,2), -- PRIMARY KEY,
 username Varchar(50),
 message TEXT, -- 
 star int,
-imagepath VARBINARY(MAX),
-datetime Varchar(50),
+imagebuffer VARBINARY(MAX),
+filepath VARCHAR(50),
+datetime VARCHAR(50),
 
 -- primary key
 CONSTRAINT reviews_PK PRIMARY KEY(entityId),
 
 );
 
-INSERT INTO reviews(username, message, star, imagepath, datetime) VALUES ('Serge','THIS IS A TEST', '5',CAST(null AS VARBINARY(MAX)),'2019');
+INSERT INTO reviews(username, message, star, imagebuffer, filepath, datetime) VALUES ('Serge','THIS IS A TEST', '5',CAST(null AS VARBINARY(MAX)), 'test','2019');
 
 select * from reviews;

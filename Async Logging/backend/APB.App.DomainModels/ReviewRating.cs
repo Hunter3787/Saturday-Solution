@@ -35,6 +35,8 @@ namespace APB.App.DomainModels
             set { _filePath = value; }
         }
 
+        public string ImagePath { get; set; }
+
         /// <summary>
         /// This method is the customized getter and setter for the image picture variable.
         /// </summary>

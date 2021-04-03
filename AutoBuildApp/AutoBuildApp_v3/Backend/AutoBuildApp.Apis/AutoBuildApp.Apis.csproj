@@ -6,21 +6,9 @@
 
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Apis' " />
+
+
   <ItemGroup>
-    <ProjectReference Include="..\AutoBuildApp.Managers\AutoBuildApp.Managers.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
-    <ProjectReference Include="..\AutoBuildApp.Models\AutoBuildApp.Models.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Remove="wwwroot\index.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="wwwroot\index.html" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
   </ItemGroup>
 </Project>
