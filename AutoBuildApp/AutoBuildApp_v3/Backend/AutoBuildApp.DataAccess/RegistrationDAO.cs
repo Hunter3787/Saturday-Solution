@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using AutoBuildApp.Models.Users;
+using System;
 using System.Data;
-using System.Text;
-using AutoBuildApp.Models;
-using Microsoft.Data.SqlClient;
-using Microsoft.Data.Sqlite;
+using System.Data.SqlClient;
 
 namespace AutoBuildApp.DataAccess
 {
