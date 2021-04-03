@@ -35,7 +35,6 @@ namespace AutoBuildApp.DataAccess
                         adapter.InsertCommand.Parameters.Add("@MANUFACTURERNAME", SqlDbType.VarChar).Value = product.ManufacturerName;
 
                         adapter.InsertCommand.ExecuteNonQuery();
-
                         transaction.Commit();
                         Console.WriteLine("done");
 
