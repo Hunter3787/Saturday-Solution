@@ -50,10 +50,10 @@ namespace APB.App.DataAccess
 
                     // Stored the query that will be used for insertion. This is an insertion statement.
                     command.CommandText =
-                        "INSERT INTO reviews(username, message, star, imagepath, datetime)" +
-                        "SELECT @v0, @v1, @v2, @v3, @v4";
+                        "INSERT INTO reviews(username, message, star, imagebuffer, filepath, datetime)" +
+                        "SELECT @v0, @v1, @v2, @v3, @v4, @v5";
 
-                    var parameters = new SqlParameter[5]; // initialize 5 parameters to be read through incrementally.
+                    var parameters = new SqlParameter[6]; // initialize 5 parameters to be read through incrementally.
                     parameters[0] = new SqlParameter("@v0", reviewRatingEntity.Username); // first parameter: string username
                     parameters[1] = new SqlParameter("@v1", reviewRatingEntity.Message); // string message.
                     parameters[2] = new SqlParameter("@v2", reviewRatingEntity.StarRatingValue); // integer star rating value.
@@ -69,7 +69,8 @@ namespace APB.App.DataAccess
                         parameters[3] = new SqlParameter("@v3", SqlDbType.VarBinary, -1);
                         parameters[3].Value = DBNull.Value;
                     }
-                    parameters[4] = new SqlParameter("@v4", reviewRatingEntity.DateTime); // string dateTime.
+                    parameters[4] = new SqlParameter("@v4", reviewRatingEntity.FilePath);
+                    parameters[5] = new SqlParameter("@v5", reviewRatingEntity.DateTime); // string dateTime.
 
                     // This will add the range of parameters to the parameters that will be used in the query.
                     command.Parameters.AddRange(parameters);
@@ -183,8 +184,9 @@ namespace APB.App.DataAccess
                             // checks if the image path is not null, if not it will return the imagepath, if not null then it wont.
                             if(reader["imagepath"] != DBNull.Value)
                             {
-                                reviewRatingEntity.ImageBuffer = (byte[])reader["imagepath"];
+                                reviewRatingEntity.ImageBuffer = (byte[])reader["imagebuffer"];
                             }
+                            reviewRatingEntity.FilePath = (string)reader["filepath"];
                             // store the datetime as a string in DateTime.
                             reviewRatingEntity.DateTime = (string)reader["datetime"];
                         }
@@ -296,10 +298,11 @@ namespace APB.App.DataAccess
                             reviewRatingEntity.StarRatingValue = (int)reader["star"]; // store the star value int as an int in StarRatingValue.
 
                             // checks if the image path is not null, if not it will return the imagepath, if not null then it wont.
-                            if (reader["imagepath"] != DBNull.Value)
+                            if (reader["imagebuffer"] != DBNull.Value)
                             {
-                                reviewRatingEntity.ImageBuffer = (byte[])reader["imagepath"];
+                                reviewRatingEntity.ImageBuffer = (byte[])reader["imagebuffer"];
                             }
+                            reviewRatingEntity.FilePath = (string)reader["filepath"];
                             reviewRatingEntity.DateTime = (string)reader["datetime"];
 
                             reviewRatingEntityList.Add(reviewRatingEntity); // adds the entity object, with retrieved data to the list.
@@ -443,10 +446,10 @@ namespace APB.App.DataAccess
                     // Stored the query that will be used to edit a review WHERE the ids match and replacing values via the SET command.
                     command.CommandText =
                         "UPDATE reviews " +
-                        "SET star=@v0, message=@v1, imagepath=@v2 " +
-                        "WHERE entityId = @v3";
+                        "SET star=@v0, message=@v1, imagebuffer=@v2, filepath=@v3 " +
+                        "WHERE entityId = @v4";
 
-                    var parameters = new SqlParameter[4]; // initialize four parameters to be sent through.
+                    var parameters = new SqlParameter[5]; // initialize four parameters to be sent through.
                     parameters[0] = new SqlParameter("@v0", reviewRatingEntity.StarRatingValue); // send the star value to be replaced.
                     parameters[1] = new SqlParameter("@v1", reviewRatingEntity.Message); // send the message that will be used to replace.
 
@@ -460,7 +463,8 @@ namespace APB.App.DataAccess
                         parameters[2] = new SqlParameter("@v2", SqlDbType.VarBinary, -1);
                         parameters[2].Value = DBNull.Value;
                     }
-                    parameters[3] = new SqlParameter("@v3", reviewRatingEntity.EntityId);
+                    parameters[3] = new SqlParameter("@v3", reviewRatingEntity.FilePath);
+                    parameters[4] = new SqlParameter("@v4", reviewRatingEntity.EntityId);
 
                     // This will add the range of parameters to the parameters that will be used in the query.
                     command.Parameters.AddRange(parameters);

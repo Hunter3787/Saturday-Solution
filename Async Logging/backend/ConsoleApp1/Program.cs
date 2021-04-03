@@ -11,6 +11,12 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
+            ReviewRatingDAO reviewRatingDAO = new ReviewRatingDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            ReviewRatingService reviewRatingService = new ReviewRatingService(reviewRatingDAO);
+            ReviewRatingManager reviewRatingManager = new ReviewRatingManager(reviewRatingService);
+
+            reviewRatingManager.GetAllReviewsRatings();
+
             Console.WriteLine("Hello World");
 
             Console.Read();
