@@ -16,7 +16,8 @@ namespace AutoBuildApp.DataAccess
             this._connection = connectionString;
         }
 
-        public String Match(String userName, String password)
+        // check the database and see if the username and password is equal to what is input
+        public String MatchData(String userName, String password)
         {
             using (SqlConnection connection = new SqlConnection(this._connection))
             {

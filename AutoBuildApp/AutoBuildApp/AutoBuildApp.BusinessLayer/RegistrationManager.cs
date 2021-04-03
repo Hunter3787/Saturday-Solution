@@ -6,19 +6,18 @@ using System.Text;
 using AutoBuildApp.Models;
 using System.Linq;
 using BC = BCrypt.Net.BCrypt;
+using AutoBuildApp.DataAccess;
 
 namespace AutoBuildApp.BusinessLayer
 {
     public class RegistrationManager
     {
 
-        private RegistrationService _RegService;
+        private RegistrationDAO _RegistrationDAO;
 
-        private String _cnnctString;
         public RegistrationManager(String _cnnctString)
         {
-            this._cnnctString = _cnnctString;
-            _RegService = new RegistrationService(_cnnctString);
+            _RegistrationDAO = new RegistrationDAO(_cnnctString);
         }
 
 
@@ -27,7 +26,7 @@ namespace AutoBuildApp.BusinessLayer
         // is the string empty
         // is the password of certain length -> min 8 char, upper and lower case REQUIRED, at least one digit
 
-
+        // check inputs, hash password
         public String RegisterUser(UserAccount user)
         {   
             if(!IsInformationValid(user))
@@ -35,19 +34,22 @@ namespace AutoBuildApp.BusinessLayer
                 return "Invalid Input!";
             }
             user.passHash = BC.HashPassword(user.passHash, BC.GenerateSalt());
-            return _RegService.IsRegistrationValid(user);
+            return _RegistrationDAO.CreateUserRecord(user);
         }
 
+        // checks email
         public bool ValidEmail(string email)
         {
             return email.Contains("@") && email.Contains(".") && !String.IsNullOrEmpty(email);
         }
 
+        // checks username
         public bool ValidUserName(string username)
         {
             return !String.IsNullOrEmpty(username) && username.Length >= 4 && username.Length <= 20;
         }
 
+        // checks password
         public bool IsPasswordValid(string password)
         {
             return !String.IsNullOrEmpty(password)
@@ -66,7 +68,5 @@ namespace AutoBuildApp.BusinessLayer
                 && !String.IsNullOrEmpty(user.LastName)
                 ;
         }
-
-
     }
 }
