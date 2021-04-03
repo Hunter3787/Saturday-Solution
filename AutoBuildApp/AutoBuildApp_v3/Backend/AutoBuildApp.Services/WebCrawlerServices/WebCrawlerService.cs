@@ -38,7 +38,6 @@ namespace AutoBuildApp.Services.WebCrawlerServices
         }
         public void testService()
         {
-            webCrawlerDAO.test();
         }
 
         public WebCrawlerService(string connectionString, List<String> listOfLinks)
@@ -82,11 +81,10 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             return allHrefLinks;
         }
 
-        public void getAllInformationFromPage(string url, string titleQuerySelector, string priceQuerySelector, string availabilityQuerySelector, string specsKeysQuerySelector,
+        public void getAllInformationFromPage(string url, string companyName, string productType, string titleQuerySelector, string priceQuerySelector, string availabilityQuerySelector, string specsKeysQuerySelector,
                                                 string specsValuesQuerySelector, string reviewerNameQuerySelector, string reviewDateQuerySelector,
                                                 string ratingsContentQuerySelector, string addToCartText)
         {
-            int y = 1;
             bool x = true;
             while (x)
             {
@@ -95,30 +93,42 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                 var title = htmlDocument.DocumentNode.QuerySelector(titleQuerySelector);
                 var price = htmlDocument.DocumentNode.QuerySelector(priceQuerySelector);
                 var specsKeys = htmlDocument.DocumentNode.QuerySelectorAll(specsKeysQuerySelector);
-                if (specsKeys == null || !specsKeys.Any())
-                {
-                    rotateProxy();
-                    continue;
-                }
-                title.InnerText.Trim();
                 var specsValues = htmlDocument.DocumentNode.QuerySelectorAll(specsValuesQuerySelector);
                 var ratingsReviewerName = htmlDocument.DocumentNode.QuerySelectorAll(reviewerNameQuerySelector);
                 var ratingsDate = htmlDocument.DocumentNode.QuerySelectorAll(reviewDateQuerySelector);
                 var ratingsContent = htmlDocument.DocumentNode.QuerySelectorAll(ratingsContentQuerySelector);
 
+                // if any of these variables are empty, then we know something went wrong with the html read. Most likely, the proxy was flagged and thus the page was a catcha page.
+                if (!specsKeys.Any() || !specsValues.Any() || !ratingsReviewerName.Any() || !ratingsDate.Any() || !ratingsContent.Any())
+                {
+                    rotateProxy();
+                    continue;
+                }
+
                 Dictionary<string, string> specsDictionary = new Dictionary<string, string>();
                 int keyCount = specsKeys.Count();
+                int modelNumberIndex = 0;
+                int brandIndex = 0;
                 for (int i = 0; i < keyCount; i++)
                 {
+                    string key = specsKeys.ElementAt(i).InnerText;
+                    string value = specsKeys.ElementAt(i).InnerText;
+                    if (key.ToLower().Contains("model"))
+                    {
+                        modelNumberIndex = i;
+                    }
+                    if (key.ToLower().Contains("brand"))
+                    {
+                        brandIndex = i;
+                    }
                     specsDictionary.Add(specsKeys.ElementAt(i).InnerText, specsValues.ElementAt(i).InnerText);
-
                 }
-                //Product product = new Product(url, getModelNumber();
-                //var avgStarRating = htmlDocument.DocumentNode.QuerySelectorAll(avgStarRatingQuerySelector);
-                //var totalNumberOfRatings = htmlDocument.DocumentNode.QuerySelectorAll(totalRatingsQuerySelector);
 
 
-                //Console.Write(avgStarRating.Split(' ')[0]);
+                //create product
+                Product product = new Product(price != null, companyName, url, specsValues.ElementAt(modelNumberIndex).InnerText, title.InnerText.Trim(), productType, specsValues.ElementAt(brandIndex).InnerText, specsDictionary);
+                webCrawlerDAO.PostProductToDatabase(product);
+                //add attributes
 
 
                 // new egg good
