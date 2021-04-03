@@ -158,8 +158,10 @@ namespace AutoBuildApp.Services
                             using (Image img = Image.FromStream(streamBitmap))
                             {
                                 // this will dynamically store the image based on usename and entity id for ease of access.
-                                string filePath = $"C:/Users/Serge/Code/GitHub/Saturday-Solution/AutoBuildApp/AutoBuildApp_v3/Backend/AutoBuildApp.Reviews.Apis/wwwroot/images/{reviewRatingEntity.Username}_{reviewRatingEntity.EntityId}.jpg";
-                                img.Save(filePath);
+                                string path = Directory.GetCurrentDirectory();
+                                string newPath = Path.GetFullPath(Path.Combine(path, $"wwwroot/images/{reviewRatingEntity.Username}_{reviewRatingEntity.EntityId}.jpg"));
+
+                                img.Save(newPath);
                                 reviewRatings.FilePath = $"images/{ reviewRatingEntity.Username}_{ reviewRatingEntity.EntityId}.jpg"; // file path that is accessible by the UI.
                                 //reviewRatings.FilePath = $"C:/Users/Serge/Code/GitHub/Saturday-Solution/Async Logging/backend/APB.App.Apis/wwwroot/images/{reviewRatingEntity.Username}_{reviewRatingEntity.EntityId}.jpg";
                             }
