@@ -41,7 +41,6 @@ namespace AutoBuildSecure.WebApi.Controllers
         {
             #region Variable Instantiations 
 
-
             _userPrinciple = new UserPrinciple();
             // assign the principle to the thread.
             Thread.CurrentPrincipal = _userPrinciple;
