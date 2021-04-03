@@ -60,6 +60,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Queries", "Queries", "{4708
 		..\..\..\..\..\MSSQL_1433\schemeToSecurityIntegration\SQLQuerySecurityProcedures.sql = ..\..\..\..\..\MSSQL_1433\schemeToSecurityIntegration\SQLQuerySecurityProcedures.sql
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoBuildApp.WebCrawlerApp", "WebCrawlerApp\AutoBuildApp.WebCrawlerApp.csproj", "{5B3501B3-5D16-4552-99F3-2E36F9C02C63}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -130,6 +132,10 @@ Global
 		{46DD329C-4EBD-41A9-B4AD-D904584AF2FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46DD329C-4EBD-41A9-B4AD-D904584AF2FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46DD329C-4EBD-41A9-B4AD-D904584AF2FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B3501B3-5D16-4552-99F3-2E36F9C02C63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B3501B3-5D16-4552-99F3-2E36F9C02C63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B3501B3-5D16-4552-99F3-2E36F9C02C63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B3501B3-5D16-4552-99F3-2E36F9C02C63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -152,6 +158,7 @@ Global
 		{C71BA827-94B6-4201-AD2D-ADD6378C451B} = {98226589-714B-4BAA-8B69-B54BD0FE5CA1}
 		{46DD329C-4EBD-41A9-B4AD-D904584AF2FC} = {98226589-714B-4BAA-8B69-B54BD0FE5CA1}
 		{4708FC6F-3262-40EF-A08E-ED167EBBF131} = {B856A8D9-9146-4455-873E-BFC95BFC4CC3}
+		{5B3501B3-5D16-4552-99F3-2E36F9C02C63} = {98226589-714B-4BAA-8B69-B54BD0FE5CA1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B8B2E261-6A44-42F8-9F54-8F8E133DFC4D}
