@@ -11,15 +11,15 @@ namespace WebCrawlerApp
         {
             List<string> newEggBlackList = new List<string>();
             newEggBlackList.Add("ComboDealDetails");
-            newEggBlackList.Add("/p/");
+            newEggBlackList.Add("newegg.com/p/");
 
             List<string> amazonBlackList = new List<string>();
             amazonBlackList.Add("picassoRedirect");
 
             WebCrawlerService wcs = new WebCrawlerService("Server = localhost; Database = DB; Trusted_Connection = True;");
 
-            List<string> allLinks = wcs.grabHrefLinksFromPage("https://www.newegg.com/Processors-Desktops/SubCategory/ID-343?Tid=7671", "Page-", ".item-cell .item-title", "", newEggBlackList);
-            for(int i = 0; i < allLinks.Count; i++)
+            List<string> allLinks = wcs.grabHrefLinksFromPage("https://www.newegg.com/Processors-Desktops/SubCategory/ID-343?Tid=7671", "Page-", ".item-cell:not(.width-100) .item-img", "", newEggBlackList);
+            for (int i = 0; i < allLinks.Count; i++)
             {
                 wcs.getAllInformationFromPage(allLinks[i], "new egg", "cpu", ".product-title", ".product-pane .price-current strong",
                     ".table-horizontal tr th", ".table-horizontal tr td", ".comments-name", ".comments-title .comments-text",
