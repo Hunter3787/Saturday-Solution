@@ -60,12 +60,17 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                 foreach (var link in links)
                 {
                     string fullLink = companyUrl + link.Attributes["href"].Value;
+                    bool cleanLink = true;
                     foreach (var blackListLink in blacklistLinks)
                     {
-                        if (!fullLink.Contains(blackListLink))
+                        if (fullLink.Contains(blackListLink))
                         {
-                            hrefLinks.Add(fullLink);
+                            cleanLink = false;
                         }
+                    }
+                    if (cleanLink)
+                    {
+                        hrefLinks.Add(fullLink);
                     }
                 }
                 url = url.Replace(replaceDelimiter + pageNumber, replaceDelimiter + ++pageNumber);
@@ -82,6 +87,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             {
                 //TODO individual star rating
                 htmlDocument.LoadHtml(getHtml(url));
+                Console.WriteLine(url);
                 var title = htmlDocument.DocumentNode.QuerySelector(titleQuerySelector);
                 var price = htmlDocument.DocumentNode.QuerySelector(priceQuerySelector);
                 var specsKeys = htmlDocument.DocumentNode.QuerySelectorAll(specsKeysQuerySelector);
@@ -91,12 +97,13 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                 var ratingsContent = htmlDocument.DocumentNode.QuerySelectorAll(ratingsContentQuerySelector);
 
                 // if any of these variables are empty, then we know something went wrong with the html read. Most likely, the proxy was flagged and thus the page was a catcha page.
-                if (!specsKeys.Any() || !specsValues.Any() || !ratingsReviewerName.Any() || !ratingsDate.Any() || !ratingsContent.Any())
+                if (!specsKeys.Any() || !specsValues.Any())
                 {
                     rotateProxy();
                     continue;
                 }
 
+                // || !ratingsReviewerName.Any() || !ratingsDate.Any() || !ratingsContent.Any()
                 Dictionary<string, string> specsDictionary = new Dictionary<string, string>();
                 int keyCount = specsKeys.Count();
                 int modelNumberIndex = 0;
