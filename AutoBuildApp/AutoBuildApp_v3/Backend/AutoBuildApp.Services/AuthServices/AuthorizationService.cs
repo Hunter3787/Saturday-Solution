@@ -9,7 +9,7 @@ using AutoBuildApp.Security.Models;
 
 namespace AutoBuildApp.Services.Auth_Services
 {
-    public class AuthorizationService
+    class AuthorizationService
     {
 
         private UserPrinciple _threadPrinciple = (UserPrinciple)Thread.CurrentPrincipal;

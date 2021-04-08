@@ -4,18 +4,19 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using AutoBuildApp.Security.Models;
+using AutoBuildApp.Security;
 
 namespace AutoBuildApp.DataAccess
 {
     public class AuthDAO
     {
         private Claims _userClaims;
-        /// this is the common respone object for authentication
-        private CommonReponseAuth _CRAuth;
+
         public AuthDAO(string connection)
         {
             try
             {
+                // set the claims needed for this method call
                 ConnectionString = connection;
                 Console.WriteLine($"in auth DAO connection string  { ConnectionString}");
             }
@@ -35,7 +36,7 @@ namespace AutoBuildApp.DataAccess
             ConnectionString = " ";
         }
 
-        public  string ConnectionString { get; set; }
+        public string ConnectionString { get; set; }
 
 
         /// <summary>
@@ -43,8 +44,9 @@ namespace AutoBuildApp.DataAccess
         /// if the connection is closed or if db is not connected
         /// </summary>
         /// <returns></returns>
-        public object tryConnection()
-        {
+        public object TryConnection()
+        { //REINSTANTIATE IT 
+            CommonReponseAuth _CRAuth = new CommonReponseAuth();
             using (SqlConnection con = new SqlConnection(this.ConnectionString))
             {
                 con.Open();
@@ -66,8 +68,8 @@ namespace AutoBuildApp.DataAccess
         public object CheckConnection(SqlConnection con)
         {
             //REINSTANTIATE IT 
-            _CRAuth = new CommonReponseAuth();
-             Console.WriteLine($" in CHECK CONNECTION");
+            CommonReponseAuth _CRAuth = new CommonReponseAuth();
+            Console.WriteLine($" in CHECK CONNECTION");
             if (con == null)
             {
                 _CRAuth.SuccessBool = false;
@@ -82,13 +84,11 @@ namespace AutoBuildApp.DataAccess
                     con.State != ConnectionState.Closed)
                 {
                     _CRAuth.connectionState = true;
-                    return _CRAuth;  
-                    // Console.WriteLine($" Common response expected VALID CON: {_CRAuth.ToString() }");
-
+                    return _CRAuth;
                 }
                 else
                 {
-                   _CRAuth.connectionState = false;
+                    _CRAuth.connectionState = false;
                     return _CRAuth;
 
                 }
@@ -140,23 +140,17 @@ namespace AutoBuildApp.DataAccess
         /// </summary>
         /// <param name="userCredentials"></param>
         /// <returns></returns>
-        public object RetrieveUserInformation(UserCredentials userCredentials)
+        public CommonReponseAuth RetrieveUserInformation(UserCredentials userCredentials)
         {
-
-            _CRAuth = new CommonReponseAuth();
-            using (SqlConnection conn = new SqlConnection(ConnectionString))
-            {
-                // before we continue let us check the connection state.
-                _CRAuth = (CommonReponseAuth)CheckConnection(conn);
-                if (_CRAuth.connectionState == false) { return _CRAuth; }
-            }
+            CommonReponseAuth _CRAuth = new CommonReponseAuth(); // EMPHAREL  ( FOR THE MONENT )VALEUE NO NEED TO STORE
 
             using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
-                Console.WriteLine($" \t RetrieveUserPermissions METHOD \n");
+                Console.WriteLine($"\tRetrieveUserPermissions METHOD \n");
                 conn.Open();
-                string SQL = "retrievePermissions";
-                using (SqlCommand command = new SqlCommand(SQL, conn))
+                // naming convention SP_ name of procudrure
+                string SP_retrievePermissions = "retrievePermissions";
+                using (SqlCommand command = new SqlCommand(SP_retrievePermissions, conn))
                 {
                     command.Transaction = conn.BeginTransaction();
                     #region SQL related
@@ -166,8 +160,10 @@ namespace AutoBuildApp.DataAccess
                     // 1) Create a Command, and set its CommandType property to StoredProcedure.
                     command.CommandType = CommandType.StoredProcedure;
                     // 2) Set the CommandText to the name of the stored procedure.
-                    command.CommandText = SQL;
+                    command.CommandText = SP_retrievePermissions;
+                    /// command.Parameters.AddWithValue   -> fix itttttttt!!!!!
                     //Add any required parameters to the Command.Parameters collection.
+                    // command.Parameters.AddWithValue("@username", userCredentials.Username);
                     var param = new SqlParameter[2];
                     param[0] = new SqlParameter("@username", userCredentials.Username);
                     param[0].Value = userCredentials.Username;
@@ -177,31 +173,38 @@ namespace AutoBuildApp.DataAccess
                     command.Parameters.AddRange(param);
                     #endregion
 
+
                     var _reader = command.ExecuteReader();
                     Console.WriteLine($" reader rows: {_reader.HasRows}");
-                    if (_reader.HasRows == false)
+                    if (!_reader.HasRows) // use the bang!!!!!!! 
                     {
                         _CRAuth.FailureString = "User not found";
                         _CRAuth.IsUserExists = false;
                     }
-                    if (_reader.HasRows == true)
+                    if (_reader.HasRows) // just else is enough 
                     {
                         _CRAuth.SuccessString = "User Exists";
                         _CRAuth.IsUserExists = true;
                     }
-                    
+                    //READ AND STORE ALL THE ORDINALS YOU NEED
+                    int userID = _reader.GetOrdinal("userCredID");
+                    int username = _reader.GetOrdinal("username");
+                    int permissions = _reader.GetOrdinal("permission");
+                    int scope = _reader.GetOrdinal("scopeOfPermission");
+
                     while (_reader.Read())
                     {
                         _userClaims = new Claims();
-                        // ret = $"user ID: {_reader.GetInt64(0)} Permissions: {_reader.GetString(1)} scopeOfPermission { _reader.GetString(2) }";
-                        //_userPermissions.UserAccountID = _reader.GetInt64(0);
-                        _CRAuth.AuthUserDTO.UserEmail = _reader.GetString(1);
-                       _userClaims.Permission = _reader.GetString(2);
-                        _userClaims.scopeOfPermissions = _reader.GetString(3);
+                        /// ret = $"user ID: {_reader.GetInt64(0)} Permissions: {_reader.GetString(1)} scopeOfPermission { _reader.GetString(2) }";
+                        ///_userPermissions.UserAccountID = _reader.GetInt64(0);
+                        /// magic values -> will the collumns alwats be the same
+                        /// better to use ordinal names -> no matter where the column just specifiy thr column 
+                        _CRAuth.AuthUserDTO.UserEmail = (string)_reader[username];
+                        _userClaims.Permission = (string)_reader[permissions];
+                        _userClaims.scopeOfPermissions = (string)_reader[scope];
                         _CRAuth.AuthUserDTO.Claims.Add(_userClaims);
                     }
-                    Console.WriteLine($"USER 3 CHECK: {_CRAuth.ToString()}");
-
+                    Console.WriteLine($"Auth DAO Common response check:: {_CRAuth.ToString()}");
                     return _CRAuth;
                 }
             }
