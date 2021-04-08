@@ -1,6 +1,6 @@
-﻿using AutoBuildApp.DataAccess;
+﻿using AutoBuildApp.DomainModels;
 using AutoBuildApp.Managers;
-using AutoBuildApp.Services;
+using AutoBuildApp.Models.Enumerations;
 using System;
 
 namespace AutoBuildApp.ConsoleApp
@@ -9,13 +9,22 @@ namespace AutoBuildApp.ConsoleApp
     {
         static void Main(string[] args)
         {
-            ReviewRatingDAO reviewRatingDAO = new ReviewRatingDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
-            ReviewRatingService reviewRatingService = new ReviewRatingService(reviewRatingDAO);
-            ReviewRatingManager reviewRatingManager = new ReviewRatingManager(reviewRatingService);
+            var mostPopularBuildsManager = new MostPopularBuildsManager();
 
-            reviewRatingManager.GetAllReviewsRatings();
+            var buildPost = new BuildPost()
+            {
+                Username = "Billy",
+                Title = "Gharam",
+                Description = "Greatest build ever",
+                LikeIncrementor  = 0,
+                BuildType = BuildType.Gaming,
+                BuildImagePath = @"C:\Users\Serge\Desktop\images\3.jpg",
+                DateTime = "2019"
+            };
 
-            var result = reviewRatingManager.GetReviewsRatings("30000");
+            var result = mostPopularBuildsManager.PublishBuild(buildPost);
+
+            Console.WriteLine(result);
 
             Console.WriteLine("Hello World");
 
