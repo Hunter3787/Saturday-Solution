@@ -5,23 +5,21 @@ using System.Security.Principal;
 namespace AutoBuildApp.Security.Models
 {
     /// <summary>
-     /// So lets take a look at that in the
-     /// context of ASP.NET Core. Identities 
-     /// in ASP.NET Core are a ClaimsIdentity.
-     /// </summary>
-     /// /https://andrewlock.net/introduction-to-authentication-with-asp-net-core/
-     /// 
-     //Identity Object An Identity object is basically a user account
-    public class UserIdentity : IIdentity // IIdentity exposes three simple properties:
-                                   // AuthenticationType, IsAuthenticated, and Name.
+    /// So lets take a look at that in the
+    /// context of ASP.NET Core. Identities 
+    /// in ASP.NET Core are a ClaimsIdentity.
+    /// </summary>
+    /// /https://andrewlock.net/introduction-to-authentication-with-asp-net-core/
+    /// 
+    //Identity Object An Identity object is basically a user account
+    public class UserIdentity : IIdentity // IIdentity exposes three simple properties:                          // AuthenticationType, IsAuthenticated, and Name.
     {
 
         public UserIdentity()
         {
-            this.AuthenticationType = " ";
+            this.AuthenticationType = "AutoBuild JWT";
             this.IsAuthenticated = false;
-            this.Name = " ";
-            this.UserEmail = " ";
+            this.Name = "AutoBuild User";
         }
 
         /// <summary>
@@ -47,11 +45,6 @@ namespace AutoBuildApp.Security.Models
         public bool IsAuthenticated { get; set; }
 
         public string Name { get; set; }
-
-       // public string IssuedJWTToken { get; set; }
-
-        // testing something 
-        public string UserEmail { get; set; }
 
     }
 }
