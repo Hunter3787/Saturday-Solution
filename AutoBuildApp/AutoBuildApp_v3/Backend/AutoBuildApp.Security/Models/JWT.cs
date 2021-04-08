@@ -7,8 +7,8 @@ using System.Text.Json;
 
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using System.Collections.Generic;
 using System.Security.Claims;
+using System.Collections.Generic;
 using System.Threading;
 /// <summary>
 /// Reference: see /AuthReference.=
@@ -202,7 +202,6 @@ namespace AutoBuildApp.Security.Models
         #endregion
 
 
-
         public string JWT { get; set; }
         private string SecretKey { get { return "Secret"; } set { value = "Secret"; } }
 
@@ -213,14 +212,9 @@ namespace AutoBuildApp.Security.Models
         public JWTValidator(string JWTToken)
         {
             this.JWT = JWTToken;
+
             Console.WriteLine("Token pased: " + JWTToken);
         }
-
-
-        // so what I am thinking is that upon the 
-        // successful JWT validation then the UserPrinciple object 
-        // will be return to set it to the current thread.
-        public UserPrinciple UserPrincipleObject { get; set; }
 
 
         public JWTPayload GetJWTPayload()
@@ -283,27 +277,25 @@ namespace AutoBuildApp.Security.Models
             string headerJSON = Base64UrlEncoder.Decode(parseJWT[0]);
             JWTHeader header = JsonSerializer.Deserialize<JWTHeader>(headerJSON);
 
-
-
             string payloadJSON = Base64UrlEncoder.Decode(parseJWT[1]);
-            Console.WriteLine($"\n\nJson payload: {payloadJSON}");
+            ///Console.WriteLine($"\n\nJson payload: {payloadJSON}");
             JWTPayload payload = JsonSerializer.Deserialize<JWTPayload>(payloadJSON);
-            Console.WriteLine("\n\nPaylaod ToString: " + payload.ToString());
+            ///Console.WriteLine("\n\nPaylaod ToString: " + payload.ToString());
 
 
 
             string signature = parseJWT[2];
-            Console.WriteLine($" the signature passed: {signature}");
+            ///Console.WriteLine($" the signature passed: {signature}");
             // so what i will do is regenrate the signature and 
             // check if the generated signature matches the 
             // one passed 
             _jwt = new JWT(SecretKey, payload, header);
             string genratedJWT = _jwt.GenerateJWTSignature();
-            Console.WriteLine($"generated JWT signature: { genratedJWT}");
+            /// Console.WriteLine($"generated JWT signature: { genratedJWT}");
 
             if (genratedJWT.Equals(signature) == false)
             {
-                Console.WriteLine($"the signature is not valid.");
+                ///Console.WriteLine($"the signature is not valid.");
                 return false;
             }
 
@@ -438,7 +430,7 @@ namespace AutoBuildApp.Security.Models
         /// upon complete verfifcatons.
         /// </summary>
         /// <returns></returns>
-        public ClaimsPrincipal ParseForUserPrinciple()
+        public ClaimsPrincipal ParseForClaimsPrinciple()
         {
             _principalGenerated = new ClaimsPrincipal();
 
@@ -467,6 +459,8 @@ namespace AutoBuildApp.Security.Models
             Thread.CurrentPrincipal = _principalGenerated;
             return _principalGenerated;
         }
+
+
 
     }
 
