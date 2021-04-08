@@ -67,7 +67,7 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
                     /// the jwt token and extract the 
                     /// user principle ( claims and identity ) 
                     var userPrinciple =
-                        _validateAuthorizationHeader.ParseForUserPrinciple();
+                        _validateAuthorizationHeader.ParseForClaimsPrinciple();
 
                 }
 
