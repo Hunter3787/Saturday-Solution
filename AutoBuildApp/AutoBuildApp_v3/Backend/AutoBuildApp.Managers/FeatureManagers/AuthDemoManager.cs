@@ -53,7 +53,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
                 // Console.WriteLine(returnValue);
             }
 
-            //Console.WriteLine($"End of  AuthDemoManager");
+            Console.WriteLine($"End of  AuthDemoManager");
 
 
             // kk we are going to check if user authorized 

@@ -63,14 +63,15 @@ namespace AutoBuildSecure.WebApi
 
             app.UseAuthorization();
 
+            /// my custome middleware for jwt
+            app.UseMiddleware<DemoMiddleware>();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers().RequireCors("CorsPolicy");
             });
 
 
-            /// my custome middleware for jwt
-            app.UseMiddleware<DemoMiddleware>();
         }
     }
 }

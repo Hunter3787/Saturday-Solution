@@ -33,6 +33,12 @@ namespace AutoBuildSecure.WebApi.Controllers
             Thread.CurrentPrincipal = HttpContext.User;
             string returnValue = "";
             Console.WriteLine("checking principle;");
+            foreach (var clm in HttpContext.User.Claims)
+            {
+                returnValue += $" claim type: { clm.Type } claim value: {clm.Value} \n";
+                Console.WriteLine(returnValue);
+            }
+            Console.WriteLine("checking principle;");
             foreach (var clm in _principal.Claims)
             {
                 returnValue += $" claim type: { clm.Type } claim value: {clm.Value} \n";
