@@ -75,7 +75,7 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
                     }
                     else
                     {
-                        var userPrinciple = _validateAuthorizationHeader.ParseForUserPrinciple();
+                        var userPrinciple = _validateAuthorizationHeader.ParseForClaimsPrinciple();
                         Console.WriteLine($" " +
                             $"PARSING FOR THE CLAIMS PRINCIPLE \n" +
                             $" {userPrinciple}");
