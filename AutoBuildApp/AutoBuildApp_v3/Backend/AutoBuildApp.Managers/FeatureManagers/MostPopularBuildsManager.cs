@@ -1,6 +1,7 @@
 ﻿using AutoBuildApp.DomainModels;
 using AutoBuildApp.DomainModels.Exceptions;
 using AutoBuildApp.Services;
+using AutoBuildApp.Services.FeatureServices;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,6 +18,18 @@ namespace AutoBuildApp.Managers
         // Initialize the logger service locally.
         private readonly LoggingProducerService _logger = LoggingProducerService.GetInstance;
 
+        // creates a private variable of the service so its methods can be called.
+        private readonly MostPopularBuildsService _mostPopularBuildsService;
+
+        /// <summary>
+        /// This default constructor to initalize the service.
+        /// </summary>
+        /// <param name="mostPopularBuildsService">Takes in a service as a parameter to intialize it.</param>
+        public MostPopularBuildsManager(MostPopularBuildsService mostPopularBuildsService)
+        {
+            _mostPopularBuildsService = mostPopularBuildsService;
+        }
+
         /// <summary>
         /// This method will be called to validate/invalidate BRD reqs.
         /// </summary>
@@ -24,6 +37,37 @@ namespace AutoBuildApp.Managers
         /// <returns>success state bool value.</returns>
         public bool PublishBuild(BuildPost buildPost)
         {
+            // This try/catch block checks for a null BuildPost object.
+            try
+            {
+                if (buildPost == null)
+                {
+                    throw new ArgumentNullException("A null argument was passed through the method parameters");
+                }
+            }
+            catch (ArgumentNullException ex)
+            {
+                _logger.LogWarning(ex.Message);
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+
+            // This try/catch block checks for a null var in a BuildPost object.
+            try
+            {
+                if (buildPost.Username == null || buildPost.Title == null || buildPost.Description == null ||
+                    buildPost.BuildImagePath == null || buildPost.DateTime == null)
+                {
+                    throw new NullReferenceException("A null object variable was passed through the method parameters");
+                }
+            }
+            catch (NullReferenceException ex)
+            {
+                _logger.LogWarning(ex.Message);
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+
             // Logs the calling event of the method.
             _logger.LogInformation($"Most Popular Builds Manager PublishBuild was called for User:{buildPost.Username}");
 
@@ -98,7 +142,9 @@ namespace AutoBuildApp.Managers
             }
 
             // TODO: implement service return method.
-            return true;
+            return _mostPopularBuildsService.PublishBuild(buildPost);
         }
+
+        // TODO: create a manager method for retrieving builds from the DB, doing BRD validation checks
     }
 }

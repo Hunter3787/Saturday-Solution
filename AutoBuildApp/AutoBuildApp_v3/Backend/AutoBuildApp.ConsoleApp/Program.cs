@@ -1,6 +1,7 @@
 ﻿using AutoBuildApp.DomainModels;
 using AutoBuildApp.Managers;
 using AutoBuildApp.Models.Enumerations;
+using AutoBuildApp.Services.FeatureServices;
 using System;
 
 namespace AutoBuildApp.ConsoleApp
@@ -9,7 +10,8 @@ namespace AutoBuildApp.ConsoleApp
     {
         static void Main(string[] args)
         {
-            var mostPopularBuildsManager = new MostPopularBuildsManager();
+            var mostPopularBuildsService = new MostPopularBuildsService();
+            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
             var buildPost = new BuildPost()
             {
