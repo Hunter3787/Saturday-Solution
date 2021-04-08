@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using System;
+using System.Security.Claims;
 
 namespace AutoBuildSecure.WebApi
 {
@@ -40,7 +41,7 @@ namespace AutoBuildSecure.WebApi
                     .AllowAnyHeader();
                 });
             });
-            services.AddTransient<UserPrinciple>();
+            services.AddTransient<ClaimsPrincipal>();
             services.AddControllers();
         }
 
@@ -54,36 +55,6 @@ namespace AutoBuildSecure.WebApi
                 app.UseDeveloperExceptionPage();
             }
 
-            /// custom middle ware for JWT validation, first line of defense 
-            app.Use(async (context, next) =>
-            {
-                if (!string.IsNullOrEmpty(context.Request.Headers[HeaderNames.Authorization]))
-                {
-                    var accessTokenReq = context.Request.Headers[HeaderNames.Authorization];
-                    string accessToken = accessTokenReq;
-
-                    Console.WriteLine($"The auth header: { accessTokenReq}");
-                    string[] parse = accessToken.Split(' ');
-                    accessToken = parse[1];
-                    Console.WriteLine($"The auth header token: { accessToken}");
-                    JWTValidator validateAuthorizationHeader = new JWTValidator(accessToken);
-
-                    Console.WriteLine($"the access token: { accessTokenReq}");
-                    if (!string.IsNullOrEmpty(accessToken))
-                    {
-                        if (validateAuthorizationHeader.IsValidJWT() == false)
-                        {
-                            // does not work but would like it to, had trouble invoking it to the page:
-                            app.UseCustomErrors(env);
-                            // alternative to the custom error page:
-                            await context.Response.WriteAsync("JWT validation fail");
-                        }
-                    }
-                }
-                await next();
-            });
-
-            // middleware has an order of execution 
 
             app.UseHttpsRedirection();
             app.UseRouting();
@@ -97,6 +68,9 @@ namespace AutoBuildSecure.WebApi
                 endpoints.MapControllers().RequireCors("CorsPolicy");
             });
 
+
+            /// my custome middleware for jwt
+            app.UseMiddleware<DemoMiddleware>();
         }
     }
 }
