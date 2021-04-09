@@ -1,4 +1,5 @@
-﻿using AutoBuildApp.DomainModels;
+﻿using AutoBuildApp.DataAccess;
+using AutoBuildApp.DomainModels;
 using AutoBuildApp.Managers;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Services.FeatureServices;
@@ -24,7 +25,8 @@ namespace AutoBuildApp.Manger.Tests
         public void MostPopularBuilds_PublishBuild_ReturnFalseIfObjectIsNull()
         {
             // Arrange
-            var mostPopularBuildsService = new MostPopularBuildsService();
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
             BuildPost buildPost = null;
@@ -44,7 +46,8 @@ namespace AutoBuildApp.Manger.Tests
         public void MostPopularBuilds_PublishBuild_ReturnFalseIfAnyNullVarsInBuildPostObject()
         {
             // Arrange
-            var mostPopularBuildsService = new MostPopularBuildsService();
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
             bool result = false;
@@ -133,7 +136,8 @@ namespace AutoBuildApp.Manger.Tests
         public void MostPopularBuilds_PublishBuild_ReturnFalseIfTitleCharsAreGreaterThan50()
         {
             // Arrange
-            var mostPopularBuildsService = new MostPopularBuildsService();
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
             StringBuilder testTitleString = new StringBuilder();
@@ -171,7 +175,8 @@ namespace AutoBuildApp.Manger.Tests
         public void MostPopularBuilds_PublishBuild_ReturnFalseIfDescriptionCharsAreGreaterThan10k()
         {
             // Arrange
-            var mostPopularBuildsService = new MostPopularBuildsService();
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
             StringBuilder testDescriptionString = new StringBuilder();
@@ -209,7 +214,8 @@ namespace AutoBuildApp.Manger.Tests
         public void MostPopularBuilds_PublishBuild_ReturnFalseIfTitleContainsInvalidChars()
         {
             // Arrange
-            var mostPopularBuildsService = new MostPopularBuildsService();
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
             var invalidUsernameTest = "%^#TheGreatestTestTitle$#^#";
@@ -240,7 +246,8 @@ namespace AutoBuildApp.Manger.Tests
         public void MostPopularBuilds_PublishBuild_ReturnTrueIfAllConditionsAreMet()
         {
             // Arrange
-            var mostPopularBuildsService = new MostPopularBuildsService();
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
             // Act

@@ -1,4 +1,5 @@
-﻿using AutoBuildApp.DomainModels;
+﻿using AutoBuildApp.DataAccess;
+using AutoBuildApp.DomainModels;
 using AutoBuildApp.Managers;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Services.FeatureServices;
@@ -10,7 +11,10 @@ namespace AutoBuildApp.ConsoleApp
     {
         static void Main(string[] args)
         {
-            var mostPopularBuildsService = new MostPopularBuildsService();
+            LoggingConsumerManager _loggingConsumerManager = new LoggingConsumerManager();
+
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
             var buildPost = new BuildPost()
@@ -25,6 +29,20 @@ namespace AutoBuildApp.ConsoleApp
             };
 
             var result = mostPopularBuildsManager.PublishBuild(buildPost);
+
+            var list = mostPopularBuildsManager.GetBuildPosts();
+
+            foreach (var item in list)
+            {
+                Console.WriteLine(item.EntityId);
+                Console.WriteLine(item.Username);
+                Console.WriteLine(item.Title);
+                Console.WriteLine(item.Description);
+                Console.WriteLine(item.LikeIncrementor);
+                Console.WriteLine(item.BuildImagePath);
+                Console.WriteLine(item.DateTime);
+                Console.WriteLine();
+            }
 
             Console.WriteLine(result);
 

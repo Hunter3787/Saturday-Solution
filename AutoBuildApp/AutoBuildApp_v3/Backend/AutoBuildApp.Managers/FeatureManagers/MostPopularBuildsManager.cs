@@ -145,6 +145,16 @@ namespace AutoBuildApp.Managers
             return _mostPopularBuildsService.PublishBuild(buildPost);
         }
 
-        // TODO: create a manager method for retrieving builds from the DB, doing BRD validation checks
+        /// <summary>
+        /// This method will retrieve the list from the service and send it
+        /// to the controller after doing checks.
+        /// </summary>
+        /// <returns>returns the list of build posts.</returns>
+        public List<BuildPost> GetBuildPosts()
+        {
+            // Log the manager get build posts being called
+            _logger.LogInformation("Most Popular Builds Manager GetBuildPosts was called.");
+            return _mostPopularBuildsService.GetBuildPosts();
+        }
     }
 }
