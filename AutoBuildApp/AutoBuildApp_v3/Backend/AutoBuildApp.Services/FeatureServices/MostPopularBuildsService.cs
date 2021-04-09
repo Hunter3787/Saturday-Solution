@@ -51,7 +51,8 @@ namespace AutoBuildApp.Services.FeatureServices
                 DateTime = buildPost.DateTime
             };
 
-            return _mostPopularBuildsDAO.PublishBuildRecord(buildPostEntity);
+            //return _mostPopularBuildsDAO.PublishBuildRecord(buildPostEntity); // This method is for non reflection insertions.
+            return _mostPopularBuildsDAO.PublishBuildRecord(buildPostEntity, "mostpopularbuilds");
         }
 
         /// <summary>

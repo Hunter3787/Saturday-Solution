@@ -20,7 +20,7 @@ namespace AutoBuildApp.ConsoleApp
             var buildPost = new BuildPost()
             {
                 Username = "Billy",
-                Title = "Gharam",
+                Title = "Great Title",
                 Description = "Greatest build ever",
                 LikeIncrementor  = 0,
                 BuildType = BuildType.Gaming,
