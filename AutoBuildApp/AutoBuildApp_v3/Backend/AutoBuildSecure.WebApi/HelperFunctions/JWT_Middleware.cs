@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+
 
 namespace AutoBuildSecure.WebApi.HelperFunctions
 {
@@ -37,13 +37,43 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
             /// for the bearer token
             /// 
 
+            /// postman isnt sending a request header containing aa referer....
+            /// so:
+            /// https://learning.postman.com/docs/sending-requests/requests/
+            /// 
+            ///
+
+            string referer = "";
             var token = httpContext.Request
                 .Headers[HeaderNames.Authorization]
                 .FirstOrDefault()?
                 .Split(" ")
                 .Last();
+
+            var Url =
+                httpContext.Request
+                .Headers[HeaderNames.Path]
+                .FirstOrDefault();
+            var test = httpContext.Request.Headers;
+
+
+            var Url_Two =
+                httpContext.Request.Path.ToUriComponent().ToString();
+
+
+            referer = httpContext
+                .Request
+                .Headers["Referer"]
+                .ToString();
+
+            Console.WriteLine($"\n\t IN THE JWT_MIDDLEWARE \n" +
+                $"INCOMING URL REFERAL TEST:   { Url}" +
+                $" \nand referer string: {referer} " +
+                $" \nand the referal by header name: {Url_Two}");
             if (token != null)
             {
+
+                _validateAuthorizationHeader = new JWTValidator(token);
                 ValidateTheToken(httpContext, token);
             }
 
