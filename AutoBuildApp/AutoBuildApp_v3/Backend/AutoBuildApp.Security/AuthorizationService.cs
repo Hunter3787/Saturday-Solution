@@ -32,6 +32,12 @@ namespace AutoBuildApp.Security
         /// <returns></returns>
         public static bool checkPermissions(IEnumerable<Claim> permissionsRequired) // PASS INTO WHY STORE IT???????
         {
+            ///handle the null values
+            if(permissionsRequired is null)
+            {
+                return false; 
+            }
+
             _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
             foreach (Claim claims in _threadPrinciple.Claims)
             {
