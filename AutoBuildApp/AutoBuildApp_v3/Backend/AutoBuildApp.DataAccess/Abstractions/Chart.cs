@@ -25,8 +25,20 @@ namespace AutoBuildApp.DataAccess.Abstractions
         public int YValue { get; set; }
 
 
+        public Chart()
+        {
+            XLabel = " ";
+            Legend = " ";
+            YValue = 0;
+        }
 
+        public Chart(string xLabel, int yValue, string legend)
+        {
+            this.XLabel = xLabel;
+            this.YValue = yValue;
+            this.Legend = legend;
 
+        }
 
     }
 }
