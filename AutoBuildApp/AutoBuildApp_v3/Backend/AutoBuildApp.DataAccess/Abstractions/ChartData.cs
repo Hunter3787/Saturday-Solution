@@ -6,7 +6,7 @@ namespace AutoBuildApp.DataAccess.Abstractions
 {
     ///will be treating this as a base class
     /// for now.
-    class Chart
+    class ChartData
     {
         /// <summary>
         /// XLabel represents the
@@ -24,20 +24,23 @@ namespace AutoBuildApp.DataAccess.Abstractions
         /// </summary>
         public int YValue { get; set; }
 
-
-        public Chart()
+        public ChartData()
         {
             XLabel = " ";
             Legend = " ";
             YValue = 0;
         }
 
-        public Chart(string xLabel, int yValue, string legend)
+        public ChartData(string xLabel, int yValue, string legend)
         {
             this.XLabel = xLabel;
             this.YValue = yValue;
             this.Legend = legend;
 
+        }
+        public override string ToString()
+        {
+            return $"(X,Y,Legend) : ({this.XLabel}, {this.YValue}, {this.Legend})\n";
         }
 
     }
