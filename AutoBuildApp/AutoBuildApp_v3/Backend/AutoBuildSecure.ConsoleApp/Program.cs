@@ -52,8 +52,6 @@ namespace AutoBuildSecure.ConsoleApp
 
             #region creating a principle for this thread
 
-
-
             IEnumerable<Claim> claims = new List<Claim>() {
                 new Claim(PermissionEnumType.READ_ONLY,ScopeEnumType.AUTOBUILD),
 
@@ -73,26 +71,13 @@ namespace AutoBuildSecure.ConsoleApp
 
             #endregion
 
-            Console.WriteLine($"This is the the claims stored in the claims priciple object");
-            foreach (var clm in _principal.Claims)
-            {
-                Console.WriteLine($" claim type: { clm.Type } claim value: {clm.Value} ");
-            }
-
-            Console.WriteLine($"mimicing the bussiness object");
-
-            Console.WriteLine($"\n\tIfactory for accessing defined claims:");
-
+         
 
             /// TAKLE OUT THE HARDCODING AND DO ENUMERATIOONS OF ROLES INSTAD OT ENUMERATIOSN 
             /// NO STING STATEMENTS IN SWITCH
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
             IClaimsFactory unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
-            Console.WriteLine($"\n\tPrinting the claims defined under Unregistered");
-            unregistered.PrintClaims();
-
-
-            AuthorizationService.print();
+      
 
             Console.WriteLine($"\n\tAuthorization output" +
                 $" {AuthorizationService.checkPermissions(unregistered.Claims())}");

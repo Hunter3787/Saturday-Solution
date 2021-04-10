@@ -22,6 +22,7 @@ namespace AutoBuildApp.Security.Tests
     {
 
         private static IEnumerable<Claim> claims = new List<Claim>() {
+
                 new Claim(PermissionEnumType.READ_ONLY,ScopeEnumType.AUTOBUILD),
 
             };

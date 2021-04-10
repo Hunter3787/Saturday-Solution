@@ -1,9 +1,10 @@
 ﻿
+using AutoBuildApp.Security.Enumerations;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading;
-using AutoBuildApp.Security.Models;
 
 
 namespace AutoBuildApp.Security
@@ -11,16 +12,15 @@ namespace AutoBuildApp.Security
     public static class AuthorizationService
     {
         private static ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
-
-
+       
         public static void print()
         {
             Console.WriteLine($"THE CLAIMS IN THE CURRENT THREAD: ");
-
+            Console.WriteLine($" " +
+                   $"In the authorizatioin service");
             foreach (Claim c in _threadPrinciple.Claims)
             {
                 Console.WriteLine($" " +
-                    $"In the authorizatioin service\n" +
                     $"claim type: { c.Type } claim value: {c.Value} ");
 
             }
@@ -32,33 +32,55 @@ namespace AutoBuildApp.Security
         /// <returns></returns>
         public static bool checkPermissions(IEnumerable<Claim> permissionsRequired) // PASS INTO WHY STORE IT???????
         {
+
             ///handle the null values
-            if(permissionsRequired is null)
+            if (permissionsRequired is null)
             {
-                return false; 
+                return false;
+            }
+            Console.WriteLine($"THE CLAIMS IN THE CURRENT THREAD: ");
+            Console.WriteLine($" " +
+                   $"In the authorizatioin service");
+            foreach (Claim c in _threadPrinciple.Claims)
+            {
+                Console.WriteLine($" " +
+                    $"claim type: { c.Type } claim value: {c.Value} ");
+
             }
 
-            _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
-
-            foreach (Claim claims in _threadPrinciple.Claims)
+            Console.WriteLine($" " +
+                   $"Permissions passed:");
+            foreach (Claim c in _threadPrinciple.Claims)
             {
-                foreach (Claim claimNeeded in permissionsRequired)
-                {
-                    /// FIX THISSS ITS DOING EQUALS WRONG
-                    /// nicks opinion:  if defined as role based -> best to have matched
-                    /// but easier to have a series of permissions 
-                    if (!(claims.Type.Equals(claimNeeded.Type)
-                        && claims.Value.Equals(claimNeeded.Value)))
-                    {
-                        return false;
-                    }
-                }
+                Console.WriteLine($" " +
+                    $"claim type: { c.Type } claim value: {c.Value} ");
+
             }
-            return true;
+
+            bool outcome = Enumerable.SequenceEqual(_threadPrinciple.Claims, permissionsRequired, new MyCustomComparer());
+
+            return outcome;
+
+
         }
         // nick: not a terrible idea :  make two different checks singular and 
         // FULL check
 
 
     }
+    public class MyCustomComparer : IEqualityComparer<Claim>
+    {
+        public bool Equals(Claim x, Claim y)
+        {
+            if (x.Type == y.Type && x.Value == y.Value)
+                return true;
+            return false;
+        }
+
+        public int GetHashCode(Claim obj)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 }
