@@ -1,5 +1,10 @@
-﻿using AutoBuildApp.Security.Enumerations;
+﻿using AutoBuildApp.DataAccess;
+using AutoBuildApp.DataAccess.Entities;
+using AutoBuildApp.Security.Enumerations;
+using AutoBuildApp.Security.FactoryModels;
+using AutoBuildApp.Security.Interfaces;
 using AutoBuildApp.Security.Models;
+using AutoBuildApp.Services.Auth_Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -23,7 +28,14 @@ namespace AutoBuildApp.Security.Tests
 
         private static IEnumerable<Claim> claims = new List<Claim>() {
 
-                new Claim(PermissionEnumType.READ_ONLY,ScopeEnumType.AUTOBUILD),
+                  new Claim( PermissionEnumType.READ_ONLY  , ScopeEnumType.AUTOBUILD),
+                  new Claim( PermissionEnumType.DELETE     , ScopeEnumType.SELF),
+                  new Claim( PermissionEnumType.UPDATE     , ScopeEnumType.SELF),
+                  new Claim( PermissionEnumType.EDIT       , ScopeEnumType.SELF),
+                  new Claim( PermissionEnumType.CREATE     , ScopeEnumType.REVIEWS),
+                  new Claim( PermissionEnumType.DELETE     , ScopeEnumType.SELF_REVIEWS),
+                  new Claim( PermissionEnumType.UPDATE     , ScopeEnumType.SELF_REVIEWS),
+
 
             };
 
@@ -49,8 +61,18 @@ namespace AutoBuildApp.Security.Tests
            bool AuthActual =  AuthorizationService.checkPermissions(permissionsRequired);
            bool AuthExpected = true;
 
+            ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
+            UserCredentials credential1 = new UserCredentials("Zeina", "PassHash");
+            CommonReponseAuth _CRAuth = new CommonReponseAuth();
+            AuthDAO _authDAO = new AuthDAO("Data Source=localhost;Initial Catalog=DB;Integrated Security=True");
+            AuthenticationService authenticationService = new AuthenticationService(_authDAO);
+            _CRAuth = authenticationService.AuthenticateUser(credential1);
+            IClaimsFactory basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
 
-           Assert.AreEqual(AuthExpected, AuthActual);
+            AuthActual = AuthorizationService.checkPermissions(basic.Claims());
+
+
+            Assert.AreEqual(AuthExpected, AuthActual);
         }
 
         private static IEnumerable<object[]> GetClaimsRequired()

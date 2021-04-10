@@ -34,6 +34,9 @@ namespace AutoBuildApp.Services.Auth_Services
 
         #region System.Security.Claims
 
+
+        ClaimsPrincipal claimsPrincipal;
+
         // instantiation of security claims of 
         // type System.Security.Claims;
         private IList<Claim> _securityClaims = new List<Claim>();
@@ -83,6 +86,7 @@ namespace AutoBuildApp.Services.Auth_Services
         /// <param name="credentials"></param>
         public CommonReponseAuth AuthenticateUser(UserCredentials credentials) // RETURN CMRESPONSE
         {
+            claimsPrincipal = (ClaimsPrincipal)Thread.CurrentPrincipal;
             /// retrieves the result from the query as an object
             /// then we cast it to type Common responde object -> Auth
             _responseAuth = _authDAO.RetrieveUserInformation(credentials);
@@ -98,14 +102,11 @@ namespace AutoBuildApp.Services.Auth_Services
                 _responseAuth.SuccessBool = true;
                 _responseAuth.isAuthenticated = true;
 
-
                 // conversion of userClaims to the built in claims 
                 foreach (Claims claims in _authUserDTO.Claims)
                 { // converting the claims in type System.Security.Claims
                     _securityClaims.Add(new Claim(claims.Permission, claims.scopeOfPermissions));
                 }
-
-
                 /// if the quthentication is a success then we
                 /// add thos new claims to the claims principle
                 UserIdentity userIdentity = new UserIdentity();
@@ -114,26 +115,22 @@ namespace AutoBuildApp.Services.Auth_Services
 
 
                 ClaimsIdentity claimsIdentity;
-                ClaimsPrincipal claimsPrincipal;
 
                 claimsIdentity = new ClaimsIdentity
                     (_securityClaims, userIdentity.AuthenticationType,
                     _authUserDTO.UserEmail, "");
 
                 claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-
-                Thread.CurrentPrincipal = claimsPrincipal;
                 _responseAuth.JWTString = generateJWTToken(_authUserDTO);
-
             }
             else
             {
                 _responseAuth.isAuthenticated = false;
                 _responseAuth.SuccessBool = false;
             }
-            Console.WriteLine($"\nOUTPUT IN THE AUTHENTICATION SERVICE: " +
-                $"{_responseAuth.ToString()}\n");
+
+
+            Thread.CurrentPrincipal = claimsPrincipal;
             return _responseAuth;
         }
 

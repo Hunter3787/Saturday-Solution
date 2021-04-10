@@ -18,28 +18,24 @@ namespace AutoBuildSecure.WebApi.Controllers
     {
 
         #region 
-        private ClaimsPrincipal _principal;
+        private ClaimsPrincipal _threadPrinciple;
         #endregion
 
         public AuthDemoController()
         {
 
         }
-
         [HttpGet]
         public IActionResult GetData()
         {
-            _principal = HttpContext.User;
-            Thread.CurrentPrincipal = HttpContext.User;
+            /// RETRIEVING THE THREAD PRINCIPAL 
+            /// SET IN THE JWT MIDDLEWARE
+
+            _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
             string returnValue = "";
             Console.WriteLine("checking principle;");
-            foreach (var clm in HttpContext.User.Claims)
-            {
-                returnValue += $" claim type: { clm.Type } claim value: {clm.Value} \n";
-                Console.WriteLine(returnValue);
-            }
-            Console.WriteLine("checking principle;");
-            foreach (var clm in _principal.Claims)
+            foreach (var clm in _threadPrinciple.Claims)
             {
                 returnValue += $" claim type: { clm.Type } claim value: {clm.Value} \n";
                 Console.WriteLine(returnValue);

@@ -84,18 +84,26 @@ namespace AutoBuildSecure.ConsoleApp
             Console.WriteLine($"\n\tAuthorization output" +
                 $" {AuthorizationService.checkPermissions(unregistered.Claims())}");
 
-            UserCredentials credential1 = new UserCredentials("Zeina", "PassHash"); //user exists
 
+
+
+            Console.WriteLine($"TESTING THE AUTHORIZATION SERVICE:");
+
+
+           UserCredentials credential1 = new UserCredentials("Zeina", "PassHash"); //user exists
             CommonReponseAuth _CRAuth = new CommonReponseAuth();
             AuthDAO _authDAO = new AuthDAO("Data Source=localhost;Initial Catalog=DB;Integrated Security=True");
-
             AuthenticationService authenticationService = new AuthenticationService(_authDAO);
+            _CRAuth = authenticationService.AuthenticateUser(credential1);
+            _principal = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            IClaimsFactory basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
+
+            Console.WriteLine($"\n\tAuthorization output#2" +
+                $" {AuthorizationService.checkPermissions(basic.Claims())}");
 
 
-        _CRAuth = authenticationService.AuthenticateUser(credential1);
 
-            Console.WriteLine($"test method " +
-                $"{ _CRAuth.ToString()}");
+
 
 
             UserIdentity testing = new UserIdentity();

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Text.Json;
@@ -36,8 +37,7 @@ namespace AutoBuildSecure.WebApi.Controllers
 
         private AuthManager _loginManager;
         private UserCredentials _userCredentials;
-        private ClaimsIdentity _claimsIdentity;
-        private ClaimsPrincipal _principal;
+        ClaimsPrincipal _threadPrinciple;
         #endregion
 
         public AuthenticationController()
@@ -45,15 +45,12 @@ namespace AutoBuildSecure.WebApi.Controllers
 
             // setting a default principle object t=for the thread.
             #region Instantiating the Claims principle
-            IIdentity userIdentity = new UserIdentity();
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
             IClaimsFactory unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
-            _claimsIdentity = new ClaimsIdentity(userIdentity, unregistered.Claims());
-            Console.WriteLine($" Identity name: {_claimsIdentity.Name} {_claimsIdentity.IsAuthenticated} ");
-            _principal = new ClaimsPrincipal(_claimsIdentity);
+
 
             // set it to th current thread
-            Thread.CurrentPrincipal = _principal;
+            //Thread.CurrentPrincipal = _principal;
             #endregion
 
 
@@ -66,8 +63,6 @@ namespace AutoBuildSecure.WebApi.Controllers
             // Console.WriteLine($"connection string passed in controller: {connection} ");
             //3) connection string passed to the logIn manager 
             _loginManager = new AuthManager(connection);
-
-
             #endregion
 
         }
@@ -79,64 +74,36 @@ namespace AutoBuildSecure.WebApi.Controllers
         [HttpGet]
         public IActionResult GetJWTToken()
         {
-            // retrieve the bearer token from the Authorization header 
-            var accessTokenHeader = Request.Headers[HeaderNames.Authorization];
-
-            // if there is no JWT key assigned to the incomming request
-            // then assign a Default user principle object
-            if (string.IsNullOrEmpty(accessTokenHeader)
-                || string.IsNullOrWhiteSpace(accessTokenHeader))
+            Console.WriteLine($"The Claims prinicple set in the JWT validator:");
+            foreach (Claim c in _threadPrinciple.Claims)
             {
-                ClaimsPrincipal principal = new ClaimsPrincipal(_claimsIdentity);
-                // set it to th current thread
-                Thread.CurrentPrincipal = principal;
-                foreach (var clm in _principal.Claims)
-                {
-                    Console.WriteLine($" claim type: { clm.Type } claim value: {clm.Value} ");
-                }
-
-            }
-            else
-            {
-                string accessToken = accessTokenHeader;
-                string[] parse = accessToken.Split(' ');
-                /// parse and retrieve the access token from the header
-                accessToken = parse[1];
-                /// calling the JWT Validator to parse and return the
-                /// object to be stored as a UserPrinciple
-                JWTValidator validateAuthorizationHeader = new JWTValidator(accessToken);
-
-                if (validateAuthorizationHeader.IsValidJWT())
-                {
-                    // if the checks pass for the JWT then extract the user information
-                    ClaimsPrincipal modified = validateAuthorizationHeader.ParseForClaimsPrinciple();
-                    // and assign it to the current thread!
-
-                    _principal = modified;
-                    Thread.CurrentPrincipal = _principal;
-
-                    Console.WriteLine($"In the authentication controller" +
-                        $" identity name: {Thread.CurrentPrincipal.Identity.Name} ");
-
-                    foreach (var clm in _principal.Claims)
-                    {
-                        Console.WriteLine($" claim type: { clm.Type } claim value: {clm.Value} ");
-                    }
-
-                }
+                Console.WriteLine($"Permission:  {c.Type}, Scope: {c.Value} ");
             }
 
             return
-                Ok($"The header extracted: {accessTokenHeader}" +
-              $"\n\nCurrent Thread Priciple: {JsonSerializer.Serialize(Thread.CurrentPrincipal)}");
+                Ok( $"\n\nCurrent Thread Priciple: {JsonSerializer.Serialize(Thread.CurrentPrincipal)}");
         }
 
-        [HttpPost("{UserCred}")]
-        public ActionResult<AuthUserDTO> AuthenticateUser(UserCredentials userCredentials)
+        [HttpPost("{Login}")]
+        public ActionResult<AuthUserDTO> AuthenticateUser(UserCredentials userCredentials, string returnURL)
         {
+
+             _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+            foreach(Claim c in _threadPrinciple.Claims)
+            {
+                Console.WriteLine($"Permission:  {c.Type}, Scope: {c.Value} ");
+            }
+
             this._userCredentials = userCredentials;
             var JWTToken = _loginManager.AuthenticateUser(_userCredentials);
-            // along the call the defaukt principle should be updated
+            Console.WriteLine($"AFTER THE JWT HAS BEEN ISSUED: \n");
+
+            _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            foreach (Claim c in _threadPrinciple.Claims)
+            {
+                Console.WriteLine($"Permission:  {c.Type}, Scope: {c.Value} ");
+            }
 
             return Ok(JWTToken);
         }

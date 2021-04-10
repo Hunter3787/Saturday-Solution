@@ -32,6 +32,8 @@ namespace AutoBuildApp.Security.Models
             get { return this.authenticationType; }
             set { this.authenticationType = value; } 
         }
+
+        private bool isAuthenticated = false;
         /// <summary>
         /// the property IsAuthenticated indicates whether 
         /// an identity is authenticated or not.
@@ -47,7 +49,9 @@ namespace AutoBuildApp.Security.Models
         ///  an important distinction to bear in mind. 
         ///  
         /// </summary>
-        public bool IsAuthenticated { get; set; }
+        public bool IsAuthenticated {
+            get { return this.isAuthenticated; }
+            set { isAuthenticated = value; } }
 
         public string Name { get; set; }
 

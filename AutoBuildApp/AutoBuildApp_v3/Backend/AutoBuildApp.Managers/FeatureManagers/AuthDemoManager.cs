@@ -17,20 +17,14 @@ namespace AutoBuildApp.Managers.FeatureManagers
     /// </summary>
     public class AuthDemoManager
     {
-        private ClaimsPrincipal _principal;
+        private ClaimsPrincipal _threadPrinciple;
         private ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
         IClaimsFactory unregistered;
+        IClaimsFactory basic;
         public AuthDemoManager()
         {
-            _principal = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            Console.WriteLine($" wihtin the demo manager");
-            foreach (var clm in _principal.Claims)
-            {
-                Console.WriteLine($" claim type: { clm.Type } claim value: {clm.Value} \n");
-            }
-
             unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
-
+            basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
         }
 
 
@@ -45,9 +39,11 @@ namespace AutoBuildApp.Managers.FeatureManagers
         public string getData()
         {
 
-            Console.WriteLine($"Within the AuthDemoManager:");
+            _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            Console.WriteLine($"Within the AuthDemoManager get data:");
+            Console.WriteLine($" wihtin the demo manager");
             string returnValue = "";
-            foreach (var clm in _principal.Claims)
+            foreach (var clm in _threadPrinciple.Claims)
             {
                 returnValue += $" claim type: { clm.Type } claim value: {clm.Value} \n";
                 // Console.WriteLine(returnValue);
@@ -62,12 +58,13 @@ namespace AutoBuildApp.Managers.FeatureManagers
             string values = " ";
 
 
-            if (AuthorizationService.checkPermissions(unregistered.Claims()))
+            if (AuthorizationService.checkPermissions(basic.Claims()))
             {
 
-                values += $"here is the data you asked for" +
+                values += $"" +
+                    $"Here is the data you asked for" +
                     $"\n\tAuthorization output" +
-                    $" {AuthorizationService.checkPermissions(unregistered.Claims())}";
+                    $" {AuthorizationService.checkPermissions(basic.Claims())}";
 
             }
             else

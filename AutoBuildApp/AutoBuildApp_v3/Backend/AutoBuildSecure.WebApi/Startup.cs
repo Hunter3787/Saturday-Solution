@@ -64,7 +64,7 @@ namespace AutoBuildSecure.WebApi
             app.UseAuthorization();
 
             /// my custome middleware for jwt
-            app.UseMiddleware<DemoMiddleware>();
+            app.UseMiddleware<JWT_Middleware>();
 
             app.UseEndpoints(endpoints =>
             {

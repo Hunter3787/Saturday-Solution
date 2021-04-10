@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading;
 
 
@@ -11,10 +12,10 @@ namespace AutoBuildApp.Security
 {
     public static class AuthorizationService
     {
-        private static ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
-       
         public static void print()
         {
+
+            ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
             Console.WriteLine($"THE CLAIMS IN THE CURRENT THREAD: ");
             Console.WriteLine($" " +
                    $"In the authorizatioin service");
@@ -32,15 +33,16 @@ namespace AutoBuildApp.Security
         /// <returns></returns>
         public static bool checkPermissions(IEnumerable<Claim> permissionsRequired) // PASS INTO WHY STORE IT???????
         {
-
+            ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
             ///handle the null values
             if (permissionsRequired is null)
             {
                 return false;
             }
-            Console.WriteLine($"THE CLAIMS IN THE CURRENT THREAD: ");
+
             Console.WriteLine($" " +
                    $"In the authorizatioin service");
+            Console.WriteLine($"The claims in the thead in AuthorizationService:");
             foreach (Claim c in _threadPrinciple.Claims)
             {
                 Console.WriteLine($" " +
@@ -49,7 +51,7 @@ namespace AutoBuildApp.Security
             }
 
             Console.WriteLine($" " +
-                   $"Permissions passed:");
+                   $"Permissions passed in AuthorizationService:");
             foreach (Claim c in _threadPrinciple.Claims)
             {
                 Console.WriteLine($" " +
@@ -58,28 +60,33 @@ namespace AutoBuildApp.Security
             }
 
             bool outcome = Enumerable.SequenceEqual(_threadPrinciple.Claims, permissionsRequired, new MyCustomComparer());
-
+            Console.WriteLine($" " +
+                   $"The outcome: : { outcome}");
+            outcome = _threadPrinciple.Claims.SequenceEqual( permissionsRequired, new MyCustomComparer());
+            Console.WriteLine($" " +
+                   $"The outcome2: : { outcome}");
             return outcome;
-
-
         }
         // nick: not a terrible idea :  make two different checks singular and 
         // FULL check
 
 
     }
+    /// <summary>
+    /// whaving trouble with the Ienum:
+    /// https://dotnetcodr.com/2017/09/06/determine-if-two-sequences-are-equal-with-linq-c-2/
+    /// 
+    /// </summary>
     public class MyCustomComparer : IEqualityComparer<Claim>
     {
         public bool Equals(Claim x, Claim y)
         {
-            if (x.Type == y.Type && x.Value == y.Value)
-                return true;
-            return false;
+            return (x.Type == y.Type && x.Value == y.Value);
         }
 
         public int GetHashCode(Claim obj)
         {
-            throw new NotImplementedException();
+            return obj.ToString().GetHashCode();
         }
     }
 
