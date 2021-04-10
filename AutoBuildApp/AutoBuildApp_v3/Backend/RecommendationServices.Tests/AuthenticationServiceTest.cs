@@ -12,8 +12,6 @@ namespace AutoBuildApp.Services.Tests
     public class AuthenticationServiceTest
     {
 
-
-
         // setting this principle to the thread:
 
         private static AuthDAO _authDAO = new AuthDAO("Data Source=localhost;Initial Catalog=DB;Integrated Security=True");

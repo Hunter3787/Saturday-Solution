@@ -205,6 +205,7 @@ namespace AutoBuildApp.DataAccess
                         _CRAuth.AuthUserDTO.Claims.Add(_userClaims);
                     }
                     Console.WriteLine($"Auth DAO Common response check:: {_CRAuth.ToString()}");
+                    _CRAuth.connectionState = true;
                     return _CRAuth;
                 }
             }
