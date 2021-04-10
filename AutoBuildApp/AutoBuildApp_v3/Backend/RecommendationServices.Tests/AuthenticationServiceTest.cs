@@ -77,7 +77,6 @@ namespace AutoBuildApp.Services.Tests
         {
             _CRAuth = (CommonReponseAuth)authenticationService.AuthenticateUser(user);
 
-
             Assert.AreEqual(commonResponseExpected.Equals(_CRAuth), true);
 
         }
