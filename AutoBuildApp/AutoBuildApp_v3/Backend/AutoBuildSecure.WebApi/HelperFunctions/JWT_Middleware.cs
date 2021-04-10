@@ -39,74 +39,57 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
 
         public async Task InvokeAsync(HttpContext httpContext)
         {
-            /// first read the http authorization header 
-            /// for the bearer token
-            /// 
-
             /// postman isnt sending a request header containing aa referer....
             /// so:
             /// https://learning.postman.com/docs/sending-requests/requests/
             /// 
             ///
-           
 
-            string referer = "";
+            //STEP 1: EXTRACT THE TOKEN (IF EXISTS ANY)
+            #region EXTRACT THE TOKEN (IF EXISTS ANY)
             var token = httpContext.Request
                 .Headers[HeaderNames.Authorization]
                 .FirstOrDefault()?
                 .Split(" ")
                 .Last();
-          
-
             Console.WriteLine($"\n\t THIS IS WHATS IN THE AUTH HEADER: { token}  \n");
-
-
-          var Url =
+            #endregion
+            //STEP 2: EXTRACT THE REFERER
+            #region EXTRACT THE REFERER
+            var Url =
                 httpContext.Request
                 .Headers[HeaderNames.Path]
                 .FirstOrDefault();
-            var test = httpContext.Request.Headers;
-
             var Url_Two =
                 httpContext.Request.Path.ToUriComponent().ToString();
-
-            referer = httpContext
+            string referer = httpContext
                 .Request
                 .Headers["Referer"]
                 .ToString();
 
             Console.WriteLine($"\n\t IN THE JWT_MIDDLEWARE \n" +
                 $"INCOMING URL REFERAL TEST:   { Url}");
-            if (token != null && token.Length != 0)
+            #endregion
+
+            if (token != null && token.Length != 0) // there is a JWT token 
             {
-
-                Console.WriteLine($"HITTING FIRST IF");
-                _validateAuthorizationHeader = new JWTValidator(token);
-
+                _validateAuthorizationHeader = new JWTValidator(token); // validate the token 
                 var result = ValidateTheToken(httpContext, token);
-                if (result == false)
+                if (result == false) //IF JWT NOT VALID
                 {             
-                    await httpContext.Response.WriteAsync(httpContext.Response.StatusCode.ToString());
+                    await httpContext
+                        .Response
+                        .WriteAsync(httpContext.Response.StatusCode.ToString());
 
                 }
-
             }
-            else if (token == null)
+            else if (token == null) // else set the default principle:
             { 
-
-
-                Console.WriteLine($"HITTING 2ND ELSE IF");
-                if (Thread.CurrentPrincipal != null)
+                if (Thread.CurrentPrincipal != null) // this check may be removed...
                 {
                     Thread.CurrentPrincipal = (ClaimsPrincipal)Thread.CurrentPrincipal;
                 }
-                else
-                {
-
-                    DefaultClaimsPrinciple();
-
-                }
-                //here we will set a default claims prinicple instead of returning that^.
+                else{ DefaultClaimsPrinciple();}
             }
             await _next(httpContext);
         }
@@ -116,26 +99,28 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
             
                 ///https://dev.to/tjindapitak/better-way-of-storing-per-request-data-across-middlewares-in-asp-net-core-1m9k
                 ///
-                if (!_validateAuthorizationHeader.IsValidJWT())
+                if (!_validateAuthorizationHeader.IsValidJWT()) // JWT IS NOT VALID, END CALL
                 {
                     httpContext.Response.StatusCode = 400; //Bad Request   
                     return false;
                 }
-                else
+                else //THE JWT IS VALID, THEREFORE SET THE CLAIMS PRINCIPLE TO THREAD.
                 {
                     #region IF THE AUTH HEADER CONTAINS VALID TOKEN  -> SET CLAIMSPRINCIPAL TO THREAD
                    
                     var userPrinciple =
                         _validateAuthorizationHeader.ParseForClaimsPrinciple();
-                    Console.WriteLine($" " +
-                        $"THE USER CLAIMS PRINCIPLE if jwt it valid. in jwt middleware");
                     _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
-                    Thread.CurrentPrincipal = _threadPrinciple;
-                    foreach (Claim c in _threadPrinciple.Claims)
+                    Thread.CurrentPrincipal = _threadPrinciple; // SETTING THE PARSED TOKEN, TO THE THREAD.
+
+                /*
+                Console.WriteLine($" " +
+                    $"THE USER CLAIMS PRINCIPLE if jwt it valid. in jwt middleware");
+                foreach (Claim c in _threadPrinciple.Claims)
                     {
                         Console.WriteLine($"Permission:  {c.Type}, Scope: {c.Value} ");
                     }
-
+                */
                     #endregion
                 }
            
@@ -143,8 +128,10 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
 
 
         }
-
-
+        /// <summary>
+        /// CREATED A HELPER CLASS THAT HANDLES THE DEFAULT VALUES
+        /// FOR A GUEST REQUEST. (EMPTY TOKEN).
+        /// </summary>
         public void DefaultClaimsPrinciple()
         {
             // setting a default principle object t=for the thread.

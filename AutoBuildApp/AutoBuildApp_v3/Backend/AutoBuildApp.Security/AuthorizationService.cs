@@ -39,8 +39,6 @@ namespace AutoBuildApp.Security
             {
                 return false;
             }
-
-
             /// how about ordering the claims first:
             /// http://csharphelper.com/blog/2018/04/determine-whether-two-lists-contain-the-same-sequences-of-objects-in-different-orders-in-c/
             /// 
@@ -51,6 +49,8 @@ namespace AutoBuildApp.Security
             var y = from Claim item in permissionsRequired
                     orderby item.Type
                     select item;
+            #region PRINTING CHECK
+            /*
             Console.WriteLine($" " +
                    $"In the authorizatioin service");
             Console.WriteLine($"The claims in the thead in AuthorizationService:");
@@ -71,13 +71,12 @@ namespace AutoBuildApp.Security
                     $"claim type: { c.Type } claim value: {c.Value} ");
 
             }
-
+            */
+            #endregion
 
             ///http://csharphelper.com/blog/2018/04/determine-whether-two-lists-contain-the-same-sequences-of-objects-in-different-orders-in-c/
             ///
             bool outcome = Enumerable.SequenceEqual(x, y, new MyCustomComparer());
-            Console.WriteLine($" " +
-                   $"The outcome: : { outcome}");
             return outcome;
         }
         // nick: not a terrible idea :  make two different checks singular and 
@@ -96,10 +95,10 @@ namespace AutoBuildApp.Security
         {
             return (x.Type == y.Type && x.Value == y.Value);
         }
-
         public int GetHashCode(Claim obj)
         {
-            return obj.ToString().GetHashCode();
+            throw new NotImplementedException();
+            //return obj.ToString().GetHashCode();
         }
     }
 

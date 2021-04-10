@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading;
 
 namespace AutoBuildSecure.WebApi.Controllers
@@ -44,7 +45,8 @@ namespace AutoBuildSecure.WebApi.Controllers
             //. getting the data
             var data = authDemo.getData();
             return Ok($"the list of claims given: { returnValue}," +
-                $"/n the data in the demo manager : {data}");
+                $"/n the data from the demo manager : {data}\n" +
+                $"\n\nCurrent Thread Priciple: { JsonSerializer.Serialize(Thread.CurrentPrincipal)} ");
 
         }
 
