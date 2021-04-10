@@ -22,11 +22,16 @@ namespace AutoBuildApp.Security.Models
             this.Name = "AutoBuild User";
         }
 
+        private string authenticationType = "AutoBuild JWT";
+
         /// <summary>
         /// Authentication type in ASP.NET is more
         /// like cookies and bearer or google...
         /// </summary>
-        public string AuthenticationType { get; set; }
+        public string AuthenticationType {
+            get { return this.authenticationType; }
+            set { this.authenticationType = value; } 
+        }
         /// <summary>
         /// the property IsAuthenticated indicates whether 
         /// an identity is authenticated or not.
@@ -45,6 +50,15 @@ namespace AutoBuildApp.Security.Models
         public bool IsAuthenticated { get; set; }
 
         public string Name { get; set; }
+
+
+        public override string ToString()
+        {
+            return $" " +
+                $"\nAuthType: {this.AuthenticationType} " +
+                $"\nIsAuth: {this.IsAuthenticated } " +
+                $"\nName: {this.Name }";
+        }
 
     }
 }

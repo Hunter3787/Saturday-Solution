@@ -11,7 +11,9 @@ using System.Threading;
 
 using AutoBuildApp.Security.Enumerations;
 using System.Security.Principal;
-
+using AutoBuildApp.DataAccess;
+using AutoBuildApp.DataAccess.Entities;
+using AutoBuildApp.Services.Auth_Services;
 
 namespace AutoBuildSecure.ConsoleApp
 {
@@ -81,6 +83,25 @@ namespace AutoBuildSecure.ConsoleApp
 
             Console.WriteLine($"\n\tAuthorization output" +
                 $" {AuthorizationService.checkPermissions(unregistered.Claims())}");
+
+            UserCredentials credential1 = new UserCredentials("Zeina", "PassHash"); //user exists
+
+            CommonReponseAuth _CRAuth = new CommonReponseAuth();
+            AuthDAO _authDAO = new AuthDAO("Data Source=localhost;Initial Catalog=DB;Integrated Security=True");
+
+            AuthenticationService authenticationService = new AuthenticationService(_authDAO);
+
+
+        _CRAuth = authenticationService.AuthenticateUser(credential1);
+
+            Console.WriteLine($"test method " +
+                $"{ _CRAuth.ToString()}");
+
+
+            UserIdentity testing = new UserIdentity();
+            Console.WriteLine($"" +
+                $"\n testing :" +
+                $" { testing.ToString()}");
 
 
         }

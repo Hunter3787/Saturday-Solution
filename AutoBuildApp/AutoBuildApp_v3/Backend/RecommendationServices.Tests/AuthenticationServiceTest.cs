@@ -18,8 +18,6 @@ namespace AutoBuildApp.Services.Tests
 
         private static AuthenticationService authenticationService = new AuthenticationService(_authDAO);
 
-        private static CommonReponseAuth _CRAuth = new CommonReponseAuth();
-
         private static IEnumerable<object[]> getNullObjects()
         {
             AuthDAO authDAONull = null;
@@ -52,8 +50,8 @@ namespace AutoBuildApp.Services.Tests
             _CRAuthNotAuthenticated.IsUserExists = false;
             _CRAuthNotAuthenticated.connectionState = true;
 
-            _CRAuthNotAuthenticated.isAuthenticated = false;
             _CRAuthNotAuthenticated.SuccessBool = false;
+            _CRAuthNotAuthenticated.isAuthenticated = false;
 
 
 
@@ -75,7 +73,10 @@ namespace AutoBuildApp.Services.Tests
         [DynamicData(nameof(getUserCredentialsData), DynamicDataSourceType.Method)]
         public void AuthenticationUser_ReturnUSerAuthenticated(UserCredentials user, CommonReponseAuth commonResponseExpected)
         {
-            _CRAuth = (CommonReponseAuth)authenticationService.AuthenticateUser(user);
+
+
+            CommonReponseAuth _CRAuth;
+        _CRAuth = authenticationService.AuthenticateUser(user);
 
             Assert.AreEqual(commonResponseExpected.Equals(_CRAuth), true);
 
@@ -126,7 +127,9 @@ namespace AutoBuildApp.Services.Tests
         [DynamicData(nameof(User_Jwt_data), DynamicDataSourceType.Method)]
         public void Authentication_generatingJWT_UserExistCases(UserCredentials user, bool expectedJWTgeneratedBool)
         {
-            _CRAuth = (CommonReponseAuth)authenticationService.AuthenticateUser(user);
+
+            CommonReponseAuth _CRAuth;
+            _CRAuth = authenticationService.AuthenticateUser(user);
             bool JWTExists = !(string.IsNullOrWhiteSpace(_CRAuth.JWTString));
             Assert.AreEqual(expectedJWTgeneratedBool, JWTExists);
 
