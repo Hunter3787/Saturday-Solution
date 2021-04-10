@@ -1,5 +1,6 @@
 ﻿using AutoBuildApp.Security.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.Linq;
@@ -74,13 +75,21 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
             {
 
                 _validateAuthorizationHeader = new JWTValidator(token);
-                ValidateTheToken(httpContext, token);
+                var result = ValidateTheToken(httpContext, token);
+                if (result == false)
+                {               
+                    await httpContext.Response.WriteAsync(StatusCodes.Status500InternalServerError.ToString());
+
+                }
+
+
+
             }
 
             await _next(httpContext);
         }
 
-        public void ValidateTheToken(HttpContext httpContext, string token)
+        public bool ValidateTheToken(HttpContext httpContext, string token)
         {
             try
             {
@@ -88,8 +97,8 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
                 ///
                 if (!_validateAuthorizationHeader.IsValidJWT())
                 {
-                    httpContext.Items["JWT_Result"] = "JWT failure";
-
+                    httpContext.Response.StatusCode = 400; //Bad Request 
+                    return false;
                 }
                 else
                 {
@@ -100,7 +109,6 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
                         _validateAuthorizationHeader.ParseForClaimsPrinciple();
 
                 }
-
             }
             catch
             {
@@ -108,6 +116,7 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
 
             }
 
+            return true;
 
 
         }
