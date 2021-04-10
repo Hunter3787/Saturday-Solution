@@ -39,6 +39,7 @@ namespace AutoBuildApp.Security
             }
 
             _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
             foreach (Claim claims in _threadPrinciple.Claims)
             {
                 foreach (Claim claimNeeded in permissionsRequired)
