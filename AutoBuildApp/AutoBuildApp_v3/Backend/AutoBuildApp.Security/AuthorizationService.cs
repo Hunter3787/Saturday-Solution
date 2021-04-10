@@ -40,31 +40,44 @@ namespace AutoBuildApp.Security
                 return false;
             }
 
+
+            /// how about ordering the claims first:
+            /// http://csharphelper.com/blog/2018/04/determine-whether-two-lists-contain-the-same-sequences-of-objects-in-different-orders-in-c/
+            /// 
+            var x =
+                from Claim item in _threadPrinciple.Claims
+                orderby item.Type
+                select item;
+            var y = from Claim item in permissionsRequired
+                    orderby item.Type
+                    select item;
             Console.WriteLine($" " +
                    $"In the authorizatioin service");
             Console.WriteLine($"The claims in the thead in AuthorizationService:");
-            foreach (Claim c in _threadPrinciple.Claims)
+            Console.WriteLine($"x");
+            foreach (Claim c in x)
             {
                 Console.WriteLine($" " +
                     $"claim type: { c.Type } claim value: {c.Value} ");
 
             }
-
             Console.WriteLine($" " +
-                   $"Permissions passed in AuthorizationService:");
-            foreach (Claim c in _threadPrinciple.Claims)
+                  $"Permissions passed in AuthorizationService:");
+            Console.WriteLine($" " +
+                   $"y:");
+            foreach (Claim c in y)
             {
                 Console.WriteLine($" " +
                     $"claim type: { c.Type } claim value: {c.Value} ");
 
             }
 
-            bool outcome = Enumerable.SequenceEqual(_threadPrinciple.Claims, permissionsRequired, new MyCustomComparer());
+
+            ///http://csharphelper.com/blog/2018/04/determine-whether-two-lists-contain-the-same-sequences-of-objects-in-different-orders-in-c/
+            ///
+            bool outcome = Enumerable.SequenceEqual(x, y, new MyCustomComparer());
             Console.WriteLine($" " +
                    $"The outcome: : { outcome}");
-            outcome = _threadPrinciple.Claims.SequenceEqual( permissionsRequired, new MyCustomComparer());
-            Console.WriteLine($" " +
-                   $"The outcome2: : { outcome}");
             return outcome;
         }
         // nick: not a terrible idea :  make two different checks singular and 
