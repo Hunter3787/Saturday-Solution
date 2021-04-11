@@ -2,20 +2,16 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AutoBuildApp.Models.Web_Crawler
+namespace AutoBuildApp.Models.WebCrawler
 {
     public class Proxy
     {
         public string IPAddress { get; private set; }
         public int Port { get; private set; }
-
-        public string Country { get; private set; }
-
-        public Proxy(string ipAddress, int port, string country)
+        public Proxy(string ipAddress, int port)
         {
             IPAddress = ipAddress;
             Port = port;
-            Country = country;
         }
 
         public override int GetHashCode()
@@ -23,7 +19,6 @@ namespace AutoBuildApp.Models.Web_Crawler
             int hash = 19;
             hash = hash * 29 + IPAddress.GetHashCode();
             hash = hash * 29 + Port.GetHashCode();
-            hash = hash * 29 + Country.GetHashCode();
             return hash;
         }
 
@@ -34,7 +29,7 @@ namespace AutoBuildApp.Models.Web_Crawler
 
         public bool Equals(Proxy p)
         {
-            return p.IPAddress.Equals(IPAddress) && p.Port == Port && p.Country.Equals(Country);
+            return p.IPAddress.Equals(IPAddress) && p.Port == Port;
         }
     }
 }

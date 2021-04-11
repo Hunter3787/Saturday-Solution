@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AutoBuildApp.Models.Web_Crawler
+namespace AutoBuildApp.Models.WebCrawler
 {
     public class Product
     {
@@ -13,9 +13,16 @@ namespace AutoBuildApp.Models.Web_Crawler
         public string Name { get; set; }
         public string ProductType { get; set; }
         public string ManufacturerName { get; set; }
+        public string Price { get; set; }
+        public string TotalRating { get; set; }
+        public string TotalNumberOfReviews { get; set; }
         public Dictionary<string, string> Specs { get; set; }
+        public List<Review> Reviews { get; set; }
 
-        public Product(bool availability, string company, string url, string modelNumber, string name, string productType, string manufacturerName, Dictionary<string, string> specs)
+
+        public Product(bool availability, string company, string url, string modelNumber, string name, 
+            string productType, string manufacturerName, string totalRating, string totalNumberOfReviews,
+            string price, Dictionary<string, string> specs, List<Review> reviews)
         {
             Availability = availability;
             Company = company;
@@ -24,7 +31,11 @@ namespace AutoBuildApp.Models.Web_Crawler
             Name = name;
             ProductType = productType;
             ManufacturerName = manufacturerName;
+            TotalRating = totalRating;
+            TotalNumberOfReviews = totalNumberOfReviews;
+            Price = price;
             Specs = specs;
+            Reviews = reviews;
         }
     }
 }
