@@ -74,6 +74,8 @@ namespace AutoBuildSecure.WebApi.Controllers
         [HttpGet]
         public IActionResult GetJWTToken()
         {
+            _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
             Console.WriteLine($"The Claims prinicple set in the JWT validator:");
             foreach (Claim c in _threadPrinciple.Claims)
             {

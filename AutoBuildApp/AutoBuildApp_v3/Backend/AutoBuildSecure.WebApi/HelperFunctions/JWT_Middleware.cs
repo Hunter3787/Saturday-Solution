@@ -28,13 +28,15 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
         // http.context.item["ClaimsPrincipal"] =.
         private ClaimsPrincipal _threadPrinciple;
 
-
+        /// <summary>
+        /// RequestDelegate is a function that can process an HTTP request.
+        /// </summary>
+        /// <param name="next"></param>
         public JWT_Middleware(RequestDelegate next)
         {
             _next = next;
 
         }
-
 
 
         public async Task InvokeAsync(HttpContext httpContext)
@@ -68,8 +70,20 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
                 .ToString();
 
             Console.WriteLine($"\n\t IN THE JWT_MIDDLEWARE \n" +
-                $"INCOMING URL REFERAL TEST:   { Url}");
+                $"INCOMING URL REFERAL TEST:   {Url}\n" +
+                $"2: {Url_Two}\n" +
+                $"3: {referer}\n");
             #endregion
+            if(Url_Two.Contains("authentication"))
+            {
+                Console.WriteLine($"YOU ARE REQUESTING THE AUTHENTICATION URL");
+            }
+            else if (Url_Two.Contains("authdemo"))
+            {
+
+                Console.WriteLine($"YOU ARE REQUESTING THE AUTHDEMO URL");
+            }
+
 
             if (token != null && token.Length != 0) // there is a JWT token 
             {
