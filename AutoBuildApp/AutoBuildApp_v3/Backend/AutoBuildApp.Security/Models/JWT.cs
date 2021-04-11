@@ -221,7 +221,7 @@ namespace AutoBuildApp.Security.Models
         {
             string[] parseJWT = JWT.Split('.');
             string payloadJSON = Base64UrlEncoder.Decode(parseJWT[1]);
-            Console.WriteLine($"\n\nJson payload: {payloadJSON}");
+           /// Console.WriteLine($"\n\nJson payload: {payloadJSON}");
             JWTPayload payload = JsonSerializer.Deserialize<JWTPayload>(payloadJSON);
             return payload;
         }
@@ -354,7 +354,7 @@ namespace AutoBuildApp.Security.Models
         public bool isValidPayload()
         {
             JWTPayload payload = GetJWTPayload();
-            Console.WriteLine("\n\nPaylaod ToString: " + payload.ToString());
+            //Console.WriteLine("\n\nPaylaod ToString: " + payload.ToString());
 
             if (payload.exp <= payload.ToUnixTimestamp(DateTimeOffset.UtcNow))
             {
@@ -447,14 +447,17 @@ namespace AutoBuildApp.Security.Models
                 };
                 foreach (Claims claims in payload.UserCLaims)
                 { // converting the claims in type System.Security.Claims
-                    Console.WriteLine($"{ claims.Permission} ,{claims.scopeOfPermissions} ");
+                    //Console.WriteLine($"{ claims.Permission} ,{claims.scopeOfPermissions} ");
                     _securityClaims.Add(new Claim(claims.Permission, claims.scopeOfPermissions));
                 }
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(_securityClaims,
                 userIdentity.AuthenticationType, userIdentity.Name, " ");
                 _principalGenerated.AddIdentity(claimsIdentity);
-            }
 
+
+            }
+            Console.WriteLine($"\t In the jwt validator class: \n" +
+                $" Identity.name: { _principalGenerated.Identity.Name} ");
 
             Thread.CurrentPrincipal = _principalGenerated;
             return _principalGenerated;

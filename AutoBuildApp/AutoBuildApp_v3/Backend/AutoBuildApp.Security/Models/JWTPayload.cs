@@ -29,8 +29,6 @@ namespace AutoBuildApp.Security.Models
         public JWTPayload(string subject, string issuer, string audience,
             string username, object expiration, object nbf, object DOBofJWTToken)
         {
-            Console.WriteLine($" expiration: { expiration} nbf:  { nbf} iat: {DOBofJWTToken}");
-
             try
             {
 
@@ -39,9 +37,9 @@ namespace AutoBuildApp.Security.Models
                 this.iss = issuer; // in our context "Autobuild"
                 this.aud = audience; // in our context "US"
                 this.Username = username;
-                Console.WriteLine($"the type: {nbf.GetType()}");
-                Console.WriteLine($"the reference for datetime: {Object.ReferenceEquals(nbf.GetType(), typeof(DateTimeOffset))}");
-                Console.WriteLine($"the reference for long: {Object.ReferenceEquals(nbf.GetType(), typeof(System.Int64))}");
+                ///Console.WriteLine($"the type: {nbf.GetType()}");
+                ///Console.WriteLine($"the reference for datetime: {Object.ReferenceEquals(nbf.GetType(), typeof(DateTimeOffset))}");
+                ///Console.WriteLine($"the reference for long: {Object.ReferenceEquals(nbf.GetType(), typeof(System.Int64))}");
 
                 if (Object.ReferenceEquals(nbf.GetType(), typeof(System.DateTimeOffset)) &&
                     Object.ReferenceEquals(DOBofJWTToken.GetType(), typeof(System.DateTimeOffset)) &&
@@ -50,9 +48,6 @@ namespace AutoBuildApp.Security.Models
                     this.iat = ToUnixTimestamp(DOBofJWTToken);
                     this.nbf = ToUnixTimestamp(nbf);
                     this.exp = ToUnixTimestamp(expiration);
-                    Console.WriteLine($"FIRST IF exp: { exp} nbf:  { this.nbf} iat: {this.iat}");
-
-
                 }
                 else if (Object.ReferenceEquals(nbf.GetType(), typeof(System.Int64)) &&
                         Object.ReferenceEquals(DOBofJWTToken.GetType(), typeof(System.Int64)) &&
@@ -61,8 +56,6 @@ namespace AutoBuildApp.Security.Models
                     this.iat = (long)DOBofJWTToken;
                     this.nbf = (long)nbf;
                     this.exp = (long)expiration;
-                    Console.WriteLine($" exp: { exp} nbf:  { this.nbf} iat: {this.iat}");
-
 
                 }
             }
@@ -85,7 +78,7 @@ namespace AutoBuildApp.Security.Models
             DateTimeOffset datePass = (DateTimeOffset)datePassed;
             //Console.WriteLine($"date passed: time: {datePassed}");
             var epoch = new DateTimeOffset(1970, 1, 1, 0, 0, 0,TimeSpan.Zero);
-           Console.WriteLine("{0} --> Unix Seconds: {1}", epoch, epoch.ToUnixTimeSeconds());
+           ///Console.WriteLine("{0} --> Unix Seconds: {1}", epoch, epoch.ToUnixTimeSeconds());
             var time = datePass.ToUniversalTime().Subtract(epoch);
             //Console.WriteLine($"time: {time.Ticks / TimeSpan.TicksPerSecond}");
             return time.Ticks / TimeSpan.TicksPerSecond;
