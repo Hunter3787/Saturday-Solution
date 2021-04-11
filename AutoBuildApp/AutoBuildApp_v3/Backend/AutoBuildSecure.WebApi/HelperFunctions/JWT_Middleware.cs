@@ -107,10 +107,11 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
 
         public bool ValidateTheToken(HttpContext httpContext, string token)
         {
-            
-                ///https://dev.to/tjindapitak/better-way-of-storing-per-request-data-across-middlewares-in-asp-net-core-1m9k
-                ///
-                if (!_validateAuthorizationHeader.IsValidJWT()) // JWT IS NOT VALID, END CALL
+
+            Console.WriteLine($"VALIDATING THE TOKEN METHOD.");
+            ///https://dev.to/tjindapitak/better-way-of-storing-per-request-data-across-middlewares-in-asp-net-core-1m9k
+            ///
+            if (!_validateAuthorizationHeader.IsValidJWT()) // JWT IS NOT VALID, END CALL
                 {
                     httpContext.Response.StatusCode = 400; //Bad Request   
                     return false;
