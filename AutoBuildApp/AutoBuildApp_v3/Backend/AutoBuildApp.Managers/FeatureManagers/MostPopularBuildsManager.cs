@@ -146,15 +146,24 @@ namespace AutoBuildApp.Managers
         }
 
         /// <summary>
-        /// This method will retrieve the list from the service and send it
-        /// to the controller after doing checks.
+        /// This method will be called to validate/invalidate BRD reqs.
         /// </summary>
-        /// <returns>returns the list of build posts.</returns>
-        public List<BuildPost> GetBuildPosts()
+        /// <param name="queryBy">takes in a query string that specifies query type.</param>
+        /// <returns>returns the list of queried Build Post objects</returns>
+        public List<BuildPost> GetBuildPosts(string queryBy)
         {
             // Log the manager get build posts being called
             _logger.LogInformation("Most Popular Builds Manager GetBuildPosts was called.");
-            return _mostPopularBuildsService.GetBuildPosts();
+
+            if (queryBy == "BuildType_GraphicArtist" || queryBy == "BuildType_Gaming" ||
+               queryBy == "BuildType_WordProcessing" || queryBy == "AscendingLikes")
+            {
+                return _mostPopularBuildsService.GetBuildPosts(queryBy);
+            }
+
+            var defaultQuery = "DescendingLikes";
+
+            return _mostPopularBuildsService.GetBuildPosts(defaultQuery);
         }
     }
 }

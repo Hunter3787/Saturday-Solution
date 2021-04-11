@@ -51,28 +51,45 @@ namespace AutoBuildApp.Services.FeatureServices
                 DateTime = buildPost.DateTime
             };
 
-            //return _mostPopularBuildsDAO.PublishBuildRecord(buildPostEntity); // This method is for non reflection insertions.
-            return _mostPopularBuildsDAO.PublishBuildRecord(buildPostEntity, "mostpopularbuilds");
+            return _mostPopularBuildsDAO.PublishBuildRecord(buildPostEntity);
+            //return _mostPopularBuildsDAO.PublishBuildRecord(buildPostEntity, "mostpopularbuilds");
         }
+
 
         /// <summary>
         /// This method retrieves and parses DB object data to Domain Model objects.
         /// </summary>
-        /// <returns>returns a list of build post objects.</returns>
-        public List<BuildPost> GetBuildPosts()
+        /// <param name="queryBy">takes in a string that specifies what the returned data will be queried by.</param>
+        /// <returns>returns the list of queried builds.</returns>
+        public List<BuildPost> GetBuildPosts(string queryBy)
         {
             // Logs the event of getting build posts in the service layer.
             _logger.LogInformation("Most Popular Builds Service GetBuildPosts was called.");
 
-            // Calls the DAO method to retrieve DB data and store in a local var.
-            var buildPostEntities = _mostPopularBuildsDAO.GetAllBuildPostRecords();
+            List<BuildPostEntity> buildPostEntities;
+
+            if (queryBy == "BuildType_GraphicArtist" || queryBy == "BuildType_Gaming" ||
+                queryBy == "BuildType_WordProcessing")
+            {
+                buildPostEntities = _mostPopularBuildsDAO.GetAllBuildPostRecordsByBuild(queryBy);
+            }
+
+            else if (queryBy == "AscendingLikes")
+            {
+                buildPostEntities = _mostPopularBuildsDAO.GetAllBuildPostRecordsByLikes(queryBy);
+            }
+
+            else
+            {
+                buildPostEntities = _mostPopularBuildsDAO.GetAllBuildPostRecordsByLikes(queryBy);
+            }
 
             // create a list of build posts that will be appended to and returned to the manager.
             var buildPosts = new List<BuildPost>();
 
             // This for loop will iterate through the list of entities and incrememntally transfer
             // its data to a new list of build posts.
-            foreach(BuildPostEntity buildPostEntity in buildPostEntities)
+            foreach (BuildPostEntity buildPostEntity in buildPostEntities)
             {
                 var buildPost = new BuildPost()
                 {

@@ -75,7 +75,7 @@ namespace AutoBuildApp.WebApp.Controllers
         /// </summary>
         /// <returns>returns the status of OK as well as the list of Build Posts.</returns>
         [HttpGet]
-        public IActionResult GetBuildPosts()
+        public IActionResult GetBuildPosts(string queryBy)
         {
             _logger.LogInformation("GetBuildPosts was fetched.");
 
@@ -84,12 +84,32 @@ namespace AutoBuildApp.WebApp.Controllers
             // This will start a manager and pass in the service.
             MostPopularBuildsManager mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
+            List<BuildPost> buildPosts;
+
             // This will try to get all Builds, and if not, it will catch it and return the error code.
             try
             {
-                var buildPosts = mostPopularBuildsManager.GetBuildPosts(); // calls the manager to get all Builds.
+                switch (queryBy)
+                {
+                    case "BuildType_GraphicArtist":
+                        buildPosts = mostPopularBuildsManager.GetBuildPosts(queryBy); // calls the manager to get all Builds sorted by build type, Graphic Artist.
+                        break;
+                    case "BuildType_Gaming":
+                        buildPosts = mostPopularBuildsManager.GetBuildPosts(queryBy); // calls the manager to get all Builds sorted by build type, Gaming.
+                        break;
+                    case "BuildType_WordProcessing":
+                        buildPosts = mostPopularBuildsManager.GetBuildPosts(queryBy); // calls the manager to get all Builds sorted by build type, Word Processing.
+                        break;
+                    case "AscendingLikes":
+                        buildPosts = mostPopularBuildsManager.GetBuildPosts(queryBy); // calls the manager to get all Builds in ascending order likes (least) first.
+                        break;
+                    default:
+                        buildPosts = mostPopularBuildsManager.GetBuildPosts(queryBy); // calls the manager to get all Builds in default descending order (most) first.
+                        break;
+                }
+                //var buildPosts = mostPopularBuildsManager.GetBuildPosts(); // calls the manager to get all Builds.
 
-                _logger.LogInformation("GetBuildPosts was sucessfully fetched.");
+                //_logger.LogInformation("GetBuildPosts was sucessfully fetched.");
                 return Ok(buildPosts); // sends the BuildPost list through the OK to be read from the front end fetch request.
             }
             catch

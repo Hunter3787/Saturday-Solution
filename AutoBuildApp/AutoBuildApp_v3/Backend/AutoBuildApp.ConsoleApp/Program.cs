@@ -17,34 +17,25 @@ namespace AutoBuildApp.ConsoleApp
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
-            var buildPost = new BuildPost()
-            {
-                Username = "Billy",
-                Title = "Great Title",
-                Description = "Greatest build ever",
-                LikeIncrementor  = 0,
-                BuildType = BuildType.Gaming,
-                BuildImagePath = @"C:\Users\Serge\Desktop\images\3.jpg",
-                DateTime = "2019"
-            };
+            var queryBy1 = "AscendingLikes";
+            var queryBy2 = "BuildType_GraphicArtist";
+            var queryBy3 = "BuildType_Gaming";
+            var queryBy4 = "BuildType_WordProcessing";
+            var queryBy5 = "RandomSHIIIIIIZZZ";
 
-            var result = mostPopularBuildsManager.PublishBuild(buildPost);
-
-            var list = mostPopularBuildsManager.GetBuildPosts();
+            var list = mostPopularBuildsManager.GetBuildPosts(queryBy5);
 
             foreach (var item in list)
             {
-                Console.WriteLine(item.EntityId);
-                Console.WriteLine(item.Username);
-                Console.WriteLine(item.Title);
-                Console.WriteLine(item.Description);
-                Console.WriteLine(item.LikeIncrementor);
-                Console.WriteLine(item.BuildImagePath);
-                Console.WriteLine(item.DateTime);
+                //Console.WriteLine(item.EntityId);
+                //Console.WriteLine(item.Username);
+                //Console.WriteLine(item.Title);
+                //Console.WriteLine(item.Description);
+                Console.WriteLine("Likes: "+item.LikeIncrementor + " Build Type:" + item.BuildType);
+                //Console.WriteLine(item.BuildImagePath);
+                //Console.WriteLine(item.DateTime);
                 Console.WriteLine();
             }
-
-            Console.WriteLine(result);
 
             Console.WriteLine("Hello World");
 
