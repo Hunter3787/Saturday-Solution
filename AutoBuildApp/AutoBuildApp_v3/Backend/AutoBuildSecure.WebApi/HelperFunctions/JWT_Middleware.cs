@@ -36,8 +36,6 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
         {
             _next = next;
         }
-
-
         public async Task InvokeAsync(HttpContext httpContext)
         {
             /// postman isnt sending a request header containing aa referer....
@@ -126,6 +124,7 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
                     _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
                     Thread.CurrentPrincipal = _threadPrinciple; // SETTING THE PARSED TOKEN, TO THE THREAD.
 
+                Console.WriteLine($"\nIN THE JWT MIDDLEWARE CHEWCKING THE PRINCIPLE NAME: {_threadPrinciple.Identity.Name}\n");
                 /*
                 Console.WriteLine($" " +
                     $"THE USER CLAIMS PRINCIPLE if jwt it valid. in jwt middleware");
