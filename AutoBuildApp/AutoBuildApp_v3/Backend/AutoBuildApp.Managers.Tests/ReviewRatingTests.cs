@@ -86,6 +86,26 @@ namespace ReviewsAndRatings.UnitTests
         }
 
         /// <summary>
+        /// This test will return a list of review rating objects, if it does, then it passes.
+        /// </summary>
+        [Test]
+        public void ReviewRating_GetAllReviewsRatings_ReturnsListOfReviewRatingObjects()
+        {
+            // Arrange
+            var reviewRatingDAO = new ReviewRatingDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            var reviewRatingService = new ReviewRatingService(reviewRatingDAO);
+            var reviewRatingManager = new ReviewRatingManager(reviewRatingService);
+
+            var reviewRatingList = new List<ReviewRating>();
+
+            // Act
+            var result = reviewRatingManager.GetAllReviewsRatings();
+
+            // Assert
+            Assert.AreEqual(reviewRatingList.GetType(), result.GetType());
+        }
+
+        /// <summary>
         /// This test will return a review rating object with a specified ID, it will check if IDs are equal.
         /// If IDs are equal, then it will return true.
         /// </summary>

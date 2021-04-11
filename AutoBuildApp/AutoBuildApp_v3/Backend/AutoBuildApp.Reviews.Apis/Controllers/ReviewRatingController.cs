@@ -12,7 +12,7 @@ using AutoBuildApp.DomainModels;
 /// [1,3-5]
 /// </summary>
 
-namespace AutoBuildApp.WebApp.Controllers
+namespace APB.App.Apis.Controllers
 {
     /// <summary>
     /// This class will be the controller of the ReviewRatings and call methods from the front end.
