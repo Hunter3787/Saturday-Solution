@@ -150,20 +150,38 @@ namespace AutoBuildApp.Managers
         /// </summary>
         /// <param name="queryBy">takes in a query string that specifies query type.</param>
         /// <returns>returns the list of queried Build Post objects</returns>
-        public List<BuildPost> GetBuildPosts(string queryBy)
+        public List<BuildPost> GetBuildPosts(string orderLikes, string buildType)
         {
             // Log the manager get build posts being called
             _logger.LogInformation("Most Popular Builds Manager GetBuildPosts was called.");
 
-            if (queryBy == "BuildType_GraphicArtist" || queryBy == "BuildType_Gaming" ||
-               queryBy == "BuildType_WordProcessing" || queryBy == "AscendingLikes")
+            var defaultOrderLikes = "";
+            var defaultBuildType = "";
+
+            // conditions: GA and ASC, G and ASC, WP and ASC
+            //             GA and DESC, G and DESC, WP and DESC
+            //             GA, G, WP
+            //             ASC
+            // default:    DESC
+
+            if ((buildType == "BuildType_GraphicArtist" && (orderLikes == "AscendingLikes" || orderLikes == "DescendingLikes"))|| 
+                (buildType == "BuildType_Gaming" && (orderLikes == "AscendingLikes" || orderLikes == "DescendingLikes")) || 
+                (buildType == "BuildType_WordProcessing" && (orderLikes == "AscendingLikes" || orderLikes == "DescendingLikes")))
             {
-                return _mostPopularBuildsService.GetBuildPosts(queryBy);
+                return _mostPopularBuildsService.GetBuildPosts(orderLikes, buildType);
             }
 
-            var defaultQuery = "DescendingLikes";
+            if (buildType == "BuildType_GraphicArtist" || buildType == "BuildType_Gaming" || buildType == "BuildType_WordProcessing")
+            {
+                return _mostPopularBuildsService.GetBuildPosts(defaultOrderLikes, buildType);
+            }
 
-            return _mostPopularBuildsService.GetBuildPosts(defaultQuery);
+            if (orderLikes == "AscendingLikes")
+            {
+                return _mostPopularBuildsService.GetBuildPosts(orderLikes, defaultBuildType);
+            }
+
+            return _mostPopularBuildsService.GetBuildPosts(defaultOrderLikes, defaultBuildType);
         }
     }
 }

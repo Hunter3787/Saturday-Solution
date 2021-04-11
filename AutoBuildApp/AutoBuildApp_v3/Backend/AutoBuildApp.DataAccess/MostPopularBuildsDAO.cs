@@ -168,19 +168,30 @@ namespace AutoBuildApp.DataAccess
         /// </summary>
         /// <param name="queryBy">takes in a query string to specify the type of sort.</param>
         /// <returns>returns a list of Build Post Entities sorted by likes.</returns>
-        public List<BuildPostEntity> GetAllBuildPostRecordsByLikes(string queryBy)
+        public List<BuildPostEntity> GetAllBuildPostRecordsByQuery(string orderLikes, string buildType)
         {
             // Initialize the query string.
-            string orderBy;
+            string orderBy = "ORDER BY LikeIncrementor DESC";
+            string whereClause = "";
+
+            // Checks the condition of the query by string and sets the where clause accordingly, else it will run a default query of descneding likes.
+            if (buildType == "BuildType_GraphicArtist")
+            {
+                whereClause = "WHERE BuildTypeValue = 1";
+            }
+            else if (buildType == "BuildType_Gaming")
+            {
+                whereClause = "WHERE BuildTypeValue = 2";
+            }
+            else if (buildType == "BuildType_WordProcessing")
+            {
+                whereClause = "WHERE BuildTypeValue = 3";
+            }
 
             // Will check the condition of which to sort likes, the default else clause will sort in descending order of likes.
-            if (queryBy == "AscendingLikes")
+            if (orderLikes == "AscendingLikes")
             {
                 orderBy = "ORDER BY LikeIncrementor ASC";
-            }
-            else
-            {
-                orderBy = "ORDER BY LikeIncrementor DESC";
             }
 
             // uses var connection and will automatically close once the using block has reached the end.
@@ -200,7 +211,7 @@ namespace AutoBuildApp.DataAccess
 
                     // Stored the query that will be used for retrieval of all build posts.
                     command.CommandText =
-                        $"SELECT * from mostpopularbuilds {orderBy};";
+                        $"SELECT * from mostpopularbuilds {whereClause} {orderBy};";
 
                     // this will start the sql data reader that will be utilized to read through the database. for only the duration of the using block.
                     using (SqlDataReader reader = command.ExecuteReader())

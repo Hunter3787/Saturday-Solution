@@ -61,28 +61,13 @@ namespace AutoBuildApp.Services.FeatureServices
         /// </summary>
         /// <param name="queryBy">takes in a string that specifies what the returned data will be queried by.</param>
         /// <returns>returns the list of queried builds.</returns>
-        public List<BuildPost> GetBuildPosts(string queryBy)
+        public List<BuildPost> GetBuildPosts(string orderLikes, string buildType)
         {
             // Logs the event of getting build posts in the service layer.
             _logger.LogInformation("Most Popular Builds Service GetBuildPosts was called.");
 
-            List<BuildPostEntity> buildPostEntities;
-
-            if (queryBy == "BuildType_GraphicArtist" || queryBy == "BuildType_Gaming" ||
-                queryBy == "BuildType_WordProcessing")
-            {
-                buildPostEntities = _mostPopularBuildsDAO.GetAllBuildPostRecordsByBuild(queryBy);
-            }
-
-            else if (queryBy == "AscendingLikes")
-            {
-                buildPostEntities = _mostPopularBuildsDAO.GetAllBuildPostRecordsByLikes(queryBy);
-            }
-
-            else
-            {
-                buildPostEntities = _mostPopularBuildsDAO.GetAllBuildPostRecordsByLikes(queryBy);
-            }
+            // stores the list retreived from the DB into a local List var.
+            var buildPostEntities = _mostPopularBuildsDAO.GetAllBuildPostRecordsByQuery(orderLikes, buildType);
 
             // create a list of build posts that will be appended to and returned to the manager.
             var buildPosts = new List<BuildPost>();

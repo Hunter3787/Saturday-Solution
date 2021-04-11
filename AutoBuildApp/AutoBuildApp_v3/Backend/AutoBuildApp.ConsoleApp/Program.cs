@@ -23,7 +23,7 @@ namespace AutoBuildApp.ConsoleApp
             var queryBy4 = "BuildType_WordProcessing";
             var queryBy5 = "RandomSHIIIIIIZZZ";
 
-            var list = mostPopularBuildsManager.GetBuildPosts(queryBy5);
+            var list = mostPopularBuildsManager.GetBuildPosts(queryBy5, queryBy2);
 
             foreach (var item in list)
             {
