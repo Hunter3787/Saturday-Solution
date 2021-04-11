@@ -148,8 +148,9 @@ namespace AutoBuildApp.Managers
         /// <summary>
         /// This method will be called to validate/invalidate BRD reqs.
         /// </summary>
-        /// <param name="queryBy">takes in a query string that specifies query type.</param>
-        /// <returns>returns the list of queried Build Post objects</returns>
+        /// <param name="orderLikes">query string to determing which order to list elements by likes</param>
+        /// <param name="buildType">query string to determinw which order to list builds</param>
+        /// <returns>retruns a list of Build Posts.</returns>
         public List<BuildPost> GetBuildPosts(string orderLikes, string buildType)
         {
             // Log the manager get build posts being called
@@ -158,6 +159,8 @@ namespace AutoBuildApp.Managers
             var defaultOrderLikes = "";
             var defaultBuildType = "";
 
+            // The following if conditions will check all possible conditions and assign values accordingly,
+            // else it will insert the default parameters.
             // conditions: GA and ASC, G and ASC, WP and ASC
             //             GA and DESC, G and DESC, WP and DESC
             //             GA, G, WP

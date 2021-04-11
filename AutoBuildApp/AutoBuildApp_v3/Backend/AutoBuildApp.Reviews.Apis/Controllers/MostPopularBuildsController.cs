@@ -73,6 +73,8 @@ namespace AutoBuildApp.WebApp.Controllers
         /// <summary>
         /// This method will get all Builds from the DB.
         /// </summary>
+        /// <param name="orderLikes">Takes in query string to order likes.</param>
+        /// <param name="buildType">Takes in query string to sort build type.</param>
         /// <returns>returns the status of OK as well as the list of Build Posts.</returns>
         [HttpGet]
         public IActionResult GetBuildPosts(string orderLikes, string buildType)
@@ -83,7 +85,6 @@ namespace AutoBuildApp.WebApp.Controllers
             MostPopularBuildsService mostPopularBuildsService = new MostPopularBuildsService(_mostPopularBuildsDAO);
             // This will start a manager and pass in the service.
             MostPopularBuildsManager mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
-
 
 
             // This will try to get all Builds, and if not, it will catch it and return the error code.

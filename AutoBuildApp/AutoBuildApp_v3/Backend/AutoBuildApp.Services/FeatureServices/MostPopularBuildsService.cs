@@ -55,12 +55,12 @@ namespace AutoBuildApp.Services.FeatureServices
             //return _mostPopularBuildsDAO.PublishBuildRecord(buildPostEntity, "mostpopularbuilds");
         }
 
-
         /// <summary>
         /// This method retrieves and parses DB object data to Domain Model objects.
         /// </summary>
-        /// <param name="queryBy">takes in a string that specifies what the returned data will be queried by.</param>
-        /// <returns>returns the list of queried builds.</returns>
+        /// <param name="orderLikes">takes in the query condition for the likes.</param>
+        /// <param name="buildType">takes in the query condition for the build type.</param>
+        /// <returns>returns a list of build posts</returns>
         public List<BuildPost> GetBuildPosts(string orderLikes, string buildType)
         {
             // Logs the event of getting build posts in the service layer.
