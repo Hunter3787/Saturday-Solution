@@ -8,7 +8,8 @@ namespace AutoBuildApp.Security.Models
 {
     //Principal Object A Principal object is a holder 
     //for all the roles the user belongs to(according to the active authentication mechanism).
-    public class UserPrinciple : IPrincipal
+
+    class UserPrinciple : IPrincipal
     {
         private UserIdentity defaultIdentity;
         public UserPrinciple()
@@ -26,8 +27,6 @@ namespace AutoBuildApp.Security.Models
             this.Permissions = DefaultClaims;
             this.myIdentity = defaultIdentity;
         }
-
-
 
         public UserPrinciple(UserIdentity identity)
         {
@@ -70,7 +69,7 @@ namespace AutoBuildApp.Security.Models
         public string getPermissions()
         {
             string ret = "";
-            foreach( Claims claims in this.Permissions)
+            foreach (Claims claims in this.Permissions)
             {
                 ret += $" {claims.Permission}, {claims.scopeOfPermissions }\n";
 

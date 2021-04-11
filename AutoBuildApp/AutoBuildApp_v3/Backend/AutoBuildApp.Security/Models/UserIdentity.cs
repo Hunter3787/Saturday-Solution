@@ -5,30 +5,35 @@ using System.Security.Principal;
 namespace AutoBuildApp.Security.Models
 {
     /// <summary>
-     /// So lets take a look at that in the
-     /// context of ASP.NET Core. Identities 
-     /// in ASP.NET Core are a ClaimsIdentity.
-     /// </summary>
-     /// /https://andrewlock.net/introduction-to-authentication-with-asp-net-core/
-     /// 
-     //Identity Object An Identity object is basically a user account
-    public class UserIdentity : IIdentity // IIdentity exposes three simple properties:
-                                   // AuthenticationType, IsAuthenticated, and Name.
+    /// So lets take a look at that in the
+    /// context of ASP.NET Core. Identities 
+    /// in ASP.NET Core are a ClaimsIdentity.
+    /// </summary>
+    /// /https://andrewlock.net/introduction-to-authentication-with-asp-net-core/
+    /// 
+    //Identity Object An Identity object is basically a user account
+    public class UserIdentity : IIdentity // IIdentity exposes three simple properties:                          // AuthenticationType, IsAuthenticated, and Name.
     {
 
         public UserIdentity()
         {
-            this.AuthenticationType = " ";
+            this.AuthenticationType = "AutoBuild JWT";
             this.IsAuthenticated = false;
-            this.Name = " ";
-            this.UserEmail = " ";
+            this.Name = "AutoBuild User";
         }
+
+        private string authenticationType = "AutoBuild JWT";
 
         /// <summary>
         /// Authentication type in ASP.NET is more
         /// like cookies and bearer or google...
         /// </summary>
-        public string AuthenticationType { get; set; }
+        public string AuthenticationType {
+            get { return this.authenticationType; }
+            set { this.authenticationType = value; } 
+        }
+
+        private bool isAuthenticated = false;
         /// <summary>
         /// the property IsAuthenticated indicates whether 
         /// an identity is authenticated or not.
@@ -44,14 +49,24 @@ namespace AutoBuildApp.Security.Models
         ///  an important distinction to bear in mind. 
         ///  
         /// </summary>
-        public bool IsAuthenticated { get; set; }
+        public bool IsAuthenticated {
+            get { return this.isAuthenticated; }
+            set { isAuthenticated = value; } }
 
-        public string Name { get; set; }
+        // the i identity has issues with read only so OVERRIDE IT
+        private string name = "AutoBuild User";
+        public string Name {
+            get { return this.name; }
+            set { name = value; } }
 
-       // public string IssuedJWTToken { get; set; }
 
-        // testing something 
-        public string UserEmail { get; set; }
+        public override string ToString()
+        {
+            return $" " +
+                $"\nAuthType: {this.AuthenticationType} " +
+                $"\nIsAuth: {this.IsAuthenticated } " +
+                $"\nName: {this.Name }";
+        }
 
     }
 }

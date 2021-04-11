@@ -12,7 +12,7 @@ namespace AutoBuildApp.DataAccess
     /// response Failure
     /// response 
     /// </summary>
-    public class CommonReponseAuth : ICommonResponse, IEquatable<CommonReponseAuth>
+    public class CommonReponseAuth : CommonResponse, IEquatable<CommonReponseAuth>
     {
 
         public string SuccessString { get; set; }

@@ -23,6 +23,20 @@ namespace AutoBuildApp.DataAccess.Entities
 
         }
         // the email to identify the user
+        public override string ToString()
+        {
+            string retVal = " ";
+            retVal += UserEmail;
+            foreach (Claims claims in Claims)
+            {
+                retVal += $" " +
+                    $"userPermissions: {claims.Permission } " +
+                    $"scope { claims.scopeOfPermissions}";
+            }
+
+
+            return retVal;
+        }
 
     }
 }

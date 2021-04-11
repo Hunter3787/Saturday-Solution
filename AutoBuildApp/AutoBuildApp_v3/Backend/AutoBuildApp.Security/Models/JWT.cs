@@ -1,5 +1,5 @@
 ﻿using System;
- //https://docs.microsoft.com/en-us/dotnet/api/microsoft.identitymodel.tokens.base64urlencoder?view=azure-dotnet 
+//https://docs.microsoft.com/en-us/dotnet/api/microsoft.identitymodel.tokens.base64urlencoder?view=azure-dotnet 
 
 
 using System.Security.Cryptography;
@@ -7,6 +7,9 @@ using System.Text.Json;
 
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System.Collections.Generic;
+using System.Threading;
 /// <summary>
 /// Reference: see /AuthReference.=
 /// </summary>
@@ -44,14 +47,14 @@ namespace AutoBuildApp.Security.Models
         /// </summary>
         public string SecretKey { get; set; }
 
-       /// <summary>
-       /// The JWT constructor, takes in the 
-       /// secret key, the payload object and
-       /// the header object for the JWT generation.
-       /// </summary>
-       /// <param name="secretKey"></param>
-       /// <param name="payload"></param>
-       /// <param name="header"></param>
+        /// <summary>
+        /// The JWT constructor, takes in the 
+        /// secret key, the payload object and
+        /// the header object for the JWT generation.
+        /// </summary>
+        /// <param name="secretKey"></param>
+        /// <param name="payload"></param>
+        /// <param name="header"></param>
         public JWT(string secretKey, object payload, object header)
         {
             try
@@ -82,11 +85,11 @@ namespace AutoBuildApp.Security.Models
                 this.Payload = (JWTPayload)payload;
             }
             catch (ArgumentNullException)
-            {   
+            {
                 // catching any null objects passed.
-                    var expectedParamName = "NULL OBJECT PROVIDED";
-                    throw new ArgumentNullException(expectedParamName);
-              
+                var expectedParamName = "NULL OBJECT PROVIDED";
+                throw new ArgumentNullException(expectedParamName);
+
             }
 
         }
@@ -140,7 +143,7 @@ namespace AutoBuildApp.Security.Models
         }
         public string JWTToken { get; set; }
         public string JWTSignature { get; set; }
-        public  string ToString2()
+        public string ToString2()
         {
             return $"\nThe JWT token: {JWTToken}\n" +
                 $"Header : {ApplyJson(Header)} \n" +
@@ -191,8 +194,16 @@ namespace AutoBuildApp.Security.Models
         private JWT _jwt;
 
 
+        #region claims priciple built in
+        private IList<Claim> _securityClaims = new List<Claim>();
+
+        ClaimsPrincipal _principalGenerated;
+
+        #endregion
+
+
         public string JWT { get; set; }
-        private string SecretKey { get { return "secret"; } set { value = "secret"; } }
+        private string SecretKey { get { return "Secret"; } set { value = "Secret"; } }
 
         public JWTValidator()
         {
@@ -201,14 +212,9 @@ namespace AutoBuildApp.Security.Models
         public JWTValidator(string JWTToken)
         {
             this.JWT = JWTToken;
+
             Console.WriteLine("Token pased: " + JWTToken);
         }
-
-
-        // so what I am thinking is that upon the 
-        // successful JWT validation then the UserPrinciple object 
-        // will be return to set it to the current thread.
-        public UserPrinciple UserPrincipleObject { get; set; }
 
 
         public JWTPayload GetJWTPayload()
@@ -271,27 +277,25 @@ namespace AutoBuildApp.Security.Models
             string headerJSON = Base64UrlEncoder.Decode(parseJWT[0]);
             JWTHeader header = JsonSerializer.Deserialize<JWTHeader>(headerJSON);
 
-
-
             string payloadJSON = Base64UrlEncoder.Decode(parseJWT[1]);
-            Console.WriteLine($"\n\nJson payload: {payloadJSON}");
+            ///Console.WriteLine($"\n\nJson payload: {payloadJSON}");
             JWTPayload payload = JsonSerializer.Deserialize<JWTPayload>(payloadJSON);
-            Console.WriteLine("\n\nPaylaod ToString: " + payload.ToString());
+            ///Console.WriteLine("\n\nPaylaod ToString: " + payload.ToString());
 
 
 
             string signature = parseJWT[2];
-            Console.WriteLine($" the signature passed: {signature}");
+            ///Console.WriteLine($" the signature passed: {signature}");
             // so what i will do is regenrate the signature and 
             // check if the generated signature matches the 
             // one passed 
             _jwt = new JWT(SecretKey, payload, header);
             string genratedJWT = _jwt.GenerateJWTSignature();
-            Console.WriteLine($"generated JWT signature: { genratedJWT}");
+            /// Console.WriteLine($"generated JWT signature: { genratedJWT}");
 
             if (genratedJWT.Equals(signature) == false)
             {
-                Console.WriteLine($"the signature is not valid.");
+                ///Console.WriteLine($"the signature is not valid.");
                 return false;
             }
 
@@ -426,12 +430,11 @@ namespace AutoBuildApp.Security.Models
         /// upon complete verfifcatons.
         /// </summary>
         /// <returns></returns>
-        public UserPrinciple ParseForUserPrinciple()
+        public ClaimsPrincipal ParseForClaimsPrinciple()
         {
-            /// if the JWT check all pass then
-            /// go ahead and parse for the user object information
-            UserPrinciple userPrinciple = new UserPrinciple();
-            if (IsValidJWT())
+            _principalGenerated = new ClaimsPrincipal();
+
+            if (IsValidJWT() == true)
             {
                 /// here we assign the user information 
                 ///  from the JWT token to the UserPrinciple Object
@@ -439,18 +442,22 @@ namespace AutoBuildApp.Security.Models
                 UserIdentity userIdentity = new UserIdentity
                 {
                     Name = payload.Username,
-                    IsAuthenticated = false,
+                    IsAuthenticated = true,
                     AuthenticationType = "JWT"
                 };
-                userPrinciple = new UserPrinciple(userIdentity)
-                {
-                    Permissions = payload.UserCLaims
-
-                };
-
+                foreach (Claims claims in payload.UserCLaims)
+                { // converting the claims in type System.Security.Claims
+                    Console.WriteLine($"{ claims.Permission} ,{claims.scopeOfPermissions} ");
+                    _securityClaims.Add(new Claim(claims.Permission, claims.scopeOfPermissions));
+                }
+                ClaimsIdentity claimsIdentity = new ClaimsIdentity(_securityClaims,
+                userIdentity.AuthenticationType, userIdentity.Name, " ");
+                _principalGenerated.AddIdentity(claimsIdentity);
             }
-            this.UserPrincipleObject = userPrinciple;
-            return userPrinciple;
+
+
+            Thread.CurrentPrincipal = _principalGenerated;
+            return _principalGenerated;
         }
 
 

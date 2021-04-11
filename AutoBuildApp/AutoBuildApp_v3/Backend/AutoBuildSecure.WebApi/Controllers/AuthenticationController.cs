@@ -1,11 +1,17 @@
 ﻿using AutoBuildApp.DataAccess.Entities;
 using AutoBuildApp.Managers.Registration_PackManger;
+using AutoBuildApp.Security.Enumerations;
+using AutoBuildApp.Security.FactoryModels;
+using AutoBuildApp.Security.Interfaces;
 using AutoBuildApp.Security.Models;
 using AutoBuildSecure.WebApi.HelperFunctions;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
-
+using System;
+using System.Linq;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Text.Json;
 using System.Threading;
 
@@ -29,23 +35,26 @@ namespace AutoBuildSecure.WebApi.Controllers
     {
         #region  Authentication Controller variables 
 
-        private UserPrinciple _userPrinciple;
         private AuthManager _loginManager;
         private UserCredentials _userCredentials;
-
-
+        ClaimsPrincipal _threadPrinciple;
         #endregion
-
 
         public AuthenticationController()
         {
-            #region Variable Instantiations 
+
+            // setting a default principle object t=for the thread.
+            #region Instantiating the Claims principle
+            ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
+            IClaimsFactory unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
 
 
-            _userPrinciple = new UserPrinciple();
-            // assign the principle to the thread.
-            Thread.CurrentPrincipal = _userPrinciple;
+            // set it to th current thread
+            //Thread.CurrentPrincipal = _principal;
+            #endregion
 
+
+            #region getting the connection string and passing to the loginmanager
             // created a connection manager to access the connection strings in 
             // 1) the app settings .json file
             ConnectionManager conString = ConnectionManager.connectionManager;
@@ -54,7 +63,6 @@ namespace AutoBuildSecure.WebApi.Controllers
             // Console.WriteLine($"connection string passed in controller: {connection} ");
             //3) connection string passed to the logIn manager 
             _loginManager = new AuthManager(connection);
-
             #endregion
 
         }
@@ -64,52 +72,45 @@ namespace AutoBuildSecure.WebApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult GetJWTToken()
         {
-            // retrieve the bearer token from the Authorization header 
-            var accessTokenHeader = Request.Headers[HeaderNames.Authorization];
+            _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
-            // if there is no JWT key assigned to the incomming request
-            // then assign a Default user principle object
-            if (   string.IsNullOrEmpty(accessTokenHeader) 
-                || string.IsNullOrWhiteSpace(accessTokenHeader))
-            { 
-                _userPrinciple = new UserPrinciple();
+            Console.WriteLine($"The Claims prinicple set in the JWT validator:");
+            foreach (Claim c in _threadPrinciple.Claims)
+            {
+                Console.WriteLine($"Permission:  {c.Type}, Scope: {c.Value} ");
             }
-            else
-            {  
-                string accessToken = accessTokenHeader;
-                string[] parse = accessToken.Split(' ');
-                /// parse and retrieve the access token from the header
-                accessToken = parse[1];
-                /// calling the JWT Validator to parse and return the
-                /// object to be stored as a UserPrinciple
-                JWTValidator validateAuthorizationHeader = new JWTValidator(accessToken);
-
-                if (validateAuthorizationHeader.IsValidJWT())
-                {
-                    // if the checks pass for the JWT then extract the user information
-                    _userPrinciple = validateAuthorizationHeader.ParseForUserPrinciple();
-                    // and assign it to the current thread!
-
-                }
-            }
-
-            // update the current priniciple to accomedate changes
-            Thread.CurrentPrincipal = _userPrinciple;
-
-            return 
-                Ok($"The header extracted: {accessTokenHeader}" +
-              $"\n\nCurrent Thread Priciple: {JsonSerializer.Serialize(_userPrinciple)}");
+            
+            
+            return
+                Ok( $"\n\nCurrent Thread Priciple: {JsonSerializer.Serialize(Thread.CurrentPrincipal)}/n" +
+                $"OUTPUTTING THE USEREMAIL IN THE CURRENT THREAD FOR NICK: {_threadPrinciple.Identity.Name} " +
+                $"");
         }
 
-        [HttpPost("{UserCred}")]
-        public ActionResult<AuthUserDTO> AuthenticateUser(UserCredentials userCredentials)
+        [HttpPost("{Login}")]
+        public ActionResult<AuthUserDTO> AuthenticateUser(UserCredentials userCredentials, string returnURL)
         {
-            this._userCredentials= userCredentials;
-            var accessTokenHeader = Request.Headers[HeaderNames.Authorization];
-            var JWTToken =  _loginManager.AuthenticateUser(_userCredentials);
-            return Ok(JWTToken);
+
+             _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+            foreach(Claim c in _threadPrinciple.Claims)
+            {
+                Console.WriteLine($"Permission:  {c.Type}, Scope: {c.Value} ");
+            }
+
+            this._userCredentials = userCredentials;
+            var JWTToken = _loginManager.AuthenticateUser(_userCredentials);
+            Console.WriteLine($"AFTER THE JWT HAS BEEN ISSUED: \n");
+
+            _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            foreach (Claim c in _threadPrinciple.Claims)
+            {
+                Console.WriteLine($"Permission:  {c.Type}, Scope: {c.Value} ");
+            }
+
+            return Ok( $" { JWTToken} { _threadPrinciple.Identity.Name}");
         }
     }
 }

@@ -3,6 +3,8 @@ using AutoBuildApp.DataAccess.Entities;
 using AutoBuildApp.Security.Models;
 
 using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text.Json;
 using System.Threading;
 
@@ -29,8 +31,21 @@ namespace AutoBuildApp.Services.Auth_Services
         private JWTHeader _header;
         #endregion
 
-        #region AuthDAO specific objects
+
+        #region System.Security.Claims
+
+
+        ClaimsPrincipal claimsPrincipal;
+
+        // instantiation of security claims of 
+        // type System.Security.Claims;
+        private IList<Claim> _securityClaims = new List<Claim>();
+
+
         #endregion
+
+
+        #region Data access objects
 
         /// <summary>
         /// the data access object to query for user permissions 
@@ -40,11 +55,7 @@ namespace AutoBuildApp.Services.Auth_Services
         private CommonReponseAuth _responseAuth = new CommonReponseAuth();
         private AuthDAO _authDAO;
 
-        // this is to access the principleUser on the thread to update its identity and 
-        // principle after they are authenticated 
-        private UserPrinciple _threadPrinciple = (UserPrinciple)Thread.CurrentPrincipal;
-
-
+        #endregion
 
         public AuthenticationService(AuthDAO authDAO)
         {
@@ -52,7 +63,6 @@ namespace AutoBuildApp.Services.Auth_Services
             {
                 if (authDAO == null)
                 {
-
                     var expectedParamName = "NULL OBJECT PROVIDED";
                     throw new ArgumentNullException(expectedParamName);
 
@@ -74,63 +84,53 @@ namespace AutoBuildApp.Services.Auth_Services
         /// 
         /// </summary>
         /// <param name="credentials"></param>
-        public object AuthenticateUser(UserCredentials credentials)
+        public CommonReponseAuth AuthenticateUser(UserCredentials credentials) // RETURN CMRESPONSE
         {
-            // retrieves the result from the query as an object
-            // then we cast it to type Common responde object -> Auth
-            _responseAuth = (CommonReponseAuth)_authDAO.RetrieveUserInformation(credentials);
+            claimsPrincipal = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            /// retrieves the result from the query as an object
+            /// then we cast it to type Common responde object -> Auth
+            _responseAuth = _authDAO.RetrieveUserInformation(credentials);
             // an initial check for connection state:
-            if (_responseAuth.connectionState == false)
+            if (!_responseAuth.connectionState)
             {
                 _responseAuth.isAuthenticated = false;
-                //return "Authentication Failed";
-                return _responseAuth;
             }
             if (_responseAuth.IsUserExists == true)
             {
+
                 _authUserDTO = _responseAuth.AuthUserDTO;
                 _responseAuth.SuccessBool = true;
                 _responseAuth.isAuthenticated = true;
 
-                Console.WriteLine($"From Common Response: " +
-                    $"{_responseAuth.SuccessString}");
-
+                // conversion of userClaims to the built in claims 
                 foreach (Claims claims in _authUserDTO.Claims)
-                {
-                    Console.WriteLine($" " +
-                        $"userPermissions: {claims.Permission } " +
-                        $"scope { claims.scopeOfPermissions}");
+                { // converting the claims in type System.Security.Claims
+                    _securityClaims.Add(new Claim(claims.Permission, claims.scopeOfPermissions));
                 }
-
-                // setting the users claims retrieved to the 
-                // user principle
-                if(_threadPrinciple == null)
-                {
-                    _threadPrinciple = new UserPrinciple();
-                    _threadPrinciple.Permissions = _authUserDTO.Claims;
-                    _threadPrinciple.myIdentity.UserEmail = _authUserDTO.UserEmail;
-                    _threadPrinciple.myIdentity.IsAuthenticated = true;
-
-                    Thread.CurrentPrincipal = _threadPrinciple;
-                }
-                else
-                {
-                    _threadPrinciple.Permissions = _authUserDTO.Claims;
-                    _threadPrinciple.myIdentity.UserEmail = _authUserDTO.UserEmail;
-                    _threadPrinciple.myIdentity.IsAuthenticated = true;
-                }
+                /// if the quthentication is a success then we
+                /// add thos new claims to the claims principle
+                UserIdentity userIdentity = new UserIdentity();
+                userIdentity.Name = _authUserDTO.UserEmail;
+                userIdentity.IsAuthenticated = true;
 
 
-               _responseAuth.JWTString =  generateJWTToken(_authUserDTO);
-               return _responseAuth;
+                ClaimsIdentity claimsIdentity = new ClaimsIdentity
+                    (_securityClaims, userIdentity.AuthenticationType,
+                     userIdentity.Name, "");
+
+                
+                claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                _responseAuth.JWTString = generateJWTToken(_authUserDTO);
             }
-            else if (_responseAuth.IsUserExists == false)
+            else
             {
                 _responseAuth.isAuthenticated = false;
                 _responseAuth.SuccessBool = false;
-                return _responseAuth;
             }
-            // i think its enough to send back the JWT string to the controller
+
+
+            Thread.CurrentPrincipal = claimsPrincipal;
             return _responseAuth;
         }
 
@@ -153,13 +153,13 @@ namespace AutoBuildApp.Services.Auth_Services
             _payload = new JWTPayload
                 ("Autobuild User", "Autobuild", "US",
                 AuthUserDTO.UserEmail,
-                DateTimeOffset.UtcNow.AddDays(7), 
+                DateTimeOffset.UtcNow.AddDays(7),
                 DateTimeOffset.UtcNow.AddDays(7),
                 DateTimeOffset.UtcNow)
             {
-                UserCLaims =  AuthUserDTO.Claims
+                UserCLaims = AuthUserDTO.Claims
             };
-            
+
             jsonString = JsonSerializer.Serialize(_payload);
             Console.WriteLine("PayLoad\n" + jsonString + "\n\n");
 
