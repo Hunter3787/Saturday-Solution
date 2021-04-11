@@ -53,7 +53,11 @@ namespace AutoBuildApp.Security.Models
             get { return this.isAuthenticated; }
             set { isAuthenticated = value; } }
 
-        public string Name { get; set; }
+        // the i identity has issues with read only so OVERRIDE IT
+        private string name = "AutoBuild User";
+        public string Name {
+            get { return this.name; }
+            set { name = value; } }
 
 
         public override string ToString()

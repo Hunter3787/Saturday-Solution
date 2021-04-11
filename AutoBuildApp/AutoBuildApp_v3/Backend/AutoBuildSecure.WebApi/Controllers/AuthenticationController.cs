@@ -81,9 +81,12 @@ namespace AutoBuildSecure.WebApi.Controllers
             {
                 Console.WriteLine($"Permission:  {c.Type}, Scope: {c.Value} ");
             }
-
+            
+            
             return
-                Ok( $"\n\nCurrent Thread Priciple: {JsonSerializer.Serialize(Thread.CurrentPrincipal)}");
+                Ok( $"\n\nCurrent Thread Priciple: {JsonSerializer.Serialize(Thread.CurrentPrincipal)}/n" +
+                $"OUTPUTTING THE USEREMAIL IN THE CURRENT THREAD FOR NICK: {_threadPrinciple.Identity.Name} " +
+                $"");
         }
 
         [HttpPost("{Login}")]
@@ -107,7 +110,7 @@ namespace AutoBuildSecure.WebApi.Controllers
                 Console.WriteLine($"Permission:  {c.Type}, Scope: {c.Value} ");
             }
 
-            return Ok(JWTToken);
+            return Ok( $" { JWTToken} { _threadPrinciple.Identity.Name}");
         }
     }
 }

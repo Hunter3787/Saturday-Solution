@@ -114,13 +114,13 @@ namespace AutoBuildApp.Services.Auth_Services
                 userIdentity.IsAuthenticated = true;
 
 
-                ClaimsIdentity claimsIdentity;
-
-                claimsIdentity = new ClaimsIdentity
+                ClaimsIdentity claimsIdentity = new ClaimsIdentity
                     (_securityClaims, userIdentity.AuthenticationType,
-                    _authUserDTO.UserEmail, "");
+                     userIdentity.Name, "");
 
+                
                 claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
                 _responseAuth.JWTString = generateJWTToken(_authUserDTO);
             }
             else

@@ -35,7 +35,6 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
         public JWT_Middleware(RequestDelegate next)
         {
             _next = next;
-
         }
 
 
