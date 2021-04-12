@@ -14,6 +14,8 @@ using System.Security.Principal;
 using AutoBuildApp.DataAccess;
 using AutoBuildApp.DataAccess.Entities;
 using AutoBuildApp.Services.Auth_Services;
+using System.Linq;
+using System.Text.Json;
 
 namespace AutoBuildSecure.ConsoleApp
 {
@@ -50,7 +52,7 @@ namespace AutoBuildSecure.ConsoleApp
 
 
             ClaimsIdentity _claimsIdentity;
-            IIdentity userIdentity = new UserIdentity();
+            UserIdentity userIdentity = new UserIdentity();
 
             #region creating a principle for this thread
 
@@ -58,22 +60,32 @@ namespace AutoBuildSecure.ConsoleApp
                 new Claim(PermissionEnumType.READ_ONLY,ScopeEnumType.AUTOBUILD),
 
             };
-            _claimsIdentity = new ClaimsIdentity(claims, userIdentity.AuthenticationType, userIdentity.Name, " ");
-
+            _claimsIdentity = 
+                new ClaimsIdentity(userIdentity, claims, userIdentity.AuthenticationType, userIdentity.Name, " ");
             ClaimsPrincipal _principal = new ClaimsPrincipal(_claimsIdentity);
 
 
-            Console.WriteLine($"GETTING THE USERNAME ON CURRENT THREAD" +
-                $"{_principal.Identity.Name}" +
-                $"for rhe claimsidentity issues:" +
-                $"{_claimsIdentity.NameClaimType}");
+            Console.WriteLine($"GETTING THE USERNAME ON CURRENT THREAD\n" +
+                $"" +
+                $"Claimsidentity NameClaims type:" +
+                $"{_claimsIdentity.NameClaimType} \n" +
+                $"Claimsidentity Name\n:" +
+                $"{_claimsIdentity.Name}" +
+                $"ClaimsPrincipe name: \n" +
+                $"{_principal.Identity } and auth type: {_principal.Identity.AuthenticationType}\n" +
+                $"the idenity the claims principal carries:\n" +
+                $"{JsonSerializer.Serialize(_principal.Identity)}");
             // _principal.AddIdentity(_claimsIdentity);
             // set it to th current thread
             Thread.CurrentPrincipal = _principal;
 
             #endregion
 
-         
+           // Console.WriteLine($"\n\nCurrent Thread Priciple: { JsonSerializer.Serialize(Thread.CurrentPrincipal)} \n" +
+            //    $" {ClaimsPrincipal.Current.Identities.First().Name}");
+
+            CP cP = new CP();
+              cP.testing();
 
             /// TAKLE OUT THE HARDCODING AND DO ENUMERATIOONS OF ROLES INSTAD OT ENUMERATIOSN 
             /// NO STING STATEMENTS IN SWITCH

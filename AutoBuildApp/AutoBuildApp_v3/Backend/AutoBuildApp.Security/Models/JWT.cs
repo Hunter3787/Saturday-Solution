@@ -450,7 +450,10 @@ namespace AutoBuildApp.Security.Models
                     //Console.WriteLine($"{ claims.Permission} ,{claims.scopeOfPermissions} ");
                     _securityClaims.Add(new Claim(claims.Permission, claims.scopeOfPermissions));
                 }
-                ClaimsIdentity claimsIdentity = new ClaimsIdentity(_securityClaims,
+                ClaimsIdentity claimsIdentity = 
+                    new ClaimsIdentity(
+                        userIdentity,
+                        _securityClaims,
                 userIdentity.AuthenticationType, userIdentity.Name, " ");
                 _principalGenerated.AddIdentity(claimsIdentity);
 
@@ -458,7 +461,7 @@ namespace AutoBuildApp.Security.Models
             }
             Console.WriteLine($"\t In the jwt validator class: \n" +
                 $" Identity.name: { _principalGenerated.Identity.Name} ");
-
+            //setting to the thread.
             Thread.CurrentPrincipal = _principalGenerated;
             return _principalGenerated;
         }

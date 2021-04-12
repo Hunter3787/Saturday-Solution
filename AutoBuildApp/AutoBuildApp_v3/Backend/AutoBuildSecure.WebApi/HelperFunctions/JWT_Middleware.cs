@@ -120,8 +120,7 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
                 {
                     #region IF THE AUTH HEADER CONTAINS VALID TOKEN  -> SET CLAIMSPRINCIPAL TO THREAD
                    
-                    var userPrinciple =
-                        _validateAuthorizationHeader.ParseForClaimsPrinciple();
+                    var userPrinciple = _validateAuthorizationHeader.ParseForClaimsPrinciple();
                     _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
                     Thread.CurrentPrincipal = _threadPrinciple; // SETTING THE PARSED TOKEN, TO THE THREAD.
 

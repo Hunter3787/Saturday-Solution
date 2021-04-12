@@ -115,12 +115,11 @@ namespace AutoBuildApp.Services.Auth_Services
 
 
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity
-                    (_securityClaims, userIdentity.AuthenticationType,
+                    ( userIdentity,
+                    _securityClaims,
+                    userIdentity.AuthenticationType,
                      userIdentity.Name, "");
-
-                
                 claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
                 _responseAuth.JWTString = generateJWTToken(_authUserDTO);
             }
             else
@@ -129,9 +128,8 @@ namespace AutoBuildApp.Services.Auth_Services
                 _responseAuth.SuccessBool = false;
             }
 
-
             Thread.CurrentPrincipal = claimsPrincipal;
-            return _responseAuth;
+             return _responseAuth;
         }
 
         /// <summary>

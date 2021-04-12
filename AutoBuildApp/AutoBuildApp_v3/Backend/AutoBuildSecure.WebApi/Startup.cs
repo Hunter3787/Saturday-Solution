@@ -59,6 +59,7 @@ namespace AutoBuildSecure.WebApi
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors();
+            
 
 
             app.UseAuthorization();
