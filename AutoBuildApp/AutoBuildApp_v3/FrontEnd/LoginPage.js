@@ -1,6 +1,7 @@
 //const uri1 = 'https://localhost:44363/api/TodoItems';
 const uri ='https://localhost:5001/authentication';
 let todos = [];
+var JWT_Token = ' ';
 const token = 'YOUR_TOKEN_HERE';
 
   //https://gomakethings.com/using-oauth-with-fetch-in-vanilla-js/
@@ -16,6 +17,9 @@ function getItems() {
     .catch(error => console.error('Unable to get items.', error));
 }
 
+document.getElementById("LoginSubmit")
+    .addEventListener("click", checkCredentials)
+
 function checkCredentials() {
   console.log('Verifying credentials');
   const addNameTextbox = document.getElementById('add-username');
@@ -30,8 +34,8 @@ function checkCredentials() {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
-      
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + JWT_Token
     },
     body: JSON.stringify(UserCred)
   })
