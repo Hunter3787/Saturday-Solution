@@ -37,23 +37,10 @@ namespace AutoBuildSecure.WebApi.Controllers
 
         private AuthManager _loginManager;
         private UserCredentials _userCredentials;
-        ClaimsPrincipal _threadPrinciple;
         #endregion
 
         public AuthenticationController()
         {
-
-            // setting a default principle object t=for the thread.
-            #region Instantiating the Claims principle
-            ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
-            IClaimsFactory unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
-
-
-            // set it to th current thread
-            //Thread.CurrentPrincipal = _principal;
-            #endregion
-
-
             #region getting the connection string and passing to the loginmanager
             // created a connection manager to access the connection strings in 
             // 1) the app settings .json file
@@ -68,13 +55,13 @@ namespace AutoBuildSecure.WebApi.Controllers
         }
 
         /// <summary>
-        /// the 
+        /// this is for testing 
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult GetJWTToken()
+        public IActionResult GetPrinciple()
         {
-            _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
             return
                 Ok($"\n\nCurrent Thread Priciple: {JsonSerializer.Serialize(Thread.CurrentPrincipal)}/n" +
                 $"Checking name per nick: { _threadPrinciple.Identity.Name}!!!!!!");
@@ -85,7 +72,6 @@ namespace AutoBuildSecure.WebApi.Controllers
         {
             this._userCredentials = userCredentials;
             var JWTToken = _loginManager.AuthenticateUser(_userCredentials);
-            _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
             return Ok( $" { JWTToken}\n\n" +
                   $"\n\nCurrent Thread Priciple: { JsonSerializer.Serialize(Thread.CurrentPrincipal)} ");
         }
