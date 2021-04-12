@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading;
@@ -51,7 +52,18 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
                 .FirstOrDefault()?
                 .Split(" ")
                 .Last();
-            Console.WriteLine($"\n\t THIS IS WHATS IN THE AUTH HEADER: { token}  \n");
+           // var authHeader = httpContext.Request.Headers["Authorization"][0];
+            if (AuthenticationHeaderValue.TryParse(token, out var headerValue))
+            {
+                // we have a valid AuthenticationHeaderValue that has the following details:
+                var scheme = headerValue.Scheme;
+
+                var parameter = headerValue.Parameter;
+                // scheme will be "Bearer"
+                // parmameter will be the token itself.
+                token = parameter;
+            }
+
             #endregion
             //STEP 2: EXTRACT THE REFERER
             #region EXTRACT THE REFERER
@@ -81,7 +93,7 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
                 Console.WriteLine($"YOU ARE REQUESTING THE AUTHDEMO URL");
             }
 
-
+            Console.WriteLine($"Token to be validated : {token } ");
             if (token != null && token.Length != 0) // there is a JWT token 
             {
                 _validateAuthorizationHeader = new JWTValidator(token); // validate the token 

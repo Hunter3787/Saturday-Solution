@@ -29,7 +29,6 @@ function checkCredentials() {
     Username : addNameTextbox.value.trim(),
     Password : addHashTextbox.value.trim()
   };
-
   fetch(`https://localhost:5001/authentication/UserCred`, {
     method: 'POST',
     headers: {
@@ -58,6 +57,8 @@ function displayToken(id)
   var getBody = document.getElementById("JWT-TOKEN");
   console.log(id);
   var text =  document.createTextNode(JSON.stringify(id));
+  JWT_Token = id;
+  alert(JWT_Token);
   getBody.appendChild(text);
 
 }

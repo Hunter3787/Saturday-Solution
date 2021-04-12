@@ -72,8 +72,12 @@ namespace AutoBuildSecure.WebApi.Controllers
         {
             this._userCredentials = userCredentials;
             var JWTToken = _loginManager.AuthenticateUser(_userCredentials);
-            return Ok( $" { JWTToken}\n\n" +
-                  $"\n\nCurrent Thread Priciple: { JsonSerializer.Serialize(Thread.CurrentPrincipal)} ");
+            return Ok(JWTToken);
         }
+        // GET: for main view  
+        ////public EmptyResult EmptyData()
+        ////{
+        ////    return new EmptyResult();
+        ////}
     }
 }
