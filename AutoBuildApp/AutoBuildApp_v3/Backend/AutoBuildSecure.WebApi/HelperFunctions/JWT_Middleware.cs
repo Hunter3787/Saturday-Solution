@@ -113,9 +113,10 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
                 var result = ValidateTheToken(httpContext, token);
                 if (result == false) //IF JWT NOT VALID
                 {
-                    await httpContext
-                       .Response
-                       .WriteAsync(httpContext.Response.StatusCode.ToString());
+
+                    Console.WriteLine($"THE TOKEN PASSED IS NOT VALID JWT!");
+                    await httpContext.Response.WriteAsync("Hello World! "+ httpContext.Response.StatusCode);
+                    // await httpContext .Response .WriteAsync(httpContext.Response.StatusCode.ToString());
 
                 }
             }
@@ -143,7 +144,6 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
             if (!_validateAuthorizationHeader.IsValidJWT()) // JWT IS NOT VALID, END CALL
             {
 
-                Console.WriteLine($"THE TOKEN PASSED IS NOT VALID JWT!");
                 httpContext.Response.StatusCode = 400; //Bad Request   
                 return false;
             }
