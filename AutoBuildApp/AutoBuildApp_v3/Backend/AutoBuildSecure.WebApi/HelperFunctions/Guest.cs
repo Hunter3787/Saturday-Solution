@@ -27,7 +27,8 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
             /// as "AutoBuild User" since that will trigger the read only value of is authenticated to 
             /// be True, when in fact the user is not
             /// authenticated.
-            ClaimsIdentity identity = new ClaimsIdentity(unregistered.Claims());
+            ClaimsIdentity identity = new 
+                ClaimsIdentity(unregistered.Claims());
             ClaimsPrincipal _principal = new ClaimsPrincipal(identity);
             /* //some printing
             Console.WriteLine($"IN THE GUEST");

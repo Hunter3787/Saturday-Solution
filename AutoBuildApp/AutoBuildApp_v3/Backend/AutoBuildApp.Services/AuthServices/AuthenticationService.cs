@@ -115,12 +115,11 @@ namespace AutoBuildApp.Services.Auth_Services
 
 
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity
-                    (_securityClaims, userIdentity.AuthenticationType,
+                    ( userIdentity,
+                    _securityClaims,
+                    userIdentity.AuthenticationType,
                      userIdentity.Name, "");
-
-                
                 claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
                 _responseAuth.JWTString = generateJWTToken(_authUserDTO);
             }
             else
@@ -129,9 +128,8 @@ namespace AutoBuildApp.Services.Auth_Services
                 _responseAuth.SuccessBool = false;
             }
 
-
             Thread.CurrentPrincipal = claimsPrincipal;
-            return _responseAuth;
+             return _responseAuth;
         }
 
         /// <summary>
@@ -145,9 +143,10 @@ namespace AutoBuildApp.Services.Auth_Services
             _header = new JWTHeader();
             //_key = "a random, long, sequence of characters that only the server knows";
             string _key = "Secret";
-
+            /*
             string jsonString = JsonSerializer.Serialize(_header);
             Console.WriteLine("Header\n" + jsonString + "\n\n");
+            */
 
             // so the first thing is taking the auth dto and passing it to form the payload necessary. 
             _payload = new JWTPayload
@@ -160,9 +159,10 @@ namespace AutoBuildApp.Services.Auth_Services
                 UserCLaims = AuthUserDTO.Claims
             };
 
+            /*
             jsonString = JsonSerializer.Serialize(_payload);
             Console.WriteLine("PayLoad\n" + jsonString + "\n\n");
-
+            */
 
             // instantiating the jwt class
             _jwt = new JWT(_key, _payload, _header);
@@ -170,9 +170,10 @@ namespace AutoBuildApp.Services.Auth_Services
             // call the signature JWT generater to return the signature
             string result = _jwt.GenerateJWTSignature();
 
+            /*
             Console.WriteLine($"In authentication service to generateJWTToken: \n" +
                 $" {_jwt.ToString()} \n\n");
-
+            */
 
             // returns back the jwt token
             return _jwt.ToString();

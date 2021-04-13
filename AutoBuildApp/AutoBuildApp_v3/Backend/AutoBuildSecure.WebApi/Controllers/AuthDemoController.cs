@@ -18,10 +18,6 @@ namespace AutoBuildSecure.WebApi.Controllers
     public class AuthDemoController : ControllerBase
     {
 
-        #region 
-        private ClaimsPrincipal _threadPrinciple;
-        #endregion
-
         public AuthDemoController()
         {
 
@@ -31,22 +27,20 @@ namespace AutoBuildSecure.WebApi.Controllers
         {
             /// RETRIEVING THE THREAD PRINCIPAL 
             /// SET IN THE JWT MIDDLEWARE
-
-            _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
             string returnValue = "";
             Console.WriteLine("checking principle;");
             foreach (var clm in _threadPrinciple.Claims)
             {
                 returnValue += $" claim type: { clm.Type } claim value: {clm.Value} \n";
-                Console.WriteLine(returnValue);
             }
             AuthDemoManager authDemo = new AuthDemoManager();
             //. getting the data
             var data = authDemo.getData();
             return Ok($"the list of claims given: { returnValue}," +
-                $"/n the data from the demo manager : {data}\n" +
-                $"\n\nCurrent Thread Priciple: { JsonSerializer.Serialize(Thread.CurrentPrincipal)} ");
+                $"\n The data retrieved from the authManager  : {data}" +
+                $"\n Current Thread Priciple: { JsonSerializer.Serialize(Thread.CurrentPrincipal)} ");
 
         }
 

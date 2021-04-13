@@ -204,7 +204,7 @@ namespace AutoBuildApp.DataAccess
                         _userClaims.scopeOfPermissions = (string)_reader[scope];
                         _CRAuth.AuthUserDTO.Claims.Add(_userClaims);
                     }
-                    Console.WriteLine($"Auth DAO Common response check:: {_CRAuth.ToString()}");
+                    //Console.WriteLine($"Auth DAO Common response check:: {_CRAuth.ToString()}");
                     _CRAuth.connectionState = true;
                     return _CRAuth;
                 }

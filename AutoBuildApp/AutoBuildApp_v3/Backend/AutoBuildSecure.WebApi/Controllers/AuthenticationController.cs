@@ -37,23 +37,10 @@ namespace AutoBuildSecure.WebApi.Controllers
 
         private AuthManager _loginManager;
         private UserCredentials _userCredentials;
-        ClaimsPrincipal _threadPrinciple;
         #endregion
 
         public AuthenticationController()
         {
-
-            // setting a default principle object t=for the thread.
-            #region Instantiating the Claims principle
-            ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
-            IClaimsFactory unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
-
-
-            // set it to th current thread
-            //Thread.CurrentPrincipal = _principal;
-            #endregion
-
-
             #region getting the connection string and passing to the loginmanager
             // created a connection manager to access the connection strings in 
             // 1) the app settings .json file
@@ -68,49 +55,29 @@ namespace AutoBuildSecure.WebApi.Controllers
         }
 
         /// <summary>
-        /// the 
+        /// this is for testing 
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult GetJWTToken()
+        public IActionResult GetPrinciple()
         {
-            _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
-
-            Console.WriteLine($"The Claims prinicple set in the JWT validator:");
-            foreach (Claim c in _threadPrinciple.Claims)
-            {
-                Console.WriteLine($"Permission:  {c.Type}, Scope: {c.Value} ");
-            }
-            
-            
+            ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
             return
-                Ok( $"\n\nCurrent Thread Priciple: {JsonSerializer.Serialize(Thread.CurrentPrincipal)}/n" +
-                $"OUTPUTTING THE USEREMAIL IN THE CURRENT THREAD FOR NICK: {_threadPrinciple.Identity.Name} " +
-                $"");
+                Ok($"\n\nCurrent Thread Priciple: {JsonSerializer.Serialize(Thread.CurrentPrincipal)}/n" +
+                $"Checking name per nick: { _threadPrinciple.Identity.Name}!!!!!!");
         }
 
         [HttpPost("{Login}")]
         public ActionResult<AuthUserDTO> AuthenticateUser(UserCredentials userCredentials, string returnURL)
         {
-
-             _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
-
-            foreach(Claim c in _threadPrinciple.Claims)
-            {
-                Console.WriteLine($"Permission:  {c.Type}, Scope: {c.Value} ");
-            }
-
             this._userCredentials = userCredentials;
             var JWTToken = _loginManager.AuthenticateUser(_userCredentials);
-            Console.WriteLine($"AFTER THE JWT HAS BEEN ISSUED: \n");
-
-            _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            foreach (Claim c in _threadPrinciple.Claims)
-            {
-                Console.WriteLine($"Permission:  {c.Type}, Scope: {c.Value} ");
-            }
-
-            return Ok( $" { JWTToken} { _threadPrinciple.Identity.Name}");
+            return Ok(JWTToken);
         }
+        // GET: for main view  
+        ////public EmptyResult EmptyData()
+        ////{
+        ////    return new EmptyResult();
+        ////}
     }
 }
