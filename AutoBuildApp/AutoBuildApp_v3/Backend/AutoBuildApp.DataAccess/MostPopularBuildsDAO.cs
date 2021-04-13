@@ -245,5 +245,61 @@ namespace AutoBuildApp.DataAccess
                 }
             }
         }
+
+        /// <summary>
+        /// This DAO method adds a like to the database for the respective build.
+        /// </summary>
+        /// <param name="likeEntity">takes in an entity object.</param>
+        /// <returns>returns a success state bool.</returns>
+        public bool AddLike(LikeEntity likeEntity)
+        {
+            // uses var connection and will automatically close once the using block has reached the end.
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                // Open the connection to the database.
+                conn.Open();
+
+                // Uses the var command and will only use the command within this block.
+                using (var command = new SqlCommand())
+                {
+                    command.Transaction = conn.BeginTransaction(); // begins the transaction to the database.
+                    command.Connection = conn; // sets the connection of the command equal to the connection that has already been starte in the outer using block.
+                    command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds; // automatically times out the connection after 60 seconds.
+                    command.CommandType = CommandType.Text; // sets the command type to command text, allowing use of string 'parametrized' queries.
+
+                    // Stored the query that will be used for insertion. This is an insertion statement.
+                    command.CommandText =
+                        "INSERT INTO likes(postId, userId) VALUES (@PostId, @UserId); " +
+                        "update mostpopularbuilds set LikeIncrementor = (select count(*) from likes where postId = @PostId) " +
+                        "where EntityId = @PostId";
+
+                    var parameters = new SqlParameter[2]; // initialize 5 parameters to be read through incrementally.
+                    parameters[0] = new SqlParameter("@PostId", likeEntity.PostId);
+                    parameters[1] = new SqlParameter("@UserId", likeEntity.UserId);
+
+                    // This will add the range of parameters to the parameters that will be used in the query.
+                    command.Parameters.AddRange(parameters);
+
+                    // stores the number of rows added in the statement.
+                    try
+                    {
+                        var rowsAdded = command.ExecuteNonQuery();
+
+                        // If the row that was added is one, it will commit the transaction and return true, else false.
+                        if (rowsAdded == 2)
+                        {
+                            command.Transaction.Commit(); // sends the transaction to be commited at the database.
+                            return true;
+                        }
+                    }
+                   
+                    catch(SqlException)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return false;
+        }
     }
 }

@@ -141,6 +141,10 @@ namespace AutoBuildApp.Managers
                 return false;
             }
 
+            buildPost.LikeIncrementor = 0; // A new post should have a start of 0 likes. This ensures that.
+
+            buildPost.DateTime = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF"); // sets the current date time to this variable.
+
             // TODO: implement service return method.
             return _mostPopularBuildsService.PublishBuild(buildPost);
         }
@@ -185,6 +189,18 @@ namespace AutoBuildApp.Managers
             }
 
             return _mostPopularBuildsService.GetBuildPosts(defaultOrderLikes, defaultBuildType);
+        }
+
+        /// <summary>
+        /// This is the manager method that calls the add like service function.
+        /// </summary>
+        /// <param name="like">takes in a like object to send to service.</param>
+        /// <returns>returns a success state bool.</returns>
+        public bool addLike(Like like)
+        {
+            // logs when the method is called.
+            _logger.LogInformation($"Most Popular Builds Manager addLike was called for user:{like.UserId} and post:{like.PostId}");
+            return _mostPopularBuildsService.addLike(like);
         }
     }
 }

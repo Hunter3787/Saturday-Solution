@@ -52,7 +52,7 @@ namespace AutoBuildApp.Services.FeatureServices
             };
 
             return _mostPopularBuildsDAO.PublishBuildRecord(buildPostEntity);
-            //return _mostPopularBuildsDAO.PublishBuildRecord(buildPostEntity, "mostpopularbuilds");
+            //return _mostPopularBuildsDAO.PublishBuildRecord(buildPostEntity, "mostpopularbuilds"); // This is the reflections method of the DAO (not currently optimized).
         }
 
         /// <summary>
@@ -93,6 +93,25 @@ namespace AutoBuildApp.Services.FeatureServices
             // TODO: Check for false or null values??
 
             return buildPosts;
+        }
+
+        /// <summary>
+        /// This method transfers data from a domain to a entity.
+        /// </summary>
+        /// <param name="like">takes in a log object</param>
+        /// <returns>returns a success state bool.</returns>
+        public bool addLike(Like like)
+        {
+            // Logs the event of the service addLike method being called
+            _logger.LogInformation($"Most Popular Builds Service addLike was called for user:{like.UserId} and post{like.PostId}");
+
+            var likeEntity = new LikeEntity()
+            {
+                PostId = like.PostId,
+                UserId = like.UserId
+            };
+
+            return _mostPopularBuildsDAO.AddLike(likeEntity);
         }
     }
 }
