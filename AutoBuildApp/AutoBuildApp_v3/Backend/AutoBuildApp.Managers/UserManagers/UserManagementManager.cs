@@ -1,114 +1,178 @@
-﻿//using AutoBuildApp.DataAccess;
-//using AutoBuildApp.Models.Users;
-//using AutoBuildApp.Models.DTO;
-//using AutoBuildApp.Services;
-//using System;
+﻿using AutoBuildApp.DataAccess;
+using AutoBuildApp.Models.Users;
+using AutoBuildApp.Models.DTO;
+using AutoBuildApp.Services;
+using System;
+using AutoBuildApp.Managers.UserManagers;
 
-//namespace AutoBuildApp.Managers
-//{
-//    public class UserManagementManager
-//    {
-//        private readonly UserManagementService service;
+namespace AutoBuildApp.Managers
+{
+    public class UserManagementManager
+    {
+        private readonly UserManagementDAO _userManagementDAO;
+        private InputValidityManager _inputValidityManager;
 
-//        ILogger logger = new LoggingService();
+        public UserManagementManager(UserManagementDAO userManagementDAO)
+        {
+            _inputValidityManager = new InputValidityManager();
+            _userManagementDAO = userManagementDAO;
+        }
 
-//        public UserManagementManager(String connectionString)
-//        {
-//            service = new UserManagementService(connectionString);
-//        }
+        public string UpdatePassword(string password)
+        {
+            //password = "P@ssw0rd!123";
+            string userEmail = "ZeinabFarhat@gmail.com";
+            if (_inputValidityManager.IsPasswordValid(password))
+            {
+                //return _userManagementDAO.newDBPassword(password);
+                return _userManagementDAO.UpdatePasswordDB(userEmail, password);
+            }
+            else
+            {
+                return "Invalid Password";
+            }
+        }
 
-//        public String CreateUserRecord(UserAccount caller, UserAccount user)
-//        {
-//            logger.Log("hello", LogLevel.Information);
-//            if (caller.role != "ADMIN")
-//            {
-//                return "Unauthorized";
-//            }
+        public string UpdateEmail(string userInput)
+        {
+            userInput = "crkobel@verizon.net";
+            if (_inputValidityManager.ValidEmail(userInput))
+            {
+                return _userManagementDAO.newDBEmail(userInput);
+            }
+            else
+            {
+                return "Invalid Email";
+            }
+        }
 
-//            if (!IsInformationValid(user))
-//            {
-//                return "Invalid input";
-//            }
-//            return service.CreateUser(user);
-//        }
+        public string UpdateUsername(string userInput)
+        {
+            userInput = "crkobel";
+            if (_inputValidityManager.ValidUserName(userInput))
+            {
+                return _userManagementDAO.newDBUserName(userInput);
+            }
+            else
+            {
+                return "Invalid Username";
+            }
+        }
 
-//        public String UpdateUserRecord(UserAccount caller, UserAccount user, UpdateUserDTO updatedUser)
-//        {
+        public string RequestUsersList()
+        {
+            return _userManagementDAO.showUsers();
+        }
 
-//            if (caller.role != "ADMIN")
-//            {
-//                return "Unauthorized";
-//            }
+        public string ChangePermissions(UserAccount user)
+        {
+            return "";
+        }
 
-//            if (!IsInformationValid(updatedUser))
-//            {
-//                return "Invalid input";
-//            }
+        public string ChangeState(UserAccount user)
+        {
+            return "";
+        }
 
-//            return service.UpdateUser(user, updatedUser);
+        public string DeleteUser(UserAccount user)
+        {
+            return "";
+        }
 
-//        }
 
-//        public String DeleteUserRecord(UserAccount caller, UserAccount user)
-//        {
+        //public String CreateUserRecord(UserAccount caller, UserAccount user)
+        //{
+        //    logger.Log("hello", LogLevel.Information);
+        //    if (caller.role != "ADMIN")
+        //    {
+        //        return "Unauthorized";
+        //    }
 
-//            if (caller.role != "ADMIN")
-//            {
-//                return "Unauthorized";
-//            }
+        //    if (!IsInformationValid(user))
+        //    {
+        //        return "Invalid input";
+        //    }
+        //    return service.CreateUser(user);
+        //}
 
-//            return service.DeleteUser(user);
-//        }
+        //public String UpdateUserRecord(UserAccount caller, UserAccount user, UpdateUserDTO updatedUser)
+        //{
 
-//        public string EnableUser(UserAccount caller, UserAccount user, string role)
-//        {
-//            if (caller.role != "ADMIN")
-//            {
-//                return "Unauthorized";
-//            }
+        //    if (caller.role != "ADMIN")
+        //    {
+        //        return "Unauthorized";
+        //    }
 
-//            return service.EnableUser(user, role); ;
-//        }
+        //    if (!IsInformationValid(updatedUser))
+        //    {
+        //        return "Invalid input";
+        //    }
 
-//        public String DisableUser(UserAccount caller, UserAccount user)
-//        {
-//            if (caller.role != "ADMIN")
-//            {
-//                return "Unauthorized";
-//            }
+        //    return service.UpdateUser(user, updatedUser);
 
-//            return service.DisableUser(user);
-//        }
+        //}
 
-//        public bool ValidEmail(string email)
-//        {
-//            return email.Contains("@") && email.Contains(".");
-//        }
+        //public String DeleteUserRecord(UserAccount caller, UserAccount user)
+        //{
 
-//        public bool ValidUserName(string username)
-//        {
-//            return !String.IsNullOrEmpty(username) && username.Length >= 4 && username.Length <= 12;
-//        }
+        //    if (caller.role != "ADMIN")
+        //    {
+        //        return "Unauthorized";
+        //    }
 
-//        public bool IsInformationValid(UserAccount user)
-//        {
-//            return ValidEmail(user.UserEmail)
-//                && ValidUserName(user.UserName)
-//                && !String.IsNullOrEmpty(user.FirstName)
-//                && !String.IsNullOrEmpty(user.LastName);
-//        }
+        //    return service.DeleteUser(user);
+        //}
 
-//        public bool IsInformationValid(UpdateUserDTO user)
-//        {
-//            if(!String.IsNullOrEmpty(user.UserEmail))
-//            {
-//                return ValidEmail(user.UserEmail);
-//            }
-//            else if(!String.IsNullOrEmpty(user.UserName)) {
-//                return ValidUserName(user.UserName);
-//            }
-//            return true;
+        //public string EnableUser(UserAccount caller, UserAccount user, string role)
+        //{
+        //    if (caller.role != "ADMIN")
+        //    {
+        //        return "Unauthorized";
+        //    }
 
-//        }
-//    }
-//}
+        //    return service.EnableUser(user, role); ;
+        //}
+
+        //public String DisableUser(UserAccount caller, UserAccount user)
+        //{
+        //    if (caller.role != "ADMIN")
+        //    {
+        //        return "Unauthorized";
+        //    }
+
+        //    return service.DisableUser(user);
+        //}
+
+        //public bool ValidEmail(string email)
+        //{
+        //    return email.Contains("@") && email.Contains(".");
+        //}
+
+        //public bool ValidUserName(string username)
+        //{
+        //    return !String.IsNullOrEmpty(username) && username.Length >= 4 && username.Length <= 12;
+        //}
+
+        //public bool IsInformationValid(UserAccount user)
+        //{
+        //    return ValidEmail(user.UserEmail)
+        //        && ValidUserName(user.UserName)
+        //        && !String.IsNullOrEmpty(user.FirstName)
+        //        && !String.IsNullOrEmpty(user.LastName);
+        //}
+
+        //public bool IsInformationValid(UpdateUserDTO user)
+        //{
+        //    if (!String.IsNullOrEmpty(user.UserEmail))
+        //    {
+        //        return ValidEmail(user.UserEmail);
+        //    }
+        //    else if (!String.IsNullOrEmpty(user.UserName))
+        //    {
+        //        return ValidUserName(user.UserName);
+        //    }
+        //    return true;
+
+        //}
+    }
+}
