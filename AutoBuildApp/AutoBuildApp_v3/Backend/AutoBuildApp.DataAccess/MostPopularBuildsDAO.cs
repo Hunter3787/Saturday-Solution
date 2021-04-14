@@ -27,7 +27,7 @@ namespace AutoBuildApp.DataAccess
             _connectionString = connectionString;
         }
 
-        #region DAO method not using reflections
+        #region DAO Publish method not using reflections
         /// <summary>
         /// Method that is used to create a MPB record in the DB.
         /// </summary>
@@ -83,7 +83,7 @@ namespace AutoBuildApp.DataAccess
         }
         #endregion
 
-        #region DAO method using reflections
+        #region DAO Publish method using reflections
         /// <summary>
         /// Method that is used to create a MPB record in the DB.
         /// </summary>
@@ -143,8 +143,6 @@ namespace AutoBuildApp.DataAccess
                     }
 
                     var query = sqlBefore.Substring(0, sqlBefore.Length - 1) + ") " + sqlAfter.Substring(0, sqlAfter.Length - 1) + ")";
-
-                    Console.WriteLine(query);
 
                     command.CommandText = query;
 
@@ -280,7 +278,6 @@ namespace AutoBuildApp.DataAccess
                     // This will add the range of parameters to the parameters that will be used in the query.
                     command.Parameters.AddRange(parameters);
 
-                    // stores the number of rows added in the statement.
                     try
                     {
                         var rowsAdded = command.ExecuteNonQuery();
@@ -292,14 +289,13 @@ namespace AutoBuildApp.DataAccess
                             return true;
                         }
                     }
-                   
-                    catch(SqlException)
+                    catch (SqlException e) when (e.Number == 2627)
                     {
                         return false;
                     }
+                    return false;
                 }
             }
-            return false;
         }
     }
 }

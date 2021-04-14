@@ -17,6 +17,7 @@ namespace AutoBuildApp.ConsoleApp
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
+
             //var queryBy1 = "AscendingLikes";
             //var queryBy2 = "BuildType_GraphicArtist";
             //var queryBy3 = "BuildType_Gaming";
@@ -37,20 +38,18 @@ namespace AutoBuildApp.ConsoleApp
             //    Console.WriteLine();
             //}
 
-            for(var i = 2; i < 20; i++)
+            for(var i = 2; i < 10; i++)
             {
                 var like = new Like()
                 {
                     PostId = "30008",
                     UserId = i.ToString()
                 };
-                var result = mostPopularBuildsManager.addLike(like);
+                var result = mostPopularBuildsManager.AddLike(like);
                 Console.WriteLine(result);
             }
 
             //var result = mostPopularBuildsManager.addLike(like);
-
-
 
             Console.WriteLine("Hello World");
 

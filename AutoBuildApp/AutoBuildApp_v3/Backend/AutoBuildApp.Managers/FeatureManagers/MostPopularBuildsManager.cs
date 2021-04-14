@@ -37,6 +37,9 @@ namespace AutoBuildApp.Managers
         /// <returns>success state bool value.</returns>
         public bool PublishBuild(BuildPost buildPost)
         {
+            // Logs the calling event of the method.
+            _logger.LogInformation($"Most Popular Builds Manager PublishBuild was called for User:{buildPost.Username}");
+
             // This try/catch block checks for a null BuildPost object.
             try
             {
@@ -48,7 +51,6 @@ namespace AutoBuildApp.Managers
             catch (ArgumentNullException ex)
             {
                 _logger.LogWarning(ex.Message);
-                Console.WriteLine(ex.Message);
                 return false;
             }
 
@@ -64,12 +66,8 @@ namespace AutoBuildApp.Managers
             catch (NullReferenceException ex)
             {
                 _logger.LogWarning(ex.Message);
-                Console.WriteLine(ex.Message);
                 return false;
             }
-
-            // Logs the calling event of the method.
-            _logger.LogInformation($"Most Popular Builds Manager PublishBuild was called for User:{buildPost.Username}");
 
             // This var stores the maximum possible length of a title string.
             var maxTitleLength = 50;
@@ -103,7 +101,6 @@ namespace AutoBuildApp.Managers
             catch (StringTooLongException ex)
             {
                 _logger.LogWarning(ex.Message);
-                Console.WriteLine(ex.Message);
                 return false;
             }
 
@@ -120,7 +117,6 @@ namespace AutoBuildApp.Managers
             catch(InvalidUsernameException ex)
             {
                 _logger.LogWarning(ex.Message);
-                Console.WriteLine(ex.Message);
                 return false;
             }
 
@@ -137,7 +133,6 @@ namespace AutoBuildApp.Managers
             catch (StringTooLongException ex)
             {
                 _logger.LogWarning(ex.Message);
-                Console.WriteLine(ex.Message);
                 return false;
             }
 
@@ -196,11 +191,39 @@ namespace AutoBuildApp.Managers
         /// </summary>
         /// <param name="like">takes in a like object to send to service.</param>
         /// <returns>returns a success state bool.</returns>
-        public bool addLike(Like like)
+        public bool AddLike(Like like)
         {
+            // This try/catch block checks for a null BuildPost object.
+            try
+            {
+                if (like == null)
+                {
+                    throw new ArgumentNullException("A null argument was passed through the method parameters");
+                }
+            }
+            catch (ArgumentNullException ex)
+            {
+                _logger.LogWarning(ex.Message);
+                return false;
+            }
+
+            // This try/catch block checks for a null var in a BuildPost object.
+            try
+            {
+                if (like.UserId == null || like.PostId == null)
+                {
+                    throw new NullReferenceException("A null object variable was passed through the method parameters");
+                }
+            }
+            catch (NullReferenceException ex)
+            {
+                _logger.LogWarning(ex.Message);
+                return false;
+            }
+
             // logs when the method is called.
             _logger.LogInformation($"Most Popular Builds Manager addLike was called for user:{like.UserId} and post:{like.PostId}");
-            return _mostPopularBuildsService.addLike(like);
+            return _mostPopularBuildsService.AddLike(like);
         }
     }
 }

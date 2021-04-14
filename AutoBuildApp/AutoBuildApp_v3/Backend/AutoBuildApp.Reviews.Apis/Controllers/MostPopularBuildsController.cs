@@ -24,6 +24,12 @@ namespace AutoBuildApp.WebApp.Controllers
         // Initializes the DAO that will be used for builds.
         private readonly MostPopularBuildsDAO _mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
 
+        // This will start a service when a post fetch is called. and pass in the DAO that will be used.
+        private MostPopularBuildsService mostPopularBuildsService;
+
+        // This will start a manager and pass in the service.
+        private MostPopularBuildsManager mostPopularBuildsManager;
+
         // This will start the logging consumer manager in the background so that logs may be sent to the DB.
         private LoggingConsumerManager _loggingConsumerManager = new LoggingConsumerManager();
 
@@ -49,18 +55,20 @@ namespace AutoBuildApp.WebApp.Controllers
         [HttpPost]
         public IActionResult PublishBuild(BuildPost buildPost)
         {
+            // Log event when a fetch happens.
             _logger.LogInformation("PublishBuild was fetched.");
 
-            // This will start a service when a post fetch is called. and pass in the DAO that will be used.
-            MostPopularBuildsService mostPopularBuildsService = new MostPopularBuildsService(_mostPopularBuildsDAO);
-            // This will start a manager and pass in the service.
-            MostPopularBuildsManager mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+            // Pass in the DAO to the service.
+            mostPopularBuildsService = new MostPopularBuildsService(_mostPopularBuildsDAO);
+
+            // Pass the service into the manager.
+            mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
             // This will store the bool result of the MPB creation to see if it is a success or fail.
-            var createResult = mostPopularBuildsManager.PublishBuild(buildPost);
+            var returnsTrue = mostPopularBuildsManager.PublishBuild(buildPost);
 
             // if true, it will return OK, else it will return status code error of 500
-            if (createResult)
+            if (returnsTrue)
             {
                 _logger.LogInformation("PublishBuild was a success.");
                 return Ok();
@@ -79,13 +87,14 @@ namespace AutoBuildApp.WebApp.Controllers
         [HttpGet]
         public IActionResult GetBuildPosts(string orderLikes, string buildType)
         {
+            // Log the event of a get fetch.
             _logger.LogInformation("GetBuildPosts was fetched.");
 
-            // This will start a service when a post fetch is called. and pass in the DAO that will be used.
-            MostPopularBuildsService mostPopularBuildsService = new MostPopularBuildsService(_mostPopularBuildsDAO);
-            // This will start a manager and pass in the service.
-            MostPopularBuildsManager mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+            // Pass in the DAO to the service.
+            mostPopularBuildsService = new MostPopularBuildsService(_mostPopularBuildsDAO);
 
+            // Pass the service into the manager.
+            mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
             // This will try to get all Builds, and if not, it will catch it and return the error code.
             try
@@ -100,6 +109,37 @@ namespace AutoBuildApp.WebApp.Controllers
                 _logger.LogWarning("GetBuildPosts was not sucessfully fetched.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
+        }
+
+        /// <summary>
+        /// This controller method posts a like to a build post.
+        /// </summary>
+        /// <param name="like">takes in a like object (userid and postid)</param>
+        /// <returns>returns an iaction result of success or fail.</returns>
+        [HttpPost("like")]
+        public IActionResult AddLike(Like like)
+        {
+            // Log event when a fetch happens for liking a build post.
+            _logger.LogInformation("Add Like was fetched.");
+
+            // Pass in the DAO to the service.
+            mostPopularBuildsService = new MostPopularBuildsService(_mostPopularBuildsDAO);
+
+            // Pass the service into the manager.
+            mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+
+            // This will store the bool result of the MPB creation to see if it is a success or fail.
+            var returnsTrue = mostPopularBuildsManager.AddLike(like);
+
+            // if true, it will return OK, else it will return status code error of 500
+            if (returnsTrue)
+            {
+                _logger.LogInformation("Add like was a success.");
+                return Ok();
+            }
+
+            _logger.LogInformation("Add like was not successfully fetched.");
+            return new StatusCodeResult(StatusCodes.Status400BadRequest);
         }
     }
 }

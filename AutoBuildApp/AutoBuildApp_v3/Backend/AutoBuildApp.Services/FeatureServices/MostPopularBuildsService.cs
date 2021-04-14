@@ -100,7 +100,7 @@ namespace AutoBuildApp.Services.FeatureServices
         /// </summary>
         /// <param name="like">takes in a log object</param>
         /// <returns>returns a success state bool.</returns>
-        public bool addLike(Like like)
+        public bool AddLike(Like like)
         {
             // Logs the event of the service addLike method being called
             _logger.LogInformation($"Most Popular Builds Service addLike was called for user:{like.UserId} and post{like.PostId}");
