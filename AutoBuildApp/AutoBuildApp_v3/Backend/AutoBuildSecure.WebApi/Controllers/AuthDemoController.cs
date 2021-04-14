@@ -40,8 +40,8 @@ namespace AutoBuildSecure.WebApi.Controllers
             AuthDemoManager authDemo = new AuthDemoManager();
             //. getting the data
             var data = authDemo.getData();
-            return Ok($"The list of claims given: { returnValue}," +
-                $"\n The data retrieved from the authManager  : {data}" +
+           //return Ok($"The list of claims given: { returnValue}," +
+            return Ok($"\n The data retrieved from the authManager  : {data}" +
                 $"\n Current Thread Priciple: { JsonSerializer.Serialize(Thread.CurrentPrincipal)} ");
 
         }

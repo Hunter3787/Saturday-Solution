@@ -59,6 +59,8 @@ namespace AutoBuildApp.Security.Models
             get { return this.name; }
             set { name = value; } }
 
+     
+
 
         public override string ToString()
         {

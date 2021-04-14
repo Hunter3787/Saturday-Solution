@@ -18,6 +18,7 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
 {
     public class JWT_Middleware
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
         /// <summary>
         /// processes http requests.
         /// </summary>
@@ -55,13 +56,17 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
                 .FirstOrDefault()?
                 .Split(" ")
                 .Last();
+
+            if( token!= null) { Console.WriteLine($"Token to be validated : {token } \n"); }
             Console.WriteLine($"Token to be validated : {token } \n");
 
-            var authHeader = httpContext.Request.Headers["Authorization"];
+            var authHeader = httpContext.Request.Headers["Authorization"];//[0];
+
             if (AuthenticationHeaderValue.TryParse(authHeader, out var headerValue))
             {
                 // we have a valid AuthenticationHeaderValue that has the following details:
                 var scheme = headerValue.Scheme;
+
                 var parameter = headerValue.Parameter;
                 Console.WriteLine($"\n\t " +
                     $"IN THE TRY PARSE \n" +
@@ -70,13 +75,8 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
 
                 // scheme will be "Bearer"
                 // parmameter will be the token itself.
-                //token = parameter;
+                token = parameter;
             }
-
-
-
-
-
             #endregion
             //STEP 2: EXTRACT THE REFERER
             #region EXTRACT THE REFERER
@@ -91,22 +91,15 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
                 .Headers["Referer"]
                 .ToString();
 
+            string ReturnUrl = Convert.ToString(httpContext.Request.QueryString.ToUriComponent());
+
             Console.WriteLine($"\n\t IN THE JWT_MIDDLEWARE \n" +
                 $"INCOMING URL REFERAL TEST:   {Url}\n" +
                 $"2: {Url_Two}\n" +
-                $"3: {referer}\n");
+                $"3: {referer}\n" +
+                $"4 query string: { ReturnUrl }\n");
             #endregion
-            if (Url_Two.Contains("authentication"))
-            {
-                Console.WriteLine($"YOU ARE REQUESTING THE AUTHENTICATION URL");
-            }
-            else if (Url_Two.Contains("authdemo"))
-            {
-
-                Console.WriteLine($"YOU ARE REQUESTING THE AUTHDEMO URL");
-            }
-
-
+            
             if (token != null && token.Length != 0) // there is a JWT token 
             {
                 _validateAuthorizationHeader = new JWTValidator(token); // validate the token 
@@ -120,7 +113,7 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
 
                 }
             }
-            else if (token == null) // else set the default principle:
+            else if (token == null || token == " ") // else set the default principle:
             {
                 if (Thread.CurrentPrincipal != null) // this check may be removed...
                 {
@@ -128,6 +121,22 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
                 }
                 else { DefaultClaimsPrinciple(); }
             }
+
+
+            if (Url_Two.Contains("authentication"))
+            {
+                Console.WriteLine($"YOU ARE REQUESTING THE AUTHENTICATION URL");
+            }
+            else if (Url_Two.Contains("authdemo"))
+            {
+
+                Console.WriteLine($"YOU ARE REQUESTING THE AUTHDEMO URL\n");
+                Console.WriteLine($"Is the user authenticated? ");
+                // so the first thing is to check if the are authenticated.
+                //Console.WriteLine($"{Thread.CurrentPrincipal.Identity.IsAuthenticated} . \n");
+
+            }
+
 
             Console.WriteLine($"\n\t " +
                 $"END OF THE JWT MIDDLE WARE \n");
