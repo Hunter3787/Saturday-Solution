@@ -29,6 +29,8 @@ namespace AutoBuildSecure.WebApi.Controllers
             /// SET IN THE JWT MIDDLEWARE
             ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
+            Console.WriteLine($"checkin" +
+                $"g for the username:\n {_threadPrinciple.Identity.Name}");
             string returnValue = "";
             Console.WriteLine("checking principle;");
             foreach (var clm in _threadPrinciple.Claims)

@@ -42,6 +42,8 @@ namespace AutoBuildApp.Security
             /// how about ordering the claims first:
             /// http://csharphelper.com/blog/2018/04/determine-whether-two-lists-contain-the-same-sequences-of-objects-in-different-orders-in-c/
             /// 
+            
+
             var x =
                 from Claim item in _threadPrinciple.Claims
                 orderby item.Type
