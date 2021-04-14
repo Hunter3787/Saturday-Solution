@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.Security.Claims;
+using System.Security.Principal;
 
 namespace AutoBuildSecure.WebApi
 {
