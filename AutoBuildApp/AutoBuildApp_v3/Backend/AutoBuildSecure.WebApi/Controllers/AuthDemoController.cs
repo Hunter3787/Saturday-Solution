@@ -29,8 +29,10 @@ namespace AutoBuildSecure.WebApi.Controllers
             /// SET IN THE JWT MIDDLEWARE
             ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
+            Console.WriteLine($"\nIN THE CUTH DEMO CONTROLLER" +
+                $"\nThe username:\n {_threadPrinciple.Identity.Name}");
             string returnValue = "";
-            Console.WriteLine("checking principle;");
+            Console.WriteLine("\nchecking principle claims: \n");
             foreach (var clm in _threadPrinciple.Claims)
             {
                 returnValue += $" claim type: { clm.Type } claim value: {clm.Value} \n";
@@ -38,8 +40,8 @@ namespace AutoBuildSecure.WebApi.Controllers
             AuthDemoManager authDemo = new AuthDemoManager();
             //. getting the data
             var data = authDemo.getData();
-            return Ok($"the list of claims given: { returnValue}," +
-                $"\n The data retrieved from the authManager  : {data}" +
+           //return Ok($"The list of claims given: { returnValue}," +
+            return Ok($"\n The data retrieved from the authManager  : {data}" +
                 $"\n Current Thread Priciple: { JsonSerializer.Serialize(Thread.CurrentPrincipal)} ");
 
         }

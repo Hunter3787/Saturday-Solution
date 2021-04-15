@@ -432,7 +432,6 @@ namespace AutoBuildApp.Security.Models
         /// <returns></returns>
         public ClaimsPrincipal ParseForClaimsPrinciple()
         {
-            _principalGenerated = new ClaimsPrincipal();
 
             if (IsValidJWT() == true)
             {
@@ -450,6 +449,7 @@ namespace AutoBuildApp.Security.Models
                     //Console.WriteLine($"{ claims.Permission} ,{claims.scopeOfPermissions} ");
                     _securityClaims.Add(new Claim(claims.Permission, claims.scopeOfPermissions));
                 }
+                /*
                 ClaimsIdentity claimsIdentity = 
                     new ClaimsIdentity(
                         userIdentity,
@@ -457,10 +457,19 @@ namespace AutoBuildApp.Security.Models
                 userIdentity.AuthenticationType, userIdentity.Name, " ");
                 _principalGenerated.AddIdentity(claimsIdentity);
 
+                */
+                //_securityClaims.Add(new Claim("USERNAME", userIdentity.Name));
+                ClaimsIdentity claimsIdentity = new ClaimsIdentity
+                ( userIdentity, _securityClaims, userIdentity.AuthenticationType, userIdentity.Name, " ");
+
+                //claimsIdentity.RemoveClaim(claimsIdentity.FindFirst(userIdentity.Name));
+                //_principalGenerated.FindFirst("USERNAME").Value
+
+                _principalGenerated = new ClaimsPrincipal(claimsIdentity);
 
             }
             Console.WriteLine($"\t In the jwt validator class: \n" +
-                $" Identity.name: { _principalGenerated.Identity.Name} ");
+                $" Identity.name: {_principalGenerated.Identity.Name} ");
             //setting to the thread.
             Thread.CurrentPrincipal = _principalGenerated;
             return _principalGenerated;

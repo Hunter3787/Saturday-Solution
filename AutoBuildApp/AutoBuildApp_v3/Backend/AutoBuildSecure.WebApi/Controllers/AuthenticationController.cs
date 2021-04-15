@@ -61,7 +61,11 @@ namespace AutoBuildSecure.WebApi.Controllers
         [HttpGet]
         public IActionResult GetPrinciple()
         {
+            //https://stackoverflow.com/questions/47513674/user-identity-name-is-null-when-integrating-asp-net-identity-with-owin-auth-to-a 
             ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            // ClaimsPrincipal.Current.FindFirst(ClaimsPrincipal.Current.Identities.First().NameClaimType)
+            Console.WriteLine("XChecking in the authentication service\n");
+
             return
                 Ok($"\n\nCurrent Thread Priciple: {JsonSerializer.Serialize(Thread.CurrentPrincipal)}/n" +
                 $"Checking name per nick: { _threadPrinciple.Identity.Name}!!!!!!");

@@ -42,16 +42,22 @@ namespace AutoBuildApp.Security
             /// how about ordering the claims first:
             /// http://csharphelper.com/blog/2018/04/determine-whether-two-lists-contain-the-same-sequences-of-objects-in-different-orders-in-c/
             /// 
+            Console.WriteLine($"\nthe identitiy name is Authorizatioin service: " +
+                $"{_threadPrinciple.Identity.Name}\n");
+
+
             var x =
                 from Claim item in _threadPrinciple.Claims
+                    //where item.Type != "USERNAME"
+                where item.Value != _threadPrinciple.Identity.Name
                 orderby item.Type
                 select item;
             var y = from Claim item in permissionsRequired
                     orderby item.Type
                     select item;
             #region PRINTING CHECK
-            /*
-            Console.WriteLine($" " +
+            
+            Console.WriteLine($"\n"+
                    $"In the authorizatioin service");
             Console.WriteLine($"The claims in the thead in AuthorizationService:");
             Console.WriteLine($"x");
@@ -61,7 +67,7 @@ namespace AutoBuildApp.Security
                     $"claim type: { c.Type } claim value: {c.Value} ");
 
             }
-            Console.WriteLine($" " +
+            Console.WriteLine($"\n" +
                   $"Permissions passed in AuthorizationService:");
             Console.WriteLine($" " +
                    $"y:");
@@ -71,7 +77,7 @@ namespace AutoBuildApp.Security
                     $"claim type: { c.Type } claim value: {c.Value} ");
 
             }
-            */
+            
             #endregion
 
             ///http://csharphelper.com/blog/2018/04/determine-whether-two-lists-contain-the-same-sequences-of-objects-in-different-orders-in-c/
