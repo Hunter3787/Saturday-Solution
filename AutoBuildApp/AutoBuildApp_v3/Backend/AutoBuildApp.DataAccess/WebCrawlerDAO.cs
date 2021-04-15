@@ -203,10 +203,11 @@ namespace AutoBuildApp.DataAccess
                             AddVendor(vendor);
                         }
                         SqlDataAdapter adapter = new SqlDataAdapter();
-                        String sql = "insert into vendor_product_junction(vendorID, productID, vendorLinkURL, productStatus, productPrice, rating, reviews)Values((select vendorId from vendorClub where vendorName =@VENDORNAME)," +
-                            " (select productID from products where modelNumber = @MODELNUMBER), @VENDORLINKURL, @PRODUCTSTATUS, @PRODUCTPRICE, @RATING, @REVIEWS)";
+                        String sql = "insert into vendor_product_junction(vendorID, productID, vendorImageUrl, vendorLinkURL, productStatus, productPrice, rating, reviews)Values((select vendorId from vendorClub where vendorName =@VENDORNAME)," +
+                            " (select productID from products where modelNumber = @MODELNUMBER), @VENDORIMAGEURL, @VENDORLINKURL, @PRODUCTSTATUS, @PRODUCTPRICE, @RATING, @REVIEWS)";
 
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
+                        adapter.InsertCommand.Parameters.Add("@VENDORIMAGEURL", SqlDbType.VarChar).Value = product.ImageUrl;
                         adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = vendor;
                         adapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = product.ModelNumber;
                         adapter.InsertCommand.Parameters.Add("@VENDORLINKURL", SqlDbType.VarChar).Value = product.Url;
