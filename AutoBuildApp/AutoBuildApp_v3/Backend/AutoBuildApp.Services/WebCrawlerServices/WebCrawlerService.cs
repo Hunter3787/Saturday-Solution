@@ -70,68 +70,10 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             this.webCrawlerDAO = new WebCrawlerDAO(connectionString);
         }
 
-        public async Task<bool> IsProxyValid()
-        {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://google.com");
-            request.Proxy = new WebProxy(currentProxy.IPAddress, currentProxy.Port);
-            request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36";
-            request.Timeout = 2000;            
-            //LaunchOptions options = new LaunchOptions()
-
-            try
-            {
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine("BAD - " + currentProxy.IPAddress + " - " + currentProxy.Port);
-                allProxies.Remove(currentProxy);
-                currentProxy = allProxies[0];
-                return false;
-            }
-            Console.WriteLine("GOOD - " + currentProxy.IPAddress + " - " + currentProxy.Port);
-            //{
-            //    Headless = true,
-            //    IgnoreHTTPSErrors = true,
-            //    Args = new[] {
-            //            $"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}",
-            //            "--no-sandbox",
-            //            "--disable-gpu",
-            //            "--ignore-certificate-errors",
-            //        }
-            //};
-            //using (var browser = await Puppeteer.LaunchAsync(options))
-            //{
-            //    using (Page page = await browser.NewPageAsync())
-            //    {
-            //        try
-            //        {
-            //            page.DefaultNavigationTimeout = 15000;
-            //            await page.GoToAsync(url, navigationOptions);
-            //        }
-            //        catch(Exception e)
-            //        {
-            //            return false;
-            //        }
-            //    }
-            //}
-            return true;
-        }
-
         public async Task<List<StartingLink>> grabHrefLinksFromPageAsync(List<StartingLink> startingLinks, string replaceDelimiter, string querySelectorString, string companyUrl, List<string> blacklistLinks)
         {
             List<StartingLink> hrefLinks = new List<StartingLink>();
-            //LaunchOptions options = new LaunchOptions()
-            //{
-            //    Headless = false,
-            //    IgnoreHTTPSErrors = true,
-            //    Args = new[] {
-            //            $"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}",
-            //            "--no-sandbox",
-            //            "--disable-gpu",
-            //            "--ignore-certificate-errors",
-            //        }
-            //};
+
             Browser browser = await Puppeteer.LaunchAsync(options);
 
             int repeat = 0;
@@ -211,7 +153,6 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                 if (!links.Any())
                 {
                     Console.WriteLine(htmlDocument);
-                    Console.WriteLine("OUt");
                     rotateProxy();
                     i--;
                     continue;
@@ -353,8 +294,12 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         {
                             reviews.Add(new Review(reviewerNames.ElementAt(i).ToString(), getRatingFromString(individualRatings.ElementAt(i).ToString()), reviewContent.ElementAt(i).ToString(), reviewerDates.ElementAt(i).ToString()));
                         }
-                        Models.WebCrawler.Product product = new Models.WebCrawler.Product(imageUrl.ToString(), price != null, companyName, url, specsVals.ElementAt(modelNumberIndex).ToString(), title.ToString(), productType,
-                            specsVals.ElementAt(brandIndex).ToString(), totalStarRatingString, totalNumberOfReviewsString, price == null ? "N/A" : price.ToString(), specsDictionary, reviews);
+                        bool availability = price != null;
+                        string modelNumber = specsVals.ElementAt(modelNumberIndex).ToString();
+                        string brand = specsVals.ElementAt(brandIndex).ToString();
+                        string priceString = price == null ? "N/A" : price.ToString();
+                        Models.WebCrawler.Product product = new Models.WebCrawler.Product(imageUrl.ToString(), availability, companyName, url, modelNumber, title.ToString(), productType,
+                            brand, totalStarRatingString, totalNumberOfReviewsString, priceString, specsDictionary, reviews);
 
                         // amazon
                         //var reviewsLink = await page.EvaluateExpressionAsync("document.querySelector('[data-hook=see-all-reviews-link-foot]').href");
