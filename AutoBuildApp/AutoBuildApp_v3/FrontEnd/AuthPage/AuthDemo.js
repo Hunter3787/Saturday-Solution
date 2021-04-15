@@ -10,7 +10,7 @@ var msg = 'Hello world';
 
 document.getElementById("myBtn")
     .addEventListener("click", getItems)
-    JWT_Token = ''
+    //JWT_Token = ''
 console.log(msg);
 
 
