@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 
 //this is a test
 /*
@@ -9,14 +8,17 @@ using System;
  * https://devblogs.microsoft.com/dotnet/introducing-the-new-microsoftdatasqlclient/
  */
 using AutoBuildApp.Models.Users;
+using AutoBuildApp.Models.Catalog;
 using Microsoft.Data.SqlClient;
-using AutoBuildApp.Models;
+using System.Data;
+using System.Collections.Generic;
+using AutoBuildApp.Managers;
 
 namespace AutoBuildApp.DataAccess
 {
     public class CatalogGateway
     {
-        private String connection;
+        private String _connection;
         /*
          * "Represents a set of data commands and a database connection 
          * that are used to fill the DataSet and update a SQL Server database"
@@ -29,17 +31,42 @@ namespace AutoBuildApp.DataAccess
         public CatalogGateway(String connectionString)
         {
             // instantiation of the connections string via a constructor to avoid any hardcoding
-            this.connection = connectionString;
+            _connection = connectionString;
         }
 
-        //public bool SaveComponentToUser(string component, UserAccount user) 
-        //{ 
-            
-        //}
+        public ISet<IResult> SearchForProduct(string product, string resultType) 
+        { 
+            return 
+        }
 
-        //public ComponentDetails GetComponentDetails(string component) 
-        //{ 
-        
-        //}
+        public bool SaveComponentToUser(string component, UserAccount user) 
+        {
+            return true;
+        }
+
+        public ProductDetails GetProductDetails(string component) 
+        {
+            // uses var connection and will automatically close once the using block has reached the end.
+            using (var conn = new SqlConnection(_connection))
+            {
+                // Open the connection to the database.
+                conn.Open();
+
+                // Uses the var command and will only use the command within this block.
+                using (var command = new SqlCommand())
+                {
+                    command.Transaction = conn.BeginTransaction(); 
+                    command.Connection = conn; 
+                    command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds; 
+                    command.CommandType = CommandType.Text;
+
+                    command.CommandText =
+                       "SELECT componentName, componentImage" +
+                       "WHERE name = @componentName";
+                }
+
+                
+            }
+        }
     }
 }
