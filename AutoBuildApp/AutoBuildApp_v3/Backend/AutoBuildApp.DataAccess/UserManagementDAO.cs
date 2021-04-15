@@ -16,25 +16,65 @@ namespace AutoBuildApp.DataAccess
             this._connectionString = connectionString;
         }
 
-        public string newDBPassword(string password)
-        {
-            using (var conn = new SqlConnection(_connectionString))
-            {
-                conn.Open();
-                using (var command = new SqlCommand())
-                {
-                    command.Transaction = conn.BeginTransaction();
-                    command.Connection = conn;
-                    command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
-                    command.CommandType = CommandType.Text;
+        //public string newDBPassword(string password)
+        //{
+        //    using (var conn = new SqlConnection(_connectionString))
+        //    {
+        //        conn.Open();
+        //        using (var command = new SqlCommand())
+        //        {
+        //            command.Transaction = conn.BeginTransaction();
+        //            command.Connection = conn;
+        //            command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
+        //            command.CommandType = CommandType.Text;
 
-                    command.CommandText = "UPDATE UserAccounts SET PassHash = 'password' WHERE UserEmail = ";
+        //            command.CommandText = "UPDATE UserAccounts SET PassHash = 'password' WHERE UserEmail = ";
 
-                    command.Transaction.Commit();
-                }
-            }
-            return "Password has been updated";
-        }
+        //            command.Transaction.Commit();
+        //        }
+        //    }
+        //    return "Password has been updated";
+        //}
+
+        //   public string newDBEmail(string userInput)
+        //{
+        //    using (var conn = new SqlConnection(_connectionString))
+        //    {
+        //        conn.Open();
+        //        using (var command = new SqlCommand())
+        //        {
+        //            command.Transaction = conn.BeginTransaction();
+        //            command.Connection = conn;
+        //            command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
+        //            command.CommandType = CommandType.Text;
+
+        //            command.CommandText = "UPDATE UserAccounts SET UserEmail = 'userInput' WHERE UserAccountID = ";
+
+        //            command.Transaction.Commit();
+        //        }
+        //    }
+        //    return "Email has been updated";
+        //}
+
+        //public string newDBUserName(string userInput)
+        //{
+        //    using (var conn = new SqlConnection(_connectionString))
+        //    {
+        //        conn.Open();
+        //        using (var command = new SqlCommand())
+        //        {
+        //            command.Transaction = conn.BeginTransaction();
+        //            command.Connection = conn;
+        //            command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
+        //            command.CommandType = CommandType.Text;
+
+        //            command.CommandText = "UPDATE UserAccounts SET UserName = 'userInput' WHERE UserAccountID = ";
+
+        //            command.Transaction.Commit();
+        //        }
+        //    }
+        //    return "Username has been updated";
+        //}
 
         public string UpdatePasswordDB(string email, string password)
         {
@@ -55,9 +95,7 @@ namespace AutoBuildApp.DataAccess
                     command.CommandType = CommandType.StoredProcedure;
                     // 2) Set the CommandText to the name of the stored procedure.
                     command.CommandText = SP_UpdatePassword;
-                    /// command.Parameters.AddWithValue   -> fix itttttttt!!!!!
                     //Add any required parameters to the Command.Parameters collection.
-                    // command.Parameters.AddWithValue("@username", userCredentials.Username);
                     var param = new SqlParameter[2];
                     param[0] = new SqlParameter("@USEREMAIL", email);
                     param[0].Value = email;
@@ -69,7 +107,7 @@ namespace AutoBuildApp.DataAccess
 
                     var rowsAdded = command.ExecuteNonQuery();
 
-                    // If the row that was added is one, it will commit the transaction and return true, else false.
+                    // If the row that was added is one, it will commit the transaction.
                     if (rowsAdded == 1)
                     {
                         command.Transaction.Commit(); // sends the transaction to be commited at the database.
@@ -77,50 +115,96 @@ namespace AutoBuildApp.DataAccess
                     }
                 }
             }
-            return "YOU FAIL";
+            return "Password WAS NOT successfully updated";
         }
 
-
-
-           public string newDBEmail(string userInput)
+        public string UpdateEmailDB(string email, string updatedEmail)
         {
-            using (var conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(_connectionString))
             {
+                Console.WriteLine($"\tRetrieveUserPermissions METHOD \n");
                 conn.Open();
-                using (var command = new SqlCommand())
+                // naming convention SP name of procudrure
+                string SP_UpdateEmail = "UpdateEmail";
+                using (SqlCommand command = new SqlCommand(SP_UpdateEmail, conn))
                 {
                     command.Transaction = conn.BeginTransaction();
-                    command.Connection = conn;
+                    #region SQL related
+
+                    // https://learning.oreilly.com/library/view/adonet-in-a/0596003617/ch04s05.html
                     command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
-                    command.CommandType = CommandType.Text;
+                    // 1) Create a Command, and set its CommandType property to StoredProcedure.
+                    command.CommandType = CommandType.StoredProcedure;
+                    // 2) Set the CommandText to the name of the stored procedure.
+                    command.CommandText = SP_UpdateEmail;
+                    //Add any required parameters to the Command.Parameters collection.
+                    var param = new SqlParameter[2];
+                    param[0] = new SqlParameter("@USEREMAIL", email);
+                    param[0].Value = email;
+                    param[1] = new SqlParameter("@EMAIL", updatedEmail);
+                    param[1].Value = updatedEmail;
+                    // add the commands the parameters for the stored procedure
+                    command.Parameters.AddRange(param);
+                    #endregion
 
-                    command.CommandText = "UPDATE UserAccounts SET UserEmail = 'userInput' WHERE UserAccountID = ";
+                    var rowsAdded = command.ExecuteNonQuery();
 
-                    command.Transaction.Commit();
+                    // If the row that was added is one, it will commit the transaction.
+                    if (rowsAdded == 1)
+                    {
+                        command.Transaction.Commit(); // sends the transaction to be commited at the database.
+                        return "Email successfully updated";
+                    }
                 }
             }
-            return "Email has been updated";
+            return "Email WAS NOT successfully updated";
         }
 
-        public string newDBUserName(string userInput)
+
+        public string UpdateUserNameDB(string email, string updatedUserName)
         {
-            using (var conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(_connectionString))
             {
+                Console.WriteLine($"\tRetrieveUserPermissions METHOD \n");
                 conn.Open();
-                using (var command = new SqlCommand())
+                // naming convention SP name of procudrure
+                string SP_UpdateUserName = "UpdateUserName";
+                using (SqlCommand command = new SqlCommand(SP_UpdateUserName, conn))
                 {
                     command.Transaction = conn.BeginTransaction();
-                    command.Connection = conn;
+                    #region SQL related
+
+                    // https://learning.oreilly.com/library/view/adonet-in-a/0596003617/ch04s05.html
                     command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
-                    command.CommandType = CommandType.Text;
+                    // 1) Create a Command, and set its CommandType property to StoredProcedure.
+                    command.CommandType = CommandType.StoredProcedure;
+                    // 2) Set the CommandText to the name of the stored procedure.
+                    command.CommandText = SP_UpdateUserName;
+                    //Add any required parameters to the Command.Parameters collection.
+                    var param = new SqlParameter[2];
+                    param[0] = new SqlParameter("@USEREMAIL", email);
+                    param[0].Value = email;
+                    param[1] = new SqlParameter("@USERNAME", updatedUserName);
+                    param[1].Value = updatedUserName;
+                    // add the commands the parameters for the stored procedure
+                    command.Parameters.AddRange(param);
+                    #endregion
 
-                    command.CommandText = "UPDATE UserAccounts SET UserName = 'userInput' WHERE UserAccountID = ";
+                    var rowsAdded = command.ExecuteNonQuery();
 
-                    command.Transaction.Commit();
+                    // If the row that was added is one, it will commit the transaction.
+                    if (rowsAdded == 1)
+                    {
+                        command.Transaction.Commit(); // sends the transaction to be commited at the database.
+                        return "Username successfully updated";
+                    }
                 }
             }
-            return "Username has been updated";
+            return "Username WAS NOT successfully updated";
         }
+
+
+
 
         public string showUsers()
         {

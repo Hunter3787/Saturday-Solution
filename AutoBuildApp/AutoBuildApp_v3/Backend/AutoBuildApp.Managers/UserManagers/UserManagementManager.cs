@@ -4,6 +4,9 @@ using AutoBuildApp.Models.DTO;
 using AutoBuildApp.Services;
 using System;
 using AutoBuildApp.Managers.UserManagers;
+using BC = BCrypt.Net.BCrypt;
+using System.Security.Claims;
+using System.Threading;
 
 namespace AutoBuildApp.Managers
 {
@@ -21,10 +24,14 @@ namespace AutoBuildApp.Managers
         public string UpdatePassword(string password)
         {
             //password = "P@ssw0rd!123";
-            string userEmail = "ZeinabFarhat@gmail.com";
+            // get the current principle that is on the thread:
+            ClaimsPrincipal _threadPrinciple
+                = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            string userEmail = _threadPrinciple.FindFirst(ClaimTypes.Email).Value;
             if (_inputValidityManager.IsPasswordValid(password))
             {
                 //return _userManagementDAO.newDBPassword(password);
+                password = BC.HashPassword(password, BC.GenerateSalt());
                 return _userManagementDAO.UpdatePasswordDB(userEmail, password);
             }
             else
@@ -35,10 +42,13 @@ namespace AutoBuildApp.Managers
 
         public string UpdateEmail(string userInput)
         {
-            userInput = "crkobel@verizon.net";
+            //userInput = "crkobel@verizon.net";
+            ClaimsPrincipal _threadPrinciple
+                = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            string userEmail = _threadPrinciple.FindFirst(ClaimTypes.Email).Value;
             if (_inputValidityManager.ValidEmail(userInput))
             {
-                return _userManagementDAO.newDBEmail(userInput);
+                return _userManagementDAO.UpdateEmailDB(userEmail, userInput);
             }
             else
             {
@@ -48,10 +58,13 @@ namespace AutoBuildApp.Managers
 
         public string UpdateUsername(string userInput)
         {
-            userInput = "crkobel";
+            //userInput = "crkobel";
+            ClaimsPrincipal _threadPrinciple
+                = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            string userEmail = _threadPrinciple.FindFirst(ClaimTypes.Email).Value;
             if (_inputValidityManager.ValidUserName(userInput))
             {
-                return _userManagementDAO.newDBUserName(userInput);
+                return _userManagementDAO.UpdateUserNameDB(userEmail, userInput);
             }
             else
             {
