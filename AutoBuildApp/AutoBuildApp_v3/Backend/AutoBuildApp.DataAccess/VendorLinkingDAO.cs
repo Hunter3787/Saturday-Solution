@@ -131,7 +131,7 @@ namespace AutoBuildApp.DataAccess
                         //command.Connection = connection;
                         //command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
                         //command.CommandType = CommandType.Text;
-                        String sql = "select vp.productStatus, v.vendorName, vp.VendorLinkURL, p.modelNumber, vp.productPrice from ((vendor_product_junction as vp " +
+                        String sql = "select vp.vendorImageURL, vp.productStatus, v.vendorName, vp.VendorLinkURL, p.modelNumber, vp.productPrice from ((vendor_product_junction as vp " +
                                         "inner join products as p on vp.productID = p.productID) " +
                                         "inner join vendorclub as v on vp.vendorID = v.vendorID)" +
                                         "where vp.vendorID = (select vendorId from vendorClub where vendorName =@VENDORNAME)";
@@ -145,6 +145,7 @@ namespace AutoBuildApp.DataAccess
                             while (reader.Read())
                             {
                                 AddProductDTO productInfo = new AddProductDTO();
+                                productInfo.ImageUrl = (string)reader["vendorImageURL"];
                                 productInfo.Availability = (string)reader["productStatus"] == "AVAILABLE" ? true : false;
                                 productInfo.Company = (string)reader["vendorName"];
                                 productInfo.Url = (string)reader["VendorLinkURL"];
