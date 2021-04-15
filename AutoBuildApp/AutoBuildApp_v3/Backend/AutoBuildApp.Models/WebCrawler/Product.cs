@@ -6,6 +6,7 @@ namespace AutoBuildApp.Models.WebCrawler
 {
     public class Product
     {
+        public string ImageUrl { get; set; }
         public bool Availability { get; set; }
         public string Company { get; set; }
         public string Url { get; set; }
@@ -20,10 +21,11 @@ namespace AutoBuildApp.Models.WebCrawler
         public List<Review> Reviews { get; set; }
 
 
-        public Product(bool availability, string company, string url, string modelNumber, string name, 
+        public Product(string imageUrl, bool availability, string company, string url, string modelNumber, string name, 
             string productType, string manufacturerName, string totalRating, string totalNumberOfReviews,
             string price, Dictionary<string, string> specs, List<Review> reviews)
         {
+            ImageUrl = imageUrl;
             Availability = availability;
             Company = company;
             Url = url;
