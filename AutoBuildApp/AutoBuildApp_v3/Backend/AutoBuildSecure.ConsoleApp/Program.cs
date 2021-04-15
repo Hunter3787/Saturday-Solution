@@ -24,6 +24,36 @@ namespace AutoBuildSecure.ConsoleApp
         static void Main(string[] args)
         {
 
+            UserIdentity userId = new UserIdentity();
+            userId.Name = "this is my name";
+            IEnumerable<Claim> connorClaims = new List<Claim>() {
+                new Claim(ClaimTypes.Email,"this is my email"),
+            };
+            ClaimsIdentity _claimsId =
+                new ClaimsIdentity(
+                    userId, 
+                    connorClaims, 
+                    userId.AuthenticationType, 
+                    userId.Name, 
+                    " ");
+            ClaimsPrincipal _prince = new ClaimsPrincipal(_claimsId);
+            Thread.CurrentPrincipal = _prince;
+
+            foreach (var clm in _prince.Claims)
+            {
+                Console.WriteLine($" claim type: { clm.Type } claim value: {clm.Value} ");
+            }
+            CP test = new CP();
+            test.conors();
+
+            Console.WriteLine("STOP HER E ");
+
+
+            _prince = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            Console.WriteLine($"this is updated email: " +
+                $"{_prince.FindFirst(ClaimTypes.Email).Value}\n");
+
+
             //ClaimsIdentity _claimsIdentity;
 
             //ClaimsPrincipal _principal;
@@ -64,6 +94,9 @@ namespace AutoBuildSecure.ConsoleApp
                 new ClaimsIdentity(userIdentity, claims, userIdentity.AuthenticationType, userIdentity.Name, " ");
             ClaimsPrincipal _principal = new ClaimsPrincipal(_claimsIdentity);
 
+
+
+      
 
             Console.WriteLine($"GETTING THE USERNAME ON CURRENT THREAD\n" +
                 $"" +
