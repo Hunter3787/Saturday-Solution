@@ -12,6 +12,8 @@ document.getElementById("myBtn")
     .addEventListener("click", getItems)
     JWT_Token = ''
 console.log(msg);
+
+
 function getItems() {
   fetch('https://localhost:5001/authdemo', {
   method: 'GET',
@@ -26,6 +28,14 @@ function getItems() {
     .then(response => displayToken(response))
     .catch(error => console.error('Unable to get items.', error));
 }
+
+//https://www.w3schools.com/js/tryit.asp?filename=tryjs_addeventlistener_displaydate
+document.getElementById("myBtn").addEventListener("click", displayDate);
+
+function displayDate() {
+  document.getElementById("demo").innerHTML = Date();
+}
+
 
 // add notes
 function displayToken(id)
