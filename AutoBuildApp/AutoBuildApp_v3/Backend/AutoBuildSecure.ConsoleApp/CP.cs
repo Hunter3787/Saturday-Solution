@@ -57,7 +57,7 @@ namespace AutoBuildSecure.ConsoleApp
         
             
             var identity = Thread.CurrentPrincipal.Identity as ClaimsIdentity;
-           
+            //https://stackoverflow.com/questions/24587414/how-to-update-a-claim-in-asp-net-identity 
             Console.WriteLine($" HERE {identity.FindFirst(ClaimTypes.Email)} \n"); 
            identity.RemoveClaim(identity.FindFirst(ClaimTypes.Email));
            string returnedVal = "this is my new email";
