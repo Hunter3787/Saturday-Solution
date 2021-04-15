@@ -1,4 +1,5 @@
 ﻿using AutoBuildApp.Managers.FeatureManagers;
+using AutoBuildApp.Models.VendorLinking;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -32,6 +33,19 @@ namespace VendorLinkingAPI.Controllers
             //    return NoContent();
             //}
 
+        [HttpPost]
+        public IActionResult AddProductToVendorListOfProducts(AddProductDTO product)
+        {
+            bool result = _vendorLinkingManager.AddProductToVendorListOfProducts(product);
+            return Ok();
+        }
+
+        [HttpPost]
+        public IActionResult EditProductInVendorListOfProducts(AddProductDTO product)
+        {
+            bool result = _vendorLinkingManager.EditProductInVendorListOfProducts(product);
+            return Ok();
+        }
         /// <summary>
         /// This method will get all reviews from the DB.
         /// </summary>
