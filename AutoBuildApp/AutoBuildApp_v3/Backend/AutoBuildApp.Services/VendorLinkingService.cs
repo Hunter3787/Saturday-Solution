@@ -15,6 +15,10 @@ namespace AutoBuildApp.Services
         {
             return _vendorLinkingDAO.AddProductToVendorListOfProducts(product);
         }
+        public bool EditProductInVendorListOfProducts(AddProductDTO product)
+        {
+            return _vendorLinkingDAO.EditProductInVendorListOfProducts(product);
+        }
         public List<AddProductDTO> GetAllProductsByVendor(string companyName)
         {
             return _vendorLinkingDAO.GetAllProductsByVendor(companyName);
