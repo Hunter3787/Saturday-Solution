@@ -25,6 +25,7 @@ namespace AutoBuildApp.Managers
         public readonly int MIN_INDEX = 0;
         public readonly int MIN_INTEGER_VALUE = 0;
         private readonly string _connectionString;
+        
 
         #region "Constructors"
         /// <summary>
@@ -64,16 +65,12 @@ namespace AutoBuildApp.Managers
                 List<IComponent> peripherals, PSUModularity psuType,
                     HardDriveType hddType, int hddCount)
         {
-            // Early escapes.
             if ( initial < MIN_BUDGET || hddCount < MIN_INTEGER_VALUE )
                 return null;
 
             double budget = initial;
-            // Buid factor passses type and returns a specific build.
             IBuild build = BuildFactory.CreateBuild(buildType);
 
-            // If peripherals were selected we remove their
-            // cost from the total budget.
             if (peripherals != null)
             {
                 build.Peripherals = peripherals;
@@ -81,8 +78,7 @@ namespace AutoBuildApp.Managers
                     budget -= extras.GetTotalcost();
             }
 
-            // Early kick out if budget has been reduced too low for items
-            // by peripheral selection.
+            // Business Rule
             if (budget <= MIN_BUDGET && initial > MIN_BUDGET)
                 return null;
 
