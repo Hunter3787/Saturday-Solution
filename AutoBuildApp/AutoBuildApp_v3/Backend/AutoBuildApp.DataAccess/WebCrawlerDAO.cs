@@ -98,7 +98,7 @@ namespace AutoBuildApp.DataAccess
                     try
                     {
                         SqlDataAdapter adapter = new SqlDataAdapter();
-                        String sql = "insert into products_specs(modelNumber, productSpecs, productSpecsValue)Values(@MODELNUMBER, @SPECSKEY, @SPECSVALUE)";
+                        String sql = "insert into products_specs(productID, productSpecs, productSpecsValue)Values((select productID from products where modelNumber = @MODELNUMBER), @SPECSKEY, @SPECSVALUE)";
 
                         foreach(var pair in product.Specs)
                         {
@@ -203,15 +203,16 @@ namespace AutoBuildApp.DataAccess
                             AddVendor(vendor);
                         }
                         SqlDataAdapter adapter = new SqlDataAdapter();
-                        String sql = "insert into vendor_product_junction(vendorName, modelNumber, vendorImageUrl, vendorLinkURL, productStatus, productPrice, rating, reviews)Values(@VENDORNAME," +
-                            " @MODELNUMBER, @VENDORIMAGEURL, @VENDORLINKURL, @PRODUCTSTATUS, @PRODUCTPRICE, @RATING, @REVIEWS)";
+                        String sql = "insert into vendor_product_junction(vendorID, productID, vendorImageUrl, vendorLinkURL, productStatus, productPrice, rating, reviews)Values(" +
+                            "(select vendorID from vendorclub where vendorName = @VENDORNAME),(select productID from products where modelNumber = @MODELNUMBER), @VENDORIMAGEURL, " +
+                            "@VENDORLINKURL, @PRODUCTSTATUS, @PRODUCTPRICE, @RATING, @REVIEWS)";
 
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
                         adapter.InsertCommand.Parameters.Add("@VENDORIMAGEURL", SqlDbType.VarChar).Value = product.ImageUrl;
                         adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = vendor;
                         adapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = product.ModelNumber;
                         adapter.InsertCommand.Parameters.Add("@VENDORLINKURL", SqlDbType.VarChar).Value = product.Url;
-                        adapter.InsertCommand.Parameters.Add("@PRODUCTSTATUS", SqlDbType.VarChar).Value = product.Availability ? "AVAILABLE" : "NOT AVAILABLE";
+                        adapter.InsertCommand.Parameters.Add("@PRODUCTSTATUS", SqlDbType.VarChar).Value = product.Availability ;
                         adapter.InsertCommand.Parameters.Add("@PRODUCTPRICE", SqlDbType.VarChar).Value = product.Price;
                         adapter.InsertCommand.Parameters.Add("@RATING", SqlDbType.VarChar).Value = product.TotalRating;
                         adapter.InsertCommand.Parameters.Add("@REVIEWS", SqlDbType.VarChar).Value = product.TotalNumberOfReviews;
@@ -242,8 +243,9 @@ namespace AutoBuildApp.DataAccess
                     try
                     {
                         SqlDataAdapter adapter = new SqlDataAdapter();
-                        String sql = "insert into Vendor_product_reviews(vendorName, modelNumber, reviewerName, reviewStarRating, reviewContent, reviewDate)VALUES(@VENDORNAME," +
-                            " @MODELNUMBER, @REVIEWERNAME, @REVIEWSTARRATING, @REVIEWCONTENT, @REVIEWDATE)";
+                        String sql = "insert into Vendor_product_reviews_junction(vendorID, productID, reviewerName, reviewStarRating, reviewContent, reviewDate)VALUES(" +
+                            "(select vendorID from vendorclub where vendorName = @VENDORNAME),(select productID from products where modelNumber = @MODELNUMBER)," +
+                            " @REVIEWERNAME, @REVIEWSTARRATING, @REVIEWCONTENT, @REVIEWDATE)";
 
                         foreach (var review in product.Reviews)
                         {
