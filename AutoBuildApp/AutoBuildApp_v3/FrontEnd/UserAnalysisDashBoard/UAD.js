@@ -39,12 +39,15 @@ var myVinyls = {
     "Class": 1,
     "Alternative rock": 14,
     "Pop": 2,
-    "Jazz": 12
+    "Jazz": 12,
+    "Class1": 1,
+    "Alt": 14,
+    "Pop1": 2,
+    "Jazz1": 12
 };
 
 
 // implementing the bar chart component:
-
 var Barchart = function(options){
     this.options = options; // these are storing the pased parameters to the class
     this.canvas = options.canvas;
@@ -105,7 +108,7 @@ var Barchart = function(options){
                 this.ctx,
                 this.options.padding + barIndex * barSize,
                 this.canvas.height - barHeight - this.options.padding,
-                barSize = 15,
+                barSize = 10,
                 barHeight,
                 this.colors[barIndex%this.colors.length]
             );
@@ -117,7 +120,7 @@ var Barchart = function(options){
         this.ctx.textBaseline="bottom";
         this.ctx.textAlign="center";
         this.ctx.fillStyle = "#000000";
-        this.ctx.font = "bold 14px Arial";
+        this.ctx.font = "11px Arial";
         this.ctx.fillText(this.options.seriesName, this.canvas.width/2,this.canvas.height);
         this.ctx.restore();  
     }
@@ -147,6 +150,4 @@ var LineChart = function(options)
 }
 
 
-document.getElementById("myCanvas2").innerText= myBarchart.draw();
-
-document.getElementById("myLineChart").innerHTML= myBarchart.draw();
+document.getElementById("myCanvas").innerText= myBarchart.draw();
