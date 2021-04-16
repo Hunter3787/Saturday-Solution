@@ -6,7 +6,7 @@ namespace AutoBuildApp.DataAccess.Abstractions
 {
     ///will be treating this as a base class
     /// for now.
-    class ChartData
+    public class ChartData
     {
         /// <summary>
         /// XLabel represents the
