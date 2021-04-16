@@ -20,15 +20,16 @@ namespace AutoBuildApp.DataAccess
                     try
                     {
                         SqlDataAdapter adapter = new SqlDataAdapter();
-                        String sql = "insert into vendor_product_junction(vendorName, modelNumber, vendorImageUrl, vendorLinkURL, productStatus, productPrice)Values" +
-                            "(@VENDORNAME, @MODELNUMBER, @VENDORIMAGEURL, @VENDORLINKURL, @PRODUCTSTATUS, @PRODUCTPRICE)";
+                        String sql = "insert into vendor_product_junction(vendorID, productID, vendorImageUrl, vendorLinkURL, productStatus, productPrice)Values" +
+                            "((select vendorID from vendorClub where vendorName = @VENDORNAME), (select productID from products where modelNumber = @MODELNUMBER), @VENDORIMAGEURL, @VENDORLINKURL, @PRODUCTSTATUS, @PRODUCTPRICE)";
+
 
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
                         adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = product.Company.ToLower();
                         adapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = product.ModelNumber;
                         adapter.InsertCommand.Parameters.Add("@VENDORIMAGEURL", SqlDbType.VarChar).Value = product.ImageUrl;
                         adapter.InsertCommand.Parameters.Add("@VENDORLINKURL", SqlDbType.VarChar).Value = product.Url;
-                        adapter.InsertCommand.Parameters.Add("@PRODUCTSTATUS", SqlDbType.VarChar).Value = product.Availability ? "AVAILABLE" : "NOT AVAILABLE";
+                        adapter.InsertCommand.Parameters.Add("@PRODUCTSTATUS", SqlDbType.VarChar).Value = product.Availability;
                         adapter.InsertCommand.Parameters.Add("@PRODUCTPRICE", SqlDbType.VarChar).Value = product.Price;
 
                         adapter.InsertCommand.ExecuteNonQuery();
@@ -62,7 +63,7 @@ namespace AutoBuildApp.DataAccess
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
                         adapter.InsertCommand.Parameters.Add("@VENDORIMAGEURL", SqlDbType.VarChar).Value = product.ImageUrl;
                         adapter.InsertCommand.Parameters.Add("@VENDORLINKURL", SqlDbType.VarChar).Value = product.Url;
-                        adapter.InsertCommand.Parameters.Add("@PRODUCTSTATUS", SqlDbType.VarChar).Value = product.Availability ? "AVAILABLE" : "NOT AVAILABLE";
+                        adapter.InsertCommand.Parameters.Add("@PRODUCTSTATUS", SqlDbType.VarChar).Value = product.Availability;
                         adapter.InsertCommand.Parameters.Add("@PRODUCTPRICE", SqlDbType.VarChar).Value = product.Price;
                         adapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = product.ModelNumber;
                         adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = product.Company.ToLower();
@@ -135,9 +136,9 @@ namespace AutoBuildApp.DataAccess
                         //command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
                         //command.CommandType = CommandType.Text;
                         String sql = "select vp.vendorImageURL, vp.productStatus, v.vendorName, vp.VendorLinkURL, p.modelNumber, vp.productPrice from ((vendor_product_junction as vp " +
-                                        "inner join products as p on vp.modelNumber = p.modelNumber) " +
-                                        "inner join vendorclub as v on vp.vendorName = v.vendorName)" +
-                                        "where vp.vendorName = @VENDORNAME";
+                                        "inner join products as p on vp.productID = p.productID) " +
+                                        "inner join vendorclub as v on vp.vendorID = v.vendorID)" +
+                                        "where vp.vendorID = (select vendorID from vendorClub where vendorName = @VENDORNAME)";
                         //String sql = "select vp.productStatus from vendor_product_junction as vp";
 
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
@@ -149,7 +150,7 @@ namespace AutoBuildApp.DataAccess
                             {
                                 AddProductDTO productInfo = new AddProductDTO();
                                 productInfo.ImageUrl = (string)reader["vendorImageURL"];
-                                productInfo.Availability = (string)reader["productStatus"] == "AVAILABLE" ? true : false;
+                                productInfo.Availability = (bool)reader["productStatus"];
                                 productInfo.Company = (string)reader["vendorName"];
                                 productInfo.Url = (string)reader["VendorLinkURL"];
                                 productInfo.ModelNumber = (string)reader["modelNumber"];
