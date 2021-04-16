@@ -1,10 +1,9 @@
 var myCanvas = document.getElementById("myCanvas");
+var myCanvas = document.getElementById("myCanvas");
 myCanvas.width = 300;
 myCanvas.height = 300;
   
 var ctx = myCanvas.getContext("2d");
-
-
 
 // to draw a bar chart requires nowing how to draw:
 // a line 
@@ -124,10 +123,6 @@ var Barchart = function(options){
         this.ctx.restore();  
     }
 }
-
-
-
-
 var myBarchart = new Barchart(
     {
         canvas:myCanvas,
@@ -143,4 +138,4 @@ myBarchart.draw();
 
 
 
-document.getElementById("Graph1").innerHTML = myBarchart.draw();
+document.getElementById("myCanvas").innerText= myBarchart.draw();
