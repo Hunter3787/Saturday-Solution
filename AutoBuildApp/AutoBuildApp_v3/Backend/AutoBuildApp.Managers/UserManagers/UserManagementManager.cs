@@ -7,6 +7,9 @@ using AutoBuildApp.Managers.UserManagers;
 using BC = BCrypt.Net.BCrypt;
 using System.Security.Claims;
 using System.Threading;
+using AutoBuildApp.DomainModels;
+using System.Collections.Generic;
+using AutoBuildApp.Services.UserServices;
 
 namespace AutoBuildApp.Managers
 {
@@ -14,12 +17,22 @@ namespace AutoBuildApp.Managers
     {
         private readonly UserManagementDAO _userManagementDAO;
         private InputValidityManager _inputValidityManager;
+        private readonly UserManagementService _userManagementService;
 
-        public UserManagementManager(UserManagementDAO userManagementDAO)
+
+
+        //public UserManagementManager(UserManagementDAO userManagementDAO)
+        //{
+        //    _inputValidityManager = new InputValidityManager();
+        //    _userManagementDAO = userManagementDAO;
+        //}
+
+        public UserManagementManager(UserManagementService userManagementService)
         {
             _inputValidityManager = new InputValidityManager();
-            _userManagementDAO = userManagementDAO;
+            _userManagementService = userManagementService;
         }
+
 
         public string UpdatePassword(string password)
         {
@@ -32,7 +45,7 @@ namespace AutoBuildApp.Managers
             {
                 //return _userManagementDAO.newDBPassword(password);
                 password = BC.HashPassword(password, BC.GenerateSalt());
-                return _userManagementDAO.UpdatePasswordDB(userEmail, password);
+                return _userManagementService._userManagementDAO.UpdatePasswordDB(userEmail, password);
             }
             else
             {
@@ -48,7 +61,7 @@ namespace AutoBuildApp.Managers
             string userEmail = _threadPrinciple.FindFirst(ClaimTypes.Email).Value;
             if (_inputValidityManager.ValidEmail(userInput))
             {
-                return _userManagementDAO.UpdateEmailDB(userEmail, userInput);
+                return _userManagementService._userManagementDAO.UpdateEmailDB(userEmail, userInput);
             }
             else
             {
@@ -64,7 +77,7 @@ namespace AutoBuildApp.Managers
             string userEmail = _threadPrinciple.FindFirst(ClaimTypes.Email).Value;
             if (_inputValidityManager.ValidUserName(userInput))
             {
-                return _userManagementDAO.UpdateUserNameDB(userEmail, userInput);
+                return _userManagementService._userManagementDAO.UpdateUserNameDB(userEmail, userInput);
             }
             else
             {
@@ -72,9 +85,9 @@ namespace AutoBuildApp.Managers
             }
         }
 
-        public string RequestUsersList()
+        public List<UserResults> GetUsersList()
         {
-            return _userManagementDAO.showUsers();
+            return _userManagementService.GetUsersList();
         }
 
         public string ChangePermissions(UserAccount user)

@@ -1,4 +1,5 @@
-﻿using AutoBuildApp.Models.Users;
+﻿using AutoBuildApp.DataAccess.Entities;
+using AutoBuildApp.Models.Users;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -206,25 +207,52 @@ namespace AutoBuildApp.DataAccess
 
 
 
-        public string showUsers()
+        public List<UserEntity> getUsers()
         {
             using (var conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
                 using (var command = new SqlCommand())
                 {
+                    var userEntityList = new List<UserEntity>();
                     command.Transaction = conn.BeginTransaction();
                     command.Connection = conn;
                     command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
                     command.CommandType = CommandType.Text;
 
-                    command.CommandText = "SELECT @UserAccountID, @UserName, @UserEmail, @Roley FROM UserAccounts";
+                    //command.CommandText =
+                    //    "SELECT @userID, @username, @email, @firstName, @lastName, @createdAt, @uc.modifiedAt, @uc.modifiedBy" +
+                    //    "FROM UserAccounts ua" +
+                    //    "INNER JOIN userCredentials uc" +
+                    //    "ON @uc.userCredID = @ua.userID";
+                    command.CommandText = "SELECT * FROM UserAccounts " +
+                                            "INNER JOIN UserCredentials " +
+                                            "ON UserCredentials.userCredID = UserAccounts.userID";
 
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var userEntity = new UserEntity();
+                            userEntity.UserID = reader["userID"].ToString();
+                            userEntity.UserName = (string)reader["username"];
+                            userEntity.Email = (string)reader["email"];
+                            userEntity.FirstName = (string)reader["firstName"];
+                            userEntity.LastName = (string)reader["lastName"];
+                            userEntity.CreatedAt = reader["createdat"].ToString();
+                            userEntity.ModifiedAt = reader["modifiedat"].ToString();
+                            userEntity.ModifiedBy = (reader["modifiedby"] == DBNull.Value) ? string.Empty : (string)reader["modifiedby"].ToString();
+                            //userEntity.ModifiedBy = (string)reader["modifiedby"];
+                            userEntityList.Add(userEntity);
+                        }
+                    }
+                    command.ExecuteNonQuery();
 
                     command.Transaction.Commit();
+
+                    return userEntityList;
                 }
             }
-            return "";
         }
     }
 }
