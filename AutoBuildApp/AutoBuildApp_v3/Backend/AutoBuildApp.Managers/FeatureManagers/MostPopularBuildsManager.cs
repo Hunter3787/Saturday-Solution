@@ -144,6 +144,11 @@ namespace AutoBuildApp.Managers
             return _mostPopularBuildsService.PublishBuild(buildPost);
         }
 
+        /// <summary>
+        /// This method returns a single build post from manager
+        /// </summary>
+        /// <param name="buildId">takes in an id string</param>
+        /// <returns>returns a build post.</returns>
         public BuildPost GetBuildPost(string buildId)
         {
             // Log the manager get build posts being called

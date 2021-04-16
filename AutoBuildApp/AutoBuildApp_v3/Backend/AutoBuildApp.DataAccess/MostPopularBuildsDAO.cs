@@ -161,8 +161,12 @@ namespace AutoBuildApp.DataAccess
         }
         #endregion
 
-
-        public BuildPostEntity GetAllBuildPostRecordByQuery(string buildId)
+        /// <summary>
+        /// This method retrieves data from the DB by passing in the ID.
+        /// </summary>
+        /// <param name="buildId">takes in an id string.</param>
+        /// <returns>retruns an entity object.</returns>
+        public BuildPostEntity GetBuildPostRecord(string buildId)
         {
             // uses var connection and will automatically close once the using block has reached the end.
             using (var conn = new SqlConnection(_connectionString))

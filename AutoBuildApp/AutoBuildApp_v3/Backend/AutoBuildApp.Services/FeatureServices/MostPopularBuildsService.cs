@@ -114,13 +114,18 @@ namespace AutoBuildApp.Services.FeatureServices
             return _mostPopularBuildsDAO.AddLike(likeEntity);
         }
 
+        /// <summary>
+        /// This method returns a build post from the DAO.
+        /// </summary>
+        /// <param name="buildId">takes in an ID.</param>
+        /// <returns>retruns a build post object.</returns>
         public BuildPost GetBuildPost(string buildId)
         {
             // Logs the event of getting build posts in the service layer.
             _logger.LogInformation("Most Popular Builds Service GetBuildPost was called.");
 
             // stores the list retreived from the DB into a local List var.
-            var buildPostEntity = _mostPopularBuildsDAO.GetAllBuildPostRecordByQuery(buildId);
+            var buildPostEntity = _mostPopularBuildsDAO.GetBuildPostRecord(buildId);
 
             // This will translate entities back into domain models.
             var buildPost = new BuildPost()
