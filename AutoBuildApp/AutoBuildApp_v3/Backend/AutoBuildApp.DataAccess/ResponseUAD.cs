@@ -10,7 +10,6 @@ namespace AutoBuildApp.DataAccess
 
         public IList<ChartData> _chartDatas;
 
-
         public ResponseUAD()
         {
 
