@@ -378,7 +378,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                 {
                     if(e.Message.Contains("innerText") || e.Message.Contains(".comments-content"))
                     {
-                        Console.WriteLine("yo");
+                        Console.WriteLine("yo man");
                         continue;
                     }
                     Console.WriteLine("BAD PROXY " + ": " + currentProxy.IPAddress + " - " + currentProxy.Port + "\t\t" + e.Message);
