@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 
-namespace AutoBuildSecure.WebApi.HelperFunctions
+namespace AutoBuildApp.Api.HelperFunctions
 {
     /// <summary>
     /// referenced a Youtibe tutorial on the implementation of 

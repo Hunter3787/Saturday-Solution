@@ -1,5 +1,5 @@
 using AutoBuildApp.Security.Models;
-using AutoBuildSecure.WebApi.HelperFunctions;
+using AutoBuildApp.Api.HelperFunctions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +11,7 @@ using System;
 using System.Security.Claims;
 using System.Security.Principal;
 
-namespace AutoBuildSecure.WebApi
+namespace AutoBuildApp.Api
 {
     /// <summary>
     /// the start up class is the start of the application configurations

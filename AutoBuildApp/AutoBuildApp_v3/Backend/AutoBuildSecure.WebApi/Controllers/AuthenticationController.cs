@@ -4,7 +4,7 @@ using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
 using AutoBuildApp.Security.Interfaces;
 using AutoBuildApp.Security.Models;
-using AutoBuildSecure.WebApi.HelperFunctions;
+using AutoBuildApp.Api.HelperFunctions;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -20,7 +20,7 @@ using System.Threading;
 /// Reference: see /AuthReference.
 /// 
 /// </summary>
-namespace AutoBuildSecure.WebApi.Controllers
+namespace AutoBuildApp.Api.Controllers
 { /// <summary>
   /// Web API as the name suggests, 
   /// is an API over the web which can be accessed using HTTP protocol.

@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'AutoBuildSecure.WebApi' " />
   <ItemGroup>
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
   </ItemGroup>

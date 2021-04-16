@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 
-namespace AutoBuildSecure.ConsoleApp
+namespace AutoBuildApp.ConsoleApp
 {
     public class CP
     {
