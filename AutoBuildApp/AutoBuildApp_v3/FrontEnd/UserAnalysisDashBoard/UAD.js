@@ -1,7 +1,6 @@
 var myCanvas = document.getElementById("myCanvas");
-var myCanvas = document.getElementById("myCanvas");
-myCanvas.width = 300;
-myCanvas.height = 300;
+myCanvas.width = 200;
+myCanvas.height = 100;
   
 var ctx = myCanvas.getContext("2d");
 
@@ -37,7 +36,7 @@ function drawBar
 // to fill the bar chart.
 
 var myVinyls = {
-    "Classical music": 10,
+    "Class": 1,
     "Alternative rock": 14,
     "Pop": 2,
     "Jazz": 12
@@ -106,7 +105,7 @@ var Barchart = function(options){
                 this.ctx,
                 this.options.padding + barIndex * barSize,
                 this.canvas.height - barHeight - this.options.padding,
-                barSize,
+                barSize = 15,
                 barHeight,
                 this.colors[barIndex%this.colors.length]
             );
@@ -134,8 +133,20 @@ var myBarchart = new Barchart(
         colors:["#a55ca5","#67b6c7", "#bccd7a","#eb9743"]
     }
 );
-myBarchart.draw();
+//myBarchart.draw();
 
 
+var LineChart = function(options)
+{
 
-document.getElementById("myCanvas").innerText= myBarchart.draw();
+    this.options = options; // these are storing the pased parameters to the class
+    this.canvas = options.canvas;
+    this.ctx = this.canvas.getContext("2d");
+    this.colors = options.colors;
+
+}
+
+
+document.getElementById("myCanvas2").innerText= myBarchart.draw();
+
+document.getElementById("myLineChart").innerHTML= myBarchart.draw();
