@@ -252,7 +252,7 @@ namespace AutoBuildApp.Services.Tests
             _gamingBuild.Case = null;
 
             // Act
-            var actual = CreateICompListService.CreateComponentList(_gamingBuild);
+            var actual = IBuildParsingService.CreateComponentList(_gamingBuild);
             // Assert
             CollectionAssert.AreEqual(actual, expected);
         }
@@ -267,7 +267,7 @@ namespace AutoBuildApp.Services.Tests
             var temp = BuildFactory.CreateBuild(BuildType.Gaming);
 
             // Act
-            var actual = CreateICompListService.CreateComponentList(temp);
+            var actual = IBuildParsingService.CreateComponentList(temp);
             // Assert
             CollectionAssert.AreEqual(actual, expected);
         }

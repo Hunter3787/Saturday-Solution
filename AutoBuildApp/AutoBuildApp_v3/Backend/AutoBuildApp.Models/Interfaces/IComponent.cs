@@ -17,7 +17,7 @@ namespace AutoBuildApp.Models.Interfaces
         string ProductName { get; set; }
         string ManufacturerName { get; set; }
         int Quantity { get; set; }
-        List<byte[]> ProductImages { get; set; }
+        List<string> ProductImageStrings { get; set; }
         double Price { get; set; }
         double Budget { get; set; }
 
@@ -26,7 +26,7 @@ namespace AutoBuildApp.Models.Interfaces
         /// </summary>
         /// <param name="image"></param>
         /// <returns>Boolean</returns>
-        bool AddImage(byte[] image);
+        bool AddImage(string image);
 
         /// <summary>
         /// Interface implementation of RemoveImage method.

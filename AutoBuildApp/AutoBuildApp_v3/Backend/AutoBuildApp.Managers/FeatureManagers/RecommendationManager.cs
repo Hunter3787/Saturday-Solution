@@ -25,16 +25,9 @@ namespace AutoBuildApp.Managers
         public readonly int MIN_INDEX = 0;
         public readonly int MIN_INTEGER_VALUE = 0;
         private readonly string _connectionString;
-        
+        private RecommendationDAO _dao;
 
         #region "Constructors"
-        /// <summary>
-        /// RecommendationManager default constructor.
-        /// </summary>
-        public RecommendationManager()
-        {
-        }
-
         /// <summary>
         /// 
         /// </summary>
@@ -42,6 +35,7 @@ namespace AutoBuildApp.Managers
         public RecommendationManager(string connectionString)
         {
             _connectionString = connectionString;
+            _dao = new RecommendationDAO(_connectionString);
         }
         #endregion
 
@@ -91,11 +85,11 @@ namespace AutoBuildApp.Managers
             else
             {
                 // Create component list using service. 
-                var compList = CreateICompListService.CreateComponentList(build);
+                var compList = IBuildParsingService.CreateComponentList(build);
                 var budgetedList =
-                    BudgetPortionService.BudgetComponents(compList, buildType, budget);
+                    PortionBudgetService.BudgetComponents(compList, buildType, budget);
 
-                RecommendationDAO dao = new RecommendationDAO(_connectionString);
+                
 
 
                 // recieve elements, for loop passing each component and return an int.

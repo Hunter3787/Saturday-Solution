@@ -13,9 +13,6 @@ namespace AutoBuildApp.Models.Products
     {
 
         #region "Field Declarations, get; set;"
-        public readonly int MIN_LIST_SIZE = 1;
-        public readonly int MIN_INDEX = 0;
-
         public HardDriveType HardDriveType { get; set; }
         public string ModelNumber { get; set; }
         public ProductType ProductType { get; set; }
@@ -63,7 +60,7 @@ namespace AutoBuildApp.Models.Products
             var success = false;
             var endOfList = ProductImages.Count - 1;
 
-            if (index >= MIN_INDEX && ProductImages.Count >= MIN_LIST_SIZE
+            if (index >= ProductGlobals.MIN_INDEX && ProductImages.Count >= ProductGlobals.MIN_LIST_SIZE
                 && index <= endOfList)
             {
                 ProductImages.RemoveAt(index);

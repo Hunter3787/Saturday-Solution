@@ -1,5 +1,5 @@
 ﻿using System;
-namespace AutoBuildApp.Services.RecommendatIonServices
+namespace AutoBuildApp.Services.RecommendationServices
 {
     public class RecQueryService
     {

@@ -256,7 +256,7 @@ namespace AutoBuildApp.Services.RecommendationServices.Tests
             expected = Math.Round(expected, 2, MidpointRounding.AwayFromZero);
 
             // Act
-            var result = BudgetPortionService.BudgetComponents(list, type, budget);
+            var result = PortionBudgetService.BudgetComponents(list, type, budget);
 
             double actual = 0;
             foreach (var add in result)
