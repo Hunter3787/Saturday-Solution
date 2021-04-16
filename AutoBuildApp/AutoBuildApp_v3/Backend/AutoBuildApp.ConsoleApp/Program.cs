@@ -49,6 +49,10 @@ namespace AutoBuildApp.ConsoleApp
                 Console.WriteLine(result);
             }
 
+            var rut = mostPopularBuildsManager.GetBuildPost("30002");
+
+            Console.WriteLine(rut.EntityId);
+
             //var result = mostPopularBuildsManager.addLike(like);
 
             Console.WriteLine("Hello World");

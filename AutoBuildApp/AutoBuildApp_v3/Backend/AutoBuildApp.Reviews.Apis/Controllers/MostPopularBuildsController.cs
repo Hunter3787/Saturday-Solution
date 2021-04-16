@@ -112,6 +112,39 @@ namespace AutoBuildApp.WebApp.Controllers
         }
 
         /// <summary>
+        /// This method gets a single record
+        /// </summary>
+        /// <param name="buildId">takes in a build id string.</param>
+        /// <returns>returns a single build object</returns>
+        [HttpGet("build")]
+        public IActionResult GetBuildPost(string buildId)
+        {
+            // Log the event of a get fetch.
+            _logger.LogInformation("GetBuildPost was fetched.");
+
+            // Pass in the DAO to the service.
+            mostPopularBuildsService = new MostPopularBuildsService(_mostPopularBuildsDAO);
+
+            // Pass the service into the manager.
+            mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+
+            // This will try to get a Build, and if not, it will catch it and return the error code.
+            try
+            {
+                var buildPost = mostPopularBuildsManager.GetBuildPost(buildId); // calls the manager to get all Builds sorted by build type, Graphic Artist.
+
+                //_logger.LogInformation("GetBuildPost was sucessfully fetched.");
+                return Ok(buildPost); // sends the BuildPost through the OK to be read from the front end fetch request.
+            }
+            catch
+            {
+                _logger.LogWarning("GetBuildPost was not sucessfully fetched.");
+                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            }
+        }
+
+
+        /// <summary>
         /// This controller method posts a like to a build post.
         /// </summary>
         /// <param name="like">takes in a like object (userid and postid)</param>

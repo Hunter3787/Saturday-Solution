@@ -161,6 +161,63 @@ namespace AutoBuildApp.DataAccess
         }
         #endregion
 
+
+        public BuildPostEntity GetAllBuildPostRecordByQuery(string buildId)
+        {
+            // uses var connection and will automatically close once the using block has reached the end.
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                // Open the connection to the database.
+                conn.Open();
+
+                // Uses the var command and will only use the command within this block.
+                using (var command = new SqlCommand())
+                {
+                    var buildPostEntity = new BuildPostEntity(); // initialized a list of entity objects that will be retrieved.
+                    command.Transaction = conn.BeginTransaction(); // begins the transaction to the database.
+                    command.Connection = conn; // sets the connection of the command equal to the connection that has already been starte in the outer using block.
+                    command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds; // automatically times out the connection after 60 seconds.
+                    command.CommandType = CommandType.Text; // sets the command type to command text, allowing use of string 'parametrized' queries.
+
+                    // Stored the query that will be used for retrieval of all build posts.
+                    command.CommandText =
+                        $"SELECT * from mostpopularbuilds WHERE EntityId = @buildId;";
+
+                    var parameters = new SqlParameter[1]; // parameter that will be sent through the query to identify a review.
+                    parameters[0] = new SqlParameter("@buildId", buildId); // string ID
+
+                    // This will add the range of parameters to the parameters that will be used in the query.
+                    command.Parameters.AddRange(parameters);
+
+                    // this will start the sql data reader that will be utilized to read through the database. for only the duration of the using block.
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        // while the reader is reading, it will sweep the database until it finds the id item and return it as values.
+                        while (reader.Read())
+                        {
+                            buildPostEntity.EntityId = reader["EntityId"].ToString();
+                            buildPostEntity.Username = (string)reader["Username"];
+                            buildPostEntity.Title = (string)reader["Title"];
+                            buildPostEntity.Description = (string)reader["Description"];
+                            buildPostEntity.LikeIncrementor = (int)reader["LikeIncrementor"];
+                            buildPostEntity.BuildTypeValue = (int)reader["BuildTypeValue"];
+                            buildPostEntity.BuildImagePath = (string)reader["BuildImagePath"];
+                            buildPostEntity.DateTime = (string)reader["DateTime"];
+                        }
+                    }
+
+                    // Executes the query.
+                    command.ExecuteNonQuery();
+
+                    // sends the transaction to be commited at the database.
+                    command.Transaction.Commit();
+
+                    // returns the list of entity object.
+                    return buildPostEntity;
+                }
+            }
+        }
+
         /// <summary>
         /// This method will retrieve all records from the DB to be displayed by order of likes.
         /// </summary>
