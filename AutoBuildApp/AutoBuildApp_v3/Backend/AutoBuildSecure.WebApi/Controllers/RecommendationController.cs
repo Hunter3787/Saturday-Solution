@@ -5,6 +5,7 @@ using AutoBuildApp.Managers;
 using AutoBuildApp.DomainModels;
 using AutoBuildApp.Api.HelperFunctions;
 using System;
+using AutoBuildApp.Services;
 
 /**
 * AutoBuild Recommendation Tool Controller.
@@ -20,7 +21,8 @@ namespace AutoBuildApp.Controllers
     [EnableCors("CorsPolicy")]
     public class RecommendationController : ControllerBase
     {
-
+        private LoggingConsumerManager _logManager = new LoggingConsumerManager();
+        private LoggingProducerService _logger = LoggingProducerService.GetInstance;
         private readonly string _connectionString = ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection");
         private RecommendationManager manager;
         /// <summary>
@@ -48,7 +50,13 @@ namespace AutoBuildApp.Controllers
             }
             catch(UnauthorizedAccessException ex)
             {
+                _logger.LogWarning(ex.Message);
                 return new StatusCodeResult(StatusCodes.Status401Unauthorized);
+            }
+            catch(ArgumentOutOfRangeException ex)
+            {
+                _logger.LogWarning(ex.Message);
+                return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
 
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);

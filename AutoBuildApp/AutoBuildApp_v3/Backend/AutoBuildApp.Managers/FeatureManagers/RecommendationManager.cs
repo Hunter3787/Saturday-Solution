@@ -69,7 +69,7 @@ namespace AutoBuildApp.Managers
         {
             if (!AuthorizationService.checkPermissions(_unregistered.Claims()))
             {
-                throw new UnauthorizedAccessException();
+                throw new UnauthorizedAccessException("Unauthorized user");
             }
 
             //if ( initial < MIN_BUDGET || hddCount < MIN_INTEGER_VALUE)
