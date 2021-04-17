@@ -1,26 +1,20 @@
-using AutoBuildApp.Security.Models;
 using AutoBuildSecure.WebApi.HelperFunctions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Net.Http.Headers;
+using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
-using System.Security.Principal;
+using System.Threading.Tasks;
 
-namespace AutoBuildSecure.WebApi
+namespace VendorLinkingAPI
 {
-    /// <summary>
-    /// the start up class is the start of the application configurations
-    /// Implemented here:
-    ///     - middleware handling JWT token validation check 
-    ///     - Cors Functionality 
-    /// References
-    /// 
-    /// </summary>
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -46,9 +40,7 @@ namespace AutoBuildSecure.WebApi
             services.AddControllers();
         }
 
-
-        //. This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        /// https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-5.0 
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -60,7 +52,6 @@ namespace AutoBuildSecure.WebApi
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors();
-            
 
 
             app.UseAuthorization();

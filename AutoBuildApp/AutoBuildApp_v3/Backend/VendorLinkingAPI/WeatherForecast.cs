@@ -1,6 +1,6 @@
 using System;
 
-namespace AutoBuildSecure.WebApi
+namespace VendorLinkingAPI
 {
     public class WeatherForecast
     {

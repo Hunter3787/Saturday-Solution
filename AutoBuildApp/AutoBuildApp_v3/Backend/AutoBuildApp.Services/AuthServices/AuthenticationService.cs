@@ -115,11 +115,22 @@ namespace AutoBuildApp.Services.Auth_Services
 
 
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity
-                    ( userIdentity,
+                    (userIdentity,
                     _securityClaims,
                     userIdentity.AuthenticationType,
                      userIdentity.Name, "");
+                claimsIdentity = new ClaimsIdentity
+                  (userIdentity,
+                  _securityClaims);
+
+
                 claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                Console.WriteLine("\tChecking in the authentication service\n");
+                foreach (var clm in claimsPrincipal.Claims)
+                {
+                    Console.WriteLine($" claim type: { clm.Type } claim value: {clm.Value} \n");
+                }
                 _responseAuth.JWTString = generateJWTToken(_authUserDTO);
             }
             else
