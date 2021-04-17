@@ -11,7 +11,7 @@ namespace AutoBuildApp.Security.FactoryModels
     /// <summary>
     /// This is a class which implements the Product interface.
     /// </summary>
-    public class Basic : IClaimsFactory
+    public class Basic : IClaims
     {
         public IEnumerable<Claim> Claims()
         {
@@ -43,7 +43,7 @@ namespace AutoBuildApp.Security.FactoryModels
     /// <summary>
     /// This is a class which implements the Product interface.
     /// </summary>
-    public class Admin : IClaimsFactory
+    public class Admin : IClaims
     {
         public IEnumerable<Claim> Claims()
         {
@@ -69,7 +69,7 @@ namespace AutoBuildApp.Security.FactoryModels
     /// <summary>
     /// This is a class which implements the Product interface.
     /// </summary>
-    public class Vendor : IClaimsFactory
+    public class Vendor : IClaims
     {
         public IEnumerable<Claim> Claims()
         {
@@ -104,7 +104,7 @@ namespace AutoBuildApp.Security.FactoryModels
     /// <summary>
     /// This is a class which implements the Product interface.
     /// </summary>
-    public class Unregistered : IClaimsFactory
+    public class Unregistered : IClaims
     {
 
         public IEnumerable<Claim> Claims()

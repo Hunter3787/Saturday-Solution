@@ -9,8 +9,12 @@ namespace AutoBuildApp.Services
 {
     public class VendorLinkingService
     {
-        private VendorLinkingDAO _vendorLinkingDAO = new VendorLinkingDAO();
+        private VendorLinkingDAO _vendorLinkingDAO;
 
+        public VendorLinkingService(string connectionString)
+        {
+            _vendorLinkingDAO = new VendorLinkingDAO(connectionString);
+        }
         public bool AddProductToVendorListOfProducts(AddProductDTO product)
         {
             return _vendorLinkingDAO.AddProductToVendorListOfProducts(product);

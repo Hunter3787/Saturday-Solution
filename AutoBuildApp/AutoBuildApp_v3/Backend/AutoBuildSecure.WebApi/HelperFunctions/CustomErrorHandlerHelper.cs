@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 /// <summary>
 /// References see /AuthReferences.txt.
 /// </summary>
-namespace AutoBuildSecure.WebApi.HelperFunctions
+namespace AutoBuildApp.Api.HelperFunctions
 {
 
     public class Problem

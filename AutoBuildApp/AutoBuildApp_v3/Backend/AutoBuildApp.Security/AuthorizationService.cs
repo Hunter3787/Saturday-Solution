@@ -50,6 +50,8 @@ namespace AutoBuildApp.Security
                 from Claim item in _threadPrinciple.Claims
                     //where item.Type != "USERNAME"
                 where item.Value != _threadPrinciple.Identity.Name
+                // added per email in claims - connor
+                && item.Type != ClaimTypes.Email
                 orderby item.Type
                 select item;
             var y = from Claim item in permissionsRequired

@@ -11,12 +11,47 @@ namespace AutoBuildApp.DataAccess
     public class WebCrawlerDAO
     {
         private string connectionString;
-        private List<string> listOfVendors = new List<string>();
+        private List<string> listOfVendors;
         public WebCrawlerDAO(string connectionString)
         {
             this.connectionString = connectionString;
+            listOfVendors = getAllVendors();
         }
 
+        public List<string> getAllVendors()
+        {
+            List<string> vendorList = new List<string>();
+            using (SqlConnection connection = new SqlConnection("Server = localhost; Database = DB; Trusted_Connection = True;"))
+            {
+                connection.Open();
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        SqlDataAdapter adapter = new SqlDataAdapter();
+                        String sql = "select vendorName from vendorclub";
+                        adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
+
+                        using (SqlDataReader reader = adapter.InsertCommand.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                vendorList.Add((string)reader["vendorname"]);
+                            }
+                        }
+
+                        transaction.Commit();
+                        Console.WriteLine("vendorlist is done");
+                    }
+                    catch (SqlException ex)
+                    {
+                        Console.WriteLine("wrong");
+                        transaction.Rollback();
+                    }
+                }
+            }
+            return vendorList;
+        }
         public bool ProductExists(string modelNumber)
         {
             using (SqlConnection connection = new SqlConnection(this.connectionString))
@@ -65,12 +100,11 @@ namespace AutoBuildApp.DataAccess
                         }
 
                         SqlDataAdapter adapter = new SqlDataAdapter();
-                        String sql = "insert into products(modelNumber, productType, productName, manufacturerName)Values(@MODELNUMBER, @PRODTYPE, @PRODNAME, @MANUFACTURERNAME)";
+                        String sql = "insert into products(modelNumber, productType, manufacturerName)Values(@MODELNUMBER, @PRODTYPE, @MANUFACTURERNAME)";
 
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
                         adapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = product.ModelNumber;
                         adapter.InsertCommand.Parameters.Add("@PRODTYPE", SqlDbType.VarChar).Value = product.ProductType;
-                        adapter.InsertCommand.Parameters.Add("@PRODNAME", SqlDbType.VarChar).Value = product.Name;
                         adapter.InsertCommand.Parameters.Add("@MANUFACTURERNAME", SqlDbType.VarChar).Value = product.ManufacturerName;
 
                         adapter.InsertCommand.ExecuteNonQuery();
@@ -98,7 +132,7 @@ namespace AutoBuildApp.DataAccess
                     try
                     {
                         SqlDataAdapter adapter = new SqlDataAdapter();
-                        String sql = "insert into products_specs(modelNumber, productSpecs, productSpecsValue)Values(@MODELNUMBER, @SPECSKEY, @SPECSVALUE)";
+                        String sql = "insert into products_specs(productID, productSpecs, productSpecsValue)Values((select productID from products where modelNumber = @MODELNUMBER), @SPECSKEY, @SPECSVALUE)";
 
                         foreach(var pair in product.Specs)
                         {
@@ -203,15 +237,17 @@ namespace AutoBuildApp.DataAccess
                             AddVendor(vendor);
                         }
                         SqlDataAdapter adapter = new SqlDataAdapter();
-                        String sql = "insert into vendor_product_junction(vendorName, modelNumber, vendorImageUrl, vendorLinkURL, productStatus, productPrice, rating, reviews)Values(@VENDORNAME," +
-                            " @MODELNUMBER, @VENDORIMAGEURL, @VENDORLINKURL, @PRODUCTSTATUS, @PRODUCTPRICE, @RATING, @REVIEWS)";
+                        String sql = "insert into vendor_product_junction(vendorID, productID, productName, vendorImageUrl, vendorLinkURL, productStatus, productPrice, rating, reviews)Values(" +
+                            "(select vendorID from vendorclub where vendorName = @VENDORNAME),(select productID from products where modelNumber = @MODELNUMBER), @PRODUCTNAME, @VENDORIMAGEURL, " +
+                            "@VENDORLINKURL, @PRODUCTSTATUS, @PRODUCTPRICE, @RATING, @REVIEWS)";
 
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
                         adapter.InsertCommand.Parameters.Add("@VENDORIMAGEURL", SqlDbType.VarChar).Value = product.ImageUrl;
                         adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = vendor;
                         adapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = product.ModelNumber;
+                        adapter.InsertCommand.Parameters.Add("@PRODUCTNAME", SqlDbType.VarChar).Value = product.Name;
                         adapter.InsertCommand.Parameters.Add("@VENDORLINKURL", SqlDbType.VarChar).Value = product.Url;
-                        adapter.InsertCommand.Parameters.Add("@PRODUCTSTATUS", SqlDbType.VarChar).Value = product.Availability ? "AVAILABLE" : "NOT AVAILABLE";
+                        adapter.InsertCommand.Parameters.Add("@PRODUCTSTATUS", SqlDbType.VarChar).Value = product.Availability ;
                         adapter.InsertCommand.Parameters.Add("@PRODUCTPRICE", SqlDbType.VarChar).Value = product.Price;
                         adapter.InsertCommand.Parameters.Add("@RATING", SqlDbType.VarChar).Value = product.TotalRating;
                         adapter.InsertCommand.Parameters.Add("@REVIEWS", SqlDbType.VarChar).Value = product.TotalNumberOfReviews;
@@ -242,8 +278,9 @@ namespace AutoBuildApp.DataAccess
                     try
                     {
                         SqlDataAdapter adapter = new SqlDataAdapter();
-                        String sql = "insert into Vendor_product_reviews(vendorName, modelNumber, reviewerName, reviewStarRating, reviewContent, reviewDate)VALUES(@VENDORNAME," +
-                            " @MODELNUMBER, @REVIEWERNAME, @REVIEWSTARRATING, @REVIEWCONTENT, @REVIEWDATE)";
+                        String sql = "insert into Vendor_product_reviews_junction(vendorID, productID, reviewerName, reviewStarRating, reviewContent, reviewDate)VALUES(" +
+                            "(select vendorID from vendorclub where vendorName = @VENDORNAME),(select productID from products where modelNumber = @MODELNUMBER)," +
+                            " @REVIEWERNAME, @REVIEWSTARRATING, @REVIEWCONTENT, @REVIEWDATE)";
 
                         foreach (var review in product.Reviews)
                         {
@@ -253,7 +290,7 @@ namespace AutoBuildApp.DataAccess
                             adapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = product.ModelNumber;
                             adapter.InsertCommand.Parameters.Add("@REVIEWERNAME", SqlDbType.VarChar).Value = review.ReviewerName;
                             adapter.InsertCommand.Parameters.Add("@REVIEWSTARRATING", SqlDbType.VarChar).Value = review.StarRating;
-                            adapter.InsertCommand.Parameters.Add("@REVIEWCONTENT", SqlDbType.VarChar).Value = review.Content;
+                            adapter.InsertCommand.Parameters.Add("@REVIEWCONTENT", SqlDbType.VarChar).Value = review.Content.Length > 8000 ? review.Content.Substring(0, 8000) : review.Content;
                             adapter.InsertCommand.Parameters.Add("@REVIEWDATE", SqlDbType.VarChar).Value = review.Date;
                             adapter.InsertCommand.ExecuteNonQuery();
                         }

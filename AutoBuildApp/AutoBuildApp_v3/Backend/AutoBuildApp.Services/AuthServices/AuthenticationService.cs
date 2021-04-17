@@ -95,6 +95,8 @@ namespace AutoBuildApp.Services.Auth_Services
             {
                 _responseAuth.isAuthenticated = false;
             }
+            // return immediately cuz db is off
+
             if (_responseAuth.IsUserExists == true)
             {
 

@@ -14,7 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace AutoBuildSecure.WebApi.HelperFunctions
+namespace AutoBuildApp.Api.HelperFunctions
 {
     public class JWT_Middleware
     {
@@ -132,9 +132,6 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
 
                 Console.WriteLine($"YOU ARE REQUESTING THE AUTHDEMO URL\n");
                 Console.WriteLine($"Is the user authenticated? ");
-                // so the first thing is to check if the are authenticated.
-                //Console.WriteLine($"{Thread.CurrentPrincipal.Identity.IsAuthenticated} . \n");
-
             }
 
 

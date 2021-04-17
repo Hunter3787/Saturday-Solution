@@ -10,7 +10,7 @@ namespace AutoBuildApp.Models.Interfaces
     {
         string FanRPM { get; set; }
         string NoiseVolume { get; set; }
-        List<string> CompatableSocket { get; set; }
+        List<string> CompatableSockets { get; set; }
         bool Fanless { get; set; } 
     }
 }

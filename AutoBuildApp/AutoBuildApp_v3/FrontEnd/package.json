@@ -1,0 +1,16 @@
+{
+  "name": "FrontEnd",
+  "version": "1.0.0",
+  "description": "Autobuild single page application front end, using Vanilla JS for the frontend and ASP.NET Core 3.1 for the back.",
+  "main": "server.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

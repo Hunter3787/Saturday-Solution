@@ -14,7 +14,7 @@ using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AutoBuildSecure.WebApi.HelperFunctions
+namespace AutoBuildApp.Api.HelperFunctions
 {
     public class DemoMiddleware
     {
@@ -26,7 +26,7 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
         private ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
 
         private JWTValidator _validateAuthorizationHeader;
-        private IClaimsFactory unregistered;
+        private IClaims unregistered;
 
         public DemoMiddleware(RequestDelegate next)
         {

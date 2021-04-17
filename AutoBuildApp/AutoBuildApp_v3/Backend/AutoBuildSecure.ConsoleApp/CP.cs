@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 
-namespace AutoBuildSecure.ConsoleApp
+namespace AutoBuildApp.ConsoleApp
 {
     public class CP
     {
@@ -54,10 +54,10 @@ namespace AutoBuildSecure.ConsoleApp
             Console.WriteLine($"I AM HER: \n" +
                 $"{_threadPrinciple.FindFirst(ClaimTypes.Email).Value}\n");
 
-        
-            
-            var identity = Thread.CurrentPrincipal.Identity as ClaimsIdentity;
             //https://stackoverflow.com/questions/24587414/how-to-update-a-claim-in-asp-net-identity 
+
+            var identity = Thread.CurrentPrincipal.Identity as ClaimsIdentity;
+            
             Console.WriteLine($" HERE {identity.FindFirst(ClaimTypes.Email)} \n"); 
            identity.RemoveClaim(identity.FindFirst(ClaimTypes.Email));
            string returnedVal = "this is my new email";
@@ -66,7 +66,32 @@ namespace AutoBuildSecure.ConsoleApp
             Thread.CurrentPrincipal = _threadPrinciple;
         }
 
+        public void updateEmailThread()
+        {
+            Console.WriteLine($"----------------");
+            ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            String mynameis = _threadPrinciple.Identity.Name;
 
+            Console.WriteLine($"\n\nCurrent Thread Priciple: { JsonSerializer.Serialize(Thread.CurrentPrincipal)} \n" +
+                $"\n Whats my name?  name  - { mynameis}");
+
+            foreach (var clm in _threadPrinciple.Claims)
+            {
+                Console.WriteLine($"claim type: {clm.Type} claim value: {clm.Value}");
+            }
+
+            Console.WriteLine($"I AM HERE: \n" +
+                $"{_threadPrinciple.FindFirst(ClaimTypes.Email).Value}\n");
+
+            var identity = Thread.CurrentPrincipal.Identity as ClaimsIdentity;
+            Console.WriteLine($"HERE {identity.FindFirst(ClaimTypes.Email)} \n");
+            identity.RemoveClaim(identity.FindFirst(ClaimTypes.Email));
+            //string returnedVal1 = (_threadPrinciple.FindFirst(ClaimTypes.Email).Value).ToString();
+            string returnedVal = "bob222@gmail.com";
+            identity.AddClaim(new Claim(ClaimTypes.Email, returnedVal));
+            _threadPrinciple = new ClaimsPrincipal(identity);
+            Thread.CurrentPrincipal = _threadPrinciple;
+        }
 
 
     }

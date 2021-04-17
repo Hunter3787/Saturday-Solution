@@ -16,7 +16,7 @@ namespace AutoBuildApp.Security.Interfaces
     /// the 'Product' interface
     /// an interface for creating the objects
     /// </summary>
-    public interface IClaimsFactory
+    public interface IClaims
     {
         IEnumerable<Claim> Claims();
         void PrintClaims();
