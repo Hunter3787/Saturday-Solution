@@ -132,9 +132,6 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
 
                 Console.WriteLine($"YOU ARE REQUESTING THE AUTHDEMO URL\n");
                 Console.WriteLine($"Is the user authenticated? ");
-                // so the first thing is to check if the are authenticated.
-                //Console.WriteLine($"{Thread.CurrentPrincipal.Identity.IsAuthenticated} . \n");
-
             }
 
 

@@ -39,6 +39,17 @@ namespace AutoBuildSecure.WebApi.Controllers
         private UserCredentials _userCredentials;
         #endregion
 
+        #region variables for the redirect issue, method
+
+
+        private JWTValidator _validateAuthorizationHeader;
+
+        // i want to store this into the 
+        // http.context.item["ClaimsPrincipal"] =.
+        private ClaimsPrincipal _threadPrinciple;
+
+        #endregion
+
         public AuthenticationController()
         {
             #region getting the connection string and passing to the loginmanager
@@ -72,16 +83,79 @@ namespace AutoBuildSecure.WebApi.Controllers
         }
 
         [HttpPost("{Login}")]
-        public ActionResult<AuthUserDTO> AuthenticateUser(UserCredentials userCredentials, string returnURL)
+        public ActionResult<AuthUserDTO> AuthenticateUser(UserCredentials userCredentials)
         {
             this._userCredentials = userCredentials;
             var JWTToken = _loginManager.AuthenticateUser(_userCredentials);
             return Ok(JWTToken);
         }
+
+
+
         // GET: for main view  
         ////public EmptyResult EmptyData()
         ////{
         ////    return new EmptyResult();
         ////}
+        ///
+
+        /*
+        
+        ///
+        /// 
+        /// 
+        /// <summary>
+        /// https://www.youtube.com/watch?v=-asykt9Zo_w 
+        /// </summary>
+        /// <param name="userCredentials"></param>
+        /// <param name="returnURL"></param>
+        /// <returns></returns>
+        [HttpPost("{LoginTest}")]
+        public ActionResult<AuthUserDTO> Login(UserCredentials userCredentials, string returnURL)
+        {
+            this._userCredentials = userCredentials;
+            var JWTToken = _loginManager.AuthenticateUser(_userCredentials);
+
+
+            if(!JWTToken.Equals("User not found"))
+            {
+                _validateAuthorizationHeader = new JWTValidator(JWTToken); // validate the token 
+
+                var userPrinciple =
+                   _validateAuthorizationHeader.ParseForClaimsPrinciple();
+                _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+                Thread.CurrentPrincipal = _threadPrinciple; // SETTING THE PARSED TOKEN, TO THE THREAD.
+
+                Console.WriteLine("\nchecking principle claims in this redirect: \n");
+                foreach (var clm in _threadPrinciple.Claims)
+                {
+                    Console.WriteLine(
+                        $" claim type: { clm.Type } " +
+                        $"claim value: {clm.Value} \n");
+                }
+
+
+                // this causes open redirect attack
+                //https://www.youtube.com/watch?v=0q0CZTliQ7A
+                // major security holec-> so use local redirect
+                if (!string.IsNullOrEmpty(returnURL))
+                {
+                    return LocalRedirect(returnURL);
+                }
+                else
+                {
+
+                    return RedirectToAction("GetData", "authdemo");
+                    //return RedirectToAction("index", "home");
+                }
+
+            }
+
+            return Ok(JWTToken);
+        }
+
+        */
+
+
     }
 }
