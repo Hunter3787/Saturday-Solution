@@ -19,8 +19,8 @@ namespace AutoBuildApp.Managers.FeatureManagers
     {
         private ClaimsPrincipal _threadPrinciple;
         private ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
-        IClaimsFactory unregistered;
-        IClaimsFactory basic;
+        IClaims unregistered;
+        IClaims basic;
         public AuthDemoManager()
         {
             unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);

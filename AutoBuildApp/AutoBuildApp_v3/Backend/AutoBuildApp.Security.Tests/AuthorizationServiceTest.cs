@@ -67,7 +67,7 @@ namespace AutoBuildApp.Security.Tests
             AuthDAO _authDAO = new AuthDAO("Data Source=localhost;Initial Catalog=DB;Integrated Security=True");
             AuthenticationService authenticationService = new AuthenticationService(_authDAO);
             _CRAuth = authenticationService.AuthenticateUser(credential1);
-            IClaimsFactory basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
+            IClaims basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
 
             AuthActual = AuthorizationService.checkPermissions(basic.Claims());
 

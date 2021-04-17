@@ -32,7 +32,7 @@ namespace VendorLinkingAPI
                 opts.AddPolicy(name: "CorsPolicy", builder =>
                 {
                     builder.WithMethods("GET", "POST", "OPTIONS", "PUT")
-                    .WithOrigins("http://127.0.0.1:5500")
+                    .WithOrigins("http://127.0.0.1:5501")
                     .AllowAnyHeader();
                 });
             });

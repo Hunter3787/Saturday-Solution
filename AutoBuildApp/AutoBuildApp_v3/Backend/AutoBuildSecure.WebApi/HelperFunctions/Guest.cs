@@ -22,7 +22,7 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
             #region Instantiating the Claims principle
 
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
-            IClaimsFactory unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
+            IClaims unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
             /// NOTE: passed in the claims only to the claimsIdentity and not userIdentity 
             /// as "AutoBuild User" since that will trigger the read only value of is authenticated to 
             /// be True, when in fact the user is not
@@ -30,13 +30,13 @@ namespace AutoBuildSecure.WebApi.HelperFunctions
             ClaimsIdentity identity = new 
                 ClaimsIdentity(unregistered.Claims());
             ClaimsPrincipal _principal = new ClaimsPrincipal(identity);
-            /* //some printing
+             //some printing
             Console.WriteLine($"IN THE GUEST");
             foreach (Claim c in _principal.Claims)
             {
                 Console.WriteLine($"Permission:  {c.Type}, Scope: {c.Value} ");
             }
-            */
+            
             #endregion
 
             #region NOT NECESSARY BUT WILL KEEP FOR NOW:

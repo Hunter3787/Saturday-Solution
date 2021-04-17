@@ -14,7 +14,7 @@ namespace AutoBuildApp.Security.FactoryModels
     public abstract class ClaimsFactory
     {
 
-        public abstract IClaimsFactory GetClaims(string type);
+        public abstract IClaims GetClaims(string type);
 
     }
 
@@ -28,7 +28,7 @@ namespace AutoBuildApp.Security.FactoryModels
     public class ConcreteClaimsFactory : ClaimsFactory
     {
 
-        public override IClaimsFactory GetClaims(string type)
+        public override IClaims GetClaims(string type)
         {
             type = type.ToUpper();
             switch (type)

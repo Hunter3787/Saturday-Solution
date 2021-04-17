@@ -4,15 +4,23 @@ using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Security.Claims;
 using System.Text;
+using System.Threading;
 
 namespace AutoBuildApp.DataAccess
 {
     public class VendorLinkingDAO
     {
+        private string _connectionString;
+        public VendorLinkingDAO(string connectionString)
+        {
+            Console.WriteLine("conn = " + connectionString);
+            _connectionString = connectionString;
+        }
         public bool AddProductToVendorListOfProducts(AddProductDTO product)
         {
-            using (SqlConnection connection = new SqlConnection("Server = localhost; Database = DB; Trusted_Connection = True;"))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 using (SqlTransaction transaction = connection.BeginTransaction())
@@ -20,13 +28,14 @@ namespace AutoBuildApp.DataAccess
                     try
                     {
                         SqlDataAdapter adapter = new SqlDataAdapter();
-                        String sql = "insert into vendor_product_junction(vendorID, productID, vendorImageUrl, vendorLinkURL, productStatus, productPrice)Values" +
-                            "((select vendorID from vendorClub where vendorName = @VENDORNAME), (select productID from products where modelNumber = @MODELNUMBER), @VENDORIMAGEURL, @VENDORLINKURL, @PRODUCTSTATUS, @PRODUCTPRICE)";
+                        String sql = "insert into vendor_product_junction(vendorID, productID, productName, vendorImageUrl, vendorLinkURL, productStatus, productPrice)Values" +
+                            "((select vendorID from vendorClub where vendorName = @VENDORNAME), (select productID from products where modelNumber = @MODELNUMBER), @PRODUCTNAME, @VENDORIMAGEURL, @VENDORLINKURL, @PRODUCTSTATUS, @PRODUCTPRICE)";
 
 
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
                         adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = product.Company.ToLower();
                         adapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = product.ModelNumber;
+                        adapter.InsertCommand.Parameters.Add("@PRODUCTNAME", SqlDbType.VarChar).Value = product.Name;
                         adapter.InsertCommand.Parameters.Add("@VENDORIMAGEURL", SqlDbType.VarChar).Value = product.ImageUrl;
                         adapter.InsertCommand.Parameters.Add("@VENDORLINKURL", SqlDbType.VarChar).Value = product.Url;
                         adapter.InsertCommand.Parameters.Add("@PRODUCTSTATUS", SqlDbType.VarChar).Value = product.Availability;
@@ -49,7 +58,7 @@ namespace AutoBuildApp.DataAccess
 
         public bool EditProductInVendorListOfProducts(AddProductDTO product)
         {
-            using (SqlConnection connection = new SqlConnection("Server = localhost; Database = DB; Trusted_Connection = True;"))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 using (SqlTransaction transaction = connection.BeginTransaction())
@@ -57,10 +66,11 @@ namespace AutoBuildApp.DataAccess
                     try
                     {
                         SqlDataAdapter adapter = new SqlDataAdapter();
-                        String sql = "update vendor_product_junction set vendorImageUrl = @VENDORIMAGEURL, vendorlinkurl = @VENDORLINKURL, productStatus = @PRODUCTSTATUS, productPrice = @PRODUCTPRICE where modelNumber =" +
+                        String sql = "update vendor_product_junction set productName = @PRODUCTNAME, vendorImageUrl = @VENDORIMAGEURL, vendorlinkurl = @VENDORLINKURL, productStatus = @PRODUCTSTATUS, productPrice = @PRODUCTPRICE where modelNumber =" +
                             "@MODELNUMBER and vendorName = @VENDORNAME)";
 
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
+                        adapter.InsertCommand.Parameters.Add("@PRODUCTNAME", SqlDbType.VarChar).Value = product.Name;
                         adapter.InsertCommand.Parameters.Add("@VENDORIMAGEURL", SqlDbType.VarChar).Value = product.ImageUrl;
                         adapter.InsertCommand.Parameters.Add("@VENDORLINKURL", SqlDbType.VarChar).Value = product.Url;
                         adapter.InsertCommand.Parameters.Add("@PRODUCTSTATUS", SqlDbType.VarChar).Value = product.Availability;
@@ -89,7 +99,7 @@ namespace AutoBuildApp.DataAccess
 
         public bool DeleteProductFromVendorListOfProducts(AddProductDTO product)
         {
-            using (SqlConnection connection = new SqlConnection("Server = localhost; Database = DB; Trusted_Connection = True;"))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 using (SqlTransaction transaction = connection.BeginTransaction())
@@ -121,9 +131,10 @@ namespace AutoBuildApp.DataAccess
 
         public List<AddProductDTO> GetAllProductsByVendor(string companyName)
         {
+            ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            string username = _threadPrinciple.Identity.Name;
             List<AddProductDTO> allProductsByVendor = new List<AddProductDTO>();
-            Console.WriteLine("here");
-            using (SqlConnection connection = new SqlConnection("Server = localhost; Database = DB; Trusted_Connection = True;"))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 using (SqlTransaction transaction = connection.BeginTransaction())
@@ -135,20 +146,26 @@ namespace AutoBuildApp.DataAccess
                         //command.Connection = connection;
                         //command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
                         //command.CommandType = CommandType.Text;
-                        String sql = "select vp.vendorImageURL, vp.productStatus, v.vendorName, vp.VendorLinkURL, p.modelNumber, vp.productPrice from ((vendor_product_junction as vp " +
-                                        "inner join products as p on vp.productID = p.productID) " +
-                                        "inner join vendorclub as v on vp.vendorID = v.vendorID)" +
-                                        "where vp.vendorID = (select vendorID from vendorClub where vendorName = @VENDORNAME)";
+                        //String sql = "select vp.productName, vp.vendorImageURL, vp.productStatus, v.vendorName, vp.VendorLinkURL, p.modelNumber, vp.productPrice from ((vendor_product_junction as vp " +
+                        //                "inner join products as p on vp.productID = p.productID) " +
+                        //                "inner join vendorclub as v on vp.vendorID = v.vendorID)" +
+                        //                "where vp.vendorID = (select userCredID from userCredentials where username = @USERNAME)";
                         //String sql = "select vp.productStatus from vendor_product_junction as vp";
 
-                        adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
-                        adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = companyName.ToLower();
+                        string sp_GetAllProductsByVendor = "GetAllProductsByVendor";
+                        adapter.InsertCommand = new SqlCommand(sp_GetAllProductsByVendor, connection, transaction);
+                        adapter.InsertCommand.CommandType = CommandType.StoredProcedure;
+                        adapter.InsertCommand.CommandText = sp_GetAllProductsByVendor;
+                        adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = username;
+
+                        //adapter.InsertCommand.Parameters.AddWithValue("@USERNAME", username);
 
                         using (SqlDataReader reader = adapter.InsertCommand.ExecuteReader())
                         {
                             while (reader.Read())
                             {
                                 AddProductDTO productInfo = new AddProductDTO();
+                                productInfo.Name = (string)reader["productName"];
                                 productInfo.ImageUrl = (string)reader["vendorImageURL"];
                                 productInfo.Availability = (bool)reader["productStatus"];
                                 productInfo.Company = (string)reader["vendorName"];
