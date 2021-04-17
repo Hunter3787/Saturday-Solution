@@ -27,13 +27,15 @@ namespace AutoBuildApp.Services.WebCrawlerServices
         private const string PROXY_WEBSITE = "https://free-proxy-list.net/";
         private const string PROXY_WEBSITE_XPATH = "//*[@id=\"proxylisttable\"]/tbody/tr";
         private const string PROXY_WEBSITE_QUERYSELECTOR = "Array.from(document.querySelectorAll('#proxylisttable tbody [role=row]')).map(a => a.innerText)";
-        private const int NUMBER_OF_PAGES_TO_CRAWL = 5;
+        private const int NUMBER_OF_PAGES_TO_CRAWL = 1;
         private LaunchOptions options;
         private NavigationOptions navigationOptions = new NavigationOptions
         {
             WaitUntil = new[]
             {
-                WaitUntilNavigation.DOMContentLoaded
+                //WaitUntilNavigation.Load,
+                WaitUntilNavigation.DOMContentLoaded,
+                //WaitUntilNavigation.Networkidle2
             }
         };
         private Dictionary<string, string> headers = new Dictionary<string, string>
@@ -58,6 +60,13 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         $"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}",
                         //"--proxy-server=208.80.28.208:8080",
                         //"--proxy-server=183.88.226.50:8080",
+                        //"--proxy-server=165.225.77.42:80",
+                        //"--proxy-server=182.52.83.133:8080",
+                        //"--proxy-server=51.81.82.175:80",
+                        //"--proxy-server=122.213.29.245:8080",
+
+                        //"--proxy-server=183.88.226.50:8080",
+                        //"--proxy-server=182.52.83.133:8080",
                         "--no-sandbox",
                         "--disable-gpu",
                         "--ignore-certificate-errors",
@@ -70,126 +79,79 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             this.webCrawlerDAO = new WebCrawlerDAO(connectionString);
         }
 
-        public async Task<bool> IsProxyValid()
+        public async Task<List<StartingLink>> grabHrefLinksFromPageAsync(List<StartingLink> startingLinks, string replaceDelimiter, string querySelectorString, string companyUrl, List<string> blacklistLinks)
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://google.com");
-            request.Proxy = new WebProxy(currentProxy.IPAddress, currentProxy.Port);
-            request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36";
-            request.Timeout = 2000;            
-            //LaunchOptions options = new LaunchOptions()
+            List<StartingLink> hrefLinks = new List<StartingLink>();
 
-            try
-            {
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine("BAD - " + currentProxy.IPAddress + " - " + currentProxy.Port);
-                allProxies.Remove(currentProxy);
-                currentProxy = allProxies[0];
-                return false;
-            }
-            Console.WriteLine("GOOD - " + currentProxy.IPAddress + " - " + currentProxy.Port);
-            //{
-            //    Headless = true,
-            //    IgnoreHTTPSErrors = true,
-            //    Args = new[] {
-            //            $"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}",
-            //            "--no-sandbox",
-            //            "--disable-gpu",
-            //            "--ignore-certificate-errors",
-            //        }
-            //};
-            //using (var browser = await Puppeteer.LaunchAsync(options))
-            //{
-            //    using (Page page = await browser.NewPageAsync())
-            //    {
-            //        try
-            //        {
-            //            page.DefaultNavigationTimeout = 15000;
-            //            await page.GoToAsync(url, navigationOptions);
-            //        }
-            //        catch(Exception e)
-            //        {
-            //            return false;
-            //        }
-            //    }
-            //}
-            return true;
-        }
-
-        public async Task<List<string>> grabHrefLinksFromPageAsync(string url, string replaceDelimiter, string querySelectorString, string companyUrl, List<string> blacklistLinks)
-        {
-            List<string> hrefLinks = new List<string>();
-            //LaunchOptions options = new LaunchOptions()
-            //{
-            //    Headless = false,
-            //    IgnoreHTTPSErrors = true,
-            //    Args = new[] {
-            //            $"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}",
-            //            "--no-sandbox",
-            //            "--disable-gpu",
-            //            "--ignore-certificate-errors",
-            //        }
-            //};
             Browser browser = await Puppeteer.LaunchAsync(options);
 
             int repeat = 0;
-            for (int i = 0; i < NUMBER_OF_PAGES_TO_CRAWL; i++)
+            Console.WriteLine("outside");
+            for (int i = 0; i < startingLinks.Count; i++)
             {
-                try 
+                Console.WriteLine("inside");
+                string currentUrl = startingLinks[i].Link;
+
+                for (int j = 0; j < NUMBER_OF_PAGES_TO_CRAWL; j++)
                 {
-                    await Task.Delay(new Random().Next(250));
-                    using (Page page = await browser.NewPageAsync())
+                    try
                     {
-                        await page.SetExtraHttpHeadersAsync(headers);
-                        //page.DefaultNavigationTimeout = 15000;
-                        var watch = new System.Diagnostics.Stopwatch();
-                        await page.GoToAsync(url, navigationOptions);
-
-                        var links = await page.EvaluateExpressionAsync(querySelectorString);
-                        // are you human check
-                        if(links.Count() == 0)
+                        await Task.Delay(new Random().Next(250));
+                        using (Page page = await browser.NewPageAsync())
                         {
-                            rotateProxy();
-                            options.Args[0] = $"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}";
-                            await browser.CloseAsync();
-                            browser = await Puppeteer.LaunchAsync(options);
-                            continue;
-                        }
-                        Console.WriteLine("GOOD PROXY " + ": " + currentProxy.IPAddress + " - " + currentProxy.Port);
+                            await page.SetExtraHttpHeadersAsync(headers);
+                            //page.DefaultNavigationTimeout = 15000 + new Random().Next(10000);
+                            var watch = new System.Diagnostics.Stopwatch();
+                            await page.GoToAsync(currentUrl, navigationOptions);
 
-                        foreach (var link in links)
-                        {
-                            string fullLink = link.ToString();
-                            bool cleanLink = true;
-                            foreach (var blackListLink in blacklistLinks)
+                            var links = await page.EvaluateExpressionAsync(querySelectorString);
+                            // are you human check
+                            if (links.Count() == 0)
                             {
-                                if (fullLink.Contains(blackListLink))
+                                rotateProxy();
+                                options.Args[0] = $"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}";
+                                await browser.CloseAsync();
+                                browser = await Puppeteer.LaunchAsync(options);
+                                continue;
+                            }
+                            Console.WriteLine("GOOD PROXY " + ": " + currentProxy.IPAddress + " - " + currentProxy.Port);
+
+                            foreach (var link in links)
+                            {
+                                string fullLink = link.ToString();
+                                bool cleanLink = true;
+                                foreach (var blackListLink in blacklistLinks)
                                 {
-                                    cleanLink = false;
+                                    if (fullLink.Contains(blackListLink))
+                                    {
+                                        cleanLink = false;
+                                    }
+                                }
+                                if (cleanLink)
+                                {
+                                    hrefLinks.Add(new StartingLink(fullLink, startingLinks[i].ComponentType));
                                 }
                             }
-                            if (cleanLink)
-                            {
-                                hrefLinks.Add(fullLink);
-                            }
+                            repeat++;
                         }
-                        repeat++;
-                    } 
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("BAD PROXY " + ": " + currentProxy.IPAddress + " - " + currentProxy.Port + "\t\t" + e.Message);
-                    repeat = 0;
-                    rotateProxy();
-                    options.Args[0] = $"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}";
-                    await browser.CloseAsync();
-                    i--;
-                    browser = await Puppeteer.LaunchAsync(options);
-                }
+                    }
+                    catch (Exception e)
+                    {
+                        if (e.Message.Contains("innerText"))
+                        {
+                            Console.WriteLine("yo");
+                        }
+                        Console.WriteLine("BAD PROXY " + ": " + currentProxy.IPAddress + " - " + currentProxy.Port + "\t\t" + e.Message);
+                        repeat = 0;
+                        rotateProxy();
+                        options.Args[0] = $"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}";
+                        await browser.CloseAsync();
+                        j--;
+                        browser = await Puppeteer.LaunchAsync(options);
+                    }
 
-                url = url.Replace(replaceDelimiter + (i + 1), replaceDelimiter + (i + 2));
+                    currentUrl = currentUrl.Replace(replaceDelimiter + (j + 1), replaceDelimiter + (j + 2));
+                }
             }
             await browser.CloseAsync();
 
@@ -206,7 +168,6 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                 if (!links.Any())
                 {
                     Console.WriteLine(htmlDocument);
-                    Console.WriteLine("OUt");
                     rotateProxy();
                     i--;
                     continue;
@@ -239,7 +200,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
 
         //}
 
-        public async void getAllInformationFromPageAsync(string url, string companyName, string productType, string titleQuerySelector, string priceQuerySelector, string specsKeysQuerySelector,
+        public async void getAllInformationFromPageAsync(string url, string companyName, string productType, string imageUrlQuerySelector, string titleQuerySelector, string priceQuerySelector, string specsKeysQuerySelector,
                                                 string specsValuesQuerySelector, string reviewerNameQuerySelector, string reviewDateQuerySelector,
                                                 string ratingsContentQuerySelector)
         {
@@ -254,14 +215,17 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                     using (Page page = await browser.NewPageAsync())
                     {
                         await page.SetExtraHttpHeadersAsync(headers);
-                        page.DefaultNavigationTimeout = 15000;
+                        //page.DefaultNavigationTimeout = 15000;
                         await page.GoToAsync(url, navigationOptions);
                         Console.WriteLine("GOOD PROXY " + ": " + currentProxy.IPAddress + " - " + currentProxy.Port);
 
                         Console.WriteLine(url);
                         var specsKeys = await page.EvaluateExpressionAsync(specsKeysQuerySelector);
+                        Console.Write("specsKeys\t");
                         var specsVals = await page.EvaluateExpressionAsync(specsValuesQuerySelector);
-                        if(specsKeys.Count() == 0)
+                        Console.Write("specsValues\t");
+
+                        if (specsKeys.Count() == 0)
                         {
                             rotateProxy();
                             options.Args[0] = $"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}";
@@ -269,8 +233,14 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                             browser = await Puppeteer.LaunchAsync(options);
                             continue;
                         }
+                        var imageUrl = await page.EvaluateExpressionAsync(imageUrlQuerySelector);
+                        Console.Write("imageUrl\t");
                         var title = await page.EvaluateExpressionAsync(titleQuerySelector);
+                        Console.Write("title\t");
+
                         var price = await page.EvaluateExpressionAsync(priceQuerySelector);
+                        Console.Write("price\t");
+
 
                         Dictionary<string, string> specsDictionary = new Dictionary<string, string>();
                         int keyCount = specsKeys.Count();
@@ -297,40 +267,88 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         // click ratings
                         //new egg
                         var numberOfReviewsBeforeReload = await page.EvaluateExpressionAsync(reviewerNameQuerySelector);
+                        Console.Write("reviewsBEFORE\t");
 
-                        if (numberOfReviewsBeforeReload.Count() == 0)
-                        {
-                    //        Models.WebCrawler.Product product = new Models.WebCrawler.Product(price != null, companyName, url, specsVals.ElementAt(modelNumberIndex).ToString(), title.ToString(), productType,
-                    //specsVals.ElementAt(brandIndex).ToString(), totalStarRating.ToString()[0].ToString(), totalNumberOfReviews.ToString().Split(' ')[0], price == null ? "N/A" : price.ToString(), specsDictionary, reviews);
+
+                        // TODO: case for 0 reviews
+                        JToken totalStarRating = null;
+                        JToken totalNumberOfReviews = null;
+                        //if (numberOfReviewsBeforeReload.Count() != 0)
+                        //{
+                            //Console.WriteLine("WE'RE 000000000000000000000000000000000000000000000000000000000");
+                            await page.EvaluateExpressionAsync("var x = document.querySelectorAll('.tab-nav'); " +
+                                    "for(let f of x) {" +
+                                    "   if(f.innerText == 'Reviews') {" +
+                                    "       f.click();" +
+                                    "   }" +
+                                    "}");
+                            Console.Write("EXPRESSION\t");
+
+                            await page.WaitForSelectorAsync(".comments-content");
+                        //        Models.WebCrawler.Product product = new Models.WebCrawler.Product(price != null, companyName, url, specsVals.ElementAt(modelNumberIndex).ToString(), title.ToString(), productType,
+                        //specsVals.ElementAt(brandIndex).ToString(), totalStarRating.ToString()[0].ToString(), totalNumberOfReviews.ToString().Split(' ')[0], price == null ? "N/A" : price.ToString(), specsDictionary, reviews);
+                        //await page.WaitForSelectorAsync(".rating-views");
+                            //var ff = await page.EvaluateExpressionAsync("document.querySelector('.rating-views .rating-views-num')");
+                        //if (ff == null)
+                        //{
+                        //    Console.WriteLine("NULL HERE");
+                        //}
+                        //else
+                        //{
+
+                            totalStarRating = await page.EvaluateExpressionAsync("document.querySelector('.rating-views .rating-views-num').innerText");
+                        //}
+                            Console.Write("totalStarRating\t");
+
+                            totalNumberOfReviews = await page.EvaluateExpressionAsync("document.querySelector('.rating-views-desc .rating-views-count').innerText");
+                            Console.Write("totalNumberOfReviews\t");
+
+                        //}
+
+                        string totalStarRatingString = "0";
+                        if (totalStarRating != null) {
+                            totalStarRatingString = totalStarRating.ToString()[0].ToString();
                         }
 
-                        await page.EvaluateExpressionAsync("var x = document.querySelectorAll('.tab-nav'); " +
-                                                            "for(let f of x) {" +
-                                                            "   if(f.innerText == 'Reviews') {" +
-                                                            "       f.click();" +
-                                                            "   }" +
-                                                            "}");
+                        string totalNumberOfReviewsString = "0";
+                        if(totalNumberOfReviews != null)
+                        {
+                            totalNumberOfReviewsString = totalNumberOfReviews.ToString().Split(' ')[0];
+                        }
 
-                        await page.WaitForSelectorAsync(".comments-content");
 
                         var reviewerNames = await page.EvaluateExpressionAsync(reviewerNameQuerySelector);
+                        Console.Write("reviewerName\t");
+
                         var reviewerDates = await page.EvaluateExpressionAsync(reviewDateQuerySelector);
+                        Console.Write("reviewerDate\t");
+
                         var reviewContent = await page.EvaluateExpressionAsync(ratingsContentQuerySelector);
+                        Console.Write("reviewContent\t");
+
                         var individualRatings = await page.EvaluateExpressionAsync("Array.from(document.querySelectorAll('.comments-title .rating')).map(a=>a.classList.value)");
-
-                        var totalStarRating = await page.EvaluateExpressionAsync("document.querySelector('.rating-views .rating-views-num').innerText");
-                        var totalNumberOfReviews = await page.EvaluateExpressionAsync("document.querySelector('.rating-views-desc .rating-views-count').innerText");
+                        Console.Write("individualRatings\t");
 
 
 
-                        List<Review> reviews = new List<Review>();
+
+
+                        List<Review> reviews = null;
                         int reviewCount = reviewerNames.Count();
+                        if(reviewCount > 0)
+                        {
+                            reviews = new List<Review>();
+                        }
                         for (int i = 0; i < reviewCount; i++)
                         {
                             reviews.Add(new Review(reviewerNames.ElementAt(i).ToString(), getRatingFromString(individualRatings.ElementAt(i).ToString()), reviewContent.ElementAt(i).ToString(), reviewerDates.ElementAt(i).ToString()));
                         }
-                        Models.WebCrawler.Product product = new Models.WebCrawler.Product(price != null, companyName, url, specsVals.ElementAt(modelNumberIndex).ToString(), title.ToString(), productType,
-                            specsVals.ElementAt(brandIndex).ToString(), totalStarRating.ToString()[0].ToString(), totalNumberOfReviews.ToString().Split(' ')[0], price == null ? "N/A" : price.ToString(), specsDictionary, reviews);
+                        bool availability = price != null;
+                        string modelNumber = specsVals.ElementAt(modelNumberIndex).ToString();
+                        string brand = specsVals.ElementAt(brandIndex).ToString();
+                        string priceString = price == null ? "N/A" : price.ToString();
+                        Models.WebCrawler.Product product = new Models.WebCrawler.Product(imageUrl.ToString(), availability, companyName, url, modelNumber, title.ToString(), productType,
+                            brand, totalStarRatingString, totalNumberOfReviewsString, priceString, specsDictionary, reviews);
 
                         // amazon
                         //var reviewsLink = await page.EvaluateExpressionAsync("document.querySelector('[data-hook=see-all-reviews-link-foot]').href");
@@ -349,12 +367,20 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                             webCrawlerDAO.PostSpecsOfProductsToDatabase(product);
                         }
                         webCrawlerDAO.PostToVendorProductsTable(product);
-                        webCrawlerDAO.PostToVendorProductReviewsTable(product);
+                        if (reviewCount > 0)
+                        {
+                            webCrawlerDAO.PostToVendorProductReviewsTable(product);
+                        }
                     }
                     validIP = true;
                 }
                 catch (Exception e)
                 {
+                    if(e.Message.Contains("innerText") || e.Message.Contains(".comments-content"))
+                    {
+                        Console.WriteLine("yo man");
+                        continue;
+                    }
                     Console.WriteLine("BAD PROXY " + ": " + currentProxy.IPAddress + " - " + currentProxy.Port + "\t\t" + e.Message);
                     rotateProxy();
                     options.Args[0] = $"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}";
@@ -578,7 +604,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                     currentProxy = null;
                     allProxies.AddRange(getAllProxies(PROXY_WEBSITE, PROXY_WEBSITE_XPATH));
                 }
-                currentProxy = allProxies[0];
+                currentProxy = allProxies[new Random().Next(allProxies.Count)];
                 //if (currentProxy.IPAddress == "208.80.28.208" && currentProxy.Port == 8080)
                 //{
                 //    rotateProxy();
