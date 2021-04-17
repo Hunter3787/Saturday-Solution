@@ -6,6 +6,7 @@ namespace AutoBuildApp.Models.VendorLinking
 {
     public class AddProductDTO
     {
+        public string Name { get; set; }
         public string ImageUrl { get; set; }
         public bool Availability { get; set; }
         public string Company { get; set; }

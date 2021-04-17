@@ -11,10 +11,13 @@ namespace AutoBuildApp.Managers.FeatureManagers
     {
         //private readonly LoggingProducerService _logger = LoggingProducerService.GetInstance;
 
-        private VendorLinkingService _vendorLinkingService = new VendorLinkingService();
+        private VendorLinkingService _vendorLinkingService;
 
 
-
+        public VendorLinkingManager(string connectionString)
+        {
+            _vendorLinkingService = new VendorLinkingService(connectionString);
+        }
 
         // NULL CHECKS AND LOGGING
 

@@ -20,14 +20,14 @@ namespace WebCrawlerApp
             List<StartingLink> listOfLinks = new List<StartingLink>
             {
                 //new StartingLink("https://www.newegg.com/AMD-Motherboards/SubCategory/ID-22/Page-1?Tid=7625", "motherboard"),
-                new StartingLink("https://www.newegg.com/Processors-Desktops/SubCategory/ID-343/Page-1?Tid=7671", "cpu")
-                //new StartingLink("https://www.newegg.com/p/pl?cm_sp=Cat_Motherboards_2-_-Visnav-_-Intel-Motherboards_1&page=1&N=100007627", "motherboard"),
+                //new StartingLink("https://www.newegg.com/Processors-Desktops/SubCategory/ID-343/Page-1?Tid=7671", "cpu")
+                new StartingLink("https://www.newegg.com/p/pl?cm_sp=Cat_Motherboards_2-_-Visnav-_-Intel-Motherboards_1&page=1&N=100007627", "motherboard"),
                 //new StartingLink("https://www.newegg.com/Desktop-Graphics-Cards/SubCategory/ID-48/Page-1?Tid=7709", "gpu"),
-                //new StartingLink("https://www.newegg.com/Computer-Cases/SubCategory/ID-7/Page-1?Tid=7583", "case"),
-                //new StartingLink("https://www.newegg.com/Power-Supplies/SubCategory/ID-58/Page-1?Tid=7657", "power supply"),
-                //new StartingLink("https://www.newegg.com/Desktop-Memory/SubCategory/ID-147/Page-1?Tid=7611", "ram"),
-                //new StartingLink("https://www.newegg.com/Internal-SSDs/SubCategory/ID-636/Page-1?Tid=11693", "ssd"),
-                //new StartingLink("https://www.newegg.com/Desktop-Internal-Hard-Drives/SubCategory/ID-14/Page-1?Tid=167523", "hard drive")
+                new StartingLink("https://www.newegg.com/Computer-Cases/SubCategory/ID-7/Page-1?Tid=7583", "case"),
+                new StartingLink("https://www.newegg.com/Power-Supplies/SubCategory/ID-58/Page-1?Tid=7657", "power supply"),
+                new StartingLink("https://www.newegg.com/Desktop-Memory/SubCategory/ID-147/Page-1?Tid=7611", "ram"),
+                new StartingLink("https://www.newegg.com/Internal-SSDs/SubCategory/ID-636/Page-1?Tid=11693", "ssd"),
+                new StartingLink("https://www.newegg.com/Desktop-Internal-Hard-Drives/SubCategory/ID-14/Page-1?Tid=167523", "hard drive")
             };
             WebCrawlerService wcs = new WebCrawlerService("Server = localhost; Database = DB; Trusted_Connection = True;");
             //List<string> allLinks = AsyncContext.Run(() => wcs.grabHrefLinksFromPageAsync("https://www.amazon.com/s?k=Computer+CPU+Processors&i=computers&rh=n%3A229189&page=1&_encoding=UTF8&c=ts&qid=1617671746&ts_id=229189&ref=sr_pg_2",
@@ -43,7 +43,7 @@ namespace WebCrawlerApp
             for (int i = 0; i < task.Count; i++)
             {
                 AsyncContext.Run(() => wcs.getAllInformationFromPageAsync(task[i].Link, "new egg", task[i].ComponentType, "document.querySelector('.product-view-img-original').src", "document.querySelector('.product-title').innerText;", "document.querySelector('.product-pane:not(.is-collapsed) :not(.product-raidobox) .price .price-current').innerText;",
-                    "Array.from(document.querySelectorAll('.table-horizontal tr th')).map(a=>a.innerText);", "Array.from(document.querySelectorAll('.table-horizontal tr td')).map(a=>a.innerText);", "Array.from(document.querySelectorAll('.comments-cell-side .comments-name')).map(a=>a.innerText)",
+                    "Array.from(document.querySelectorAll('.table-horizontal tr th')).map(a => a.children.length != 0 && a.children[0].className == 'popover-question' ? a.children[0].children[1].innerText : a.innerText)", "Array.from(document.querySelectorAll('.table-horizontal tr td')).map(a=>a.innerText);", "Array.from(document.querySelectorAll('.comments-cell-side .comments-name')).map(a=>a.innerText)",
                     "Array.from(document.querySelectorAll('.comments-title .comments-text')).map(a=>a.innerText)", "Array.from(document.querySelectorAll('.comments-content:not(.comments-response .comments-content')).map(a=>a.innerText)"));
             }
 
