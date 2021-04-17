@@ -100,9 +100,9 @@ namespace AutoBuildApp.Managers
             return "";
         }
 
-        public string DeleteUser(UserAccount user)
+        public string DeleteUser(string email)
         {
-            return "";
+            return _userManagementService._userManagementDAO.DeleteUserDB(email);
         }
 
 

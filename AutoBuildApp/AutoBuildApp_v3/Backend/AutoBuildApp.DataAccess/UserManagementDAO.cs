@@ -220,11 +220,6 @@ namespace AutoBuildApp.DataAccess
                     command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
                     command.CommandType = CommandType.Text;
 
-                    //command.CommandText =
-                    //    "SELECT @userID, @username, @email, @firstName, @lastName, @createdAt, @uc.modifiedAt, @uc.modifiedBy" +
-                    //    "FROM UserAccounts ua" +
-                    //    "INNER JOIN userCredentials uc" +
-                    //    "ON @uc.userCredID = @ua.userID";
                     command.CommandText = "SELECT * FROM UserAccounts " +
                                             "INNER JOIN UserCredentials " +
                                             "ON UserCredentials.userCredID = UserAccounts.userID";
@@ -254,5 +249,40 @@ namespace AutoBuildApp.DataAccess
                 }
             }
         }
+
+
+        public string DeleteUserDB(string email)
+        {
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                using (var command = new SqlCommand())
+                {
+                    command.Transaction = conn.BeginTransaction();
+                    command.Connection = conn;
+                    command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
+                    command.CommandType = CommandType.Text;
+
+                    command.CommandText = "DELETE UserAccounts FROM UserAccounts " +
+                        //"INNER JOIN UserCredentials" +
+                        //"ON UserCredentials.userCredID = UserAccounts.userID" +
+                        "WHERE email = @email";
+                    var parameters = new SqlParameter[1];
+                    parameters[0] = new SqlParameter("@email", email);
+
+                    command.Parameters.AddRange(parameters);
+                    var rowsDeleted = command.ExecuteNonQuery();
+
+                    if (rowsDeleted == 1)
+                    {
+                        command.Transaction.Commit();
+                        return "User deleted";
+                    }
+                    return "User NOT deleted";
+                }
+            }
+        }
+
+
     }
 }

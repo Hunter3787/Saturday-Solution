@@ -78,6 +78,7 @@ namespace Connor_s_Console
             }
             //Console.WriteLine(userManagementManager.GetUsersList());
 
+            Console.WriteLine(userManagementManager.DeleteUser("pepper@gmail.com"));
         }
     }
 }
