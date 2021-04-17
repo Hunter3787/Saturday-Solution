@@ -102,7 +102,7 @@ namespace AutoBuildApp.Services.Tests
                     "DDR4 - 3600",
                     "DDR5 - 50000"
                 },
-                Color = new List<string> { "black" },
+                Colors = new List<string> { "black" },
                 PCIEXSixTeenSlots = 3,
                 PCIEXEightSlots = 1,
                 PCIEXFourSlots = 1,
@@ -217,10 +217,10 @@ namespace AutoBuildApp.Services.Tests
                 ManufacturerName = "Fan Maker",
                 Price = 22,
                 Quantity = 1,
-                Color = new List<string> { "Black", "Silver" },
+                Colors = new List<string> { "Black", "Silver" },
                 FanRPM = "1200 RPM",
                 NoiseVolume = "34 dB",
-                CompatableSocket = new List<string> { "Many", "different", "Sockets" },
+                CompatableSockets = new List<string> { "Many", "different", "Sockets" },
                 Fanless = false,
                 WaterCooling = false
             };
@@ -252,7 +252,7 @@ namespace AutoBuildApp.Services.Tests
             _gamingBuild.Case = null;
 
             // Act
-            var actual = CreateICompListService.CreateComponentList(_gamingBuild);
+            var actual = BuildParsingService.CreateComponentList(_gamingBuild);
             // Assert
             CollectionAssert.AreEqual(actual, expected);
         }
@@ -267,7 +267,7 @@ namespace AutoBuildApp.Services.Tests
             var temp = BuildFactory.CreateBuild(BuildType.Gaming);
 
             // Act
-            var actual = CreateICompListService.CreateComponentList(temp);
+            var actual = BuildParsingService.CreateComponentList(temp);
             // Assert
             CollectionAssert.AreEqual(actual, expected);
         }

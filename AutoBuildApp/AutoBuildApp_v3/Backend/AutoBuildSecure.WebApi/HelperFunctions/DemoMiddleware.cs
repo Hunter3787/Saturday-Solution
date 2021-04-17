@@ -14,7 +14,7 @@ using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AutoBuildSecure.WebApi.HelperFunctions
+namespace AutoBuildApp.Api.HelperFunctions
 {
     public class DemoMiddleware
     {

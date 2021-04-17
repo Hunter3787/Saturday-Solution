@@ -12,15 +12,12 @@ namespace AutoBuildApp.Models.Products
 {
     public class GPU : IComponent
     {
-        #region "Field Declarations, get; set;"
-        public readonly int MIN_LIST_SIZE = 1;
-        public readonly int MIN_INDEX = 0;
-
+        #region "Field Declarations: get; set;"
         public ProductType ProductType { get; set; }
         public string ModelNumber { get; set; }
         public string ProductName { get; set; }
         public string ManufacturerName { get; set; }
-        public List<byte[]> ProductImages { get; set; }
+        public List<string> ProductImageStrings { get; set; }
         public double Price { get; set; }
         public string Chipset { get; set; }
         public string Memory { get; set; }
@@ -50,7 +47,7 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         public GPU()
         {
-            ProductImages = new List<byte[]>();
+            ProductImageStrings = new List<string>();
         }
 
         #region "Interface Implementations"
@@ -59,13 +56,27 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         /// <param name="image">Byte Array representing an image.</param>
         /// <returns></returns>
-        public bool AddImage(byte[] image)
+        public bool AddImage(string location)
         {
-            if (image == null)
-                return false;
+            ProductGuard.IsNotEmpty(location, nameof(location));
 
-            ProductImages.Add(image);
+            ProductImageStrings.Add(location);
             return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public bool RemoveImage(string location)
+        {
+            ProductGuard.Exists(ProductImageStrings, nameof(ProductImageStrings));
+            ProductGuard.IsNotEmpty(location, nameof(location));
+            ProductGuard.ContainsElement(ProductImageStrings, location, nameof(location));
+
+            var index = ProductImageStrings.IndexOf(location);
+            return RemoveImage(index);
         }
 
         /// <summary>
@@ -75,17 +86,11 @@ namespace AutoBuildApp.Models.Products
         /// <returns></returns>
         public bool RemoveImage(int index)
         {
-            var success = false;
-            var endOfList = ProductImages.Count - 1;
+            ProductGuard.Exists(ProductImageStrings, nameof(ProductImageStrings));
+            ProductGuard.IsInRange(ProductImageStrings, index, nameof(ProductImageStrings));
 
-            if (index >= MIN_INDEX && ProductImages.Count >= MIN_LIST_SIZE
-                && index <= endOfList)
-            {
-                ProductImages.RemoveAt(index);
-                success = true;
-            }
-
-            return success;
+            ProductImageStrings.RemoveAt(index);
+            return true;
         }
 
         /// <summary>

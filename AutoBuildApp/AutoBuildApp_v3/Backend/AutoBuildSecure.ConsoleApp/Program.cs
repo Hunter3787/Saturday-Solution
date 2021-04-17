@@ -17,7 +17,7 @@ using AutoBuildApp.Services.Auth_Services;
 using System.Linq;
 using System.Text.Json;
 
-namespace AutoBuildSecure.ConsoleApp
+namespace AutoBuildApp.ConsoleApp
 {
     class Program
     {

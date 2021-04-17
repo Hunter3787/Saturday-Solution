@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using AutoBuildApp.Models.Interfaces;
 
@@ -10,10 +11,17 @@ using AutoBuildApp.Models.Interfaces;
 namespace AutoBuildApp.Services.RecommendationServices
 {
     /// <summary>
-    /// Static class service that takes in a build to return a components list.
+    /// Class to parse elements from an IBuild.
     /// </summary>
-    public static class CreateICompListService
+    public class BuildParsingService
     {
+        /// <summary>
+        /// Default Constructor.
+        /// </summary>
+        public BuildParsingService()
+        { 
+        }
+
         /// <summary>
         /// Generate a list of Compnents from a Build.
         /// </summary>
@@ -21,21 +29,19 @@ namespace AutoBuildApp.Services.RecommendationServices
         /// <returns></returns>
         public static List<IComponent> CreateComponentList(IBuild build)
         {
-            // Null check for early dismissal.
             if (build == null)
-                return null;
+            {
+                throw new ArgumentException("No paramater passed.");
+            }
 
-            // Set components list for on method completion.
             var compList = new List<IComponent>();
 
             // For each loop using the properties of the build class type
             // to iterate through each dynamic property.
             foreach (var element in build.GetType().GetProperties())
             {
-                // Stores the value (class) of each property. 
                 var item = element.GetValue(build);
 
-                // Check that the item is of the list type and not null.
                 if (item is IList && item != null)
                     // Used the dynamic cast to assure the compiler that the item
                     // is in fact of the expected type of List<IComponent>.

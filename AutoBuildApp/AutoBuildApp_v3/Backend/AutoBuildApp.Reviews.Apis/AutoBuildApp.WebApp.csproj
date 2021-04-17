@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'APB.App.Apis' " />
   <ItemGroup>
     <ProjectReference Include="..\AutoBuildApp.Managers\AutoBuildApp.Managers.csproj" />
     <ProjectReference Include="..\AutoBuildApp.Services\AutoBuildApp.Services.csproj" />
