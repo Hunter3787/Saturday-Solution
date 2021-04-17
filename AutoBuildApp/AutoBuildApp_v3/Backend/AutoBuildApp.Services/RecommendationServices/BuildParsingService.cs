@@ -13,12 +13,12 @@ namespace AutoBuildApp.Services.RecommendationServices
     /// <summary>
     /// Class to parse elements from an IBuild.
     /// </summary>
-    public class IBuildParsingService
+    public class BuildParsingService
     {
         /// <summary>
         /// Default Constructor.
         /// </summary>
-        public IBuildParsingService()
+        public BuildParsingService()
         { 
         }
 

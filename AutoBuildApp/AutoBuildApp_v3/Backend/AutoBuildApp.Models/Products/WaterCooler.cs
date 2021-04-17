@@ -11,7 +11,7 @@ namespace AutoBuildApp.Models.Products
 {
     public class WaterCooler : IComponent, ICooler
     {
-        #region "Field Declarations, get; set;"
+        #region "Field Declarations: get; set;"
         public ProductType ProductType { get; set; }
         public string ModelNumber { get; set; }
         public string ProductName { get; set; }
@@ -22,14 +22,17 @@ namespace AutoBuildApp.Models.Products
         public double Budget { get; set; }
         public string FanRPM { get; set; }
         public string NoiseVolume { get; set; }
-        public List<string> CompatableSocket { get; set; }
+        public List<string> CompatableSockets { get; set; }
         public bool Fanless { get; set; }
         #endregion
 
+        /// <summary>
+        /// Default Constructor.
+        /// </summary>
         public WaterCooler()
         {
             ProductImageStrings = new List<string>();
-            CompatableSocket = new List<string>();
+            CompatableSockets = new List<string>();
         }
 
         #region "Interface Implementations"
@@ -40,25 +43,22 @@ namespace AutoBuildApp.Models.Products
         /// <returns></returns>
         public bool AddImage(string location)
         {
-            if (string.IsNullOrWhiteSpace(location))
-            {
-                return false;
-            }
+            ProductGuard.IsNotEmpty(location, nameof(location));
                 
             ProductImageStrings.Add(location);
             return true;
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
         public bool RemoveImage(string location)
         {
-
-            if (ProductImageStrings == null
-                || string.IsNullOrWhiteSpace(location)
-                || !ProductImageStrings.Contains(location))
-            {
-                return false;
-            }
+            ProductGuard.Exists(ProductImageStrings, nameof(ProductImageStrings));
+            ProductGuard.IsNotEmpty(location, nameof(location));
+            ProductGuard.ContainsElement(ProductImageStrings, location, nameof(location));
 
             var index = ProductImageStrings.IndexOf(location);
             return RemoveImage(index);
@@ -72,21 +72,11 @@ namespace AutoBuildApp.Models.Products
         /// <returns></returns>
         public bool RemoveImage(int index)
         {
-            if (ProductImageStrings == null)
-                return false;
+            ProductGuard.Exists(ProductImageStrings, nameof(ProductImageStrings));
+            ProductGuard.IsInRange(ProductImageStrings, index, nameof(ProductImageStrings));
 
-            var success = false;
-            var endOfList = ProductImageStrings.Count - 1;
-
-            if (index >= ProductGlobals.MIN_INDEX
-                && ProductImageStrings.Count >= ProductGlobals.MIN_LIST_SIZE
-                && index <= endOfList)
-            {
-                ProductImageStrings.RemoveAt(index);
-                success = true;
-            }
-
-            return success;
+            ProductImageStrings.RemoveAt(index);
+            return true;
         }
 
         /// <summary>

@@ -26,7 +26,7 @@ namespace AutoBuildApp.Api.HelperFunctions
         private ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
 
         private JWTValidator _validateAuthorizationHeader;
-        private IClaimsFactory unregistered;
+        private IClaims unregistered;
 
         public DemoMiddleware(RequestDelegate next)
         {

@@ -5,6 +5,10 @@ using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Services.FactoryServices;
 using AutoBuildApp.Services.RecommendationServices;
 using AutoBuildApp.DataAccess;
+using AutoBuildApp.Security.FactoryModels;
+using AutoBuildApp.Security.Interfaces;
+using AutoBuildApp.Security.Enumerations;
+using AutoBuildApp.Security;
 
 /**
  * Recommendation Manager includes business logic
@@ -17,23 +21,28 @@ namespace AutoBuildApp.Managers
     /// Class that functions as the manager to the recommendation tool
     /// for the AutoBuildApp.
     /// </summary>
-    public class RecommendationManager : ArgumentOutOfRangeException
+    public class RecommendationManager
     {
         // Local constant for minimum budget.
-        public readonly double MAX_BUDGET = double.MaxValue;
-        public readonly double MIN_BUDGET = 0.0;
-        public readonly int MIN_INDEX = 0;
-        public readonly int MIN_INTEGER_VALUE = 0;
         private readonly string _connectionString;
         private RecommendationDAO _dao;
+        private PortionBudgetService _portionService;
+        private ClaimsFactory _claimsFactory;
+        private IClaims _basicUser;
+        private IClaims _unregistered;
 
         #region "Constructors"
         /// <summary>
-        /// 
+        /// Constructor that requires a connection string to start.
         /// </summary>
         /// <param name="_connectionString"></param>
         public RecommendationManager(string connectionString)
         {
+            //Generate claims
+            _claimsFactory = new ConcreteClaimsFactory();
+            _basicUser = _claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
+            _unregistered = _claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
+
             _connectionString = connectionString;
             _dao = new RecommendationDAO(_connectionString);
         }
@@ -54,48 +63,58 @@ namespace AutoBuildApp.Managers
         /// <param name="hddCount">Number of hard drives that the user
         /// would like to be in their final build.(Optional)</param>
         /// <returns>A list of IBuild representing the recommended builds.</returns>
-        public List<IBuild>
-            RecommendBuilds(BuildType buildType, double initial,
-                List<IComponent> peripherals, PSUModularity psuType,
+        public List<IBuild> RecommendBuilds(BuildType buildType, double initial,
+                    List<IComponent> peripherals, PSUModularity psuType,
                     HardDriveType hddType, int hddCount)
         {
-            if ( initial < MIN_BUDGET || hddCount < MIN_INTEGER_VALUE )
-                return null;
-
-            double budget = initial;
-            IBuild build = BuildFactory.CreateBuild(buildType);
-
-            if (peripherals != null)
+            if (!AuthorizationService.checkPermissions(_unregistered.Claims()))
             {
-                build.Peripherals = peripherals;
-                foreach (IComponent extras in build.Peripherals)
-                    budget -= extras.GetTotalcost();
+                throw new UnauthorizedAccessException();
             }
 
-            // Business Rule
-            if (budget <= MIN_BUDGET && initial > MIN_BUDGET)
-                return null;
-
-            // Advanced settings to be implemented. 
-            if (hddType != HardDriveType.None ||
-                hddCount > MIN_INTEGER_VALUE || psuType != PSUModularity.None)
-            {
-                return null;
-            }
-            else
-            {
-                // Create component list using service. 
-                var compList = IBuildParsingService.CreateComponentList(build);
-                var budgetedList =
-                    PortionBudgetService.BudgetComponents(compList, buildType, budget);
-
-                
+            //if ( initial < MIN_BUDGET || hddCount < MIN_INTEGER_VALUE)
+            //{
+            //    return null;
+            //}
 
 
-                // recieve elements, for loop passing each component and return an int.
+            //double budget = initial;
+            //IBuild build = BuildFactory.CreateBuild(buildType);
 
-                return null;
-            }
+            //if (peripherals != null)
+            //{
+            //    build.Peripherals = peripherals;
+            //    foreach (IComponent extras in build.Peripherals)
+            //        budget -= extras.GetTotalcost();
+            //}
+
+            //// Business Rule
+            //if (budget <= MIN_BUDGET && initial > MIN_BUDGET)
+            //{
+            //    return null;
+            //}
+
+            //// Advanced settings to be implemented. 
+            //if (hddType != HardDriveType.None ||
+            //    hddCount > MIN_INTEGER_VALUE || psuType != PSUModularity.None)
+            //{
+            //    return null;
+            //}
+            //else
+            //{
+            //    // Create component list using service. 
+            //    var compList = BuildParsingService.CreateComponentList(build);
+            //    var budgetedList =
+            //        _portionService.PortionComponentList(compList, buildType, budget);
+
+
+
+
+            //    // recieve elements, for loop passing each component and return an int.
+
+            //    return null;
+            //}
+            return null;
         }
         #endregion
 

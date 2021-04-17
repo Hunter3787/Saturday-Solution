@@ -22,7 +22,7 @@ namespace AutoBuildApp.Api.HelperFunctions
             #region Instantiating the Claims principle
 
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
-            IClaimsFactory unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
+            IClaims unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
             /// NOTE: passed in the claims only to the claimsIdentity and not userIdentity 
             /// as "AutoBuild User" since that will trigger the read only value of is authenticated to 
             /// be True, when in fact the user is not

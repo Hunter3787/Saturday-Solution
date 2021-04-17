@@ -123,7 +123,7 @@ namespace AutoBuildApp.ConsoleApp
             /// TAKLE OUT THE HARDCODING AND DO ENUMERATIOONS OF ROLES INSTAD OT ENUMERATIOSN 
             /// NO STING STATEMENTS IN SWITCH
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
-            IClaimsFactory unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
+            IClaims unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
       
 
             Console.WriteLine($"\n\tAuthorization output" +
@@ -141,7 +141,7 @@ namespace AutoBuildApp.ConsoleApp
             AuthenticationService authenticationService = new AuthenticationService(_authDAO);
             _CRAuth = authenticationService.AuthenticateUser(credential1);
             _principal = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            IClaimsFactory basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
+            IClaims basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
 
             Console.WriteLine($"\n\tAuthorization output#2" +
                 $" {AuthorizationService.checkPermissions(basic.Claims())}");
@@ -211,7 +211,7 @@ namespace AutoBuildApp.ConsoleApp
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
 
 
-            IClaimsFactory unregistered = claimsFactory.GetClaims("Unregistered");
+            IClaims unregistered = claimsFactory.GetClaims("Unregistered");
             unregistered.PrintClaims();
 
 

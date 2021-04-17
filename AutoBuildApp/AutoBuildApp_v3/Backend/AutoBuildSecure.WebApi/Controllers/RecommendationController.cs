@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Cors;
 using AutoBuildApp.Managers;
 using AutoBuildApp.DomainModels;
+using AutoBuildApp.Api.HelperFunctions;
+using System;
 
 /**
 * AutoBuild Recommendation Tool Controller.
@@ -18,8 +20,9 @@ namespace AutoBuildApp.Controllers
     [EnableCors("CorsPolicy")]
     public class RecommendationController : ControllerBase
     {
-        private readonly string _connectionString = "Server = localhost; Database = DB; Trusted_Connection = True;";
 
+        private readonly string _connectionString = ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection");
+        private RecommendationManager manager;
         /// <summary>
         /// Get a full build recommendation from the system.
         /// </summary>
@@ -33,13 +36,20 @@ namespace AutoBuildApp.Controllers
         [HttpPost]
         public IActionResult GetFullBuildRecommend(UserRequestParameters requests)
         {
-            RecommendationManager manager = new RecommendationManager(_connectionString);
+             manager = new RecommendationManager(_connectionString);
 
-            var builds = manager.RecommendBuilds(requests.Build, requests.Budget,
-                requests.List,requests.Psu, requests.HddType, requests.HddCount);
+            try { 
+                var builds = manager.RecommendBuilds(requests.Build, requests.Budget,
+                    requests.List,requests.Psu, requests.HddType, requests.HddCount);
 
-            if (builds == null)
-                return Ok(builds);
+                    if (builds != null)
+                        return Ok(builds);
+
+            }
+            catch(UnauthorizedAccessException ex)
+            {
+                return new StatusCodeResult(StatusCodes.Status401Unauthorized);
+            }
 
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
