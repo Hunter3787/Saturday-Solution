@@ -3,12 +3,12 @@
 /// [2-6]
 /// </summary>
 
-const uri = 'https://localhost:44317/reviewrating';
+const uri = 'https://localhost:5001/reviewrating';
 let reviews = [];
 
 // This function will load the page by calling the functions below.
 function getItems() {
-    fetch('https://localhost:44317/reviewrating') // fetches the default URI
+    fetch('https://localhost:5001/reviewrating') // fetches the default URI
         .then(response => response.json()) // Will revieve a response from the default response.json.
         .then(data => _displayItems(data)) // will call the display items function.
         .catch(error => console.error('Unable to get items.', error)); // will catch an error and print the appropriate error message in console.
@@ -41,7 +41,7 @@ function addItem() {
     };
 
     // Will fetch this URI with the POST method.
-    fetch('https://localhost:44317/ReviewRating', {
+    fetch('https://localhost:5001/ReviewRating', {
         method: 'POST',
         mode: 'cors',
     headers: {
@@ -92,7 +92,7 @@ function updateItem() {
     };
 
     // This will fetch the PUT request to send the updated object.
-    fetch('https://localhost:44317/ReviewRating', {
+    fetch('https://localhost:5001/ReviewRating', {
         method: 'PUT',
         mode: 'cors',
     headers: {
