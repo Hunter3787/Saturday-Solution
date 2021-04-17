@@ -30,13 +30,13 @@ namespace AutoBuildApp.Api.HelperFunctions
             ClaimsIdentity identity = new 
                 ClaimsIdentity(unregistered.Claims());
             ClaimsPrincipal _principal = new ClaimsPrincipal(identity);
-            /* //some printing
+             //some printing
             Console.WriteLine($"IN THE GUEST");
             foreach (Claim c in _principal.Claims)
             {
                 Console.WriteLine($"Permission:  {c.Type}, Scope: {c.Value} ");
             }
-            */
+            
             #endregion
 
             #region NOT NECESSARY BUT WILL KEEP FOR NOW:
