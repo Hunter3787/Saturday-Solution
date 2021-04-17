@@ -37,9 +37,6 @@ namespace AutoBuildApp.Managers
         /// <returns>success state bool value.</returns>
         public bool PublishBuild(BuildPost buildPost)
         {
-            // Logs the calling event of the method.
-            _logger.LogInformation($"Most Popular Builds Manager PublishBuild was called for User:{buildPost.Username}");
-
             // This try/catch block checks for a null BuildPost object.
             try
             {
@@ -53,6 +50,9 @@ namespace AutoBuildApp.Managers
                 _logger.LogWarning(ex.Message);
                 return false;
             }
+
+            // Logs the calling event of the method.
+            _logger.LogInformation($"Most Popular Builds Manager PublishBuild was called for User:{buildPost.Username}");
 
             // This try/catch block checks for a null var in a BuildPost object.
             try

@@ -267,5 +267,86 @@ namespace AutoBuildApp.Manger.Tests
             // Assert
             Assert.IsTrue(result);
         }
+
+        /// <summary>
+        /// This test will check if a queried search is made.
+        /// </summary>
+        [Test]
+        public void MostPopularBuilds_GetBuildPosts_ReturnTrueIfSortedQueriesCallIsSuccessful()
+        {
+            // Arrange
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
+            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+
+            // Act
+
+            // Assert
+        }
+
+        /// <summary>
+        /// This test will check if a non-queries search is successful.
+        /// </summary>
+        [Test]
+        public void MostPopularBuilds_GetBuildPosts_ReturnTrueIfNormalCallIsSuccessful()
+        {
+            // Arrange
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
+            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+
+            // Act
+
+            // Assert
+        }
+
+        /// <summary>
+        /// This test will check if a particular build has been returned.
+        /// </summary>
+        [Test]
+        public void MostPopularBuilds_GetBuildPost_ReturnTrueIfTheReturnedPostIsTheExpectedPost()
+        {
+            // Arrange
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
+            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+
+            // Act
+
+            // Assert
+        }
+
+        /// <summary>
+        /// This test will check if a like has been added to a build post.
+        /// </summary>
+        [Test]
+        public void MostPopularBuilds_AddLike_ReturnTrueIfALikeWasAdded()
+        {
+            // Arrange
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
+            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+
+            // Act
+
+            // Assert
+        }
+
+        /// <summary>
+        /// This test will check if a like has already been made by a user.
+        /// </summary>
+        [Test]
+        public void MostPopularBuilds_AddLike_ReturnFalseIfALikeWasAddedButAlreadyExistsForUser()
+        {
+            // Arrange
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
+            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+
+            // Act
+
+            // Assert
+        }
+
     }
 }
