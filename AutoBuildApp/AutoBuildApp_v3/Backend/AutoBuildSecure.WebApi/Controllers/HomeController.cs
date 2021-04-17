@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AutoBuildSecure.WebApi.Controllers
+namespace AutoBuildApp.Api.Controllers
 {
 
     [EnableCors("CorsPolicy")] // applying the cors policy so that the client can

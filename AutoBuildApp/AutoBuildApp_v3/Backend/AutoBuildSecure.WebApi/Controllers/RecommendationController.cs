@@ -11,7 +11,7 @@ using AutoBuildApp.Services;
 * AutoBuild Recommendation Tool Controller.
 * @Author Nick Marshall-Eminger
 */
-namespace AutoBuildApp.Controllers
+namespace AutoBuildApp.Api.Controllers
 {
     /// <summary>
     /// Controller for the Recommendation tool.

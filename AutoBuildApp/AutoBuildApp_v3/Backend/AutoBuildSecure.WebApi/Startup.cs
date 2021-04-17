@@ -37,8 +37,9 @@ namespace AutoBuildApp.Api
             {
                 opts.AddPolicy(name: "CorsPolicy", builder =>
                 {
-                    builder.WithMethods("GET", "POST", "OPTIONS", "PUT")
+                    builder.WithMethods("GET", "POST", "OPTIONS", "PUT", "DELETE")
                     .WithOrigins("http://127.0.0.1:5500")
+                    .WithOrigins("http://127.0.0.1:5501")
                     .AllowAnyHeader();
                 });
             });
@@ -66,7 +67,7 @@ namespace AutoBuildApp.Api
             app.UseAuthorization();
 
             /// my custome middleware for jwt
-            app.UseMiddleware<JWT_Middleware>();
+            app.UseMiddleware<JwtMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
