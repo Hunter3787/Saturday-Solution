@@ -35,13 +35,33 @@ namespace AutoBuildApp.Api
         {
             services.AddCors(opts =>
             {
-                opts.AddPolicy(name: "CorsPolicy", builder =>
+                // Lecture: Get the configuration from an external source to make
+                // development and deployment easier to manage.
+                var env = "DEV";//Configuration.GetSection("Environment");
+
+                if (env == "DEV")
                 {
-                    builder.WithMethods("GET", "POST", "OPTIONS", "PUT", "DELETE")
-                    .WithOrigins("http://127.0.0.1:5500")
-                    .WithOrigins("http://127.0.0.1:5501")
-                    .AllowAnyHeader();
-                });
+                    // Lecture: Only use these CORS setting for development. Never deploy to 
+                    // production with these settings.
+                    opts.AddPolicy(name: "CorsPolicy", builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                               .AllowAnyMethod()
+                               .AllowAnyHeader();
+                    });
+                }
+                else
+                {
+
+                    // Lecture: Make sure to specify the exact origins that you want to allow
+                    // cross origin communication with your code.
+                    opts.AddPolicy(name: "CorsPolicy", builder =>
+                    {
+                        builder.WithMethods("GET", "POST", "OPTIONS")
+                               .WithOrigins("http://localhost") // Change this
+                               .AllowAnyHeader();
+                    });
+                }
             });
             services.AddTransient<ClaimsPrincipal>();
             services.AddControllers();
