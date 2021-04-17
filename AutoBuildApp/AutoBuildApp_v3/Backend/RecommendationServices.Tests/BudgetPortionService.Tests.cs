@@ -254,9 +254,10 @@ namespace AutoBuildApp.Services.RecommendationServices.Tests
             BuildType type = BuildType.Gaming;
             double expected = 1700 * .35/(.35+.25);
             expected = Math.Round(expected, 2, MidpointRounding.AwayFromZero);
+            PortionBudgetService portion = new PortionBudgetService();
 
             // Act
-            var result = PortionBudgetService.BudgetComponents(list, type, budget);
+            var result = portion.PortionComponentList(list, type, budget);
 
             double actual = 0;
             foreach (var add in result)

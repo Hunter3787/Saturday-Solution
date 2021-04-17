@@ -34,7 +34,7 @@ namespace AutoBuildApp.Managers.Tests
         [TestInitialize]
         public void Initialize()
         {
-            _manager = new RecommendationManager();
+            _manager = new RecommendationManager("testString");
             _gamingBuild = BuildFactory.CreateBuild(BuildType.Gaming);
             _hd1 = new NVMeDrive
             {
