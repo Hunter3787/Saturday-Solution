@@ -51,28 +51,30 @@ namespace AutoBuildApp.Services.FeatureServices
                 DateTime = buildPost.DateTime
             };
 
-            //return _mostPopularBuildsDAO.PublishBuildRecord(buildPostEntity); // This method is for non reflection insertions.
-            return _mostPopularBuildsDAO.PublishBuildRecord(buildPostEntity, "mostpopularbuilds");
+            return _mostPopularBuildsDAO.PublishBuildRecord(buildPostEntity);
+            //return _mostPopularBuildsDAO.PublishBuildRecord(buildPostEntity, "mostpopularbuilds"); // This is the reflections method of the DAO (not currently optimized).
         }
 
         /// <summary>
         /// This method retrieves and parses DB object data to Domain Model objects.
         /// </summary>
-        /// <returns>returns a list of build post objects.</returns>
-        public List<BuildPost> GetBuildPosts()
+        /// <param name="orderLikes">takes in the query condition for the likes.</param>
+        /// <param name="buildType">takes in the query condition for the build type.</param>
+        /// <returns>returns a list of build posts</returns>
+        public List<BuildPost> GetBuildPosts(string orderLikes, string buildType)
         {
             // Logs the event of getting build posts in the service layer.
             _logger.LogInformation("Most Popular Builds Service GetBuildPosts was called.");
 
-            // Calls the DAO method to retrieve DB data and store in a local var.
-            var buildPostEntities = _mostPopularBuildsDAO.GetAllBuildPostRecords();
+            // stores the list retreived from the DB into a local List var.
+            var buildPostEntities = _mostPopularBuildsDAO.GetAllBuildPostRecordsByQuery(orderLikes, buildType);
 
             // create a list of build posts that will be appended to and returned to the manager.
             var buildPosts = new List<BuildPost>();
 
             // This for loop will iterate through the list of entities and incrememntally transfer
             // its data to a new list of build posts.
-            foreach(BuildPostEntity buildPostEntity in buildPostEntities)
+            foreach (BuildPostEntity buildPostEntity in buildPostEntities)
             {
                 var buildPost = new BuildPost()
                 {
@@ -91,6 +93,54 @@ namespace AutoBuildApp.Services.FeatureServices
             // TODO: Check for false or null values??
 
             return buildPosts;
+        }
+
+        /// <summary>
+        /// This method transfers data from a domain to a entity.
+        /// </summary>
+        /// <param name="like">takes in a log object</param>
+        /// <returns>returns a success state bool.</returns>
+        public bool AddLike(Like like)
+        {
+            // Logs the event of the service addLike method being called
+            _logger.LogInformation($"Most Popular Builds Service addLike was called for user:{like.UserId} and post{like.PostId}");
+
+            var likeEntity = new LikeEntity()
+            {
+                PostId = like.PostId,
+                UserId = like.UserId
+            };
+
+            return _mostPopularBuildsDAO.AddLike(likeEntity);
+        }
+
+        /// <summary>
+        /// This method returns a build post from the DAO.
+        /// </summary>
+        /// <param name="buildId">takes in an ID.</param>
+        /// <returns>retruns a build post object.</returns>
+        public BuildPost GetBuildPost(string buildId)
+        {
+            // Logs the event of getting build posts in the service layer.
+            _logger.LogInformation("Most Popular Builds Service GetBuildPost was called.");
+
+            // stores the list retreived from the DB into a local List var.
+            var buildPostEntity = _mostPopularBuildsDAO.GetBuildPostRecord(buildId);
+
+            // This will translate entities back into domain models.
+            var buildPost = new BuildPost()
+            {
+                EntityId = buildPostEntity.EntityId,
+                Username = buildPostEntity.Username,
+                Title = buildPostEntity.Title,
+                Description = buildPostEntity.Description,
+                LikeIncrementor = buildPostEntity.LikeIncrementor,
+                BuildType = (BuildType)buildPostEntity.BuildTypeValue,
+                BuildImagePath = buildPostEntity.BuildImagePath,
+                DateTime = buildPostEntity.DateTime
+            };
+
+            return buildPost;
         }
     }
 }
