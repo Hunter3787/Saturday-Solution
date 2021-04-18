@@ -1,4 +1,5 @@
 ﻿using AutoBuildApp.Models.Enumerations;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,6 +12,9 @@ namespace AutoBuildApp.DomainModels
     /// </summary>
     public class BuildPost
     {
+        // This list stores a list of form data objects.
+        public List<IFormFile> File { get; set; }
+
         // This string is the unique identifier of the build post.
         public string EntityId { get; set; }
 

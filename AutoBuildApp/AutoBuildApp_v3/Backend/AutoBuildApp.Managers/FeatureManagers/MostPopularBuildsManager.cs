@@ -57,8 +57,7 @@ namespace AutoBuildApp.Managers
             // This try/catch block checks for a null var in a BuildPost object.
             try
             {
-                if (buildPost.Username == null || buildPost.Title == null || buildPost.Description == null ||
-                    buildPost.BuildImagePath == null || buildPost.DateTime == null)
+                if (buildPost.Username == null || buildPost.Title == null || buildPost.Description == null)
                 {
                     throw new NullReferenceException("A null object variable was passed through the method parameters");
                 }
