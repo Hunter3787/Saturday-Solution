@@ -14,7 +14,7 @@ document.getElementById("myBtn")
 console.log(msg);
 
 
-function getItems() {
+function getItemsfddg() {
   fetch('https://localhost:5001/authdemo', {
   method: 'GET',
     headers: {
@@ -28,6 +28,32 @@ function getItems() {
     .then(response => displayToken(response))
     .catch(error => console.error('Unable to get items.', error));
 }
+
+uri = 'https://localhost:5001/authdemo';
+item = '';
+
+const fetchRequest = {
+  method: 'POST',
+  mode: 'cors',
+headers: {
+  'Accept': 'application/json',
+  'Content-Type': 'application/json',
+  'Authorization': 'bearer ' + token
+}
+};
+let customRequest = 
+Object.assign( 
+  fetchRequest,
+   { method: 'GET', body : JSON.stringify(item) })
+
+function getItems() {
+  fetch(uri, customRequest)
+    //body: JSON.stringify()
+    .then(response => response.json())
+    .then(response => displayToken(response))
+    .catch(error => console.error('Unable to get items.', error));
+}
+
 
 //https://www.w3schools.com/js/tryit.asp?filename=tryjs_addeventlistener_displaydate
 document.getElementById("myBtn").addEventListener("click", displayDate);
