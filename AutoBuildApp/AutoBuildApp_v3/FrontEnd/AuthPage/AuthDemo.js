@@ -14,13 +14,13 @@ document.getElementById("myBtn")
 console.log(msg);
 
 
-function getItemsfddg() {
+function getItemsggg() {
   fetch('https://localhost:5001/authdemo', {
   method: 'GET',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + JWT_Token
+      'Authorization': 'bearer ' + JWT_Token
     },
     //body: JSON.stringify()
   })
@@ -29,16 +29,15 @@ function getItemsfddg() {
     .catch(error => console.error('Unable to get items.', error));
 }
 
-uri = 'https://localhost:5001/authdemo';
-item = '';
 
+var item = ' ';
 const fetchRequest = {
   method: 'POST',
   mode: 'cors',
 headers: {
   'Accept': 'application/json',
   'Content-Type': 'application/json',
-  'Authorization': 'bearer ' + token
+  'Authorization': 'bearer ' + JWT_Token
 }
 };
 let customRequest = 
