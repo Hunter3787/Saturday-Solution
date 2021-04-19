@@ -1,0 +1,53 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial;
+    margin: 0; 
+  }
+
+  .buildheader {
+    padding: 20px;
+    text-align: center;
+    background: #5DADE2;
+    color: white;
+    overflow: auto hidden;
+    height: 220px;
+  }
+
+  .buildheader .buildtitle {
+    color: whitesmoke;
+  }
+
+  .buildheader .buildusername {
+      color: black;
+  }
+
+  .buildheader .buildtype {
+      color: black;
+  }
+
+  .buildheader .builddate {
+    color: black;
+}
+
+  .builddetails {
+      padding: 20px;
+      text-align: center;
+  }
+
+  .builddetails img {
+    padding: 10px;
+    text-align: center;
+    height: 400px;
+    object-fit: cover;
+  }
+
+  .builddetails p {
+      padding: 10px;
+      color: black;
+      font-size: 1.3em;
+  }
+
+  

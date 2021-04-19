@@ -10,16 +10,13 @@ namespace AutoBuildApp.Models.Products
 {
     public class Motherboard : IComponent
     {
-        #region "Field Declarations, get; set;"
-        public readonly int MIN_LIST_SIZE = 1;
-        public readonly int MIN_INDEX = 0;
-
+        #region "Field Declarations: get; set;"
         public ProductType ProductType { get; set; }
         public string ModelNumber { get; set; }
         public string ProductName { get; set; }
         public string ManufacturerName { get; set; }
         public int Quantity { get; set; }
-        public List<byte[]> ProductImages { get; set; }
+        public List<string> ProductImageStrings { get; set; }
         public double Price { get; set; }
         public double Budget { get; set; }
         public string Socket { get; set; }
@@ -28,7 +25,7 @@ namespace AutoBuildApp.Models.Products
         public string MaxMemory { get; set; }
         public MemoryType MaxMemoryType { get; set; }
         public List<string> SupportedMemory { get; set; }
-        public List<string> Color { get; set; }
+        public List<string> Colors { get; set; }
         public int PCIEXSixTeenSlots { get; set; }
         public int PCIEXEightSlots { get; set; }
         public int PCIEXFourSlots { get; set; }
@@ -53,9 +50,9 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         public Motherboard()
         {
-            ProductImages = new List<byte[]>();
+            ProductImageStrings = new List<string>();
             SupportedMemory = new List<string>();
-            Color = new List<string>();
+            Colors = new List<string>();
             M2Slots = new List<string>();
             OnboardEthernet = new List<string>();
        }
@@ -68,8 +65,8 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool AddSupportedMemory(string input)
         {
-            if (string.IsNullOrWhiteSpace(input) || SupportedMemory.Contains(input))
-                return false;
+            ProductGuard.Exists(SupportedMemory, nameof(SupportedMemory));
+            ProductGuard.IsNotEmpty(input, nameof(input));
 
             SupportedMemory.Add(input);
             return true;
@@ -83,8 +80,9 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveSupportedMemory(string toRemove)
         {
-            if (string.IsNullOrWhiteSpace(toRemove) || !SupportedMemory.Contains(toRemove))
-                return false;
+            ProductGuard.Exists(SupportedMemory, nameof(SupportedMemory));
+            ProductGuard.IsNotEmpty(toRemove, nameof(toRemove));
+            ProductGuard.ContainsElement(SupportedMemory, toRemove, nameof(toRemove));
 
             return RemoveSupportedMemory(SupportedMemory.IndexOf(toRemove));
         }
@@ -96,8 +94,8 @@ namespace AutoBuildApp.Models.Products
         /// <returns></returns>
         public bool RemoveSupportedMemory(int index)
         {
-            if (index > SupportedMemory.Count || index < MIN_INDEX)
-                return false;
+            ProductGuard.Exists(SupportedMemory, nameof(SupportedMemory));
+            ProductGuard.IsInRange(SupportedMemory, index, nameof(SupportedMemory));
 
             SupportedMemory.RemoveAt(index);
             return true;
@@ -112,10 +110,10 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool AddColor(string input)
         {
-            if (string.IsNullOrWhiteSpace(input) || Color.Contains(input))
-                return false;
+            ProductGuard.Exists(Colors, nameof(Colors));
+            ProductGuard.IsNotEmpty(input, nameof(input));
 
-            Color.Add(input);
+            Colors.Add(input);
             return true;
         }
 
@@ -127,10 +125,11 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveColor(string toRemove)
         {
-            if (Color == null || string.IsNullOrWhiteSpace(toRemove) || !Color.Contains(toRemove))
-                return false;
+            ProductGuard.Exists(Colors, nameof(Colors));
+            ProductGuard.IsNotEmpty(toRemove, nameof(toRemove));
+            ProductGuard.ContainsElement(Colors, toRemove, nameof(toRemove));
 
-            return RemoveColor(Color.IndexOf(toRemove));
+            return RemoveColor(Colors.IndexOf(toRemove));
         }
 
         /// <summary>
@@ -140,10 +139,10 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveColor(int index)
         {
-            if (Color == null || index > Color.Count || index < MIN_INDEX)
-                return false;
+            ProductGuard.Exists(Colors, nameof(Colors));
+            ProductGuard.IsInRange(Colors, index, nameof(Colors));
 
-            Color.RemoveAt(index);
+            Colors.RemoveAt(index);
             return true;
         }
         #endregion
@@ -156,8 +155,8 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool AddM2Slot(string input)
         {
-            if (string.IsNullOrWhiteSpace(input) || M2Slots.Contains(input))
-                return false;
+            ProductGuard.Exists(M2Slots, nameof(M2Slots));
+            ProductGuard.IsNotEmpty(input, nameof(input));
 
             M2Slots.Add(input);
             return true;
@@ -171,8 +170,9 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveM2Slot(string toRemove)
         {
-            if (M2Slots == null || string.IsNullOrWhiteSpace(toRemove) || !M2Slots.Contains(toRemove))
-                return false;
+            ProductGuard.Exists(M2Slots, nameof(M2Slots));
+            ProductGuard.IsNotEmpty(toRemove, nameof(toRemove));
+            ProductGuard.ContainsElement(M2Slots, toRemove, nameof(toRemove));
 
             return RemoveM2Slot(M2Slots.IndexOf(toRemove));
         }
@@ -184,8 +184,8 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveM2Slot(int index)
         {
-            if (M2Slots == null || index > M2Slots.Count || index < MIN_INDEX)
-                return false;
+            ProductGuard.Exists(M2Slots, nameof(M2Slots));
+            ProductGuard.IsInRange(M2Slots, index, nameof(M2Slots));
 
             M2Slots.RemoveAt(index);
             return true;
@@ -201,8 +201,8 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool AddOnboardEthernet(string input)
         {
-            if (OnboardEthernet == null || string.IsNullOrWhiteSpace(input) || OnboardEthernet.Contains(input))
-                return false;
+            ProductGuard.Exists(OnboardEthernet, nameof(OnboardEthernet));
+            ProductGuard.IsNotEmpty(input, nameof(input));
 
             OnboardEthernet.Add(input);
             return true;
@@ -216,8 +216,9 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveOnboardEthernet(string toRemove)
         {
-            if (OnboardEthernet == null || string.IsNullOrWhiteSpace(toRemove) || !OnboardEthernet.Contains(toRemove))
-                return false;
+            ProductGuard.Exists(OnboardEthernet, nameof(OnboardEthernet));
+            ProductGuard.IsNotEmpty(toRemove, nameof(toRemove));
+            ProductGuard.ContainsElement(OnboardEthernet, toRemove, nameof(OnboardEthernet));
 
             return RemoveOnboardEthernet(OnboardEthernet.IndexOf(toRemove));
         }
@@ -230,8 +231,8 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveOnboardEthernet(int index)
         {
-            if (OnboardEthernet == null || index > OnboardEthernet.Count || index < MIN_INDEX)
-                return false;
+            ProductGuard.Exists(OnboardEthernet, nameof(OnboardEthernet));
+            ProductGuard.IsInRange(OnboardEthernet, index, nameof(OnboardEthernet));
 
             OnboardEthernet.RemoveAt(index);
             return true;
@@ -244,13 +245,28 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         /// <param name="image">Byte Array representing an image.</param>
         /// <returns></returns>
-        public bool AddImage(byte[] image)
+        public bool AddImage(string location)
         {
-            if (image == null)
-                return false;
+            ProductGuard.Exists(ProductImageStrings, nameof(ProductImageStrings));
+            ProductGuard.IsNotEmpty(location, nameof(location));
 
-            ProductImages.Add(image);
+            ProductImageStrings.Add(location);
             return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public bool RemoveImage(string location)
+        {
+            ProductGuard.Exists(ProductImageStrings, nameof(ProductImageStrings));
+            ProductGuard.IsNotEmpty(location, nameof(location));
+            ProductGuard.ContainsElement(ProductImageStrings, location, nameof(location));
+
+            var index = ProductImageStrings.IndexOf(location);
+            return RemoveImage(index);
         }
 
         /// <summary>
@@ -260,20 +276,11 @@ namespace AutoBuildApp.Models.Products
         /// <returns></returns>
         public bool RemoveImage(int index)
         {
-            if (ProductImages == null)
-                return false;
+            ProductGuard.Exists(ProductImageStrings, nameof(ProductImageStrings));
+            ProductGuard.IsInRange(ProductImageStrings, index, nameof(ProductImageStrings));
 
-            var success = false;
-            var endOfList = ProductImages.Count - 1;
-
-            if (index >= MIN_INDEX && ProductImages.Count >= MIN_LIST_SIZE
-                && index <= endOfList)
-            {
-                ProductImages.RemoveAt(index);
-                success = true;
-            }
-
-            return success;
+            ProductImageStrings.RemoveAt(index);
+            return true;
         }
         /// <summary>
         /// Total cost of components based on quantity and price.

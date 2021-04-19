@@ -11,17 +11,14 @@ namespace AutoBuildApp.Models.Products
 {
     public class NVMeDrive : IHardDrive, IComponent
     {
-        #region "Field Declarations, get; set;"
-        public readonly int MIN_LIST_SIZE = 1;
-        public readonly int MIN_INDEX = 0;
-
+        #region "Field Declarations: get; set;"
         public HardDriveType DriveType { get; set; }
         public ProductType ProductType { get; set; }
         public string ModelNumber { get; set; }
         public string ProductName { get; set; }
         public string ManufacturerName { get; set; }
         public int Quantity { get; set; }
-        public List<byte[]> ProductImages { get; set; }
+        public List<string> ProductImageStrings { get; set; }
         public double Price { get; set; }
         public double Budget { get; set; }
         public string Capacity { get; set; }
@@ -36,7 +33,7 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         public NVMeDrive()
         {
-            ProductImages = new List<byte[]>();
+            ProductImageStrings = new List<string>();
         }
 
         #region "Interface Implementations"
@@ -45,13 +42,28 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         /// <param name="image">Byte Array representing an image.</param>
         /// <returns></returns>
-        public bool AddImage(byte[] image)
+        public bool AddImage(string location)
         {
-            if (image == null)
-                return false;
+            ProductGuard.Exists(ProductImageStrings, nameof(ProductImageStrings));
+            ProductGuard.IsNotEmpty(location, nameof(location));
 
-            ProductImages.Add(image);
+            ProductImageStrings.Add(location);
             return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public bool RemoveImage(string location)
+        {
+            ProductGuard.Exists(ProductImageStrings, nameof(ProductImageStrings));
+            ProductGuard.IsNotEmpty(location, nameof(location));
+            ProductGuard.ContainsElement(ProductImageStrings, location, nameof(location));
+
+            var index = ProductImageStrings.IndexOf(location);
+            return RemoveImage(index);
         }
 
         /// <summary>
@@ -61,20 +73,11 @@ namespace AutoBuildApp.Models.Products
         /// <returns></returns>
         public bool RemoveImage(int index)
         {
-            if (ProductImages == null)
-                return false;
-
-            var success = false;
-            var endOfList = ProductImages.Count - 1;
-
-            if (index >= MIN_INDEX && ProductImages.Count >= MIN_LIST_SIZE
-                && index <= endOfList)
-            {
-                ProductImages.RemoveAt(index);
-                success = true;
-            }
-
-            return success;
+            ProductGuard.Exists(ProductImageStrings, nameof(ProductImageStrings));
+            ProductGuard.IsInRange(ProductImageStrings, index, nameof(ProductImageStrings));
+            
+            ProductImageStrings.RemoveAt(index);
+            return true;
         }
 
         /// <summary>

@@ -19,7 +19,7 @@ namespace AutoBuildApp.Models.Products
         public string ProductName { get; set; }
         public string ManufacturerName { get; set; }
         public int Quantity { get; set; }
-        public List<byte[]> ProductImages { get; set; }
+        public List<string> ProductImageStrings { get; set; }
         public double Price { get; set; }
         public int CoreCount { get; set; }
         public string CoreClock { get; set; }
@@ -46,7 +46,7 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         public CPU()
         {
-            ProductImages = new List<byte[]>();
+            ProductImageStrings = new List<string>();
             L1Cache = new List<string>();
             L2Cache = new List<string>();
             L3Cache = new List<string>();
@@ -58,36 +58,44 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         /// <param name="image">Byte Array representing an image.</param>
         /// <returns>Success of addition from object.</returns>
-        public bool AddImage(byte[] image)
+        public bool AddImage(string location)
         {
-            if (image == null)
-                return false;
+            ProductGuard.Exists(ProductImageStrings, nameof(ProductImageStrings));
+            ProductGuard.IsNotEmpty(location, nameof(location));
 
-            ProductImages.Add(image);
+            ProductImageStrings.Add(location);
             return true;
         }
 
         /// <summary>
-        /// Removes an 
+        /// String method to locate the index of the passed string.
+        /// Will call index variation to remove the element upon location.
+        /// </summary>
+        /// <param name="toRemove"></param>
+        /// <returns>Boolean</returns>
+        public bool RemoveImage(string toRemove)
+        {
+            ProductGuard.Exists(ProductImageStrings, nameof(ProductImageStrings));
+            ProductGuard.IsNotEmpty(toRemove, nameof(toRemove));
+            ProductGuard.ContainsElement(ProductImageStrings, toRemove, nameof(toRemove));
+
+            return RemoveImage(ProductImageStrings.IndexOf(toRemove));
+        }
+
+        /// <summary>
+        /// Index method to remove an image from the list.
         /// </summary>
         /// <param name="index"></param>
         /// <returns>Success of removal from object.</returns>
         public bool RemoveImage(int index)
         {
-            if (ProductImages == null)
-                return false;
+            ProductGuard.Exists(ProductImageStrings, nameof(ProductImageStrings));
+            ProductGuard.IsInRange(ProductImageStrings, index, nameof(ProductImageStrings));
 
-            var success = false;
-            var endOfList = ProductImages.Count - 1;
+            ProductImageStrings.RemoveAt(index);
 
-            if (index >= MIN_INDEX && ProductImages.Count >= MIN_LIST_SIZE
-                && index <= endOfList)
-            {
-                ProductImages.RemoveAt(index);
-                success = true;
-            }
 
-            return success;
+            return true;
         }
 
         /// <summary>

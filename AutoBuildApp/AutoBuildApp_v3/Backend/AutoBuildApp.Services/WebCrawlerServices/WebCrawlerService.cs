@@ -57,7 +57,8 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                 Headless = true,
                 IgnoreHTTPSErrors = true,
                 Args = new[] {
-                        $"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}",
+                        //$"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}",
+                        "--proxy-server=201.45.163.114:80",
                         //"--proxy-server=208.80.28.208:8080",
                         //"--proxy-server=183.88.226.50:8080",
                         //"--proxy-server=165.225.77.42:80",
@@ -250,6 +251,12 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         {
                             string key = specsKeys.ElementAt(i).ToString();
                             string value = specsVals.ElementAt(i).ToString();
+                            // assign series first in case there is no model number.
+                            //  if it does have a model number, it will just get overridden.
+                            if (key.ToLower().Contains("series"))
+                            {
+                                modelNumberIndex = i;
+                            }
                             if (key.ToLower().Contains("model"))
                             {
                                 modelNumberIndex = i;
@@ -273,8 +280,8 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         // TODO: case for 0 reviews
                         JToken totalStarRating = null;
                         JToken totalNumberOfReviews = null;
-                        //if (numberOfReviewsBeforeReload.Count() != 0)
-                        //{
+                        if (numberOfReviewsBeforeReload.Count() != 0)
+                        {
                             //Console.WriteLine("WE'RE 000000000000000000000000000000000000000000000000000000000");
                             await page.EvaluateExpressionAsync("var x = document.querySelectorAll('.tab-nav'); " +
                                     "for(let f of x) {" +
@@ -285,6 +292,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                             Console.Write("EXPRESSION\t");
 
                             await page.WaitForSelectorAsync(".comments-content");
+
                         //        Models.WebCrawler.Product product = new Models.WebCrawler.Product(price != null, companyName, url, specsVals.ElementAt(modelNumberIndex).ToString(), title.ToString(), productType,
                         //specsVals.ElementAt(brandIndex).ToString(), totalStarRating.ToString()[0].ToString(), totalNumberOfReviews.ToString().Split(' ')[0], price == null ? "N/A" : price.ToString(), specsDictionary, reviews);
                         //await page.WaitForSelectorAsync(".rating-views");
@@ -303,7 +311,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                             totalNumberOfReviews = await page.EvaluateExpressionAsync("document.querySelector('.rating-views-desc .rating-views-count').innerText");
                             Console.Write("totalNumberOfReviews\t");
 
-                        //}
+                        }
 
                         string totalStarRatingString = "0";
                         if (totalStarRating != null) {

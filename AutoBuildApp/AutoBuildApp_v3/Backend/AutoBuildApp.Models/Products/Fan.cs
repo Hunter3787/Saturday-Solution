@@ -11,22 +11,19 @@ namespace AutoBuildApp.Models.Products
     public class Fan : IComponent, ICooler
     {
 
-        #region "Field Declarations, get; set;"
-        public readonly int MIN_LIST_SIZE = 1;
-        public readonly int MIN_INDEX = 0;
-
+        #region "Field Declarations: get; set;"
         public ProductType ProductType { get; set; }
         public string ModelNumber { get; set; }
         public string ProductName { get; set; }
         public string ManufacturerName { get; set; }
         public int Quantity { get; set; }
-        public List<byte[]> ProductImages { get; set; }
+        public List<string> ProductImageStrings { get; set; }
         public double Price { get; set; }
         public double Budget { get; set; }
-        public List<string> Color { get; set; }
+        public List<string> Colors { get; set; }
         public string FanRPM { get; set; }
         public string NoiseVolume { get; set; }
-        public List<string> CompatableSocket { get; set; }
+        public List<string> CompatableSockets { get; set; }
         public int FanSize { get; set; }
         public bool Fanless { get; set; }
         public bool WaterCooling { get; set; }
@@ -34,9 +31,9 @@ namespace AutoBuildApp.Models.Products
 
         public Fan()
         {
-            ProductImages = new List<byte[]>();
-            Color = new List<string>();
-            CompatableSocket = new List<string>();
+            ProductImageStrings = new List<string>();
+            Colors = new List<string>();
+            CompatableSockets = new List<string>();
         }
 
         #region "Color Add/Remove"
@@ -47,10 +44,10 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool AddColor(string input)
         {
-            if (Color == null || string.IsNullOrWhiteSpace(input) || Color.Contains(input))
-                return false;
+            ProductGuard.Exists(Colors, nameof(Colors));
+            ProductGuard.IsNotEmpty(input, nameof(input));
 
-            Color.Add(input);
+            Colors.Add(input);
             return true;
         }
 
@@ -62,10 +59,11 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveColor(string toRemove)
         {
-            if (Color == null || string.IsNullOrWhiteSpace(toRemove) || !Color.Contains(toRemove))
-                return false;
+            ProductGuard.Exists(Colors, nameof(Colors));
+            ProductGuard.IsNotEmpty(toRemove, nameof(toRemove));
+            ProductGuard.ContainsElement(Colors, toRemove, nameof(toRemove));
 
-            return RemoveColor(Color.IndexOf(toRemove));
+            return RemoveColor(Colors.IndexOf(toRemove));
         }
 
         /// <summary>
@@ -75,10 +73,10 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveColor(int index)
         {
-            if (Color == null || index > Color.Count || index < MIN_INDEX)
-                return false;
+            ProductGuard.Exists(Colors, nameof(Colors));
+            ProductGuard.IsInRange(Colors, index, nameof(Colors));
 
-            Color.RemoveAt(index);
+            Colors.RemoveAt(index);
             return true;
         }
         #endregion
@@ -91,10 +89,10 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool AddCompatableSocket(string input)
         {
-            if (CompatableSocket == null || string.IsNullOrWhiteSpace(input) || CompatableSocket.Contains(input))
-                return false;
+            ProductGuard.Exists(CompatableSockets, nameof(CompatableSockets));
+            ProductGuard.IsNotEmpty(input, nameof(input));
 
-            CompatableSocket.Add(input);
+            CompatableSockets.Add(input);
             return true;
         }
 
@@ -106,10 +104,11 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveCompatableSocket(string toRemove)
         {
-            if (CompatableSocket == null || string.IsNullOrWhiteSpace(toRemove) || !CompatableSocket.Contains(toRemove))
-                return false;
+            ProductGuard.Exists(CompatableSockets, nameof(CompatableSockets));
+            ProductGuard.IsNotEmpty(toRemove, nameof(toRemove));
+            ProductGuard.ContainsElement(CompatableSockets, toRemove, nameof(toRemove));
 
-            return RemoveCompatableSocket(CompatableSocket.IndexOf(toRemove));
+            return RemoveCompatableSocket(CompatableSockets.IndexOf(toRemove));
         }
 
         /// <summary>
@@ -119,10 +118,10 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveCompatableSocket(int index)
         {
-            if (CompatableSocket == null || index > CompatableSocket.Count || index < MIN_INDEX)
-                return false;
+            ProductGuard.Exists(CompatableSockets, nameof(CompatableSockets));
+            ProductGuard.IsInRange(CompatableSockets, index, nameof(CompatableSockets));
 
-            CompatableSocket.RemoveAt(index);
+            CompatableSockets.RemoveAt(index);
             return true;
         }
         #endregion
@@ -133,13 +132,29 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         /// <param name="image">Byte Array representing an image.</param>
         /// <returns></returns>
-        public bool AddImage(byte[] image)
+        public bool AddImage(string location)
         {
-            if (image == null)
-                return false;
+            ProductGuard.Exists(ProductImageStrings, nameof(ProductImageStrings));
+            ProductGuard.IsNotEmpty(location, nameof(location));
 
-            ProductImages.Add(image);
+            ProductImageStrings.Add(location);
             return true;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public bool RemoveImage(string location)
+        {
+            ProductGuard.Exists(ProductImageStrings, nameof(ProductImageStrings));
+            ProductGuard.IsNotEmpty(location, nameof(location));
+            ProductGuard.ContainsElement(ProductImageStrings, location, nameof(location));
+
+            var index = ProductImageStrings.IndexOf(location);
+            return RemoveImage(index);
         }
 
         /// <summary>
@@ -149,20 +164,11 @@ namespace AutoBuildApp.Models.Products
         /// <returns></returns>
         public bool RemoveImage(int index)
         {
-            if (ProductImages == null)
-                return false;
+            ProductGuard.Exists(ProductImageStrings, nameof(ProductImageStrings));
+            ProductGuard.IsInRange(ProductImageStrings, index, nameof(ProductImageStrings));
 
-            var success = false;
-            var endOfList = ProductImages.Count - 1;
-
-            if (index >= MIN_INDEX && ProductImages.Count >= MIN_LIST_SIZE
-                && index <= endOfList)
-            {
-                ProductImages.RemoveAt(index);
-                success = true;
-            }
-
-            return success;
+            ProductImageStrings.RemoveAt(index);
+            return true;
         }
 
         /// <summary>
