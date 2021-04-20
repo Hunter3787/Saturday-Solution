@@ -31,6 +31,11 @@ namespace AutoBuildApp.Managers.FeatureManagers
             return _vendorLinkingService.EditProductInVendorListOfProducts(product);
         }
 
+        public List<AddProductDTO> GetAllProductsByVendor(GetProductByFilterDTO filters)
+        {
+            return _vendorLinkingService.GetAllProductsByVendor(filters);
+        }
+
         public List<AddProductDTO> GetAllProductsByVendor(string companyName)
         {
             return _vendorLinkingService.GetAllProductsByVendor(companyName);
