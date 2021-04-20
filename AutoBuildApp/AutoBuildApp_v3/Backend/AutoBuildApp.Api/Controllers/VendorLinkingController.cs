@@ -65,16 +65,25 @@ namespace AutoBuildApp.Api.Controllers
             return Ok();
         }
 
-
-            /// <summary>
-            /// This method will get all reviews from the DB.
-            /// </summary>
-            /// <returns>returns the status of OK as well as teh list of reviews.</returns>
-            /// 
-
         [HttpGet]
-        public IActionResult GetAllProductsByVendor()
+        public IActionResult GetAllProductsByVendor(string filtersString)
         {
+            GetProductByFilterDTO filters = null;
+            if (filtersString != null)
+            {
+                filters = new GetProductByFilterDTO();
+                filtersString = filtersString.Replace("?filtersString=", "");
+                Console.WriteLine("initial = " + filtersString);
+                string[] SeparatedFilters = filtersString.Split(',');
+                Console.WriteLine("yo");
+                foreach (string f in SeparatedFilters)
+                {
+                    Console.WriteLine("yooo " + f);
+                    filters.FilteredListOfProducts.Add(f, true);
+                    Console.WriteLine("ok");
+                }
+            }
+            //filters.FilteredListOfProducts.Add("cpu", true);
             if (!_threadPrinciple.Identity.IsAuthenticated)
             {
 
@@ -87,9 +96,34 @@ namespace AutoBuildApp.Api.Controllers
                 // Add action logic here
                 return new StatusCodeResult(StatusCodes.Status403Forbidden);
             }
-            var productsByVendor = _vendorLinkingManager.GetAllProductsByVendor("new egg");
+            Console.WriteLine("here");
+            var productsByVendor = _vendorLinkingManager.GetAllProductsByVendor(filters);
             return Ok(productsByVendor);
         }
+            /// <summary>
+            /// This method will get all reviews from the DB.
+            /// </summary>
+            /// <returns>returns the status of OK as well as teh list of reviews.</returns>
+            /// 
+
+        //    [HttpGet]
+        //public IActionResult GetAllProductsByVendor()
+        //{
+        //    if (!_threadPrinciple.Identity.IsAuthenticated)
+        //    {
+
+        //        // Add action logic here
+        //        return new StatusCodeResult(StatusCodes.Status401Unauthorized);
+        //    }
+        //    if (!AuthorizationService.checkPermissions(_vendorClaims.Claims()))
+        //    {
+
+        //        // Add action logic here
+        //        return new StatusCodeResult(StatusCodes.Status403Forbidden);
+        //    }
+        //    var productsByVendor = _vendorLinkingManager.GetAllProductsByVendor("new egg");
+        //    return Ok(productsByVendor);
+        //}
 
 
 

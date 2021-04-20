@@ -58,8 +58,8 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                 IgnoreHTTPSErrors = true,
                 Args = new[] {
                         //$"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}",
-                        "--proxy-server=201.45.163.114:80",
-                        //"--proxy-server=208.80.28.208:8080",
+                        //"--proxy-server=201.45.163.114:80",
+                        "--proxy-server=208.80.28.208:8080",
                         //"--proxy-server=183.88.226.50:8080",
                         //"--proxy-server=165.225.77.42:80",
                         //"--proxy-server=182.52.83.133:8080",
