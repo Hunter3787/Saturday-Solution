@@ -7,7 +7,7 @@ const fetchRequest = {
 };
 
 // This function will add an item to the DB.
-function addItem() {
+async function addItem() {
 
     const title = document.getElementById('add-title'); // will get the value from the html element and store it.
     const username = document.getElementById('add-username'); // will get the value from the html element and store it.
@@ -30,6 +30,6 @@ function addItem() {
 
     let customRequest = Object.assign(fetchRequest, {method: 'POST', body: formData});
 
-    fetch(uri, customRequest);
+    await fetch(uri, customRequest);
 
 }

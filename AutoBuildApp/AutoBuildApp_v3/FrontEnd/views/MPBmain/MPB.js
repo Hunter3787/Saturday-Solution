@@ -11,12 +11,26 @@ const fetchRequest = {
     }
 };
 
-function getItems() {
-    fetch(uri, fetchRequest) // fetches the default URI
+function process(){
+  getItems();
+}
+
+function looping(){
+  setTimeout(process, 3000);
+}
+
+var refreshData = setInterval(looping, 3000);
+
+async function getItems() {
+    await fetch(uri, fetchRequest) // fetches the default URI
         .then(response => response.json()) // Will receive a response from the default response.json.
         .then(data => displayItems(data)) // will call the display items function.
+        .then(console.log("reloaded"))
         .catch(error => console.error('Unable to get items.', error)); // will catch an error and print the appropriate error message in console.
+    refreshData;
 }
+
+
 
 function displayItems(data) {
 

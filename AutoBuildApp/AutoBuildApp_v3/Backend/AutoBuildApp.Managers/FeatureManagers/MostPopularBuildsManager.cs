@@ -2,10 +2,14 @@
 using AutoBuildApp.DomainModels.Exceptions;
 using AutoBuildApp.Services;
 using AutoBuildApp.Services.FeatureServices;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace AutoBuildApp.Managers
 {
@@ -210,6 +214,12 @@ namespace AutoBuildApp.Managers
             }
 
             return _mostPopularBuildsService.GetBuildPosts(defaultOrderLikes, defaultBuildType);
+        }
+
+
+        public async Task<bool> UploadImage(List<IFormFile> files)
+        {
+            return await _mostPopularBuildsService.UploadImage(files);
         }
 
         /// <summary>

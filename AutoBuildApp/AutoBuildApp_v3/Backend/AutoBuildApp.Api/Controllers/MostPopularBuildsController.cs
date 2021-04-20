@@ -179,34 +179,30 @@ namespace AutoBuildApp.Api.Controllers
         }
 
         [HttpPost("image")]
-        public IActionResult FilePost(List<IFormFile> files)
+        public async Task<IActionResult> FilePost(List<IFormFile> files)
         {
+            // Pass in the DAO to the service.
+            mostPopularBuildsService = new MostPopularBuildsService(_mostPopularBuildsDAO);
+
+            // Pass the service into the manager.
+            mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+
+
             for (int i = 0; i<60; i++)
             { 
                 Console.WriteLine(files.Count); 
             }
-                
-            //var path = "C:/Users/Serge/Desktop/imagesTest";
-            //var filesPath =  path;
-            //Console.WriteLine(filesPath);
-            //if (!System.IO.Directory.Exists(filesPath))
-            //{
-            //    Directory.CreateDirectory(filesPath);
-            //}
 
-            //foreach (var item in files)
-            //{
-            //    if (item.Length > 0)
-            //    {
-            //        var fileName = Path.GetFileName(item.FileName);
-            //        var filePath = Path.Combine(filesPath, fileName);
-            //        using (var stream = new FileStream(filesPath, FileMode.CreateNew))
-            //        {
-            //            await item.CopyToAsync(stream);
-            //        }
-            //    }
-            //}
-            return Ok();
+            var returnsTrue = await mostPopularBuildsManager.UploadImage(files);
+
+            if (returnsTrue)
+            {
+                _logger.LogInformation("Upload was a success.");
+                return Ok();
+            }
+
+            _logger.LogInformation("Upload not successful.");
+            return new StatusCodeResult(StatusCodes.Status400BadRequest);
         }
     }
 }
