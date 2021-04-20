@@ -23,8 +23,8 @@ namespace AutoBuildApp.DataAccess
         {
             Console.WriteLine("yo");
             ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            //string username = _threadPrinciple.Identity.Name;
-            string username = "new egg";
+            string username = _threadPrinciple.Identity.Name;
+            //string username = "new egg";
             List<AddProductDTO> allProductsByVendor = new List<AddProductDTO>();
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
