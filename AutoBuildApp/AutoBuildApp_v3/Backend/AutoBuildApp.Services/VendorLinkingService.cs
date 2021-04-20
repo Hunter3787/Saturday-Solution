@@ -23,6 +23,10 @@ namespace AutoBuildApp.Services
         {
             return _vendorLinkingDAO.EditProductInVendorListOfProducts(product);
         }
+        public List<AddProductDTO> GetAllProductsByVendor(GetProductByFilterDTO filters)
+        {
+            return _vendorLinkingDAO.GetProductsByFilter(filters, 1);
+        }
         public List<AddProductDTO> GetAllProductsByVendor(string companyName)
         {
             return _vendorLinkingDAO.GetAllProductsByVendor(companyName);

@@ -1,9 +1,12 @@
+using AutoBuildApp.Api.HelperFunctions;
+using AutoBuildApp.DataAccess;
 using AutoBuildApp.Models.WebCrawler;
 using AutoBuildApp.Services.WebCrawlerServices;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Nito.AsyncEx;
 using PuppeteerSharp;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -13,6 +16,12 @@ namespace AutoBuildApp.Api
     {
         public static void Main(string[] args)
         {
+            //VendorLinkingDAO dao = new VendorLinkingDAO(ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
+
+            //dao.GetProductsByFilter(null, 1);
+            //Console.ReadLine();
+
+            #region zeinab
             //new Thread(() =>
             //{
             //    AsyncContext.Run(async () => await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultRevision));
@@ -53,6 +62,7 @@ namespace AutoBuildApp.Api
             //            "Array.from(document.querySelectorAll('.comments-title .comments-text')).map(a=>a.innerText)", "Array.from(document.querySelectorAll('.comments-content:not(.comments-response .comments-content')).map(a=>a.innerText)"));
             //    }
             //}).Start();
+            #endregion
 
             CreateHostBuilder(args).Build().Run();
         }
