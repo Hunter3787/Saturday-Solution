@@ -6,6 +6,14 @@ const fetchRequest = {
     mode: 'cors',
 };
 
+// "textCounter(this,'counter',10000);"
+
+let counter = document.getElementById('add-description');
+counter.addEventListener("keyup", () => textCounter(counter, 'counter', 10000));
+
+let form = document.getElementById('publish-form');
+form.addEventListener("submit", () => addItem()); // lambda function for redirecting on click.
+
 // This function will add an item to the DB.
 function addItem() {
 
@@ -31,4 +39,15 @@ function addItem() {
     // Makes a fetch request to the controller with the specified attributes.
     fetch(uri, customRequest);
     
+}
+
+function textCounter(field, field2, maxlimit) {
+    var countfield = document.getElementById(field2);
+
+    if (field.value.length > maxlimit) {
+        field.value = field.value.substring(0, maxlimit);
+        return false;
+    } else {
+        countfield.innerText = maxlimit - field.value.length;
+    }
 }

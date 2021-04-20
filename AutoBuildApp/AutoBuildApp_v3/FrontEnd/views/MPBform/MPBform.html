@@ -19,41 +19,46 @@
         </div>
 
         <div class="formdetails">
-            <form action="javascript:void(0);" method="POST" onsubmit="addItem()">
-                <br /><label>Enter Title:</label><br />
-                <input type="text" id="add-title" placeholder="title">
-                <br />
-                <br /><label>Enter Username:</label><br />
-                <input type="text" id="add-username" placeholder="username">
-                <br />
-                <br />
-                <label>Enter Description:</label>
-                <br />
-                <textarea onkeyup="textCounter(this,'counter',10000);" id="add-description" rows="10" cols="100" placeholder="review"></textarea>
-                <br />
-                <label>Characters left:</label>
-                <input disabled maxlength="3" size="3" value="10000" id="counter">
-                <br />
-                <br />
-                <input type="file" id="add-image" placeholder="file path">
-                <br />
-                <br />
-                <input type="submit" value="Submit build" class="submit-btn">
+            <form action="javascript:void(0);" id="publish-form">
+
+                <div class="field">
+                    <label>Enter Title:</label>
+                    <div class="title-input">
+                        <input class="text-field" type="text" id="add-title" placeholder="title">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Enter Username:</label>
+                    <div class="username-input">
+                        <input class="text-field" type="text" id="add-username" placeholder="username">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Enter Description:</label>
+                    <div class="description-input">
+                        <textarea id="add-description" placeholder="review"></textarea>
+                    </div>
+                </div>
+
+                <div class="characters-left">
+                    <label class="character-count">Characters left:</label>
+                    <span class="count" id="counter">10000</span>
+                </div>
+
+                <div class="field">
+                    <input class="custom-upload" type="file" id="add-image">
+                </div>
+
+                <div class="field">
+                    <input type="submit" value="Submit build" class="submit-btn">
+                </div>
+
             </form>
         </div>
 
         <script src="MPBform.js" asp-append-version="true"></script>
         <script src="" async defer></script>
-        <script>
-            function textCounter(field, field2, maxlimit) {
-                var countfield = document.getElementById(field2);
-                if (field.value.length > maxlimit) {
-                    field.value = field.value.substring(0, maxlimit);
-                    return false;
-                } else {
-                    countfield.value = maxlimit - field.value.length;
-                }
-            }
-        </script>
     </body>
 </html>
