@@ -8,24 +8,27 @@ const fetchRequest = {
 
 // This function will add an item to the DB.
 function addItem() {
-    var formData = new FormData();
 
-    const title = document.getElementById('add-title'); // will get the value from the html element and store it.
-    const username = document.getElementById('add-username'); // will get the value from the html element and store it.
-    const description = document.getElementById('add-description'); // will get the value from the html element description and store it.
+    // Initializes a FormData object.
+    let formData = new FormData();
 
-    var photo = document.getElementById("add-image").files[0];
+    let title = document.getElementById('add-title'); // will get the value from the html element and store it.
+    let username = document.getElementById('add-username'); // will get the value from the html element and store it.
+    let description = document.getElementById('add-description'); // will get the value from the html element description and store it.
+    let photo = document.getElementById("add-image").files[0]; // store the file in the photo variable.
 
+    // The next 6 lines will store the above data in the formData object.
     formData.append("username", username.value.trim());
     formData.append("title", title.value.trim());
     formData.append("description", description.value.trim());
     formData.append("buildType", 2);
     formData.append("buildImagePath", "C:/Test/Directory");
-
     formData.append("image", photo);
 
+    // Overrides the constant fetchRequest with custom attributes.
     let customRequest = Object.assign(fetchRequest, {method: 'POST', body: formData});
 
+    // Makes a fetch request to the controller with the specified attributes.
     fetch(uri, customRequest);
     
 }
