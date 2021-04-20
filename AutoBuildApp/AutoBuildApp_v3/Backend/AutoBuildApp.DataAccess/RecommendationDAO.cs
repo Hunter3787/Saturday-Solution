@@ -64,10 +64,13 @@ namespace AutoBuildApp.DataAccess
                         row["productPrice"] = elements.Budget;
                         pair.Rows.Add(row);
                     }
-
-                    SqlParameter param = command
+                    var param = new SqlParameter[2];
+                    param[0] = command
                         .Parameters
                         .AddWithValue("@TYPEBUDGET", pair);
+                    param[1] = command
+                        .Parameters
+                        .AddWithValue("@username", "new egg");
 
 
                     using (SqlDataReader reader = command.ExecuteReader())

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 using AutoBuildApp.Models.Users;
+using AutoBuildApp.Security.Enumerations;
+using AutoBuildApp.Security.FactoryModels;
+using AutoBuildApp.Security.Interfaces;
 using Microsoft.Data.SqlClient;
 
 namespace AutoBuildApp.DataAccess
@@ -76,7 +79,9 @@ namespace AutoBuildApp.DataAccess
                             connection.Close();
                             return "User already exists.";
                         }
-                        String sql = "INSERT INTO userAccounts(username, email, firstName, lastName, roley, passwordHash, registrationDate ) VALUES(@USERNAME,@EMAIL, @FIRSTNAME, @LASTNAME, @ROLEY, @PASSWORD, @REG);";
+                        String sql = "INSERT INTO" +
+                            " userAccounts(username, email, firstName, lastName, roley, passwordHash, registrationDate )" +
+                            " VALUES(@USERNAME,@EMAIL, @FIRSTNAME, @LASTNAME, @ROLEY, @PASSWORD, @REG);";
 
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
                         adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = user.UserName;
@@ -104,5 +109,72 @@ namespace AutoBuildApp.DataAccess
                 }
             }
         }
+
+
+
+        public String updatePermissions()
+        {
+
+            ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
+            IClaims basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
+
+
+            using (SqlConnection connection = new SqlConnection(this._connection))
+            {
+                var SP_ChangePermissions = "SP_ChangePermissions";
+                using (var command = new SqlCommand())
+                {
+                    command.Transaction = connection.BeginTransaction();
+                    command.Connection = connection;
+                    command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = SP_ChangePermissions;
+
+                    DataTable pair = new DataTable();
+                    DataColumn column = new DataColumn();
+
+                    column.ColumnName = "UserID";
+                    column.DataType = typeof(Int64);
+                    pair.Columns.Add(column);
+                    column.ColumnName = "permission";
+                    column.DataType = typeof(string);
+                    pair.Columns.Add(column);
+                    column.ColumnName = "scopeOfPermission";
+                    column.DataType = typeof(double);
+                    pair.Columns.Add(column);
+
+                    DataRow row;
+                    foreach (var permissions in basic.Claims())
+                    {
+                        row = pair.NewRow();
+                        row["permission"] = permissions.Type;
+                        row["scopeOfPermission"] = permissions.Value;
+                        pair.Rows.Add(row);
+                    }
+                    var param = new SqlParameter[1];
+                    param[0] = command
+                        .Parameters
+                        .AddWithValue("@permissions", pair);
+                    param[1] = command
+                        .Parameters
+                        .AddWithValue("@username", "new egg");
+
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows == false)
+                            return null;
+
+                        //while (reader.Read())
+                        //{
+
+                        //}
+                    }
+                    command.Transaction.Commit();
+                }
+            }
+            return " ";
+        }
+
     }
 }
