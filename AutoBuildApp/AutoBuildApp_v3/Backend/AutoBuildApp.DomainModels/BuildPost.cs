@@ -12,8 +12,8 @@ namespace AutoBuildApp.DomainModels
     /// </summary>
     public class BuildPost
     {
-        // This list stores a list of form data objects.
-        public List<IFormFile> File { get; set; }
+        // This list stores a list of form file objects.
+        public List<IFormFile> Image { get; set; }
 
         // This string is the unique identifier of the build post.
         public string EntityId { get; set; }

@@ -39,7 +39,7 @@ namespace AutoBuildApp.Managers
         /// </summary>
         /// <param name="buildPost">takes in a build post object from the controller.</param>
         /// <returns>success state bool value.</returns>
-        public bool PublishBuild(BuildPost buildPost)
+        public async Task<bool> PublishBuild(BuildPost buildPost)
         {
             // This try/catch block checks for a null BuildPost object.
             try
@@ -143,6 +143,9 @@ namespace AutoBuildApp.Managers
 
             buildPost.DateTime = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF"); // sets the current date time to this variable.
 
+            // async call to save an image to a filepath.
+            buildPost.BuildImagePath = await _mostPopularBuildsService.UploadImage(buildPost.Username, buildPost.Image);
+
             // TODO: implement service return method.
             return _mostPopularBuildsService.PublishBuild(buildPost);
         }
@@ -214,12 +217,6 @@ namespace AutoBuildApp.Managers
             }
 
             return _mostPopularBuildsService.GetBuildPosts(defaultOrderLikes, defaultBuildType);
-        }
-
-
-        public async Task<bool> UploadImage(List<IFormFile> files)
-        {
-            return await _mostPopularBuildsService.UploadImage(files);
         }
 
         /// <summary>

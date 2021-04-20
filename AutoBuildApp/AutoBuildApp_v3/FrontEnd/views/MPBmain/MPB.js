@@ -34,6 +34,9 @@ async function getItems() {
 
 function displayItems(data) {
 
+    const innerDiv = document.getElementById('main'); // This will get the id of the form from the HTML.
+    innerDiv.innerHTML = ''; // appends a null value to the inner HTML, as is not required.
+
     // This function will create a table, and append values for each column and iterate to the next row of items.
     data.forEach(item => {
 

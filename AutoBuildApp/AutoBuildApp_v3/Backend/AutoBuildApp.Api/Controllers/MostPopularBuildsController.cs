@@ -1,6 +1,7 @@
 ﻿using AutoBuildApp.DataAccess;
 using AutoBuildApp.DomainModels;
 using AutoBuildApp.Managers;
+using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Services;
 using AutoBuildApp.Services.FeatureServices;
 using Microsoft.AspNetCore.Cors;
@@ -53,22 +54,31 @@ namespace AutoBuildApp.Api.Controllers
         /// <summary>
         /// This method will be used to fetch post new Build Posts to the DB.
         /// </summary>
-        /// <param name="buildPost">takes in a JSON BuildPost object</param>
-        /// <returns>returns a fail status code or an OK status code response.</returns>
+        /// <param name="data">takes in a IFormCollection object which reads from FormData.</param>
+        /// <param name="image">takes in an image file from the FormData.</param>
+        /// <returns>returns a status code result.</returns>
         [HttpPost]
-        public IActionResult PublishBuild(BuildPost buildPost)
+        public async Task<IActionResult> PublishBuild(IFormCollection data, List<IFormFile> image)
         {
-            // Log event when a fetch happens.
-            _logger.LogInformation("PublishBuild was fetched.");
-
             // Pass in the DAO to the service.
             mostPopularBuildsService = new MostPopularBuildsService(_mostPopularBuildsDAO);
 
             // Pass the service into the manager.
             mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
+            // Initialize a local BuildPost Object to store data into and then pass to the manager.
+            var post = new BuildPost();
+
+            // The following 6 lines parse data from the FormData to a BuildPost object.
+            post.Username = data["username"]; 
+            post.Title = data["title"];
+            post.Description = data["description"];
+            post.BuildType = (BuildType)int.Parse(data["buildType"]);
+            post.BuildImagePath = data["buildImagePath"];
+            post.Image = image;
+
             // This will store the bool result of the MPB creation to see if it is a success or fail.
-            var returnsTrue = mostPopularBuildsManager.PublishBuild(buildPost);
+            var returnsTrue = await mostPopularBuildsManager.PublishBuild(post);
 
             // if true, it will return OK, else it will return status code error of 500
             if (returnsTrue)
@@ -146,7 +156,6 @@ namespace AutoBuildApp.Api.Controllers
             }
         }
 
-
         /// <summary>
         /// This controller method posts a like to a build post.
         /// </summary>
@@ -178,31 +187,5 @@ namespace AutoBuildApp.Api.Controllers
             return new StatusCodeResult(StatusCodes.Status400BadRequest);
         }
 
-        [HttpPost("image")]
-        public async Task<IActionResult> FilePost(List<IFormFile> files)
-        {
-            // Pass in the DAO to the service.
-            mostPopularBuildsService = new MostPopularBuildsService(_mostPopularBuildsDAO);
-
-            // Pass the service into the manager.
-            mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
-
-
-            for (int i = 0; i<60; i++)
-            { 
-                Console.WriteLine(files.Count); 
-            }
-
-            var returnsTrue = await mostPopularBuildsManager.UploadImage(files);
-
-            if (returnsTrue)
-            {
-                _logger.LogInformation("Upload was a success.");
-                return Ok();
-            }
-
-            _logger.LogInformation("Upload not successful.");
-            return new StatusCodeResult(StatusCodes.Status400BadRequest);
-        }
     }
 }

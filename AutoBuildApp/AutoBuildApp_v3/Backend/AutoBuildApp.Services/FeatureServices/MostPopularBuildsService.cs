@@ -149,15 +149,17 @@ namespace AutoBuildApp.Services.FeatureServices
         /// <summary>
         /// This method takes in a list of files and uploads it to a folder.
         /// </summary>
+        /// <param name="username">takes in a username string</param>
         /// <param name="files">takes in a list of IFormFile</param>
         /// <returns>returns boolean success state.</returns>
-        public async Task<bool> UploadImage(List<IFormFile> files)
+        public async Task<string> UploadImage(string username, List<IFormFile> files)
         {
+            string path = " ";
             foreach (var item in files)
             {
                 if (item.Length > 0)
                 {
-                    var path = "C:/Users/Serge/Desktop/imagesTest/testing.jpg";
+                    path = $"C:/Users/Serge/Desktop/imagesTest/{username}_{DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}.jpg";
 
                     using (var stream = new FileStream(path, FileMode.CreateNew, FileAccess.ReadWrite))
                     {
@@ -165,7 +167,7 @@ namespace AutoBuildApp.Services.FeatureServices
                     }
                 }
             }
-            return true;
+            return path;
         }
     }
 }
