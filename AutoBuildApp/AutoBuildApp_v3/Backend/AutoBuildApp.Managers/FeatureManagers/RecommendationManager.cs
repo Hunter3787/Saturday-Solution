@@ -26,9 +26,6 @@ namespace AutoBuildApp.Managers
         // Local constant for minimum budget.
         private readonly string _connectionString;
         private RecommendationDAO _dao;
-        private PortionBudgetService _portionService;
-        private ClaimsFactory _claimsFactory;
-        private IClaims _basicUser;
         private IClaims _unregistered;
 
         #region "Constructors"
@@ -39,9 +36,8 @@ namespace AutoBuildApp.Managers
         public RecommendationManager(string connectionString)
         {
             //Generate claims
-            _claimsFactory = new ConcreteClaimsFactory();
-            _basicUser = _claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
-            _unregistered = _claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
+            ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
+            _unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
 
             _connectionString = connectionString;
             _dao = new RecommendationDAO(_connectionString);
@@ -52,8 +48,8 @@ namespace AutoBuildApp.Managers
         /// <summary>
         /// Recommend a computer build based off user defined parameters.
         /// </summary>
-        /// <param name="buildType">Type of Build based on Enum.</param>
-        /// <param name="initial">Double value representing the budget.</param>
+        /// <param name="requestedType">Type of Build based on Enum.</param>
+        /// <param name="initialBudget">Double value representing the budget.</param>
         /// <param name="peripherals">Dictionary of product types and how many
         /// of each would be requested.(Optional)</param>
         /// <param name="psuType">Power supply unit type requested by
@@ -63,58 +59,101 @@ namespace AutoBuildApp.Managers
         /// <param name="hddCount">Number of hard drives that the user
         /// would like to be in their final build.(Optional)</param>
         /// <returns>A list of IBuild representing the recommended builds.</returns>
-        public List<IBuild> RecommendBuilds(BuildType buildType, double initial,
+        public List<IBuild> RecommendBuilds(BuildType requestedType, double initialBudget,
                     List<IComponent> peripherals, PSUModularity psuType,
                     HardDriveType hddType, int hddCount)
         {
+            #region Guards
             if (!AuthorizationService.checkPermissions(_unregistered.Claims()))
             {
                 throw new UnauthorizedAccessException("Unauthorized user");
             }
+            
+            if (initialBudget < RecBusinessGlobals.MIN_BUDGET)
+            {
+                throw new ArgumentOutOfRangeException("Budget too low.");
+            }
+            else if(hddCount < RecBusinessGlobals.MIN_INTEGER_VALUE)
+            {
+                throw new ArgumentOutOfRangeException("Invalid arguement.");
+            }
+            #endregion
 
-            //if ( initial < MIN_BUDGET || hddCount < MIN_INTEGER_VALUE)
-            //{
-            //    return null;
-            //}
+            #region Initializations
+            Dictionary<ProductType, List<IComponent>> products = new Dictionary<ProductType, List<IComponent>>();
+            Dictionary<IComponent, int> scores = new Dictionary<IComponent, int>();
+            ComponentComparisonService comparator = new ComponentComparisonService();
+            GetComponentsService getter = new GetComponentsService(_dao);
+            PortionBudgetService portioner = new PortionBudgetService();
+            BuildParsingService parser = new BuildParsingService();
+            List<IBuild> buildRecommendations = new List<IBuild>();
+            IBuild prototype = BuildFactory.CreateBuild(requestedType);
+            double adjustedBudget = initialBudget;
+            #endregion
+
+            // Business Rule
+            if (initialBudget == RecBusinessGlobals.MIN_BUDGET)
+            {
+                adjustedBudget = RecBusinessGlobals.MAX_BUDGET;
+            }
+            else if (peripherals != null)
+            {
+                foreach (IComponent extras in peripherals)
+                {
+                    adjustedBudget -= extras.GetTotalcost();
+                }
+            }
+
+            if (adjustedBudget <= RecBusinessGlobals.MIN_BUDGET)
+            {
+                return buildRecommendations;
+            }
+
+            #region Advanced option initialization
+            if (psuType != PSUModularity.None)
+            {
+                prototype.Psu = PSUFactory.CreatePSU(psuType);
+            }
+
+            if(hddType != HardDriveType.None && hddCount > RecBusinessGlobals.MIN_INTEGER_VALUE)
+            {
+                prototype.HardDrives = new List<IHardDrive>() { HarDriveFactory.CreateHardDrive(hddType) };
+            }
+            #endregion
+
+            var componentList = parser.CreateComponentList(prototype);
+            var portionedList = portioner.PortionOutBudget(componentList, requestedType, adjustedBudget);
+
+            products = getter.GetProductDictionary(portionedList);
+            ScoreProductDictionary(products, scores, requestedType);
+
+            // Business rule to create 5 builds and return them all.
+            for (int i = 0; i < RecBusinessGlobals.BUILDS_TO_RETURN; i++)
+            {
+                IBuild build = BuildFactory.CreateBuild(requestedType);
+                // Add preselected peripherals.
+                build.Peripherals = peripherals;
 
 
-            //double budget = initial;
-            //IBuild build = BuildFactory.CreateBuild(buildType);
-
-            //if (peripherals != null)
-            //{
-            //    build.Peripherals = peripherals;
-            //    foreach (IComponent extras in build.Peripherals)
-            //        budget -= extras.GetTotalcost();
-            //}
-
-            //// Business Rule
-            //if (budget <= MIN_BUDGET && initial > MIN_BUDGET)
-            //{
-            //    return null;
-            //}
-
-            //// Advanced settings to be implemented. 
-            //if (hddType != HardDriveType.None ||
-            //    hddCount > MIN_INTEGER_VALUE || psuType != PSUModularity.None)
-            //{
-            //    return null;
-            //}
-            //else
-            //{
-            //    // Create component list using service. 
-            //    var compList = BuildParsingService.CreateComponentList(build);
-            //    var budgetedList =
-            //        _portionService.PortionComponentList(compList, buildType, budget);
+                // Get the highest scored mother board.
+                // Find compatable CPU, RAM, and Case
+                // Find in stock GPU. 
+                // Pick PSU based off selection if applicable that supports GPU.
+                // Add hard drives of type and number. (Compatable with Mobo.)
+                // Find cooler of the selected type. Default is fan.
+                
 
 
 
+                buildRecommendations.Add(build);
+            }
 
-            //    // recieve elements, for loop passing each component and return an int.
 
-            //    return null;
-            //}
-            return null;
+
+            // Add a function to builds to total their score
+            // via the scoring tool for sorting.
+
+            return buildRecommendations;
         }
         #endregion
 
@@ -146,6 +185,36 @@ namespace AutoBuildApp.Managers
 
 
             return null;
+        }
+        #endregion
+
+        #region Private Methods
+        /// <summary>
+        /// Scores the dictionary of products and stores them in a key value paring
+        /// based off the build type requested. 
+        /// </summary>
+        /// <param name="products">Dictionary of products to score.</param>
+        /// <param name="scores">Dictionary to hold product scores.</param>
+        /// <param name="type">Requested build type.</param>
+        private void ScoreProductDictionary(
+            Dictionary<ProductType, List<IComponent>> products,
+            Dictionary<IComponent, int> scores,
+            BuildType type
+            )
+        {
+            ComponentScoringService scorer = new ComponentScoringService();
+
+            foreach (ProductType key in products.Keys)
+            {
+                foreach (IComponent component in products[key])
+                {
+                    if (!scores.ContainsKey(component))
+                    {
+                        var score = scorer.ScoreComponent(component, type);
+                        scores.Add(component, score);
+                    }
+                }
+            }
         }
         #endregion
     }

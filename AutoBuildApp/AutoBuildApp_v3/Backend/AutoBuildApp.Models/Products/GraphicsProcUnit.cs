@@ -10,7 +10,7 @@ using AutoBuildApp.Models.Interfaces;
  */
 namespace AutoBuildApp.Models.Products
 {
-    public class GPU : IComponent
+    public class GraphicsProcUnit : IComponent
     {
         #region "Field Declarations: get; set;"
         public ProductType ProductType { get; set; }
@@ -45,7 +45,7 @@ namespace AutoBuildApp.Models.Products
         /// <summary>
         /// Graphic Processing Unit Default Constructor.
         /// </summary>
-        public GPU()
+        public GraphicsProcUnit()
         {
             ProductImageStrings = new List<string>();
         }
