@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Security.Claims;
 using System.Text;
 using AutoBuildApp.Models.Users;
 using AutoBuildApp.Security.Enumerations;
@@ -23,7 +24,7 @@ namespace AutoBuildApp.DataAccess
          */
         private SqlDataAdapter adapter = new SqlDataAdapter();
         //Represents a Transact-SQL transaction to be made in a SQL Server database
-        public RegistrationDAO(String connectionString)
+        public RegistrationDAO(string connectionString)
         {
             // instantiation of the connections string via a constructor to avoid any hardcoding
             this._connection = connectionString;
@@ -112,7 +113,7 @@ namespace AutoBuildApp.DataAccess
 
 
 
-        public String updatePermissions()
+        public int updatePermissions(IEnumerable<Claim> claims) // youd want to pass in those permissions 
         {
 
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
@@ -162,18 +163,13 @@ namespace AutoBuildApp.DataAccess
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        if (reader.HasRows == false)
-                            return null;
-
-                        //while (reader.Read())
-                        //{
-
-                        //}
+                        if (!reader.HasRows) { return 0; }
+                        else if (reader.HasRows) { return 1; }
                     }
                     command.Transaction.Commit();
                 }
             }
-            return " ";
+            return 0;
         }
 
     }
