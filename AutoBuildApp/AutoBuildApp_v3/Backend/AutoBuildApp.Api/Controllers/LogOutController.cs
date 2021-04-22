@@ -36,7 +36,7 @@ namespace AutoBuildApp.Api.Controllers
             }
             AuthDemoManager authDemo = new AuthDemoManager();
             //. getting the data
-            var data = authDemo.LogMeOut();
+            var data = authDemo.LogOut();
             //return Ok($"The list of claims given: { returnValue}," +
             return Ok(" ");
 

@@ -52,7 +52,9 @@ namespace AutoBuildApp.Api.Controllers
 
         public IActionResult Index()
         {
-            if(!_threadPrinciple.Identity.IsAuthenticated)
+
+            Console.WriteLine("we are here22");
+            if (!_threadPrinciple.Identity.IsAuthenticated)
             {
 
                 // Add action logic here
@@ -72,9 +74,18 @@ namespace AutoBuildApp.Api.Controllers
         [HttpGet]
         public IActionResult RetrieveGraphs()
         {
+
+            Console.WriteLine("we are here22");
+            if (!_threadPrinciple.Identity.IsAuthenticated)
+            {
+                Console.WriteLine("we are here");
+                // Add action logic here
+                return new StatusCodeResult(StatusCodes.Status401Unauthorized);
+            }
             if (!AuthorizationService.checkPermissions(_admin.Claims()))
             {
 
+                return Ok("good2");
                 // Add action logic here
                 return new StatusCodeResult(StatusCodes.Status403Forbidden);
             }

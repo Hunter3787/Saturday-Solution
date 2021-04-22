@@ -19,21 +19,8 @@ namespace AutoBuildApp.Api
     {
         public static void Main(string[] args)
         {
-            string connection = ConnectionManager
-            .connectionManager
-            .GetConnectionStringByName("MyConnection");
-            ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
-            IClaims basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
-            Console.WriteLine(connection);
-            string username = "NEW_USERNAME1";
-            UserManagementDAO UMDAO = new UserManagementDAO(connection);
-            string result = "";
 
-
-            result = UMDAO.ChangePermissionsDB(username, basic.Claims());
-
-
-            #region zeinab 
+            //#region zeinab 
 
             //new Thread(() =>
             //{
@@ -75,8 +62,8 @@ namespace AutoBuildApp.Api
             //            "Array.from(document.querySelectorAll('.comments-title .comments-text')).map(a=>a.innerText)", "Array.from(document.querySelectorAll('.comments-content:not(.comments-response .comments-content')).map(a=>a.innerText)"));
             //    }
             //}).Start();
-            //
-            #endregion
+
+            //#endregion
             CreateHostBuilder(args).Build().Run();
         }
 

@@ -57,8 +57,8 @@ namespace AutoBuildApp.Managers.FeatureManagers
         }
 
 
-
-        public string LogMeOut()
+        // follow naming convention -> clean up. 
+        public string LogOut()
         {
 
 
