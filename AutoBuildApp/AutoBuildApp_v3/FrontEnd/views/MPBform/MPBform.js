@@ -57,7 +57,7 @@ function addItem() {
 
 // This function acts as a counter for the textarea field to show how many characters remain.
 function textCounter(field, field2, maxlimit) {
-    var countfield = document.getElementById(field2);
+    let countfield = document.getElementById(field2);
 
     if (field.value.length > maxlimit) {
         field.value = field.value.substring(0, maxlimit);

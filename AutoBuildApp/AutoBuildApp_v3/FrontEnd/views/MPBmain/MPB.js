@@ -73,7 +73,7 @@ function displayItems(data) {
         var buildimage = document.createElement('div');
         buildimage.classList.add('buildimage');
         var image = new Image(200,200);
-        image.src = "http://cdna.pcpartpicker.com/static/forever/images/userbuild/358512.a97c3b2732e2a4d83247e1105f455c63.512.jpg"
+        image.src = "http://cdna.pcpartpicker.com/static/forever/images/userbuild/359220.7c4372b4c03e37f96b3a4e02c2d1d6f0.512.jpg"
         buildimage.appendChild(image);
         blockbuild.appendChild(buildimage);
 
