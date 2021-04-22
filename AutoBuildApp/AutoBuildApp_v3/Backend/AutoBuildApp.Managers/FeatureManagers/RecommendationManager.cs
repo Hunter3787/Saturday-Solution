@@ -4,6 +4,7 @@ using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Services.FactoryServices;
 using AutoBuildApp.Services.RecommendationServices;
+using AutoBuildApp.Services.CatalogServices;
 using AutoBuildApp.DataAccess;
 using AutoBuildApp.Security.FactoryModels;
 using AutoBuildApp.Security.Interfaces;
@@ -25,8 +26,8 @@ namespace AutoBuildApp.Managers
     {
         // Local constant for minimum budget.
         private readonly string _connectionString;
-        private RecommendationDAO _dao;
-        private IClaims _unregistered;
+        private readonly RecommendationDAO _dao;
+        private readonly IClaims _unregistered;
 
         #region "Constructors"
         /// <summary>
@@ -59,9 +60,13 @@ namespace AutoBuildApp.Managers
         /// <param name="hddCount">Number of hard drives that the user
         /// would like to be in their final build.(Optional)</param>
         /// <returns>A list of IBuild representing the recommended builds.</returns>
-        public List<IBuild> RecommendBuilds(BuildType requestedType, double initialBudget,
-                    List<IComponent> peripherals, PSUModularity psuType,
-                    HardDriveType hddType, int hddCount)
+        public List<IBuild> RecommendBuilds(
+            BuildType requestedType,
+            double initialBudget,
+            List<IComponent> peripherals,
+            PSUModularity psuType,
+            HardDriveType hddType,
+            int hddCount)
         {
             #region Guards
             if (!AuthorizationService.checkPermissions(_unregistered.Claims()))
@@ -82,12 +87,14 @@ namespace AutoBuildApp.Managers
             #region Initializations
             Dictionary<ProductType, List<IComponent>> products = new Dictionary<ProductType, List<IComponent>>();
             Dictionary<IComponent, int> scores = new Dictionary<IComponent, int>();
-            ComponentComparisonService comparator = new ComponentComparisonService();
+            //ComponentComparisonService comparator = new ComponentComparisonService();
             GetComponentsService getter = new GetComponentsService(_dao);
             PortionBudgetService portioner = new PortionBudgetService();
+            HardDriveFactory driveFacorty = new HardDriveFactory();
             BuildParsingService parser = new BuildParsingService();
+            BuildFactory buildFactory = new BuildFactory();
             List<IBuild> buildRecommendations = new List<IBuild>();
-            IBuild prototype = BuildFactory.CreateBuild(requestedType);
+            IBuild prototype = buildFactory.CreateBuild(requestedType);
             double adjustedBudget = initialBudget;
             #endregion
 
@@ -112,17 +119,22 @@ namespace AutoBuildApp.Managers
             #region Advanced option initialization
             if (psuType != PSUModularity.None)
             {
-                prototype.Psu = PSUFactory.CreatePSU(psuType);
+                prototype.Psu.PsuType = psuType;
             }
 
-            if(hddType != HardDriveType.None && hddCount > RecBusinessGlobals.MIN_INTEGER_VALUE)
+            if(hddType != HardDriveType.None
+                && hddCount > RecBusinessGlobals.MIN_INTEGER_VALUE)
             {
-                prototype.HardDrives = new List<IHardDrive>() { HarDriveFactory.CreateHardDrive(hddType) };
+                var hddToAdd = driveFacorty.CreateHardDrive(hddType);
+                prototype.AddHardDrive(hddToAdd);
             }
             #endregion
 
             var componentList = parser.CreateComponentList(prototype);
-            var portionedList = portioner.PortionOutBudget(componentList, requestedType, adjustedBudget);
+            var portionedList = portioner.PortionOutBudget(
+                componentList,
+                requestedType,
+                adjustedBudget);
 
             products = getter.GetProductDictionary(portionedList);
             ScoreProductDictionary(products, scores, requestedType);
@@ -130,7 +142,7 @@ namespace AutoBuildApp.Managers
             // Business rule to create 5 builds and return them all.
             for (int i = 0; i < RecBusinessGlobals.BUILDS_TO_RETURN; i++)
             {
-                IBuild build = BuildFactory.CreateBuild(requestedType);
+                IBuild build = buildFactory.CreateBuild(requestedType);
                 // Add preselected peripherals.
                 build.Peripherals = peripherals;
 

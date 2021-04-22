@@ -13,7 +13,6 @@ namespace AutoBuildApp.Models.Products
     {
 
         #region "Field Declarations: get; set;"
-        public HardDriveType HardDriveType { get; set; }
         public string ModelNumber { get; set; }
         public ProductType ProductType { get; set; }
         public string ProductName { get; set; }
@@ -30,6 +29,7 @@ namespace AutoBuildApp.Models.Products
         public SolidStateDrive()
         {
             ProductImageStrings = new List<string>();
+            DriveType = HardDriveType.SSD;
         }
 
         #region "Interface Implementations"

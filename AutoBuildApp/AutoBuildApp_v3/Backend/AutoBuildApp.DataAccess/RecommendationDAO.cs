@@ -1,9 +1,12 @@
-﻿using AutoBuildApp.Models.Interfaces;
+﻿using AutoBuildApp.DataAccess.Abstractions;
+using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Enumerations;
+using AutoBuildApp.DataAccess.Entities;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System;
+
 /**
 * This Data Access Object will handle collection and transformation of 
 * infromation coming from the database to be usable inside the Builder.
@@ -16,13 +19,33 @@ namespace AutoBuildApp.DataAccess
     /// Class to access the database while
     /// using the Recommendation tool.
     /// </summary>
-    public class RecommendationDAO
+    public class RecommendationDAO : IProductDAO
     {
+        // Connection String
         private readonly string _connectionString;
 
+        /// <summary>
+        /// Consturctor
+        /// </summary>
+        /// <param name="connectionString"></param>
         public RecommendationDAO(string connectionString)
         {
             _connectionString = connectionString;
+        }
+
+        public List<ProductEntity> GetAllProductEntities()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<ProductEntity> GetEntities(List<System.ComponentModel.IComponent> toFind)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<ProductEntity> GetEntitiesByType(ProductType type)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -30,13 +53,14 @@ namespace AutoBuildApp.DataAccess
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public Dictionary<ProductType, List<IComponent>>
-            GetComponentDictionary(List<IComponent> input)
+        public Dictionary<ProductType, List<IComponent>> GetProductsByList(
+            List<IComponent> input)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                Dictionary<ProductType, List<IComponent>> output = new Dictionary<ProductType, List<IComponent>>();
+                Dictionary<ProductType, List<IComponent>> output
+                    = new Dictionary<ProductType, List<IComponent>>();
 
                 var stored = "Search_ProductBudget";
                 using ( var command = new SqlCommand())
