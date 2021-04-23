@@ -24,14 +24,14 @@
                 <div class="field">
                     <label>Enter Title:</label>
                     <div class="title-input">
-                        <input type="text" class="text-field" id="add-title" placeholder="title">
+                        <input type="text" class="text-field" id="add-title" placeholder="title" required>
                     </div>
                 </div>
 
                 <div class="field">
                     <label>Enter Username:</label>
                     <div class="username-input">
-                        <input type="text" class="text-field" id="add-username" placeholder="username">
+                        <input type="text" class="text-field" id="add-username" placeholder="username" required>
                     </div>
                 </div>
 
@@ -39,7 +39,7 @@
                     <label>Build Type:</label>
                     <div class="build-type-input">
                         <div class="type-selection">
-                            <input type="radio" id="one" name="build-type" value="1">
+                            <input type="radio" id="one" name="build-type" value="1" required>
                             <label>Graphic Artist</label>
                         </div>
                         <div class="type-selection">
@@ -56,7 +56,7 @@
                 <div class="field">
                     <label>Enter Description:</label>
                     <div class="description-input">
-                        <textarea id="add-description" placeholder="review"></textarea>
+                        <textarea id="add-description" placeholder="review" required></textarea>
                     </div>
                 </div>
 
@@ -66,11 +66,11 @@
                 </div>
 
                 <div class="field">
-                    <input type="file" class="custom-upload" id="add-image">
+                    <input type="file" class="custom-upload" id="add-image" required>
                 </div>
 
                 <div class="field">
-                    <input type="submit" class="submit-btn" value="Submit build">
+                    <input type="submit" class="submit-btn" value="Submit Build">
                 </div>
 
             </form>

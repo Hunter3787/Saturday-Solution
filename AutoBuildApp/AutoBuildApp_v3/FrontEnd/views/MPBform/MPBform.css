@@ -4,7 +4,8 @@
 
 body {
     font-family: Arial;
-    margin: 0; 
+    margin: 0;
+    background-color: whitesmoke; 
   }
 
   .character-count {
@@ -21,14 +22,14 @@ body {
     color: white;
     padding: 8px;
     font-family: Arial;
-    background-color: #2ECC71;
+    background-color: #00c851 ;
     border-radius: 25px;
   }
 
   .formheader {
     padding: 10px;
     text-align: center;
-    background: #5DADE2;
+    background: #4285f4;
     color: white;
     overflow: auto hidden;
     height: 100px;
@@ -53,30 +54,6 @@ body {
     padding-top: 10px;
   }
 
-  .formdetails .submit-btn {
-    width: 50%;
-    padding: 10px;
-    cursor: pointer;
-    display: block;
-    margin-top: 2rem;
-    margin-left: auto;
-    margin-right: auto;
-    background: lightgrey;
-    border: 0;
-    outline: none;
-    border-radius: 50px;
-    color:rgb(47, 72, 79);
-    font-size: 18px;
-    font-weight: lighter;
-  }
-
-  .formdetails .submit-btn:hover {
-    color: black;
-    font-weight: bold;
-    box-shadow: 0 0 20px 9px #01168f1f;
-    background: #5DADE2;
-  }
-
   .formdetails .text-field {
     border: none;
     appearance: none;
@@ -98,4 +75,37 @@ body {
     padding: 12px 20px;
     width: 75%;
     height: 150px;
+  }
+
+  .formdetails .submit-btn {
+    padding: 10px;
+    cursor: pointer;
+    display: block;
+    margin-top: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+    background: #4285f4;
+    outline: none;
+    border-radius: .25rem;
+    color:rgb(47, 72, 79);
+    font-size: 1rem;
+    font-weight: 400;
+    border-color: #007bff;
+    border: 1px solid transparent;
+    color: #fff;
+    text-transform: uppercase;
+    line-height: 1.5;
+    transition: .15s ease-in-out;
+    transition-property: color, background-color, border-color, box-shadow;
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);  
+  }
+
+  .formdetails .submit-btn:hover {
+    border-color: #0062cc;
+    box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
+  }
+  .formdetails .submit-btn:active {
+    border-color: #005cbf;
+    background-color: #0b51c5;
+    box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
   }
