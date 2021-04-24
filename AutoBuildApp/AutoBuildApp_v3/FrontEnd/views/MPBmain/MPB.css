@@ -51,7 +51,7 @@ body {
     display: block;
     width: 100%;
     border: none;
-    background-color: #3498DB;
+    background-color: #4285f4;
     padding: 14px 28px;
     font-size: 16px;
     cursor: pointer;
@@ -59,12 +59,14 @@ body {
   }
 
   .sidenav .postbutton:hover {
-    background-color: #1F618D;
-    color: black;
+    border-color: #0062cc;
+    box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
   }
 
-  .sidenav .postbutton:focus {
-      outline: none;
+  .sidenav .postbutton:active {
+    border-color: #005cbf;
+    background-color: #0b51c5;
+    box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
   }
   
   .main {
