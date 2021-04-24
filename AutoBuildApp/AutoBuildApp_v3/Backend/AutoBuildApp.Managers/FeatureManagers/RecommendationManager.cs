@@ -26,7 +26,7 @@ namespace AutoBuildApp.Managers
     {
         // Local constant for minimum budget.
         private readonly string _connectionString;
-        private readonly RecommendationDAO _dao;
+        private readonly ProductDAO _dao;
         private readonly IClaims _unregistered;
 
         #region "Constructors"
@@ -41,7 +41,7 @@ namespace AutoBuildApp.Managers
             _unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
 
             _connectionString = connectionString;
-            _dao = new RecommendationDAO(_connectionString);
+            _dao = new ProductDAO(_connectionString);
         }
         #endregion
 
