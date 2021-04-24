@@ -21,12 +21,17 @@ namespace AutoBuildApp.Api.HelperFunctions
             // setting a default principle object t=for the thread.
             #region Instantiating the Claims principle
 
+
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
             IClaims unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
             /// NOTE: passed in the claims only to the claimsIdentity and not userIdentity 
             /// as "AutoBuild User" since that will trigger the read only value of is authenticated to 
             /// be True, when in fact the user is not
             /// authenticated.
+            /// 
+
+            //UserIdentity guestUser = new UserIdentity();
+            // https://leastprivilege.com/2012/09/24/claimsidentity-isauthenticated-and-authenticationtype-in-net-4-5/ 
             ClaimsIdentity identity = new 
                 ClaimsIdentity(unregistered.Claims());
             ClaimsPrincipal _principal = new ClaimsPrincipal(identity);
