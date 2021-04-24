@@ -1,4 +1,5 @@
-﻿using AutoBuildApp.Security;
+﻿using AutoBuildApp.Api.HelperFunctions;
+using AutoBuildApp.Security;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
 using AutoBuildApp.Security.Interfaces;
@@ -33,7 +34,19 @@ namespace AutoBuildApp.Api.Controllers
             /// 
             _admin = _claimsFactory.GetClaims(RoleEnumType.BASIC_ADMIN);
 
-          
+
+            #region getting the connection string and passing to the loginmanager
+            // created a connection manager to access the connection strings in 
+            // 1) the app settings .json file
+            ConnectionManager conString = ConnectionManager.connectionManager;
+            // 2) passing in the name I assigned my connection string 
+            string connection = conString.GetConnectionStringByName("MyConnection");
+            // Console.WriteLine($"connection string passed in controller: {connection} ");
+            //3) connection string passed to the analytics manager
+            #endregion
+
+
+
 
         }
 
