@@ -154,12 +154,18 @@ namespace AutoBuildApp.Services.FeatureServices
         /// <returns>returns boolean success state.</returns>
         public async Task<string> UploadImage(string username, List<IFormFile> files)
         {
-            string path = " ";
+            string storeIn = " ";
             foreach (var item in files)
             {
                 if (item.Length > 0)
                 {
-                    path = $"C:/Users/Serge/Desktop/imagesTest/{username}_{DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}.jpg";
+                    var currentDirectory = Directory.GetCurrentDirectory().ToString();
+
+                    storeIn = $"/assets/images/MPB/{username}_{ DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}.jpg";
+
+                    var path = Path.GetFullPath(Path.Combine(currentDirectory, $@"..\..\FrontEnd{storeIn}"));
+
+                    Console.WriteLine(storeIn);
 
                     using (var stream = new FileStream(path, FileMode.CreateNew, FileAccess.ReadWrite))
                     {
@@ -167,7 +173,7 @@ namespace AutoBuildApp.Services.FeatureServices
                     }
                 }
             }
-            return path;
+            return storeIn;
         }
     }
 }

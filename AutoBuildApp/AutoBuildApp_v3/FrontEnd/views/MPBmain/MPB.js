@@ -72,8 +72,9 @@ function displayItems(data) {
         // create the div element that encapsulates the image and then appends all to a block build.
         var buildimage = document.createElement('div');
         buildimage.classList.add('buildimage');
-        var image = new Image(200,200);
-        image.src = "http://cdna.pcpartpicker.com/static/forever/images/userbuild/359220.7c4372b4c03e37f96b3a4e02c2d1d6f0.512.jpg"
+        var image = document.createElement("img");
+        //image.src = "http://cdna.pcpartpicker.com/static/forever/images/userbuild/359220.7c4372b4c03e37f96b3a4e02c2d1d6f0.512.jpg"
+        image.src = item["buildImagePath"];
         buildimage.appendChild(image);
         blockbuild.appendChild(buildimage);
 
@@ -91,7 +92,20 @@ function displayItems(data) {
 
         // creates the build type element, appends text to it, and then appends all to a build block.
         var buildtype = document.createElement('p');
-        var buildtypetext = document.createTextNode("build: " + item["buildType"]);
+
+
+        var build = "None";
+
+        if (item["buildType"] === 1)
+          build = "Graphic Artist";
+        else if (item["buildType"] === 2)
+          build = "Gaming";
+        else if (item["buildType"] === 3)
+          build = "Word Processing";
+
+        
+
+        var buildtypetext = document.createTextNode("build: " + build);
         buildtype.appendChild(buildtypetext);
         blockbuild.appendChild(buildtype);
 
