@@ -22,41 +22,41 @@
             <form action="javascript:void(0);" id="publish-form">
 
                 <div class="field">
-                    <label>Enter Title:</label>
+                    <label class="field-label">Enter Title:</label>
                     <div class="title-input">
                         <input type="text" class="text-field" id="add-title" placeholder="title" required>
                     </div>
                 </div>
 
                 <div class="field">
-                    <label>Enter Username:</label>
+                    <label class="field-label">Enter Username:</label>
                     <div class="username-input">
                         <input type="text" class="text-field" id="add-username" placeholder="username" required>
                     </div>
                 </div>
 
                 <div class="field">
-                    <label>Build Type:</label>
+                    <label class="field-label">Build Type:</label>
                     <div class="build-type-input">
                         <div class="type-selection">
                             <input type="radio" id="one" name="build-type" value="1" required>
-                            <label>Graphic Artist</label>
+                            <label class="build-type-radio" for="one">Graphic Artist</label>
                         </div>
                         <div class="type-selection">
                             <input type="radio" id="two" name="build-type" value="2">
-                            <label for="two">Gaming</label>
+                            <label class="build-type-radio" for="two">Gaming</label>
                         </div>
                         <div class="type-selection">
                             <input type="radio" id="three" name="build-type" value="3">
-                            <label for="three">Word Processing</label>
+                            <label class="build-type-radio" for="three">Word Processing</label>
                         </div>
                     </div>
                 </div>
 
                 <div class="field">
-                    <label>Enter Description:</label>
+                    <label class="field-label">Enter Description:</label>
                     <div class="description-input">
-                        <textarea id="add-description" placeholder="review" required></textarea>
+                        <textarea class="custom-textarea" id="add-description" placeholder="review" required></textarea>
                     </div>
                 </div>
 
