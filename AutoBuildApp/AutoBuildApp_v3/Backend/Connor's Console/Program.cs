@@ -80,7 +80,7 @@ namespace Connor_s_Console
             //Console.WriteLine(userManagementManager.DeleteUser("pepper@gmail.com"));
 
             Console.WriteLine("----------------------");
-            Console.WriteLine(userManagementManager.ChangePermissions("Senior Admin"));
+            Console.WriteLine(userManagementManager.ChangePermissions(RoleEnumType.SENIOR_ADMIN));
             Console.WriteLine(userManagementManager.ChangeLockState(RoleEnumType.LOCKED));
         }
     }
