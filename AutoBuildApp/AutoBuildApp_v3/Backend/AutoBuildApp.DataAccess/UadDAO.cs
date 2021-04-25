@@ -150,7 +150,7 @@ namespace AutoBuildApp.DataAccess
                         }
 
                         //READ AND STORE ALL THE ORDINALS YOU NEED
-                        int X_Value = _reader.GetOrdinal("X_Value");
+                        int X_Value = _reader.GetOrdinal("X_Value"); // no magic 
                         int Y_Value = _reader.GetOrdinal("Y_Value");
                         int Legend = _reader.GetOrdinal("Legend");
 

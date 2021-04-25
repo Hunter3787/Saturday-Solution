@@ -9,7 +9,10 @@ namespace AutoBuildApp.DomainModels.Enumerations
     /// the client know what type of 
     /// chart the data is to display as needed!
     /// </summary>
-    class ChartType
+    public enum ChartType
     {
+        NONE,
+        LINECHART,
+        BARCHART
     }
 }

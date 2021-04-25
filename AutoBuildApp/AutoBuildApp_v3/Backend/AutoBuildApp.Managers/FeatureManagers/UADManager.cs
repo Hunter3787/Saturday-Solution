@@ -14,17 +14,18 @@ namespace AutoBuildApp.Managers.FeatureManagers
 
         private ResponseUAD _responseUAD;
 
+        private List<Charts> _AnalyticCharts;
 
         public UADManager(string _cnnctString)
         {
             _uadDAO = new UadDAO(_cnnctString);
+            _AnalyticCharts = new List<Charts>();
 
         }
         /// here in the manager we need to get the data 
         /// from the UAD DAO and populate into graphs with actual values.
         /// 
-
-
+        
         ///the controller will call the getAll method here that
         /// will get all data
         /// 
@@ -32,13 +33,13 @@ namespace AutoBuildApp.Managers.FeatureManagers
         public IList<Charts> getAllChartData()
         {
             var data  = _uadDAO.GetAllAnalytics();
-            /// so here is the work part, I already know what to populate
-            /// into the charts but since they are all of type charts I can 
-            /// just leave the actual chart drawing in the from and 
-            /// just send back the list of chart data within the list of charts
-            /// its easier. data is data, objects are onjects so yeah.
 
-
+            ///
+            /// will populate each charts object
+            /// then will add it to the _analiticCharts 
+            /// thislist of chart object will be sent back 
+            /// and the front will populate the charts based off
+            /// of the chart type and data. 
             return null;
         }
 

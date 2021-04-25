@@ -6,7 +6,7 @@ using System.Text;
 
 namespace AutoBuildApp.DomainModels
 {
-    public class BarChart : Charts
+    class BarChart : Charts
     {
         public IList<ChartData> ChartDatas;
         int BarSpace { get; set; }
