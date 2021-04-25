@@ -96,6 +96,7 @@ namespace AutoBuildApp.DataAccess
                     {
                         if(ProductExists(product.ModelNumber))
                         {
+                            Console.WriteLine("already exists");
                             return false;
                         }
 
@@ -241,6 +242,7 @@ namespace AutoBuildApp.DataAccess
                             "(select vendorID from vendorclub where vendorName = @VENDORNAME),(select productID from products where modelNumber = @MODELNUMBER), @PRODUCTNAME, @VENDORIMAGEURL, " +
                             "@VENDORLINKURL, @PRODUCTSTATUS, @PRODUCTPRICE, @RATING, @REVIEWS)";
 
+                        //double parsedPrice = (product.Price == null) ? DBNull. : Double.Parse(product.Price.Replace("$", "").Replace(",", ""));
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
                         adapter.InsertCommand.Parameters.Add("@VENDORIMAGEURL", SqlDbType.VarChar).Value = product.ImageUrl;
                         adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = vendor;
@@ -248,7 +250,14 @@ namespace AutoBuildApp.DataAccess
                         adapter.InsertCommand.Parameters.Add("@PRODUCTNAME", SqlDbType.VarChar).Value = product.Name;
                         adapter.InsertCommand.Parameters.Add("@VENDORLINKURL", SqlDbType.VarChar).Value = product.Url;
                         adapter.InsertCommand.Parameters.Add("@PRODUCTSTATUS", SqlDbType.VarChar).Value = product.Availability ;
-                        adapter.InsertCommand.Parameters.Add("@PRODUCTPRICE", SqlDbType.VarChar).Value = Double.Parse(product.Price.Replace("$","").Replace(",", ""));
+                        if(product.Price == null)
+                        {
+                            adapter.InsertCommand.Parameters.Add("@PRODUCTPRICE", SqlDbType.Decimal).Value = DBNull.Value;
+                        }
+                        else
+                        {
+                            adapter.InsertCommand.Parameters.Add("@PRODUCTPRICE", SqlDbType.Decimal).Value = Double.Parse(product.Price.Replace("$", "").Replace(",", ""));
+                        }
                         adapter.InsertCommand.Parameters.Add("@RATING", SqlDbType.VarChar).Value = product.TotalRating;
                         adapter.InsertCommand.Parameters.Add("@REVIEWS", SqlDbType.VarChar).Value = product.TotalNumberOfReviews;
 
