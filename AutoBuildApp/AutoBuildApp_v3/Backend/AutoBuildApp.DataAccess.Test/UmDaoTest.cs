@@ -1,4 +1,4 @@
-using AutoBuildApp.Api.HelperFunctions;
+﻿using AutoBuildApp.Api.HelperFunctions;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
 using AutoBuildApp.Security.Interfaces;
@@ -30,7 +30,12 @@ namespace AutoBuildApp.DataAccess.Test
         {
 
             IClaims basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
-            IClaims admin = claimsFactory.GetClaims(RoleEnumType.BASIC_ADMIN);
+            IClaims basicAdmin = claimsFactory.GetClaims(RoleEnumType.BASIC_ADMIN);
+            IClaims midLevelAdmin = claimsFactory.GetClaims(RoleEnumType.MIDLEVEL_ADMIN);
+            IClaims seniorAdmin = claimsFactory.GetClaims(RoleEnumType.SENIOR_ADMIN);
+            IClaims vendor = claimsFactory.GetClaims(RoleEnumType.VENDOR_ROLE);
+            IClaims developer = claimsFactory.GetClaims(RoleEnumType.DEVELOPER_ROLE);
+            IClaims unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
 
 
 
@@ -39,7 +44,12 @@ namespace AutoBuildApp.DataAccess.Test
             {
                 // here I instatiate objects that carry the secret key, the JWTHeader object and the JWTPayload object
                new object[]{basic.Claims()}, 
-               //new object[]{admin.Claims()}
+               new object[]{basicAdmin.Claims()},
+               new object[]{midLevelAdmin.Claims()},
+               new object[]{seniorAdmin.Claims()},
+               new object[]{vendor.Claims()},
+               new object[]{developer.Claims()},
+               new object[]{unregistered.Claims()},
             };
 
         }
@@ -51,13 +61,16 @@ namespace AutoBuildApp.DataAccess.Test
         {
 
             IClaims basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
+            IClaims admin = claimsFactory.GetClaims(RoleEnumType.SENIOR_ADMIN);
+            IClaims vendor = claimsFactory.GetClaims(RoleEnumType.VENDOR_ROLE);
+
             Console.WriteLine(connection);
-            string username = "NEW_USERNAME1";
+            string username = "KoolTrini";
             UserManagementDAO UMDAO = new UserManagementDAO(connection);
             string result = "";
 
 
-            result = UMDAO.ChangePermissionsDB(username, basic.Claims());
+            result = UMDAO.ChangePermissionsDB(username, vendor.Claims());
 
             Assert.AreEqual("permissions have been successfully updated", result);
 

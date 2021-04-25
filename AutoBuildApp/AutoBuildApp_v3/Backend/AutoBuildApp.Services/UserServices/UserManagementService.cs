@@ -42,6 +42,16 @@ namespace AutoBuildApp.Services.UserServices
         }
 
 
+       
+
+        public string ChangeState()
+        {
+            int role;
+            Console.WriteLine("User select");
+            return "";
+        }
+
+
 
         //public virtual String CreateUser(UserAccount user)
         //{

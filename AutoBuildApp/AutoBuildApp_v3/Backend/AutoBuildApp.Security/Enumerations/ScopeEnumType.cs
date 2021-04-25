@@ -17,6 +17,8 @@ namespace AutoBuildApp.Security.Enumerations
         public const string UAD = "UAD";
         public const string ADMIN_DASHBOARD = "ADMIN_DASHBOARD";
         public const string ALL_USERS = "ALL_USERS";
+        public const string REGISTRATION = "REGISTRATION";
+        public const string LOGIN = "LOGIN";
 
 
     }
