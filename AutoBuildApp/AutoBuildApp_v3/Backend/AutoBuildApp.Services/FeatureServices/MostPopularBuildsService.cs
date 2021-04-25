@@ -2,9 +2,12 @@
 using AutoBuildApp.DataAccess.Entities;
 using AutoBuildApp.DomainModels;
 using AutoBuildApp.Models.Enumerations;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AutoBuildApp.Services.FeatureServices
 {
@@ -141,6 +144,36 @@ namespace AutoBuildApp.Services.FeatureServices
             };
 
             return buildPost;
+        }
+
+        /// <summary>
+        /// This method takes in a list of files and uploads it to a folder.
+        /// </summary>
+        /// <param name="username">takes in a username string</param>
+        /// <param name="files">takes in a list of IFormFile</param>
+        /// <returns>returns boolean success state.</returns>
+        public async Task<string> UploadImage(string username, List<IFormFile> files)
+        {
+            string storeIn = " ";
+            foreach (var item in files)
+            {
+                if (item.Length > 0)
+                {
+                    var currentDirectory = Directory.GetCurrentDirectory().ToString();
+
+                    storeIn = $"/assets/images/MPB/{username}_{ DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}.jpg";
+
+                    var path = Path.GetFullPath(Path.Combine(currentDirectory, $@"..\..\FrontEnd{storeIn}"));
+
+                    Console.WriteLine(storeIn);
+
+                    using (var stream = new FileStream(path, FileMode.CreateNew, FileAccess.ReadWrite))
+                    {
+                        await item.CopyToAsync(stream);
+                    }
+                }
+            }
+            return storeIn;
         }
     }
 }

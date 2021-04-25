@@ -11,14 +11,31 @@ const fetchRequest = {
     }
 };
 
-function getItems() {
-    fetch(uri, fetchRequest) // fetches the default URI
-        .then(response => response.json()) // Will receive a response from the default response.json.
-        .then(data => displayItems(data)) // will call the display items function.
-        .catch(error => console.error('Unable to get items.', error)); // will catch an error and print the appropriate error message in console.
+function process(){
+  getItems();
 }
 
+function looping(){
+  setTimeout(process, 3000);
+}
+
+var refreshData = setInterval(looping, 3000);
+
+async function getItems() {
+    await fetch(uri, fetchRequest) // fetches the default URI
+        .then(response => response.json()) // Will receive a response from the default response.json.
+        .then(data => displayItems(data)) // will call the display items function.
+        .then(console.log("reloaded"))
+        .catch(error => console.error('Unable to get items.', error)); // will catch an error and print the appropriate error message in console.
+    //refreshData;
+}
+
+
+
 function displayItems(data) {
+
+    const innerDiv = document.getElementById('main'); // This will get the id of the form from the HTML.
+    innerDiv.innerHTML = ''; // appends a null value to the inner HTML, as is not required.
 
     // This function will create a table, and append values for each column and iterate to the next row of items.
     data.forEach(item => {
@@ -48,33 +65,47 @@ function displayItems(data) {
 
         // create a title element, appends text to it, and then appends all to a build block.
         var title = document.createElement('p');
-        var titletext = document.createTextNode("title: "+ item["title"]);
+        var titletext = document.createTextNode("Title: "+ item["title"]);
         title.appendChild(titletext);
         blockbuild.appendChild(title);
 
         // create the div element that encapsulates the image and then appends all to a block build.
         var buildimage = document.createElement('div');
         buildimage.classList.add('buildimage');
-        var image = new Image(200,200);
-        image.src = "http://cdna.pcpartpicker.com/static/forever/images/userbuild/358512.a97c3b2732e2a4d83247e1105f455c63.512.jpg"
+        var image = document.createElement("img");
+        //image.src = "http://cdna.pcpartpicker.com/static/forever/images/userbuild/359220.7c4372b4c03e37f96b3a4e02c2d1d6f0.512.jpg"
+        image.src = item["buildImagePath"];
         buildimage.appendChild(image);
         blockbuild.appendChild(buildimage);
 
         // creates the username element, appends text to it, and then appends all to a build block.
         var username = document.createElement('p');
-        var usernametext = document.createTextNode("user: " + item["username"]);
+        var usernametext = document.createTextNode("User: " + item["username"]);
         username.appendChild(usernametext);
         blockbuild.appendChild(username);
 
         // creates the likes element, appends text to it, and then appends all to a build block.
         var likes = document.createElement('p');
-        var likestext = document.createTextNode("likes: " + item["likeIncrementor"]);
+        var likestext = document.createTextNode("Likes: " + item["likeIncrementor"]);
         likes.appendChild(likestext);
         blockbuild.appendChild(likes);
 
         // creates the build type element, appends text to it, and then appends all to a build block.
         var buildtype = document.createElement('p');
-        var buildtypetext = document.createTextNode("build: " + item["buildType"]);
+
+
+        var build = "None";
+
+        if (item["buildType"] === 1)
+          build = "Graphic Artist";
+        else if (item["buildType"] === 2)
+          build = "Gaming";
+        else if (item["buildType"] === 3)
+          build = "Word Processing";
+
+        
+
+        var buildtypetext = document.createTextNode("Build: " + build);
         buildtype.appendChild(buildtypetext);
         blockbuild.appendChild(buildtype);
 

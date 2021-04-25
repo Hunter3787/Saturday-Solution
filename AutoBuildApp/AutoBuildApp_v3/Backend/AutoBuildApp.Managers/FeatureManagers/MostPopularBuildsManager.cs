@@ -2,10 +2,14 @@
 using AutoBuildApp.DomainModels.Exceptions;
 using AutoBuildApp.Services;
 using AutoBuildApp.Services.FeatureServices;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace AutoBuildApp.Managers
 {
@@ -35,7 +39,7 @@ namespace AutoBuildApp.Managers
         /// </summary>
         /// <param name="buildPost">takes in a build post object from the controller.</param>
         /// <returns>success state bool value.</returns>
-        public bool PublishBuild(BuildPost buildPost)
+        public async Task<bool> PublishBuild(BuildPost buildPost)
         {
             // This try/catch block checks for a null BuildPost object.
             try
@@ -57,8 +61,7 @@ namespace AutoBuildApp.Managers
             // This try/catch block checks for a null var in a BuildPost object.
             try
             {
-                if (buildPost.Username == null || buildPost.Title == null || buildPost.Description == null ||
-                    buildPost.BuildImagePath == null || buildPost.DateTime == null)
+                if (buildPost.Username == null || buildPost.Title == null || buildPost.Description == null)
                 {
                     throw new NullReferenceException("A null object variable was passed through the method parameters");
                 }
@@ -139,6 +142,9 @@ namespace AutoBuildApp.Managers
             buildPost.LikeIncrementor = 0; // A new post should have a start of 0 likes. This ensures that.
 
             buildPost.DateTime = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF"); // sets the current date time to this variable.
+
+            // async call to save an image to a filepath.
+            buildPost.BuildImagePath = await _mostPopularBuildsService.UploadImage(buildPost.Username, buildPost.Image);
 
             // TODO: implement service return method.
             return _mostPopularBuildsService.PublishBuild(buildPost);

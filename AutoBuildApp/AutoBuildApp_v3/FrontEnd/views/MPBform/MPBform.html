@@ -19,41 +19,64 @@
         </div>
 
         <div class="formdetails">
-            <form action="javascript:void(0);" method="POST" onsubmit="addItem()">
-                <br /><label>Enter Username:</label><br />
-                <input type="text" id="add-username" placeholder="username">
-                <br />
-                <br />
-                <label>Enter Description:</label>
-                <br />
-                <textarea onkeyup="textCounter(this,'counter',10000);" id="add-message" rows="10" cols="100" placeholder="review"></textarea>
-                <br />
-                <label>Characters left:</label>
-                <input disabled maxlength="3" size="3" value="10000" id="counter">
-                <br />
-                <br />
-                <label>Enter Path to image file:</label><br />
-                <input type="text" id="add-imagepath" placeholder="file path">
-                <br />
-                <br />
-                <input type="file" id="add-imagepath" placeholder="file path">
-                <br />
-                <br />
-                <input type="submit" value="Submit build" class="submit-btn" onclick="location.href='../MPBmain/MPB.html';">
+            <form action="javascript:void(0);" id="publish-form">
+
+                <div class="field">
+                    <label class="field-label">Enter Title:</label>
+                    <div class="title-input">
+                        <input type="text" class="text-field" id="add-title" placeholder="title" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="field-label">Enter Username:</label>
+                    <div class="username-input">
+                        <input type="text" class="text-field" id="add-username" placeholder="username" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="field-label">Build Type:</label>
+                    <div class="build-type-input">
+                        <div class="type-selection">
+                            <input type="radio" id="one" name="build-type" value="1" required>
+                            <label class="build-type-radio" for="one">Graphic Artist</label>
+                        </div>
+                        <div class="type-selection">
+                            <input type="radio" id="two" name="build-type" value="2">
+                            <label class="build-type-radio" for="two">Gaming</label>
+                        </div>
+                        <div class="type-selection">
+                            <input type="radio" id="three" name="build-type" value="3">
+                            <label class="build-type-radio" for="three">Word Processing</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="field-label">Enter Description:</label>
+                    <div class="description-input">
+                        <textarea class="custom-textarea" id="add-description" placeholder="review" required></textarea>
+                    </div>
+                </div>
+
+                <div class="characters-left">
+                    <label class="character-count">Characters left:</label>
+                    <span class="count" id="counter">10000</span>
+                </div>
+
+                <div class="field">
+                    <input type="file" class="custom-upload" id="add-image">
+                </div>
+
+                <div class="field">
+                    <input type="submit" class="submit-btn" value="Submit Build">
+                </div>
+
             </form>
         </div>
 
+        <script src="MPBform.js" asp-append-version="true" async defer></script>
         <script src="" async defer></script>
-        <script>
-            function textCounter(field, field2, maxlimit) {
-                var countfield = document.getElementById(field2);
-                if (field.value.length > maxlimit) {
-                    field.value = field.value.substring(0, maxlimit);
-                    return false;
-                } else {
-                    countfield.value = maxlimit - field.value.length;
-                }
-            }
-        </script>
     </body>
 </html>

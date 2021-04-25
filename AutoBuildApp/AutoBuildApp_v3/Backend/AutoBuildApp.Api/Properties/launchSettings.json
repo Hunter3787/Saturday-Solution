@@ -12,15 +12,21 @@
     "IIS Express": {
       "commandName": "IISExpress",
       //"launchUrl": "authentication",
+      //"launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "AutoBuildApp.Api": {
       "commandName": "Project",
+      "launchBrowser": false,
+      "launchUrl": "authentication",
+      "applicationUrl": "https://localhost:5001;http://localhost:5000",
+
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
+
     }
   }
-}
+}  

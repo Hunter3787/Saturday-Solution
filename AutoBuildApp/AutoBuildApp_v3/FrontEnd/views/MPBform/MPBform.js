@@ -1,73 +1,68 @@
-const uri = 'https://localhost:44317/reviewrating';
+const uri = 'https://localhost:5001/MostPopularBuilds';
 let posts = [];
+let token = ' ';
+const fetchRequest = {
+    method: 'GET',
+    mode: 'cors',
+};
 
-function getItems() {
-    fetch('https://localhost:44317/MostPopularBuilds') // fetches the default URI
-        .then(response => response.json()) // Will revieve a response from the default response.json.
-        .then(data => _displayItems(data)) // will call the display items function.
-        .catch(error => console.error('Unable to get items.', error)); // will catch an error and print the appropriate error message in console.
+// "textCounter(this,'counter',10000);"
+
+let counter = document.getElementById('add-description');
+counter.addEventListener("keyup", () => textCounter(counter, 'counter', 10000));
+
+let form = document.getElementById('publish-form');
+form.addEventListener("submit", () => addItem()); // lambda function for redirecting on click.
+
+// This function will add an item to the DB.
+function addItem() {
+
+    // Initializes a FormData object.
+    let formData = new FormData();
+
+    // initialize an object for the build type value to be stored in.
+    let buildTypeValue;
+
+    let title = document.getElementById('add-title'); // will get the value from the html element and store it.
+    let username = document.getElementById('add-username'); // will get the value from the html element and store it.
+    let description = document.getElementById('add-description'); // will get the value from the html element description and store it.
+    let photo = document.getElementById("add-image").files[0]; // store the file in the photo variable.
+    let buildType = document.getElementsByName("build-type");
+
+    // This for loop will iterate through the radio elements and find which one is checked.
+    for (let i = 0; i < buildType.length; i++)
+    {
+        if (buildType[i].checked)
+        {
+            buildTypeValue = buildType[i].value
+        }
+    }
+
+    console.log(buildTypeValue);
+
+    // The next 6 lines will store the above data in the formData object.
+    formData.append("username", username.value.trim());
+    formData.append("title", title.value.trim());
+    formData.append("description", description.value.trim());
+    formData.append("buildType", buildTypeValue);
+    formData.append("buildImagePath", "C:/Test/Directory");
+    formData.append("image", photo);
+
+    // Overrides the constant fetchRequest with custom attributes.
+    let customRequest = Object.assign(fetchRequest, {method: 'POST', body: formData});
+
+    // Makes a fetch request to the controller with the specified attributes.
+    fetch(uri, customRequest);
 }
 
-function _displayItems(data) {
+// This function acts as a counter for the textarea field to show how many characters remain.
+function textCounter(field, field2, maxlimit) {
+    let countfield = document.getElementById(field2);
 
-    const tBody = document.getElementsByClassName('main'); // This will get the id of the form from the HTML.
-    tBody.innerHTML = ''; // appends a null value to the inner HTML, as is not required.
-
-    // This function will create a table, and append values for each column and iterate to the next row of items.
-    data.forEach(item => {
-
-    //     <div class="gridbuilds">
-    //      <div class="blockbuild" onclick="location.href='../MPBpost/MPBpost.html';">
-    //         <p>Title</p>
-    //         <div class="buildimage">
-    //             <img src="http://cdna.pcpartpicker.com/static/forever/images/userbuild/358512.a97c3b2732e2a4d83247e1105f455c63.512.jpg">
-    //         </div>
-    //         <p>Username</p>
-    //         <p>Likes</p>
-    //         <p>Build Type</p>
-    //      </div>
-    //     </div>
-
-        // make the div for the grid of builds
-        var gridbuilds = document.createElement('div');
-        gridbuilds.classList.add('gridbuilds');
-
-        // make the div for each individual build
-        var blockbuild = document.createElement('div');
-        blockbuild.classList.add('blockbuild');
-        blockbuild.addEventListener("click", function() {
-            location.href("../MPBpost/MPBpost.html");
-        });
-
-        var title = document.createElement('p');
-        var titletext = document.createTextNode("Title");
-        title.appendChild(titletext);
-        blockbuild.appendChild(title);
-
-        var buildimage = document.createElement('div');
-        buildimage.classList.add('buildimage');
-        var image = new Image(200,200);
-        image.src = "http://cdna.pcpartpicker.com/static/forever/images/userbuild/358512.a97c3b2732e2a4d83247e1105f455c63.512.jpg"
-        buildimage.appendChild(image);
-        blockbuild.appendChild(buildimage);
-
-        var username = document.createElement('p');
-        var usernametext = document.createTextNode("Username");
-        username.appendChild(usernametext);
-        blockbuild.appendChild(username);
-
-        var likes = document.createElement('p');
-        var likestext = document.createTextNode("Likes");
-        likes.appendChild(likestext);
-        blockbuild.appendChild(likes);
-
-        var buildtype = document.createElement('p');
-        var buildtypetext = document.createTextNode("Build Type");
-        buildtype.appendChild(buildtypetext);
-        blockbuild.appendChild(buildtype);
-
-        gridbuilds.appendChild(blockbuild);
-    });
-
-  posts = data; // will store the data as an array in this variable.
+    if (field.value.length > maxlimit) {
+        field.value = field.value.substring(0, maxlimit);
+        return false;
+    } else {
+        countfield.innerText = maxlimit - field.value.length;
+    }
 }
