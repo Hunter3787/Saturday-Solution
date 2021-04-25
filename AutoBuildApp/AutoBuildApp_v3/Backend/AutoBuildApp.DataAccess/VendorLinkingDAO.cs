@@ -21,7 +21,6 @@ namespace AutoBuildApp.DataAccess
 
         public List<AddProductDTO> GetProductsByFilter(GetProductByFilterDTO product, int f)
         {
-            Console.WriteLine("yo");
             ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
             string username = _threadPrinciple.Identity.Name;
             //string username = "new egg";
@@ -63,9 +62,10 @@ namespace AutoBuildApp.DataAccess
                             pair.Rows.Add(row);
                         }
 
-                        var param = new SqlParameter[2];
+                        var param = new SqlParameter[3];
                         param[0] = adapter.InsertCommand.Parameters.AddWithValue("@Filterlist", pair);
                         param[1] = adapter.InsertCommand.Parameters.AddWithValue("@USERNAME", username);
+                        param[2] = adapter.InsertCommand.Parameters.AddWithValue("@ORDER", product.PriceOrder);
 
 
                         //SqlParameter param = adapter.InsertCommand
@@ -103,8 +103,12 @@ namespace AutoBuildApp.DataAccess
 
                         using (SqlDataReader reader = adapter.InsertCommand.ExecuteReader())
                         {
+                            Console.WriteLine("hey");
+
                             while (reader.Read())
                             {
+                                Console.WriteLine("hey2");
+
                                 AddProductDTO productInfo = new AddProductDTO();
                                 productInfo.Name = (string)reader["productName"];
                                 productInfo.ImageUrl = (string)reader["vendorImageURL"];
@@ -112,7 +116,7 @@ namespace AutoBuildApp.DataAccess
                                 productInfo.Company = (string)reader["vendorName"];
                                 productInfo.Url = (string)reader["VendorLinkURL"];
                                 productInfo.ModelNumber = (string)reader["modelNumber"];
-                                productInfo.Price = (string)reader["productPrice"];
+                                productInfo.Price = Decimal.ToDouble((decimal)reader["productPrice"]);
 
                                 allProductsByVendor.Add(productInfo);
                             }
@@ -184,7 +188,7 @@ namespace AutoBuildApp.DataAccess
                                 productInfo.Company = (string)reader["vendorName"];
                                 productInfo.Url = (string)reader["VendorLinkURL"];
                                 productInfo.ModelNumber = (string)reader["modelNumber"];
-                                productInfo.Price = (string)reader["productPrice"];
+                                productInfo.Price = Decimal.ToDouble((decimal)reader["productPrice"]);
 
                                 allProductsByVendor.Add(productInfo);
                             }
@@ -251,8 +255,8 @@ namespace AutoBuildApp.DataAccess
                     try
                     {
                         SqlDataAdapter adapter = new SqlDataAdapter();
-                        String sql = "update vendor_product_junction set productName = @PRODUCTNAME, vendorImageUrl = @VENDORIMAGEURL, vendorlinkurl = @VENDORLINKURL, productStatus = @PRODUCTSTATUS, productPrice = @PRODUCTPRICE where modelNumber =" +
-                            "@MODELNUMBER and vendorName = @VENDORNAME)";
+                        String sql = "update vendor_product_junction set productName = @PRODUCTNAME, vendorImageUrl = @VENDORIMAGEURL, vendorlinkurl = @VENDORLINKURL, productStatus = @PRODUCTSTATUS, productPrice = @PRODUCTPRICE where productID =" +
+                            "(select productID from products where modelNumber = @MODELNUMBER) and vendorID = (select vendorID from vendorclub where vendorName = @VENDORNAME)";
 
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
                         adapter.InsertCommand.Parameters.Add("@PRODUCTNAME", SqlDbType.VarChar).Value = product.Name;
@@ -314,6 +318,68 @@ namespace AutoBuildApp.DataAccess
             }
         }
 
+        //public List<AddProductDTO> GetAllProductsByVendor(string companyName)
+        //{
+        //    ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+        //    string username = _threadPrinciple.Identity.Name;
+        //    Console.WriteLine("username = " + username);
+        //    List<AddProductDTO> allProductsByVendor = new List<AddProductDTO>();
+        //    using (SqlConnection connection = new SqlConnection(_connectionString))
+        //    {
+        //        connection.Open();
+        //        using (SqlTransaction transaction = connection.BeginTransaction())
+        //        {
+        //            try
+        //            {
+        //                SqlDataAdapter adapter = new SqlDataAdapter();
+        //                //command.Transaction = connection.BeginTransaction();
+        //                //command.Connection = connection;
+        //                //command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
+        //                //command.CommandType = CommandType.Text;
+        //                //String sql = "select vp.productName, vp.vendorImageURL, vp.productStatus, v.vendorName, vp.VendorLinkURL, p.modelNumber, vp.productPrice from ((vendor_product_junction as vp " +
+        //                //                "inner join products as p on vp.productID = p.productID) " +
+        //                //                "inner join vendorclub as v on vp.vendorID = v.vendorID)" +
+        //                //                "where vp.vendorID = (select userCredID from userCredentials where username = @USERNAME)";
+        //                //String sql = "select vp.productStatus from vendor_product_junction as vp";
+
+        //                string sp_GetAllProductsByVendor = "GetAllProductsByVendor";
+        //                adapter.InsertCommand = new SqlCommand(sp_GetAllProductsByVendor, connection, transaction);
+        //                adapter.InsertCommand.CommandType = CommandType.StoredProcedure;
+        //                adapter.InsertCommand.CommandText = sp_GetAllProductsByVendor;
+        //                adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = username;
+
+        //                //adapter.InsertCommand.Parameters.AddWithValue("@USERNAME", username);
+
+        //                using (SqlDataReader reader = adapter.InsertCommand.ExecuteReader())
+        //                {
+        //                    while (reader.Read())
+        //                    {
+        //                        AddProductDTO productInfo = new AddProductDTO();
+        //                        productInfo.Name = (string)reader["productName"];
+        //                        productInfo.ImageUrl = (string)reader["vendorImageURL"];
+        //                        productInfo.Availability = (bool)reader["productStatus"];
+        //                        productInfo.Company = (string)reader["vendorName"];
+        //                        productInfo.Url = (string)reader["VendorLinkURL"];
+        //                        productInfo.ModelNumber = (string)reader["modelNumber"];
+        //                        productInfo.Price = Decimal.ToDouble((decimal)reader["productPrice"]);
+
+        //                        allProductsByVendor.Add(productInfo);
+        //                    }
+        //                }
+
+        //                transaction.Commit();
+        //                Console.WriteLine("donef2");
+        //            }
+        //            catch (SqlException ex)
+        //            {
+        //                Console.WriteLine("wrong");
+        //                transaction.Rollback();
+        //            }
+        //        }
+        //    }
+        //    return allProductsByVendor;
+        //} 
+
         public List<AddProductDTO> GetAllProductsByVendor(string companyName)
         {
             ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
@@ -338,29 +404,42 @@ namespace AutoBuildApp.DataAccess
                         //                "where vp.vendorID = (select userCredID from userCredentials where username = @USERNAME)";
                         //String sql = "select vp.productStatus from vendor_product_junction as vp";
 
-                        string sp_GetAllProductsByVendor = "GetAllProductsByVendor";
+                        string sp_GetAllProductsByVendor = "nickProc";
                         adapter.InsertCommand = new SqlCommand(sp_GetAllProductsByVendor, connection, transaction);
                         adapter.InsertCommand.CommandType = CommandType.StoredProcedure;
                         adapter.InsertCommand.CommandText = sp_GetAllProductsByVendor;
-                        adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = username;
+                        //adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = username;
 
                         //adapter.InsertCommand.Parameters.AddWithValue("@USERNAME", username);
 
                         using (SqlDataReader reader = adapter.InsertCommand.ExecuteReader())
                         {
+                            int i = 0;
                             while (reader.Read())
                             {
-                                AddProductDTO productInfo = new AddProductDTO();
-                                productInfo.Name = (string)reader["productName"];
-                                productInfo.ImageUrl = (string)reader["vendorImageURL"];
-                                productInfo.Availability = (bool)reader["productStatus"];
-                                productInfo.Company = (string)reader["vendorName"];
-                                productInfo.Url = (string)reader["VendorLinkURL"];
-                                productInfo.ModelNumber = (string)reader["modelNumber"];
-                                productInfo.Price = (string)reader["productPrice"];
+                                Console.WriteLine((string)reader.GetName(i++));
 
-                                allProductsByVendor.Add(productInfo);
+                                //while()
+                                //AddProductDTO productInfo = new AddProductDTO();
+                                //productInfo.Name = (string)reader["productName"];
+                                //productInfo.ImageUrl = (string)reader["vendorImageURL"];
+                                //productInfo.Availability = (bool)reader["productStatus"];
+                                //productInfo.Company = (string)reader["vendorName"];
+                                //productInfo.Url = (string)reader["VendorLinkURL"];
+                                //productInfo.ModelNumber = (string)reader["modelNumber"];
+                                //productInfo.Price = Decimal.ToDouble((decimal)reader["productPrice"]);
+
+                                //allProductsByVendor.Add(productInfo);
                             }
+
+                            reader.NextResult();
+                            i = 0;
+                            while(reader.Read())
+                            {
+                                Console.WriteLine("hello");
+                                Console.WriteLine((string)reader.GetName(i++));
+                            }
+
                         }
 
                         transaction.Commit();
@@ -374,6 +453,6 @@ namespace AutoBuildApp.DataAccess
                 }
             }
             return allProductsByVendor;
-        } 
+        }
     }
 }

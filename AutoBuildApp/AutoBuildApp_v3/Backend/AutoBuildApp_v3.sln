@@ -46,6 +46,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoBuildApp.DataAccess.Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoBuildApp.Api", "AutoBuildApp.Api\AutoBuildApp.Api.csproj", "{600C0164-58FB-43C2-8D4F-FAF5F0D5A7A8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Connor's Console", "Connor's Console\Connor's Console.csproj", "{CD47C394-039A-400E-93E5-3C7A2F4DDF84}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -104,6 +106,10 @@ Global
 		{600C0164-58FB-43C2-8D4F-FAF5F0D5A7A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{600C0164-58FB-43C2-8D4F-FAF5F0D5A7A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{600C0164-58FB-43C2-8D4F-FAF5F0D5A7A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD47C394-039A-400E-93E5-3C7A2F4DDF84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD47C394-039A-400E-93E5-3C7A2F4DDF84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD47C394-039A-400E-93E5-3C7A2F4DDF84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD47C394-039A-400E-93E5-3C7A2F4DDF84}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -122,6 +128,7 @@ Global
 		{C11D721B-C231-4BED-ACA0-CE1FAF088C8A} = {70F74194-2EEB-4B19-8BC8-33286D7DA08C}
 		{69ADE978-407B-419B-8FC1-F9B6D8C02CCF} = {19FCD82A-8ED3-4914-8FFF-A7380616D06C}
 		{600C0164-58FB-43C2-8D4F-FAF5F0D5A7A8} = {98226589-714B-4BAA-8B69-B54BD0FE5CA1}
+		{CD47C394-039A-400E-93E5-3C7A2F4DDF84} = {98226589-714B-4BAA-8B69-B54BD0FE5CA1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B8B2E261-6A44-42F8-9F54-8F8E133DFC4D}

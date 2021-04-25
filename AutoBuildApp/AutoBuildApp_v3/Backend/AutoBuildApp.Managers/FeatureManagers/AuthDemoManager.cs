@@ -17,7 +17,6 @@ namespace AutoBuildApp.Managers.FeatureManagers
     /// </summary>
     public class AuthDemoManager
     {
-        private ClaimsPrincipal _threadPrinciple;
         private ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
         IClaims unregistered;
         IClaims basic;
@@ -25,38 +24,21 @@ namespace AutoBuildApp.Managers.FeatureManagers
         {
             unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
             basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
-        }
-
-
-        public bool doWork()
-        {
-
-            return false;
 
         }
-
 
         public string getData()
         {
+            string values = "";
 
-            _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            Console.WriteLine($"Within the AuthDemoManager get data:");
-            Console.WriteLine($" wihtin the demo manager");
-            string returnValue = "";
+            ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            Console.WriteLine($"\n  AuthDemoManager" +
+                $"\nThe username:\n {_threadPrinciple.Identity.Name}");
+            Console.WriteLine("\nprinciple claims: \n");
             foreach (var clm in _threadPrinciple.Claims)
             {
-                returnValue += $" claim type: { clm.Type } claim value: {clm.Value} \n";
-                // Console.WriteLine(returnValue);
+                Console.WriteLine($" claim type: { clm.Type } claim value: {clm.Value} \n");
             }
-
-            Console.WriteLine($"End of  AuthDemoManager");
-
-
-            // kk we are going to check if user authorized 
-
-            AuthorizationService.print();
-            string values = " ";
-
 
             if (AuthorizationService.checkPermissions(basic.Claims()))
             {
@@ -74,6 +56,41 @@ namespace AutoBuildApp.Managers.FeatureManagers
             return values;
         }
 
+
+        // follow naming convention -> clean up. 
+        public string LogOut()
+        {
+
+
+            ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            Console.WriteLine($"\n  AuthDemoManager" +
+             $"\nThe username:\n {_threadPrinciple.Identity.Name}");
+            Console.WriteLine("\nprinciple claims: \n");
+            foreach (var clm in _threadPrinciple.Claims)
+            {
+                Console.WriteLine($" claim type: { clm.Type } claim value: {clm.Value} \n");
+            }
+
+
+            Console.WriteLine($"THESE ARE YOUR UPDATED PERMISSIONS:");
+                // setting a default principle object t=for the thread.
+                #region Instantiating the Claims principle
+                ClaimsIdentity identity = new
+                ClaimsIdentity(unregistered.Claims());
+                _threadPrinciple= new ClaimsPrincipal(identity);
+                foreach (var clm in _threadPrinciple.Claims)
+                {
+                Console.WriteLine($" claim type: { clm.Type } claim value: {clm.Value} \n");
+                    // Console.WriteLine(returnValue);
+                }
+
+                Console.WriteLine($" Is authenticated? {_threadPrinciple.Identity.IsAuthenticated  } .");
+                Thread.CurrentPrincipal = _threadPrinciple;
+                #endregion
+
+            return " " ; 
+
+        }
 
     }
 }
