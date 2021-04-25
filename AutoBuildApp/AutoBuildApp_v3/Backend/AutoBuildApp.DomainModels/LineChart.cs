@@ -6,7 +6,7 @@ using System.Text;
 
 namespace AutoBuildApp.DomainModels
 {
-    public class LineChart : Charts
+    class LineChart : Charts
     {
         public IList<ChartData> ChartDatas;
 

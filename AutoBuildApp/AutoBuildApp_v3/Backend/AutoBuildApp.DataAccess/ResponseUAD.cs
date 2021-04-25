@@ -10,6 +10,10 @@ namespace AutoBuildApp.DataAccess
 
         public IList<ChartData> _chartDatas;
 
+
+
+
+
         public ResponseUAD()
         {
 
@@ -17,9 +21,31 @@ namespace AutoBuildApp.DataAccess
             SuccessString = " ";
             FailureString = " ";
             SuccessBool = false;
-            connectionState = false;
-
+            ConnectionState = false;
+            // bar graph 1:
+            GetNumAccountsPerRole = new List<ChartData>();
+            GetUsePerComponent = new List<ChartData>();
+            GetRegPerMontthByUserType = new List<ChartData>();
+            GetAvgSessDurPerRole = new List<ChartData>();
+            GetPageViewPerMonth = new List<ChartData>();
         }
+
+        public IList<ChartData> GetNumAccountsPerRole { get; set; }
+
+
+        public IList<ChartData> GetUsePerComponent { get; set; }
+
+
+        public IList<ChartData> GetRegPerMontthByUserType { get; set; }
+
+
+
+        public IList<ChartData> GetAvgSessDurPerRole { get; set; }
+
+
+        public IList<ChartData> GetPageViewPerMonth{ get; set; }
+
+
 
 
         public string SuccessString { get; set; }
@@ -27,7 +53,7 @@ namespace AutoBuildApp.DataAccess
 
         public string ResponseString { get; set; }
         public bool SuccessBool { get; set; }
-        public bool connectionState { get; set; }
+        public bool ConnectionState { get; set; }
 
 
 
@@ -36,7 +62,7 @@ namespace AutoBuildApp.DataAccess
             return $"\nResponse String {ResponseString }\n" +
                 $"Success string {SuccessString}\nFailure String {FailureString}\n" +
                 $"Success Bool {SuccessBool}\n" +
-                $"Connection bool {connectionState}\n";
+                $"Connection bool {ConnectionState}\n";
 
         }
 
