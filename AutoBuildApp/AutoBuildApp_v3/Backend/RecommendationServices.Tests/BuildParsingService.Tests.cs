@@ -14,15 +14,15 @@ using AutoBuildApp.Services.RecommendationServices;
 namespace AutoBuildApp.Services.Tests
 {
     [TestClass]
-    public class CreateICompListServiceTests
+    public class BuildParsingServiceTest
     {
         private NVMeDrive _hd1;
         private NVMeDrive _hd2;
         private ComputerCase _compCase;
         private Motherboard _mobo;
         private PowerSupplyUnit _psu;
-        private GPU _graphics;
-        private CPU _processor;
+        private GraphicsProcUnit _graphics;
+        private CentralProcUnit _processor;
         private RAM _ram;
         private ICooler _cooler;
         private List<IComponent> _periphs;
@@ -140,7 +140,7 @@ namespace AutoBuildApp.Services.Tests
                 SixPlusTwoConnectors = 3
 
             };
-            _graphics = new GPU
+            _graphics = new GraphicsProcUnit
             {
                 ProductType = ProductType.GPU,
                 ModelNumber = "34124n",
@@ -166,7 +166,7 @@ namespace AutoBuildApp.Services.Tests
                 Cooling = 5,
                 ExternalPower = "The Sun",
             };
-            _processor = new CPU
+            _processor = new CentralProcUnit
             {
                 ProductType = ProductType.CPU,
                 ModelNumber = "AMD3",
@@ -226,7 +226,7 @@ namespace AutoBuildApp.Services.Tests
             };
             _periphs = new List<IComponent>()
             {
-                _hd2, _hd2
+                _hd1, _hd2,_ram
             };
             _gamingBuild.AddHardDrive(_hd1);
             _gamingBuild.AddHardDrive(_hd2);
@@ -250,9 +250,10 @@ namespace AutoBuildApp.Services.Tests
             };
             _gamingBuild.Peripherals = null;
             _gamingBuild.Case = null;
+            BuildParsingService parser = new BuildParsingService();
 
             // Act
-            var actual = BuildParsingService.CreateComponentList(_gamingBuild);
+            var actual = parser.CreateComponentList(_gamingBuild);
             // Assert
             CollectionAssert.AreEqual(actual, expected);
         }
@@ -264,10 +265,11 @@ namespace AutoBuildApp.Services.Tests
             var expected = new List<IComponent> {
 
             };
+            BuildParsingService parser = new BuildParsingService();
             var temp = BuildFactory.CreateBuild(BuildType.Gaming);
 
             // Act
-            var actual = BuildParsingService.CreateComponentList(temp);
+            var actual = parser.CreateComponentList(temp);
             // Assert
             CollectionAssert.AreEqual(actual, expected);
         }

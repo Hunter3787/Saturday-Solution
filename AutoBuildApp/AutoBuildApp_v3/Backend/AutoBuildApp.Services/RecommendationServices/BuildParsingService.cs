@@ -27,7 +27,7 @@ namespace AutoBuildApp.Services.RecommendationServices
         /// </summary>
         /// <param name="build"></param>
         /// <returns></returns>
-        public static List<IComponent> CreateComponentList(IBuild build)
+        public List<IComponent> CreateComponentList(IBuild build)
         {
             if (build == null)
             {
@@ -43,13 +43,21 @@ namespace AutoBuildApp.Services.RecommendationServices
                 var item = element.GetValue(build);
 
                 if (item is IList && item != null)
+                {
                     // Used the dynamic cast to assure the compiler that the item
                     // is in fact of the expected type of List<IComponent>.
                     foreach (var component in (dynamic)item)
+                    {
                         compList.Add(component);
+                    }
+                }
                 else
+                {
                     if (item != null)
-                    compList.Add((IComponent)item);
+                    {
+                        compList.Add((IComponent)item);
+                    }
+                }
             }
 
             return compList;

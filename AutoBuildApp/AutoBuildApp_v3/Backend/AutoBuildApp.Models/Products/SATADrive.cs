@@ -31,6 +31,12 @@ namespace AutoBuildApp.Models.Products
             ProductImageStrings = new List<string>();
         }
 
+        public SATADrive(HardDriveType hardDriveType)
+        {
+            ProductImageStrings = new List<string>();
+            DriveType = hardDriveType;
+        }
+
         #region "Interface Implementations"
         /// <summary>
         /// Adds an image from a byte array to the component.

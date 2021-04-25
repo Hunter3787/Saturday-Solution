@@ -29,16 +29,16 @@ namespace AutoBuildApp.Services.RecommendationServices
         /// <param name="type">BuildType</param>
         /// <param name="budget">Double</param>
         /// <returns>List of IComponents</returns>
-        public List<IComponent> PortionComponentList(
-                List<IComponent> input, BuildType type, double budget)
+        public List<IComponent> PortionOutBudget
+            (List<IComponent> input, BuildType type, double budget)
         {
+            var outputList = new List<IComponent>(input);
+            var budgetWeights = KeyFactory.CreateKey(type);
+            
             if (budget < RecServiceGlobals.MIN_BUDGET || input == null)
             {
-                return null;
+                return outputList;
             }
-
-            var budgetWeights = KeyFactory.CreateKey(type);
-            var outputList = input;
 
             foreach (var key in budgetWeights.Keys)
             {

@@ -14,9 +14,9 @@ namespace AutoBuildApp.Services.FactoryServices
     /// Build Factory to output the type of computer to be created per a switch
     /// statement.
     /// </summary>
-    public static class BuildFactory
+    public class BuildFactory
     {
-        public static IBuild CreateBuild(BuildType buildType)
+        public IBuild CreateBuild(BuildType buildType)
         {
             switch(buildType)
             {

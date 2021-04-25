@@ -35,32 +35,32 @@ namespace AutoBuildApp.Services.RecommendationServices
             var score = 0;
 
             switch (input) {
-                case GPU gpu:
-                    score = OverloadedScore(gpu, type);
+                case GraphicsProcUnit gpu:
+                    score = Score(gpu, type);
                     break;
-                case CPU cpu:
-                    score = OverloadedScore(cpu, type);
+                case CentralProcUnit cpu:
+                    score = Score(cpu, type);
                     break;
                 case PowerSupplyUnit psu:
-                    score = OverloadedScore(psu, type);
+                    score = Score(psu, type);
                     break;
                 case RAM ram:
-                    score = OverloadedScore(ram, type);
+                    score = Score(ram, type);
                     break;
                 case ComputerCase cCase:
-                    score = OverloadedScore(cCase, type);
+                    score = Score(cCase, type);
                     break;
                 case ICooler cooler:
-                    score = OverloadedScore(cooler, type);
+                    score = Score(cooler, type);
                     break;
                 //case Monitor monitor:
                 //    score = OverloadedScore(monitor, type);
                 //    break;
                 case Motherboard mobo:
-                    score = OverloadedScore(mobo, type);
+                    score = Score(mobo, type);
                     break;
                 case IHardDrive hardDrive:
-                    score = OverloadedScore(hardDrive, type);
+                    score = Score(hardDrive, type);
                     break;
                 default:
                     break;
@@ -69,7 +69,7 @@ namespace AutoBuildApp.Services.RecommendationServices
             return score;
         }
 
-        #region "Private Overload Methods"
+        #region Private Scoring Helper Methods
         /// <summary>
         /// Overloaded methods that take in a product and build type
         /// to determine a score based off of stat weights. 
@@ -77,7 +77,7 @@ namespace AutoBuildApp.Services.RecommendationServices
         /// <param name="input"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        private int OverloadedScore(GPU input, BuildType type)
+        private int Score(GraphicsProcUnit input, BuildType type)
         {
             if (input.Price == 0 || input.Memory == null || input.CoreClock == null ||
                 input.BoostClock == null || input.EffectiveMemClock == null ||
@@ -139,7 +139,7 @@ namespace AutoBuildApp.Services.RecommendationServices
             return (int)Math.Round(scoreTotal, MidpointRounding.AwayFromZero);
         }
 
-        private int OverloadedScore(CPU input, BuildType type)
+        private int Score(CentralProcUnit input, BuildType type)
         {
             if (input.Price == 0 || input.CoreCount == 0 || input.CoreClock == null ||
                 input.BoostClock == null || input.PowerDraw == 0)
@@ -185,7 +185,7 @@ namespace AutoBuildApp.Services.RecommendationServices
             return (int)Math.Round(scoreTotal, MidpointRounding.AwayFromZero);
         }
 
-        private int OverloadedScore(PowerSupplyUnit input, BuildType type)
+        private int Score(PowerSupplyUnit input, BuildType type)
         {
             if (input.Price == 0 || input.Wattage == 0 || input.EfficiencyRating == null)
                 return -1;
@@ -229,7 +229,7 @@ namespace AutoBuildApp.Services.RecommendationServices
             return (int)Math.Round(scoreTotal, MidpointRounding.AwayFromZero);
         }
 
-        private int OverloadedScore(RAM input, BuildType type)
+        private int Score(RAM input, BuildType type)
         {
             if (input.Price == 0 || input.NumOfModules == 0 || input.ModuleSize == 0
                 || input.FirstWordLat == null || input.CASLat == null)
@@ -267,7 +267,7 @@ namespace AutoBuildApp.Services.RecommendationServices
             return (int)Math.Round(scoreTotal, MidpointRounding.AwayFromZero);
         }
 
-        private int OverloadedScore(ComputerCase input, BuildType type)
+        private int Score(ComputerCase input, BuildType type)
         {
             if (input.Price == 0)
                 return -1;
@@ -307,7 +307,7 @@ namespace AutoBuildApp.Services.RecommendationServices
             return (int)Math.Round(scoreTotal, MidpointRounding.AwayFromZero);
         }
 
-        private int OverloadedScore(ICooler input, BuildType type)
+        private int Score(ICooler input, BuildType type)
         {
             if (input.Price == 0 || input.FanRPM == null || input.NoiseVolume == null)
                 return -1;
@@ -366,7 +366,7 @@ namespace AutoBuildApp.Services.RecommendationServices
         //    return (int)Math.Round(scoreTotal, MidpointRounding.AwayFromZero);
         //}
 
-        private int OverloadedScore(IHardDrive input, BuildType type)
+        private int Score(IHardDrive input, BuildType type)
         {
             if (input.Price == 0 || input.Capacity == null)
                 return -1;
@@ -405,7 +405,7 @@ namespace AutoBuildApp.Services.RecommendationServices
             return (int)Math.Round(scoreTotal, MidpointRounding.AwayFromZero);
         }
 
-        private int OverloadedScore(Motherboard input, BuildType type)
+        private int Score(Motherboard input, BuildType type)
         {
             if(input.Price == 0 || input.Socket == null || input.MaxMemory == null ||
                 input.SupportedMemory == null)

@@ -23,8 +23,8 @@ namespace AutoBuildApp.Managers.Tests
         private ComputerCase _compCase;
         private Motherboard _mobo;
         private PowerSupplyUnit _psu;
-        private GPU _graphics;
-        private CPU _processor;
+        private GraphicsProcUnit _graphics;
+        private CentralProcUnit _processor;
         private RAM _ram;
         private ICooler _cooler;
         private List<IComponent> _periphs;
@@ -143,7 +143,7 @@ namespace AutoBuildApp.Managers.Tests
                 SixPlusTwoConnectors = 3
 
             };
-            _graphics = new GPU
+            _graphics = new GraphicsProcUnit
             {
                 ProductType = ProductType.GPU,
                 ModelNumber = "34124n",
@@ -170,7 +170,7 @@ namespace AutoBuildApp.Managers.Tests
                 Cooling = 2,
                 ExternalPower = "1 PCIe 12-pin"
             };
-            _processor = new CPU
+            _processor = new CentralProcUnit
             {
                 ProductType = ProductType.CPU,
                 ModelNumber = "AMD3",
