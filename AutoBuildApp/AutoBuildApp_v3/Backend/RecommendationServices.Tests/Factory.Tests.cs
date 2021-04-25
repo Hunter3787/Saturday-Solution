@@ -14,14 +14,17 @@ namespace AutoBuildApp.Services.Tests
     [TestClass]
     public class FactoryTests
     {
+        private BuildFactory _build;
+
 
         [TestMethod]
         public void BuildFactory_CreateBuild_ReturnIBuildOfTypeGraphicArtist()
         {
             // Arrange
             var expected = new GraphicArtist().GetType();
+            _build = new BuildFactory();
             // Act
-            var actual = BuildFactory.CreateBuild(BuildType.GraphicArtist);
+            var actual = _build.CreateBuild(BuildType.GraphicArtist);
             // Assert
             Assert.IsInstanceOfType(actual, expected);
         }

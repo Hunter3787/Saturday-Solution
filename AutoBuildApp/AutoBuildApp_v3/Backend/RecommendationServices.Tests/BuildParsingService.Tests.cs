@@ -27,12 +27,14 @@ namespace AutoBuildApp.Services.Tests
         private ICooler _cooler;
         private List<IComponent> _periphs;
         private IBuild _gamingBuild;
+        private BuildFactory _build; 
 
         // Initialize test class
         [TestInitialize]
         public void Initialize()
         {
-            _gamingBuild = BuildFactory.CreateBuild(BuildType.Gaming);
+            _build = new BuildFactory();
+            _gamingBuild = _build.CreateBuild(BuildType.Gaming);
             _hd1 = new NVMeDrive
             {
                 DriveType = HardDriveType.NVMe,
@@ -265,8 +267,9 @@ namespace AutoBuildApp.Services.Tests
             var expected = new List<IComponent> {
 
             };
+            _build = new BuildFactory();
             BuildParsingService parser = new BuildParsingService();
-            var temp = BuildFactory.CreateBuild(BuildType.Gaming);
+            var temp = _build.CreateBuild(BuildType.Gaming);
 
             // Act
             var actual = parser.CreateComponentList(temp);

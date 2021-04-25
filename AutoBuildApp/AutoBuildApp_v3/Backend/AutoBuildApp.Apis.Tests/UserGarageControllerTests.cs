@@ -2,17 +2,13 @@
 
 namespace AutoBuildApp.Apis.Tests
 {
+    [TestClass]
     public class UserGarageControllerTests
     {
-        [TestClass]
-        public UserGarageControllerTests()
+    
+        [TestMethod]
+        public void TestMethod1()
         {
-
-            [TestMethod]
-            public void TestMethod1()
-            {
-
-            }
 
         }
     }

@@ -27,12 +27,14 @@ namespace AutoBuildApp.Models.Tests
         private ICooler _cooler;
         private List<IComponent> _periphs;
         private IBuild _gamingBuild;
+        private BuildFactory _build;
 
         // Initialize test class
         [TestInitialize]
         public void Initialize()
         {
-            _gamingBuild = BuildFactory.CreateBuild(BuildType.Gaming);
+            _build = new BuildFactory();
+            _gamingBuild = _build.CreateBuild(BuildType.Gaming);
             _hd1 = new NVMeDrive
             {
                 DriveType = HardDriveType.NVMe,
