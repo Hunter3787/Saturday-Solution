@@ -107,16 +107,16 @@ namespace AutoBuildApp.Managers
 
             string username = "KoolTrini";
 
-            if (role == "Basic")
+            if (role == RoleEnumType.BASIC_ROLE)
             {
                 return _userManagementDAO.ChangePermissionsDB(username, basic.Claims());
 
             }
-            else if (role == "Senior Admin")
+            else if (role == RoleEnumType.SENIOR_ADMIN)
             {
                 return _userManagementDAO.ChangePermissionsDB(username, seniorAdmin.Claims());
             }
-            else if (role == "Vendor")
+            else if (role == RoleEnumType.VENDOR_ROLE)
             {
                 return _userManagementDAO.ChangePermissionsDB(username, vendor.Claims());
             }
@@ -124,7 +124,7 @@ namespace AutoBuildApp.Managers
             //{
             //    return _userManagementDAO.ChangePermissionsDB(username, developer.Claims());
             //}
-            else if (role == "Unregistered")
+            else if (role == RoleEnumType.UNREGISTERED_ROLE)
             {
                 return _userManagementDAO.ChangePermissionsDB(username, unregistered.Claims());
             }
