@@ -29,13 +29,15 @@ namespace AutoBuildApp.Managers.Tests
         private ICooler _cooler;
         private List<IComponent> _periphs;
         private IBuild _gamingBuild;
+        private BuildFactory _build;
 
         // Initialize test class
         [TestInitialize]
         public void Initialize()
         {
+            _build = new BuildFactory();
             _manager = new RecommendationManager("testString");
-            _gamingBuild = BuildFactory.CreateBuild(BuildType.Gaming);
+            _gamingBuild = _build.CreateBuild(BuildType.Gaming);
             _hd1 = new NVMeDrive
             {
                 DriveType = HardDriveType.NVMe,

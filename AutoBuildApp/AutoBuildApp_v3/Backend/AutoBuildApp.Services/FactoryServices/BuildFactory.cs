@@ -16,6 +16,7 @@ namespace AutoBuildApp.Services.FactoryServices
     /// </summary>
     public class BuildFactory
     {
+
         public IBuild CreateBuild(BuildType buildType)
         {
             switch(buildType)
