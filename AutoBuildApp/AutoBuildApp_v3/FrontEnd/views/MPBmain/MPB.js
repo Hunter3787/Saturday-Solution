@@ -11,6 +11,9 @@ const fetchRequest = {
     }
 };
 
+let postBuild = document.getElementById('post-build-button');
+postBuild.addEventListener("click", () => window.location.assign("../MPBform/MPBform.html")); // lambda function for redirecting on click.
+
 function process(){
   getItems();
 }
@@ -27,9 +30,8 @@ async function getItems() {
         .then(data => displayItems(data)) // will call the display items function.
         .then(console.log("reloaded"))
         .catch(error => console.error('Unable to get items.', error)); // will catch an error and print the appropriate error message in console.
-    //refreshData;
+    refreshData;
 }
-
 
 
 function displayItems(data) {
@@ -73,7 +75,6 @@ function displayItems(data) {
         var buildimage = document.createElement('div');
         buildimage.classList.add('buildimage');
         var image = document.createElement("img");
-        //image.src = "http://cdna.pcpartpicker.com/static/forever/images/userbuild/359220.7c4372b4c03e37f96b3a4e02c2d1d6f0.512.jpg"
         image.src = item["buildImagePath"];
         buildimage.appendChild(image);
         blockbuild.appendChild(buildimage);
@@ -103,7 +104,6 @@ function displayItems(data) {
         else if (item["buildType"] === 3)
           build = "Word Processing";
 
-        
 
         var buildtypetext = document.createTextNode("Build: " + build);
         buildtype.appendChild(buildtypetext);
@@ -112,10 +112,11 @@ function displayItems(data) {
         // appends the block to the grid of builds.
         gridbuilds.appendChild(blockbuild);
 
-        // gets the div by id in order to append the grid to the html.
-        var main = document.getElementById('main');
-        main.appendChild(gridbuilds);
+        // appends the grid of builds to the main
+        innerDiv.appendChild(gridbuilds);
     });
 
   posts = data; // will store the data as an array in this variable for local access.
 }
+
+//let initializeView = document.getElementById("initialize-view").innerHTML = getItems();

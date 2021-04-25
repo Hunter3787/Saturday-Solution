@@ -11,7 +11,6 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="MPB.css">
-        <link rel="stylesheet" href="/../FrontEnd/assets/images/MPB/3.jpg">
     </head>
     <body>
 
@@ -21,7 +20,7 @@
 
         <div class="mpb">
             <div class="sidenav">
-                <button type="button" class="postbutton" onclick="location.href='../MPBform/MPBform.html';">Post a build</button>
+                <button type="button" class="postbutton" id="post-build-button">Post a build</button>
                 <h1>Filters</h1>
                 <h3>Build Type</h3>
                     <input type="radio" class="checkbox-filter" name="build" id="bta">
@@ -42,8 +41,7 @@
             <div class="main" id="main"></div>
         </div>
         <script src="MPB.js" asp-append-version="true"></script>
-        <script type="text/javascript">
-            getItems();
-        </script>
+        <script src="../MPBpost/MPBpost.js" asp-append-version="true"></script>
+        <script type="text/javascript">getItems();</script>
     </body>
 </html>
