@@ -10,6 +10,9 @@ using System.Threading;
 using AutoBuildApp.DomainModels;
 using System.Collections.Generic;
 using AutoBuildApp.Services.UserServices;
+using AutoBuildApp.Security.Interfaces;
+using AutoBuildApp.Security.FactoryModels;
+using AutoBuildApp.Security.Enumerations;
 
 namespace AutoBuildApp.Managers
 {
@@ -27,9 +30,10 @@ namespace AutoBuildApp.Managers
         //    _userManagementDAO = userManagementDAO;
         //}
 
-        public UserManagementManager(UserManagementService userManagementService)
+        public UserManagementManager(UserManagementService userManagementService, string connectionString)
         {
             _inputValidityManager = new InputValidityManager();
+            _userManagementDAO = new UserManagementDAO(connectionString);
             _userManagementService = userManagementService;
         }
 
@@ -90,14 +94,65 @@ namespace AutoBuildApp.Managers
             return _userManagementService.GetUsersList();
         }
 
-        public string ChangePermissions(UserAccount user)
+
+
+        public string ChangePermissions(string role)
         {
-            return "";
+            ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
+
+            IClaims basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
+            IClaims seniorAdmin = claimsFactory.GetClaims(RoleEnumType.SENIOR_ADMIN);
+            IClaims vendor = claimsFactory.GetClaims(RoleEnumType.VENDOR_ROLE);
+            IClaims unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
+
+            string username = "KoolTrini";
+
+            if (role == "Basic")
+            {
+                return _userManagementDAO.ChangePermissionsDB(username, basic.Claims());
+
+            }
+            else if (role == "Senior Admin")
+            {
+                return _userManagementDAO.ChangePermissionsDB(username, seniorAdmin.Claims());
+            }
+            else if (role == "Vendor")
+            {
+                return _userManagementDAO.ChangePermissionsDB(username, vendor.Claims());
+            }
+            //else if (role == "Developer")
+            //{
+            //    return _userManagementDAO.ChangePermissionsDB(username, developer.Claims());
+            //}
+            else if (role == "Unregistered")
+            {
+                return _userManagementDAO.ChangePermissionsDB(username, unregistered.Claims());
+            }
+            else return "Needs  proper role";
         }
 
-        public string ChangeState(UserAccount user)
+        public string ChangeLockState(string lockState)
         {
-            return "";
+            ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
+            IClaims locked = claimsFactory.GetClaims(RoleEnumType.LOCKED);
+            IClaims basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
+
+
+            string username = "SERGE";
+            if (lockState == RoleEnumType.LOCKED)
+            {
+                _userManagementDAO.ChangePermissionsDB(username, locked.Claims());
+                return _userManagementDAO.Lock(username);
+            }
+            else if (lockState == RoleEnumType.BASIC_ROLE)
+            {
+                _userManagementDAO.ChangePermissionsDB(username, basic.Claims());
+                return _userManagementDAO.Unlock(username);
+            }
+            else
+            {
+                return "Error: not set to Locked or Unlocked";
+            }
         }
 
         public string DeleteUser(string email)
