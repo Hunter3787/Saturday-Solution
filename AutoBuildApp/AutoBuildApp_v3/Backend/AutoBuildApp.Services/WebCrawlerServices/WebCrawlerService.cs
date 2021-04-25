@@ -54,7 +54,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             currentProxy = allProxies[0];
             options = new LaunchOptions()
             {
-                Headless = true,
+                Headless = false,
                 IgnoreHTTPSErrors = true,
                 ExecutablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe", // added per danny
                 Args = new[] {
@@ -242,6 +242,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
 
                         var price = await page.EvaluateExpressionAsync(priceQuerySelector);
                         Console.Write("price\t");
+                        string priceString = (price == null) || String.IsNullOrEmpty(price.ToString()) ? null : price.ToString();
 
 
                         Dictionary<string, string> specsDictionary = new Dictionary<string, string>();
@@ -355,7 +356,6 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         bool availability = price != null;
                         string modelNumber = specsVals.ElementAt(modelNumberIndex).ToString();
                         string brand = specsVals.ElementAt(brandIndex).ToString();
-                        string priceString = price == null ? "N/A" : price.ToString();
                         Models.WebCrawler.Product product = new Models.WebCrawler.Product(imageUrl.ToString(), availability, companyName, url, modelNumber, title.ToString(), productType,
                             brand, totalStarRatingString, totalNumberOfReviewsString, priceString, specsDictionary, reviews);
 
@@ -374,12 +374,13 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         if (validProduct)
                         {
                             webCrawlerDAO.PostSpecsOfProductsToDatabase(product);
+                            if (reviewCount > 0)
+                            {
+                                webCrawlerDAO.PostToVendorProductReviewsTable(product);
+                            }
                         }
                         webCrawlerDAO.PostToVendorProductsTable(product);
-                        if (reviewCount > 0)
-                        {
-                            webCrawlerDAO.PostToVendorProductReviewsTable(product);
-                        }
+
                     }
                     validIP = true;
                 }
@@ -390,6 +391,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         Console.WriteLine("yo man");
                         continue;
                     }
+                    Console.WriteLine(e.Message);
                     Console.WriteLine("BAD PROXY " + ": " + currentProxy.IPAddress + " - " + currentProxy.Port + "\t\t" + e.Message);
                     rotateProxy();
                     options.Args[0] = $"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}";

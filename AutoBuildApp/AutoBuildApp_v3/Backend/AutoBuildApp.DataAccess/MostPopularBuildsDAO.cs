@@ -45,7 +45,7 @@ namespace AutoBuildApp.DataAccess
                 using (var command = new SqlCommand())
                 {
                     command.Transaction = conn.BeginTransaction(); // begins the transaction to the database.
-                    command.Connection = conn; // sets the connection of the command equal to the connection that has already been starte in the outer using block.
+                    command.Connection = conn; // sets the connection of the command equal to the connection that has already been started in the outer using block.
                     command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds; // automatically times out the connection after 60 seconds.
                     command.CommandType = CommandType.Text; // sets the command type to command text, allowing use of string 'parametrized' queries.
 

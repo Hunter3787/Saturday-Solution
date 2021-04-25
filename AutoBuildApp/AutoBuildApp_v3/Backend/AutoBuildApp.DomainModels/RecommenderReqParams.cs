@@ -7,18 +7,18 @@ using System.Collections.Generic;
  */
 namespace AutoBuildApp.DomainModels
 {
-    public class UserRequestParameters
+    public class RecommenderReqParams
     {
         public BuildType Build { get; set; }
         public double Budget { get; set; }
-        public List<IComponent> List { get; set; }
+        public List<IComponent> PeripheralsList { get; set; }
         public PSUModularity Psu { get; set; }
         public HardDriveType HddType { get; set; }
         public int HddCount { get; set; }
 
-        public UserRequestParameters()
+        public RecommenderReqParams()
         {
-            List = new List<IComponent>();
+            PeripheralsList = new List<IComponent>();
         }
     }
 }

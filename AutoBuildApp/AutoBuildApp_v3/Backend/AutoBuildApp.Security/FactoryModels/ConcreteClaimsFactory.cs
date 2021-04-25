@@ -38,6 +38,7 @@ namespace AutoBuildApp.Security.FactoryModels
                 case "VENDOR_ROLE": return new Vendor();
                 case "UNREGISTERED_ROLE": return new Unregistered(); // set to the default 
                 case "DEVELOPER": throw new NotImplementedException();
+                case "LOCKED": return new Locked();
                 default: return new Unregistered();
             }
         }

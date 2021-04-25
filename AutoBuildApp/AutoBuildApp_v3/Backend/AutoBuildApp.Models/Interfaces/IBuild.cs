@@ -17,8 +17,8 @@ namespace AutoBuildApp.Models.Interfaces
         ComputerCase Case { get; set; }
         Motherboard Mobo { get; set; }
         PowerSupplyUnit Psu { get; set; }
-        GPU Gpu { get; set; }
-        CPU Cpu { get; set; }
+        GraphicsProcUnit Gpu { get; set; }
+        CentralProcUnit Cpu { get; set; }
         RAM Ram { get; set; }
         ICooler CPUCooler { get; set; }
         List<IComponent> Peripherals { get; set; }

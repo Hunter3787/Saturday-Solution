@@ -17,7 +17,7 @@ namespace AutoBuildApp.Services.Tests
         public void ComponentScoringSerice_ScoreCompnent_ReturnIntValueOfComoponent()
         {
             // Arrange
-            var gpu = new GPU()
+            var gpu = new GraphicsProcUnit()
             {
                 ProductType = ProductType.GPU,
                 ModelNumber = "34124n",

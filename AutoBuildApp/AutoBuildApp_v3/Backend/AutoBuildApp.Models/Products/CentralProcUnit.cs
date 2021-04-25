@@ -8,7 +8,7 @@ using AutoBuildApp.Models.Interfaces;
  */
 namespace AutoBuildApp.Models.Products
 {
-    public class CPU : IComponent
+    public class CentralProcUnit : IComponent
     {
         #region "Field Declarations, get; set;"
         public readonly int MIN_LIST_SIZE = 1;
@@ -44,7 +44,7 @@ namespace AutoBuildApp.Models.Products
         /// <summary>
         /// Default consturctor.
         /// </summary>
-        public CPU()
+        public CentralProcUnit()
         {
             ProductImageStrings = new List<string>();
             L1Cache = new List<string>();

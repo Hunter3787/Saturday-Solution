@@ -34,6 +34,8 @@ namespace AutoBuildApp.Models.Products
         public NVMeDrive()
         {
             ProductImageStrings = new List<string>();
+            NVMe = true;
+            DriveType = HardDriveType.NVMe;
         }
 
         #region "Interface Implementations"

@@ -205,9 +205,6 @@ namespace AutoBuildApp.DataAccess
             return "Username WAS NOT successfully updated";
         }
 
-
-
-
         public List<UserEntity> getUsers()
         {
             using (var conn = new SqlConnection(_connectionString))
@@ -242,13 +239,171 @@ namespace AutoBuildApp.DataAccess
                             userEntityList.Add(userEntity);
                         }
                     }
-                    command.ExecuteNonQuery();
+                    //command.ExecuteNonQuery();
 
                     command.Transaction.Commit();
 
                     return userEntityList;
                 }
             }
+        }
+
+
+        public string ChangePermissionsDB(string username, IEnumerable<Claim> claims)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+
+                        SqlDataAdapter adapter = new SqlDataAdapter();
+
+                        string SP_UpdateUserPermissions = "UpdateUserPermissions";
+                        adapter.InsertCommand = new SqlCommand(SP_UpdateUserPermissions, connection, transaction);
+                        adapter.InsertCommand.CommandType = CommandType.StoredProcedure;
+                        adapter.InsertCommand.CommandText = SP_UpdateUserPermissions;
+
+                        DataTable pair = new DataTable();
+
+                        DataColumn column = new DataColumn();
+                        column.ColumnName = "permission";
+                        column.DataType = typeof(string);
+                        pair.Columns.Add(column);
+
+                        column = new DataColumn();
+
+                        column.ColumnName = "scopeOfPermission";
+                        column.DataType = typeof(string);
+                        pair.Columns.Add(column);
+
+                        DataRow row;
+                        foreach (var claim in claims)
+                        {
+                            row = pair.NewRow();
+                            row["permission"] = claim.Type.ToString();
+                            row["scopeOfPermission"] = claim.Value.ToString();
+                            pair.Rows.Add(row);
+                        }
+
+                        foreach (DataRow r in pair.Rows)
+                        {
+                            foreach (DataColumn c in pair.Columns)
+                                Console.Write("\t{0}", r[c]);
+
+                            Console.WriteLine("\t\t\t" + r.RowState);
+                        }
+
+                        var param = new SqlParameter[2];
+                        param[0] = adapter.InsertCommand.Parameters.AddWithValue("@PERMISSIONS", pair);
+                        param[1] = adapter.InsertCommand.Parameters.AddWithValue("@USERNAME", username);
+
+
+                        var _reader = adapter.InsertCommand.ExecuteNonQuery();
+                        transaction.Commit();
+                        Console.WriteLine($" reader rows: {_reader}");
+                        if (_reader != 0)
+                        {
+                            return "permissions have been successfully updated";
+                        }
+                        else
+                        {
+                            return "failed to update permissions";
+                        }
+
+                    }
+
+                    catch (SqlException ex)
+                    {
+                        transaction.Rollback();
+                        return "failed to update permissions2";
+                    }
+                }
+            }
+        }
+
+        public string Lock(string username)
+        {
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                using (var command = new SqlCommand())
+                {
+                    command.Transaction = conn.BeginTransaction();
+                    command.Connection = conn;
+                    command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
+                    command.CommandType = CommandType.Text;
+
+                    command.CommandText = "UPDATE UserCredentials " +
+                        "SET locked = @v0 " +
+                        "WHERE username = @v1";
+
+                    var parameters = new SqlParameter[2];
+                    parameters[0] = new SqlParameter("@v0", '1');
+                    parameters[1] = new SqlParameter("@v1", username);
+
+                    command.Parameters.AddRange(parameters);
+
+                    try
+                    {
+                        var rowsAdded = command.ExecuteNonQuery();
+
+                        if (rowsAdded == 1)
+                        {
+                            command.Transaction.Commit();
+                            return "Account has been locked";
+                        }
+                    }
+                    catch (SqlException ex)
+                    {
+                        return "Account was NOT locked";
+                    }
+                }
+            }
+            return "Account was NOT locked";
+        }
+
+        public string Unlock(string username)
+        {
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                using (var command = new SqlCommand())
+                {
+                    command.Transaction = conn.BeginTransaction();
+                    command.Connection = conn;
+                    command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
+                    command.CommandType = CommandType.Text;
+
+                    command.CommandText = "UPDATE UserCredentials " +
+                        "SET locked = @v0 " +
+                        "WHERE username = @v1";
+
+                    var parameters = new SqlParameter[2];
+                    parameters[0] = new SqlParameter("@v0", '0');
+                    parameters[1] = new SqlParameter("@v1", username);
+
+                    command.Parameters.AddRange(parameters);
+                    
+                    try
+                    {
+                        var rowsAdded = command.ExecuteNonQuery();
+
+                        if (rowsAdded == 1)
+                        {
+                            command.Transaction.Commit();
+                            return "Account has been unlocked";
+                        }
+                    }
+                    catch (SqlException ex)
+                    {
+                        return "Account has NOT been unlocked";
+                    }
+                }
+            }
+            return "Account has been unlocked";
         }
 
 

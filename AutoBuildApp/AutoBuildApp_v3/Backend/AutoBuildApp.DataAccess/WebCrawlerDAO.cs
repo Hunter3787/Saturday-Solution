@@ -10,18 +10,18 @@ namespace AutoBuildApp.DataAccess
 {
     public class WebCrawlerDAO
     {
-        private string connectionString;
+        private string _connectionString;
         private List<string> listOfVendors;
         public WebCrawlerDAO(string connectionString)
         {
-            this.connectionString = connectionString;
+            this._connectionString = connectionString;
             listOfVendors = getAllVendors();
         }
 
         public List<string> getAllVendors()
         {
             List<string> vendorList = new List<string>();
-            using (SqlConnection connection = new SqlConnection("Server = localhost; Database = DB; Trusted_Connection = True;"))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 using (SqlTransaction transaction = connection.BeginTransaction())
@@ -54,7 +54,7 @@ namespace AutoBuildApp.DataAccess
         }
         public bool ProductExists(string modelNumber)
         {
-            using (SqlConnection connection = new SqlConnection(this.connectionString))
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
             {
                 connection.Open();
                 using (SqlTransaction transaction = connection.BeginTransaction())
@@ -87,7 +87,7 @@ namespace AutoBuildApp.DataAccess
         }
         public bool PostProductToDatabase(Product product)
         {
-            using (SqlConnection connection = new SqlConnection(this.connectionString))
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
             {
                 connection.Open();
                 using (SqlTransaction transaction = connection.BeginTransaction())
@@ -96,6 +96,7 @@ namespace AutoBuildApp.DataAccess
                     {
                         if(ProductExists(product.ModelNumber))
                         {
+                            Console.WriteLine("already exists");
                             return false;
                         }
 
@@ -124,7 +125,7 @@ namespace AutoBuildApp.DataAccess
 
         public void PostSpecsOfProductsToDatabase(Product product)
         {
-            using (SqlConnection connection = new SqlConnection(this.connectionString))
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
             {
                 connection.Open();
                 using (SqlTransaction transaction = connection.BeginTransaction())
@@ -159,7 +160,7 @@ namespace AutoBuildApp.DataAccess
         
         public void AddVendor(string vendorName)
         {
-            using (SqlConnection connection = new SqlConnection(this.connectionString))
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
             {
                 connection.Open();
                 using (SqlTransaction transaction = connection.BeginTransaction())
@@ -224,7 +225,7 @@ namespace AutoBuildApp.DataAccess
         //}
         public void PostToVendorProductsTable(Product product)
         {
-            using (SqlConnection connection = new SqlConnection(this.connectionString))
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
             {
                 connection.Open();
                 using (SqlTransaction transaction = connection.BeginTransaction())
@@ -241,6 +242,7 @@ namespace AutoBuildApp.DataAccess
                             "(select vendorID from vendorclub where vendorName = @VENDORNAME),(select productID from products where modelNumber = @MODELNUMBER), @PRODUCTNAME, @VENDORIMAGEURL, " +
                             "@VENDORLINKURL, @PRODUCTSTATUS, @PRODUCTPRICE, @RATING, @REVIEWS)";
 
+                        //double parsedPrice = (product.Price == null) ? DBNull. : Double.Parse(product.Price.Replace("$", "").Replace(",", ""));
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
                         adapter.InsertCommand.Parameters.Add("@VENDORIMAGEURL", SqlDbType.VarChar).Value = product.ImageUrl;
                         adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = vendor;
@@ -248,7 +250,14 @@ namespace AutoBuildApp.DataAccess
                         adapter.InsertCommand.Parameters.Add("@PRODUCTNAME", SqlDbType.VarChar).Value = product.Name;
                         adapter.InsertCommand.Parameters.Add("@VENDORLINKURL", SqlDbType.VarChar).Value = product.Url;
                         adapter.InsertCommand.Parameters.Add("@PRODUCTSTATUS", SqlDbType.VarChar).Value = product.Availability ;
-                        adapter.InsertCommand.Parameters.Add("@PRODUCTPRICE", SqlDbType.VarChar).Value = Double.Parse(product.Price.Replace("$","").Replace(",", ""));
+                        if(product.Price == null)
+                        {
+                            adapter.InsertCommand.Parameters.Add("@PRODUCTPRICE", SqlDbType.Decimal).Value = DBNull.Value;
+                        }
+                        else
+                        {
+                            adapter.InsertCommand.Parameters.Add("@PRODUCTPRICE", SqlDbType.Decimal).Value = Double.Parse(product.Price.Replace("$", "").Replace(",", ""));
+                        }
                         adapter.InsertCommand.Parameters.Add("@RATING", SqlDbType.VarChar).Value = product.TotalRating;
                         adapter.InsertCommand.Parameters.Add("@REVIEWS", SqlDbType.VarChar).Value = product.TotalNumberOfReviews;
 
@@ -270,7 +279,7 @@ namespace AutoBuildApp.DataAccess
 
         public void PostToVendorProductReviewsTable(Product product)
         {
-            using (SqlConnection connection = new SqlConnection(this.connectionString))
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
             {
                 connection.Open();
                 using (SqlTransaction transaction = connection.BeginTransaction())

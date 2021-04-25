@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -54,6 +55,7 @@ namespace AutoBuildApp.Api.Controllers
         [HttpPost]
         public IActionResult AddProductToVendorListOfProducts(AddProductDTO product)
         {
+            Console.WriteLine("image url = " + product.ImageUrl);
             bool result = _vendorLinkingManager.AddProductToVendorListOfProducts(product);
             return Ok();
         }
@@ -61,29 +63,28 @@ namespace AutoBuildApp.Api.Controllers
         [HttpPut]
         public IActionResult EditProductInVendorListOfProducts(AddProductDTO product)
         {
+            Console.WriteLine("image url2 = " + product.ImageUrl);
+
             bool result = _vendorLinkingManager.EditProductInVendorListOfProducts(product);
             return Ok();
         }
 
         [HttpGet]
-        public IActionResult GetAllProductsByVendor(string filtersString)
+        public IActionResult GetAllProductsByVendor(string filtersString, string order)
         {
+            Console.WriteLine("order = " + order);
             GetProductByFilterDTO filters = null;
             if (filtersString != null)
             {
                 filters = new GetProductByFilterDTO();
+                filters.PriceOrder = order;
                 filtersString = filtersString.Replace("?filtersString=", "");
-                Console.WriteLine("initial = " + filtersString);
                 string[] SeparatedFilters = filtersString.Split(',');
-                Console.WriteLine("yo");
                 foreach (string f in SeparatedFilters)
                 {
-                    Console.WriteLine("yooo " + f);
                     filters.FilteredListOfProducts.Add(f, true);
-                    Console.WriteLine("ok");
                 }
             }
-            //filters.FilteredListOfProducts.Add("cpu", true);
             if (!_threadPrinciple.Identity.IsAuthenticated)
             {
 
@@ -98,6 +99,7 @@ namespace AutoBuildApp.Api.Controllers
             }
             Console.WriteLine("here");
             var productsByVendor = _vendorLinkingManager.GetAllProductsByVendor(filters);
+
             return Ok(productsByVendor);
         }
             /// <summary>
