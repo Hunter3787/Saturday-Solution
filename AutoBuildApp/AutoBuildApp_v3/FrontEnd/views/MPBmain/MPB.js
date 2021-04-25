@@ -27,7 +27,7 @@ async function getItems() {
         .then(data => displayItems(data)) // will call the display items function.
         .then(console.log("reloaded"))
         .catch(error => console.error('Unable to get items.', error)); // will catch an error and print the appropriate error message in console.
-    refreshData;
+    //refreshData;
 }
 
 
@@ -65,7 +65,7 @@ function displayItems(data) {
 
         // create a title element, appends text to it, and then appends all to a build block.
         var title = document.createElement('p');
-        var titletext = document.createTextNode("title: "+ item["title"]);
+        var titletext = document.createTextNode("Title: "+ item["title"]);
         title.appendChild(titletext);
         blockbuild.appendChild(title);
 
@@ -80,13 +80,13 @@ function displayItems(data) {
 
         // creates the username element, appends text to it, and then appends all to a build block.
         var username = document.createElement('p');
-        var usernametext = document.createTextNode("user: " + item["username"]);
+        var usernametext = document.createTextNode("User: " + item["username"]);
         username.appendChild(usernametext);
         blockbuild.appendChild(username);
 
         // creates the likes element, appends text to it, and then appends all to a build block.
         var likes = document.createElement('p');
-        var likestext = document.createTextNode("likes: " + item["likeIncrementor"]);
+        var likestext = document.createTextNode("Likes: " + item["likeIncrementor"]);
         likes.appendChild(likestext);
         blockbuild.appendChild(likes);
 
@@ -105,7 +105,7 @@ function displayItems(data) {
 
         
 
-        var buildtypetext = document.createTextNode("build: " + build);
+        var buildtypetext = document.createTextNode("Build: " + build);
         buildtype.appendChild(buildtypetext);
         blockbuild.appendChild(buildtype);
 
