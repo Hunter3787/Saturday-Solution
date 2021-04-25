@@ -106,10 +106,11 @@ namespace AutoBuildApp.Api.HelperFunctions
                 var result = ValidateTheToken(httpContext, token);
                 if (result == false) //IF JWT NOT VALID
                 {
-
                     Console.WriteLine($"THE TOKEN PASSED IS NOT VALID JWT!");
-                    await httpContext.Response.WriteAsync("Hello World! "+ httpContext.Response.StatusCode);
-                    // await httpContext .Response .WriteAsync(httpContext.Response.StatusCode.ToString());
+                    return;
+
+                   // return Task.FromResult( await httpContext.Response.WriteAsync("Hello World! "+ httpContext.Response.StatusCode));
+                   // await httpContext .Response .WriteAsync(httpContext.Response.StatusCode.ToString());
 
                 }
             }
@@ -150,7 +151,7 @@ namespace AutoBuildApp.Api.HelperFunctions
             if (!_validateAuthorizationHeader.IsValidJWT()) // JWT IS NOT VALID, END CALL
             {
 
-                httpContext.Response.StatusCode = 400; //Bad Request   
+                httpContext.Response.StatusCode = StatusCodes.Status404NotFound;//400; //Bad Request   
                 return false;
             }
             else //THE JWT IS VALID, THEREFORE SET THE CLAIMS PRINCIPLE TO THREAD.
@@ -188,6 +189,10 @@ namespace AutoBuildApp.Api.HelperFunctions
             #region Instantiating the guest principle
             _threadPrinciple = Guest.DefaultClaimsPrinciple();
             Thread.CurrentPrincipal = _threadPrinciple;
+            foreach (Claim c in _threadPrinciple.Claims)
+            {
+                Console.WriteLine($"Permission:  {c.Type}, Scope: {c.Value} ");
+            }
             #endregion
         }
 

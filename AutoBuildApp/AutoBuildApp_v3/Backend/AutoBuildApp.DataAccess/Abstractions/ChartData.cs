@@ -12,35 +12,54 @@ namespace AutoBuildApp.DataAccess.Abstractions
         /// XLabel represents the
         /// X Name Tick in the chart/ graph.
         /// </summary>
-        public string XLabel { get; set; }
+        public string XLabelString { get; set; }
+
+        /// <summary>
+        /// XLabel represents the
+        /// X Name Tick in the chart/ graph.
+        /// </summary>
+        public float XLabelInt { get; set; }
+
         /// <summary>
         /// Legend represents essentially 
         /// the Z value in the chart.
         /// </summary>
-        public string Legend { get; set; }
+        public object Legend { get; set; }
         /// <summary>
         /// YValue represent the corresponding
         /// value to the X-Value.
         /// </summary>
-        public int YValue { get; set; }
+        public string YValueString { get; set; }
+
+        /// <summary>
+        /// YValue represent the corresponding
+        /// value to the X-Value.
+        /// </summary>
+        public int YValueInt { get; set; }
+
 
         public ChartData()
         {
-            XLabel = " ";
+            XLabelInt = 0;
+            XLabelString = " ";
             Legend = " ";
-            YValue = 0;
+            YValueInt = 0;
+            YValueString = " ";
         }
 
         public ChartData(string xLabel, int yValue, string legend)
         {
-            this.XLabel = xLabel;
-            this.YValue = yValue;
+            this.XLabelString = xLabel;
+            this.YValueInt = yValue;
             this.Legend = legend;
 
         }
         public override string ToString()
         {
-            return $"(X,Y,Legend) : ({this.XLabel}, {this.YValue}, {this.Legend})\n";
+
+            return $"\tXLabelInt : { XLabelInt}\n\tXLabelString : {XLabelString}\n" +
+                $"\tYValueInt : {YValueInt}\n\tYValueString : {YValueString} \n" +
+                $"\tLegend : {  Legend } ";
         }
 
     }
