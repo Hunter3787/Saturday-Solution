@@ -75,10 +75,10 @@ namespace AutoBuildApp.DataAccess
 
                             ProductEntity tempEntity = new ProductEntity()
                             {
-                                Type = (string)outerReader[DAOGlobals.PRODUCT_COLUMN_TYPE],
-                                Name = (string)outerReader[DAOGlobals.PRODUCT_COLUMN_NAME],
-                                Manufacturer = (string)outerReader[DAOGlobals.PRODUCT_COLUMN_MANUFACTURER],
-                                Model = (string)outerReader[DAOGlobals.PRODUCT_COLUMN_MODEL]
+                                Type = (string)outerReader[ProductTableCollumns.PRODUCT_COLUMN_TYPE],
+                                Name = (string)outerReader[ProductTableCollumns.PRODUCT_COLUMN_NAME],
+                                Manufacturer = (string)outerReader[ProductTableCollumns.PRODUCT_COLUMN_MANUFACTURER],
+                                Model = (string)outerReader[ProductTableCollumns.PRODUCT_COLUMN_MODEL]
                             };
 
 
@@ -95,7 +95,10 @@ namespace AutoBuildApp.DataAccess
                             tempEntity.Specs = specsDictionary;
 
                             entitiesList.Add(tempEntity);
+                            outerReader.NextResult();
                         }
+
+                        
                     }
                 }
             }

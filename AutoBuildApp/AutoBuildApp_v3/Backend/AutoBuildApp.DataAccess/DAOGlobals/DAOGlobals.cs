@@ -9,9 +9,5 @@ namespace AutoBuildApp.DataAccess
         public const int TIMEOUT_SHORT = 5;
         public const int TIMEOUT_MEDIUM = 30;
         public const int TIMEOUT_LONG = 60;
-        public const string PRODUCT_COLUMN_MODEL = "Model";
-        public const string PRODUCT_COLUMN_TYPE = "Type";
-        public const string PRODUCT_COLUMN_MANUFACTURER = "Manufacturer";
-        public const string PRODUCT_COLUMN_NAME = "Name";
     }
 }

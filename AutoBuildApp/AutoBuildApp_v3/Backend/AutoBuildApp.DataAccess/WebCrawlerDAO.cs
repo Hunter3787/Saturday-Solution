@@ -10,18 +10,18 @@ namespace AutoBuildApp.DataAccess
 {
     public class WebCrawlerDAO
     {
-        private string connectionString;
+        private string _connectionString;
         private List<string> listOfVendors;
         public WebCrawlerDAO(string connectionString)
         {
-            this.connectionString = connectionString;
+            this._connectionString = connectionString;
             listOfVendors = getAllVendors();
         }
 
         public List<string> getAllVendors()
         {
             List<string> vendorList = new List<string>();
-            using (SqlConnection connection = new SqlConnection("Server = localhost; Database = DB; Trusted_Connection = True;"))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 using (SqlTransaction transaction = connection.BeginTransaction())
@@ -54,7 +54,7 @@ namespace AutoBuildApp.DataAccess
         }
         public bool ProductExists(string modelNumber)
         {
-            using (SqlConnection connection = new SqlConnection(this.connectionString))
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
             {
                 connection.Open();
                 using (SqlTransaction transaction = connection.BeginTransaction())
@@ -87,7 +87,7 @@ namespace AutoBuildApp.DataAccess
         }
         public bool PostProductToDatabase(Product product)
         {
-            using (SqlConnection connection = new SqlConnection(this.connectionString))
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
             {
                 connection.Open();
                 using (SqlTransaction transaction = connection.BeginTransaction())
@@ -124,7 +124,7 @@ namespace AutoBuildApp.DataAccess
 
         public void PostSpecsOfProductsToDatabase(Product product)
         {
-            using (SqlConnection connection = new SqlConnection(this.connectionString))
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
             {
                 connection.Open();
                 using (SqlTransaction transaction = connection.BeginTransaction())
@@ -159,7 +159,7 @@ namespace AutoBuildApp.DataAccess
         
         public void AddVendor(string vendorName)
         {
-            using (SqlConnection connection = new SqlConnection(this.connectionString))
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
             {
                 connection.Open();
                 using (SqlTransaction transaction = connection.BeginTransaction())
@@ -224,7 +224,7 @@ namespace AutoBuildApp.DataAccess
         //}
         public void PostToVendorProductsTable(Product product)
         {
-            using (SqlConnection connection = new SqlConnection(this.connectionString))
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
             {
                 connection.Open();
                 using (SqlTransaction transaction = connection.BeginTransaction())
@@ -270,7 +270,7 @@ namespace AutoBuildApp.DataAccess
 
         public void PostToVendorProductReviewsTable(Product product)
         {
-            using (SqlConnection connection = new SqlConnection(this.connectionString))
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
             {
                 connection.Open();
                 using (SqlTransaction transaction = connection.BeginTransaction())

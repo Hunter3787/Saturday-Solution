@@ -21,10 +21,16 @@ namespace AutoBuildApp.Api.Controllers
     [EnableCors("CorsPolicy")]
     public class RecommendationController : ControllerBase
     {
-        private LoggingConsumerManager _logManager = new LoggingConsumerManager();
-        private LoggingProducerService _logger = LoggingProducerService.GetInstance;
-        private readonly string _connectionString = ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection");
+        // Logging setup
+        //private LoggingConsumerManager _logManager = new LoggingConsumerManager();
+        //private LoggingProducerService _logger = LoggingProducerService.GetInstance;
+        private readonly string _connectionString =
+            ConnectionManager
+            .connectionManager
+            .GetConnectionStringByName(ControllerGlobals.CONNECTION_CONFIG_NAME);
+
         private RecommendationManager manager;
+
         /// <summary>
         /// Get a full build recommendation from the system.
         /// </summary>
@@ -35,14 +41,15 @@ namespace AutoBuildApp.Api.Controllers
         /// <param name="hardDriveType"></param>
         /// <param name="hardDriveCount"></param>
         /// <returns></returns>
-        [HttpPost]
-        public IActionResult GetFullBuildRecommend(UserRequestParameters requests)
+        [HttpPost("BuildRecommend")]
+        public IActionResult GetBuildRecommend(RecommenderReqParams requests)
         {
-             manager = new RecommendationManager(_connectionString);
+            manager = new RecommendationManager(_connectionString);
+ 
 
             try { 
                 var builds = manager.RecommendBuilds(requests.Build, requests.Budget,
-                    requests.List,requests.Psu, requests.HddType, requests.HddCount);
+                    requests.PeripheralsList,requests.Psu, requests.HddType, requests.HddCount);
 
                     if (builds != null)
                         return Ok(builds);
@@ -50,16 +57,32 @@ namespace AutoBuildApp.Api.Controllers
             }
             catch(UnauthorizedAccessException ex)
             {
-                _logger.LogWarning(ex.Message);
+                //_logger.LogWarning(ex.Message);
                 return new StatusCodeResult(StatusCodes.Status401Unauthorized);
             }
             catch(ArgumentOutOfRangeException ex)
             {
-                _logger.LogWarning(ex.Message);
+                //_logger.LogWarning(ex.Message);
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
 
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+        }
+
+        [HttpPost]
+        [Route("BuildUpgrade")]
+        public IActionResult GetBuildUpgrade()
+        {
+
+            return Ok();
+        }
+        
+        [HttpPost]
+        [Route("ItemUpgrade")]
+        public IActionResult GetItemUpgrade()
+        {
+
+            return Ok();
         }
     }
 }
