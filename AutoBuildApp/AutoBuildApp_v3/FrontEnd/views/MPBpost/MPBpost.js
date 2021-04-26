@@ -60,7 +60,7 @@ function displayItem(item) {
     // These five lines will create a header 4 element, append the class and username data from the http get request.
     var username = document.createElement('h4');
     username.classList.add('buildusername');
-    var usernameText = document.createTextNode(item["username"]);
+    var usernameText = document.createTextNode("User: " + item["username"]);
     username.appendChild(usernameText);
     buildHeader.appendChild(username);
 
@@ -78,14 +78,14 @@ function displayItem(item) {
     // These five lines will create a header 5 element, append the class and build type data assigned above.    
     var buildType = document.createElement('h5');
     buildType.classList.add('buildtype');
-    var buildTypeText = document.createTextNode(build);
+    var buildTypeText = document.createTextNode("Build: " + build);
     buildType.appendChild(buildTypeText);
     buildHeader.appendChild(buildType);
 
     // These five lines will create a header 5 element, append the class and dateTime data from the http get request.
     var buildDate = document.createElement('h5');
-    buildDate.classList.add('buildtype');
-    var buildDateText = document.createTextNode(item["dateTime"]);
+    buildDate.classList.add('builddate');
+    var buildDateText = document.createTextNode("Date Created: " + item["dateTime"]);
     buildDate.appendChild(buildDateText);
     buildHeader.appendChild(buildDate);
 
