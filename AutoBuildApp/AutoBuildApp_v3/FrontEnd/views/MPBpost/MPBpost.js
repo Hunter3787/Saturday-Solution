@@ -1,4 +1,4 @@
-const uri = 'https://localhost:5001/mostpopularbuilds/build/?buildId=30000';
+const uri = 'https://localhost:5001/mostpopularbuilds/build/?buildId=';
 let posts = [];
 let token = ' ';
 const fetchRequest = {
@@ -22,7 +22,10 @@ function looping(){
 var refreshData = setInterval(looping, 3000);
 
 async function getItem() {
-    await fetch(uri, fetchRequest) // fetches the default URI
+
+    var buildId = sessionStorage.getItem('buildId');
+
+    await fetch(uri + buildId, fetchRequest) // fetches the default URI
         .then(response => response.json()) // Will receive a response from the default response.json.
         .then(item => displayItem(item)) // will call the display items function.
         .then(console.log("reloaded"))

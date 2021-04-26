@@ -63,7 +63,12 @@ function displayItems(data) {
         // make the div for each individual build and append it to the build block.
         var blockbuild = document.createElement('div');
         blockbuild.classList.add('blockbuild');
-        blockbuild.addEventListener("click", () => window.location.assign("../MPBpost/MPBpost.html")); // lambda function for redirecting on click.
+
+        // lambda function for redirecting on click.
+        blockbuild.addEventListener("click", () => {
+          sessionStorage.setItem('buildId', item["entityId"]);
+          window.location.assign("../MPBpost/MPBpost.html")
+        }); 
 
         // create a title element, appends text to it, and then appends all to a build block.
         var title = document.createElement('p');
