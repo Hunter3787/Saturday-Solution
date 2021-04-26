@@ -6,13 +6,32 @@ const fetchRequest = {
     mode: 'cors',
 };
 
-// "textCounter(this,'counter',10000);"
-
+// sets a keyup event listener for the textarea element.
 let counter = document.getElementById('add-description');
 counter.addEventListener("keyup", () => textCounter(counter, 'counter', 10000));
 
 let form = document.getElementById('publish-form');
-form.addEventListener("submit", () => addItem()); // lambda function for redirecting on click.
+ // lambda function for redirecting on click.
+form.addEventListener("submit", () => {
+    postItem();
+});
+
+// this is the async post item function that posts a build to the DB
+async function postItem() {
+
+    // sets var equal to the FormData returned by the function.
+    var postData = addItem();
+
+    // sets a custom request overriding the const request.
+    let customRequest = Object.assign(fetchRequest, {method: 'POST', body: postData});
+
+    // makes a fetch post request with the custom request.
+    await fetch(uri, customRequest)
+
+    // redirects the page to the main page after a submission.
+    window.location.assign("../MPBmain/MPB.html")
+}
+
 
 // This function will add an item to the DB.
 function addItem() {
@@ -27,7 +46,7 @@ function addItem() {
     let username = document.getElementById('add-username'); // will get the value from the html element and store it.
     let description = document.getElementById('add-description'); // will get the value from the html element description and store it.
     let photo = document.getElementById("add-image").files[0]; // store the file in the photo variable.
-    let buildType = document.getElementsByName("build-type");
+    let buildType = document.getElementsByName("build-type"); // will get the value from the html element buildType and store it.
 
     // This for loop will iterate through the radio elements and find which one is checked.
     for (let i = 0; i < buildType.length; i++)
@@ -38,21 +57,15 @@ function addItem() {
         }
     }
 
-    console.log(buildTypeValue);
-
     // The next 6 lines will store the above data in the formData object.
     formData.append("username", username.value.trim());
     formData.append("title", title.value.trim());
     formData.append("description", description.value.trim());
     formData.append("buildType", buildTypeValue);
-    formData.append("buildImagePath", "C:/Test/Directory");
     formData.append("image", photo);
 
-    // Overrides the constant fetchRequest with custom attributes.
-    let customRequest = Object.assign(fetchRequest, {method: 'POST', body: formData});
-
-    // Makes a fetch request to the controller with the specified attributes.
-    fetch(uri, customRequest);
+    // return the FormData object.
+    return formData;
 }
 
 // This function acts as a counter for the textarea field to show how many characters remain.

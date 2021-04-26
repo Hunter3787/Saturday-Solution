@@ -1,4 +1,4 @@
-const uri = 'https://localhost:5001/MostPopularBuilds';
+const uri = 'https://localhost:5001/MostPopularBuilds/';
 let posts = [];
 let token = ' ';
 const fetchRequest = {
@@ -11,21 +11,79 @@ const fetchRequest = {
     }
 };
 
+// Adds an event listener for redirecting to a different page when the post build button is clicked.
 let postBuild = document.getElementById('post-build-button');
-postBuild.addEventListener("click", () => window.location.assign("../MPBform/MPBform.html")); // lambda function for redirecting on click.
+postBuild.addEventListener("click", () => window.location.assign("../MPBform/MPBform.html"))
 
+// Adds an event listener foreach radio element in the radio group of build type radio buttons.
+let buildRadio = document.querySelectorAll('input[name="build"]').forEach((elem) => {
+  elem.addEventListener("change", () => getItems())
+})
+
+// Adds an event listener foreach radio element in the radio group of likes radio buttons.
+let likesRadio = document.querySelectorAll('input[name="likes"]').forEach((elem) => {
+  elem.addEventListener("change", () => getItems())
+})
+
+// This function gets the filter string if radio buttons are clicked.
+function getFilterString()
+{
+  
+  let queryString = "?"; // initialize query string with a ? to indicate a query.
+  var buildType = ""; // initialize a null query value for build type since that is the default.
+  var orderLikes = ""; // initialize a null query value for the order of likes since that is the default.
+
+  // will get the value from the html element build and store it in ele.
+  var ele = document.getElementsByName('build'); 
+
+  // This for loop will iterate through the radio elements and find which one is checked.
+  for (var i = 0; i < ele.length; i++)
+  {
+      if (ele[i].checked)
+      {
+          buildType = ele[i].value;
+      }
+  }
+
+  // will get the value from the html element likes and store it in ele.
+  var ele = document.getElementsByName('likes');
+
+  // This for loop will iterate through the radio elements and find which one is checked.
+  for (var i = 0; i < ele.length; i++)
+  {
+      if (ele[i].checked)
+      {
+          orderLikes = ele[i].value;
+      }
+  }
+
+  // This creates a string that will be appended to the query string.
+  const params = new URLSearchParams({
+    buildType: buildType,
+    orderLikes: orderLikes
+  });
+
+  // returns the full query string.
+  return queryString + params.toString();
+}
+
+// creates a function called process that will call the get items function.
 function process(){
   getItems();
 }
 
+// Sets a loop timer of 3 seconds to call the process function -> getItems();
 function looping(){
   setTimeout(process, 3000);
 }
 
+// creates a timer interval of 3 seconds to keep track of the current times, so no concurrency occurs.
 var refreshData = setInterval(looping, 3000);
 
+// This function will call a fetch request.
 async function getItems() {
-    await fetch(uri, fetchRequest) // fetches the default URI
+
+    await fetch(uri + getFilterString(), fetchRequest) // fetches the default URI
         .then(response => response.json()) // Will receive a response from the default response.json.
         .then(data => displayItems(data)) // will call the display items function.
         .then(console.log("reloaded"))
@@ -33,7 +91,7 @@ async function getItems() {
     refreshData;
 }
 
-
+// This function will display items received from the http response.
 function displayItems(data) {
 
     const innerDiv = document.getElementById('main'); // This will get the id of the form from the HTML.
