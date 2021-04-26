@@ -9,10 +9,29 @@ using AutoBuildApp.Services;
 
 namespace AutoBuildApp.Api.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
+    [EnableCors("CorsPolicy")]
     public class UserGarageController : ControllerBase
     {
-        public UserGarageController()
+        [HttpGet]
+        public IActionResult GetBuilds()
         {
+            return Ok();
         }
+
+        [HttpDelete]
+        public IActionResult DeleteBuild()
+        {
+            return Ok();
+        }
+
+        [HttpPut]
+        public IActionResult ModifyBuild()
+        {
+            return Ok();
+        }
+
+
     }
 }

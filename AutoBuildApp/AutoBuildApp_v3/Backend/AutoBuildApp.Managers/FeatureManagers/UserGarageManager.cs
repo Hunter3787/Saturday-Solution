@@ -1,5 +1,4 @@
-﻿using System;
-using AutoBuildApp.Models.Interfaces;
+﻿using AutoBuildApp.Models.Interfaces;
 
 /// <summary>
 /// "Autobuild User Garage" manager class
@@ -19,14 +18,20 @@ namespace AutoBuildApp.Managers
         public bool SaveBuild(IBuild build)
         {
             if (build == null)
+            {
                 return false;
+            }
+                
             return true;
         }
 
         public bool SaveToShelf(IComponent item, string shelfID)
         {
             if (item == null || shelfID == null)
+            {
                 return false;
+            }
+                
             return true;
         }
     }

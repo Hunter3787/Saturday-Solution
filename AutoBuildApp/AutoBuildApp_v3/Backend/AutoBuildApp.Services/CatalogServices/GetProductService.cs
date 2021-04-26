@@ -12,7 +12,7 @@ using AutoBuildApp.DataAccess.Entities;
  */
 namespace AutoBuildApp.Services.CatalogServices
 {
-    public class GetComponentsService
+    public class GetProductService
     {
         private readonly IProductDAO _dao;
 
@@ -20,7 +20,7 @@ namespace AutoBuildApp.Services.CatalogServices
         /// Constructor that takes an injection of a data access object.
         /// </summary>
         /// <param name="acessObject">Data Access Object</param>
-        public GetComponentsService(IProductDAO acessObject)
+        public GetProductService(IProductDAO acessObject)
         {
             _dao = acessObject;
         }
