@@ -1,4 +1,8 @@
 ﻿using AutoBuildApp.DataAccess.Abstractions;
+using AutoBuildApp.Security;
+using AutoBuildApp.Security.Enumerations;
+using AutoBuildApp.Security.FactoryModels;
+using AutoBuildApp.Security.Interfaces;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -10,6 +14,10 @@ namespace AutoBuildApp.DataAccess
     public class UadDAO
     {
         private ResponseUAD _responseUAD;
+
+        private ClaimsFactory _claimsFactory = new ConcreteClaimsFactory();
+
+
         public string ConnectionString { get; set; }
 
         public UadDAO(string connection)
@@ -65,10 +73,12 @@ namespace AutoBuildApp.DataAccess
                         if (!_reader.HasRows) // use the bang!!!!!!! 
                         {
                             _responseUAD.ResponseString = "No Data At The Moment";
+                            _responseUAD.SuccessBool = false;
                         }
                         else if (_reader.HasRows) // just else is enough 
                         {
                             _responseUAD.ResponseString = "There Exists Data!";
+                            _responseUAD.SuccessBool = true;
                         }
 
                         //READ AND STORE ALL THE ORDINALS YOU NEED
@@ -103,6 +113,21 @@ namespace AutoBuildApp.DataAccess
 
 
 
+        /// <summary>
+        /// method to check permissions needed per authorization service.
+        /// </summary>
+        /// <returns></returns>
+        public bool isAuthorized()
+        {
+            IClaims _admin = _claimsFactory.GetClaims(RoleEnumType.SENIOR_ADMIN);
+            // FIRST LINE OF DEFENCE 
+            if (!AuthorizationService.checkPermissions(_admin.Claims()))
+            {
+                return false;
+            }
+            return true;
+
+        }
 
 
         /// <summary>
@@ -112,8 +137,16 @@ namespace AutoBuildApp.DataAccess
         /// <returns></returns>
         public ResponseUAD GetAllAnalytics()
         {
+
             _responseUAD = new ResponseUAD();
             ChartData chartData;
+
+
+            if (!isAuthorized())
+            {
+                _responseUAD.IsAuthorized = false;
+                return _responseUAD;
+            }
 
             using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
@@ -127,13 +160,16 @@ namespace AutoBuildApp.DataAccess
                     #region SQL related
 
                     // https://learning.oreilly.com/library/view/adonet-in-a/0596003617/ch04s05.html
-                    command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
+                    command.CommandTimeout = TimeSpan.FromSeconds(DAOGlobals.TIMEOUT_LONG).Seconds;
                     // 1) Create a Command, and set its CommandType property to StoredProcedure.
                     command.CommandType = CommandType.StoredProcedure;
                     // 2) Set the CommandText to the name of the stored procedure.
                     command.CommandText = SP_GetAllAnalytics;
 
                     #endregion SQL related
+                    string X_Value = "X_Value";
+                    string Y_Value = "Y_Value";
+                    string Legend = "Legend";
 
                     using (var _reader = command.ExecuteReader())
                     {
@@ -150,9 +186,9 @@ namespace AutoBuildApp.DataAccess
                         }
 
                         //READ AND STORE ALL THE ORDINALS YOU NEED
-                        int X_Value = _reader.GetOrdinal("X_Value"); // no magic 
-                        int Y_Value = _reader.GetOrdinal("Y_Value");
-                        int Legend = _reader.GetOrdinal("Legend");
+                        int X_Value_ord = _reader.GetOrdinal(X_Value); // no magic 
+                        int Y_Value_ord = _reader.GetOrdinal(Y_Value);
+                        int Legend_ord = _reader.GetOrdinal(Legend);
 
                         /// BAR 1: 
                         /// Bar graph 1: The number of accounts (Y Axis) held
@@ -164,9 +200,9 @@ namespace AutoBuildApp.DataAccess
                             // each time generate 
                             chartData = new ChartData();
 
-                            chartData.XLabelString= (string)_reader[X_Value];
-                            chartData.Legend = (string)_reader[Legend];
-                            chartData.YValueInt = (int)_reader[Y_Value];
+                            chartData.XLabelString= (string)_reader[X_Value_ord];
+                            chartData.Legend = (string)_reader[Legend_ord];
+                            chartData.YValueInt = (int)_reader[Y_Value_ord];
                             // going to take the data! 
                             _responseUAD.GetNumAccountsPerRole.Add(chartData);
                             //Console.WriteLine($"Bar 1: {chartData.ToString()}");
@@ -216,7 +252,7 @@ namespace AutoBuildApp.DataAccess
                             chartData.YValueInt = (int)_reader[Y_Value];
                             chartData.Legend = (string)_reader[Legend];
                             // going to take the data! 
-                            _responseUAD.GetRegPerMontthByUserType.Add(chartData);
+                            _responseUAD.GetRegPerMonthByUserType.Add(chartData);
                             // Console.WriteLine($"Line Chart 1: {chartData.ToString()}");
                         }
 
@@ -235,7 +271,7 @@ namespace AutoBuildApp.DataAccess
                             chartData.YValueInt = (int)_reader[Y_Value];
                             chartData.Legend = (string)_reader[Legend];
                             // going to take the data! 
-                            _responseUAD.GetRegPerMontthByUserType.Add(chartData);
+                            _responseUAD.GetAvgSessDurPerRole.Add(chartData);
                            // Console.WriteLine($"Bar Graph 3: {chartData.ToString()}");
                         }
 
@@ -255,7 +291,7 @@ namespace AutoBuildApp.DataAccess
                             chartData.YValueInt = (int)_reader[Y_Value];
                             chartData.Legend = (int)_reader[Legend];
                             // going to take the data! 
-                            _responseUAD.GetRegPerMontthByUserType.Add(chartData);
+                            _responseUAD.GetPageViewPerMonth.Add(chartData);
                             Console.WriteLine($"line chart 2: {chartData.ToString()}");
                         }
 

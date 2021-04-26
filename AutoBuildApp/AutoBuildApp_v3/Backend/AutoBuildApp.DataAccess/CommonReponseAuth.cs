@@ -17,7 +17,6 @@ namespace AutoBuildApp.DataAccess
 
         public string SuccessString { get; set; }
         public string FailureString { get; set; }
-        public bool SuccessBool { get; set; }
         public bool connectionState { get; set; }
 
         public bool IsUserExists { get; set; }
@@ -47,7 +46,8 @@ namespace AutoBuildApp.DataAccess
         }
         public override string ToString()
         {
-            return $"\nSuccess string {SuccessString}\nFailure String {FailureString}\n" +
+            return $"\nResponse String {ResponseString }\n" +
+                $"\nSuccess string {SuccessString}\nFailure String {FailureString}\n" +
                 $"Success Bool {SuccessBool}\nIsAuthenticated {isAuthenticated}\n" +
                 $"Connection bool {connectionState}\n" +
                 $"IsUser Exists {IsUserExists}" ;

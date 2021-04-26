@@ -20,7 +20,12 @@ namespace AutoBuildApp.DataAccess.Abstractions
         /// a bool value to check incoming object if it succeeded or failed 
         /// to cast as necessary 
         /// </summary>
-        bool SuccessBool { get; set; }
+        public bool SuccessBool { get; set; }
+
+        /// <summary>
+        /// the response sttring encompases both success or fail string.
+        /// </summary>
+        public string ResponseString { get; set; }
 
 
     }

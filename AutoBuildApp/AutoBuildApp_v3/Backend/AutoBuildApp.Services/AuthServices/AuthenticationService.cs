@@ -94,6 +94,7 @@ namespace AutoBuildApp.Services.Auth_Services
             if (!_responseAuth.connectionState)
             {
                 _responseAuth.isAuthenticated = false;
+                return _responseAuth;
             }
             // return immediately cuz db is off  - do this - dNNY
 

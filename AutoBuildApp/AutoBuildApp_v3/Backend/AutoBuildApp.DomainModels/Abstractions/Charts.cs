@@ -13,6 +13,8 @@ namespace AutoBuildApp.DomainModels.Abstractions
         string YAxisTitle { get; set; }
         string XAxisTitle { get; set; }
 
+        string Legend { get; set; }
+
         ChartType chartType { get; set; } 
         int XScale { get; set; }
         int YScale { get; set; }
@@ -21,9 +23,10 @@ namespace AutoBuildApp.DomainModels.Abstractions
 
         public Charts()
         {
-            ChartTitle = "ChartTitle";
-            YAxisTitle = "YAxisTitle";
-            XAxisTitle = "XAxisTitle";
+            ChartTitle = ChartTitlesType.NONE.ToString();
+            YAxisTitle = ChartTitlesType.Y_TITLE.ToString();
+            XAxisTitle = ChartTitlesType.X_TITLE.ToString();
+            Legend     = ChartTitlesType.LEGEND.ToString();
             XScale = 2;
             YScale = 2;
             chartType = ChartType.NONE;
@@ -34,15 +37,16 @@ namespace AutoBuildApp.DomainModels.Abstractions
         // mandatory constructor parameter:
 
         public Charts(
-            string title,
             string XTitle,
             string YTitle,
-            List<ChartData> chartDatas,
+            string legendTitle,
+            IList<ChartData> chartDatas,
             ChartType chartType)
         {
-            ChartTitle = title;
+            ChartTitle =  YTitle + " PER" + XTitle + " BY "+ legendTitle;
             YAxisTitle = XTitle;
             XAxisTitle = YTitle;
+            Legend = legendTitle;
             XScale = 2;
             YScale = 2;
             this.chartType = chartType;
