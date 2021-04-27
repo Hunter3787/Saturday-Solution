@@ -1,4 +1,5 @@
 ﻿using AutoBuildApp.DataAccess;
+using AutoBuildApp.DomainModels;
 using AutoBuildApp.DomainModels.Abstractions;
 using AutoBuildApp.DomainModels.Enumerations;
 using AutoBuildApp.Security;
@@ -18,16 +19,16 @@ namespace AutoBuildApp.Managers.FeatureManagers
         private UadDAO _uadDAO;
 
         private ResponseUAD _responseUAD;
-
-        private List<Charts> _AnalyticCharts;
-
+        private UadDTO _uadDTO;
         private ClaimsFactory _claimsFactory = new ConcreteClaimsFactory();
 
         public UADManager(string _cnnctString)
         {
            
             _uadDAO = new UadDAO(_cnnctString);
-            _AnalyticCharts = new List<Charts>();
+            _responseUAD = new ResponseUAD();
+
+            _uadDTO = new UadDTO();
 
         }
        
@@ -35,7 +36,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
         /// method to check permissions needed per authorization service.
         /// </summary>
         /// <returns></returns>
-        public bool isAuthorized()
+        public bool IsAuthorized()
         {
             IClaims _admin = _claimsFactory.GetClaims(RoleEnumType.SENIOR_ADMIN);
             // FIRST LINE OF DEFENCE 
@@ -47,28 +48,31 @@ namespace AutoBuildApp.Managers.FeatureManagers
 
         }
 
-        public string getAllChartData()
+        public UadDTO GetAllChartData()
         {
+            _responseUAD = _uadDAO.GetAllAnalytics();
 
-           if (!isAuthorized())
+           if (!IsAuthorized())
            {
-                AuthorizationResultType.NOT_AUTHORIZED.ToString();
-           }
+                _uadDTO.result = AuthorizationResultType.NOT_AUTHORIZED.ToString();
+                return _uadDTO;
+
+            }
            if(!_responseUAD.IsAuthorized)
            {
-                AuthorizationResultType.NOT_AUTHORIZED.ToString();
-           }
+                _uadDTO.result = AuthorizationResultType.NOT_AUTHORIZED.ToString();
+                return _uadDTO;
 
-           _responseUAD  = _uadDAO.GetAllAnalytics();
-
+            }
             if(_responseUAD.SuccessBool == false)
             {
-                // in the case data is not being retrieved
-                return _responseUAD.ResponseString;
+                _uadDTO.result = _responseUAD.ResponseString;
+                return _uadDTO;
             }
             /// time to populate the charts into the list:
-            GetCharts(_responseUAD);
-            return ("");
+            _uadDTO.analyticChartsRequisted =  GetCharts(_responseUAD);
+            _uadDTO.result = "this is a tests again";
+            return _uadDTO;
 
         }
 
@@ -77,85 +81,80 @@ namespace AutoBuildApp.Managers.FeatureManagers
         /// </summary>
         /// <param name="responseUAD"></param>
         /// <returns></returns>
-        public IList<Charts> GetCharts(ResponseUAD responseUAD)
+        public List<Charts> GetCharts(ResponseUAD responseUAD)
         {
-            _responseUAD = responseUAD;
-
+            List<Charts> analyticCharts = new List<Charts>();
 
             ///for Bar 1 
             #region BAR GRAPH 1
-            Charts mycharts =
-                new Charts(
+            analyticCharts.Add(
+                 new Charts(
                     //"The Number Of Accounts Held Amongst Account Types",
                     ChartTitlesType.ACCOUNT_TYPES.ToString(),
                     ChartTitlesType.NUMBER_OF_ACCOUNTS.ToString(),
                     ChartTitlesType.NONE.ToString(),
-                    _responseUAD.GetNumAccountsPerRole,
-                    chartType: ChartType.BARCHART);
-            // add it to the list:
-            _AnalyticCharts.Add(mycharts);
+                    responseUAD.GetNumAccountsPerRole,
+                    chartType: ChartType.BARCHART));
             #endregion
 
 
             #region BAR GRAPH 2
             // for Bar 2 :
+            analyticCharts.Add(
             new Charts(
                    //"Percentage usage of Autobuild components, usage by visits",
                    ChartTitlesType.NUMBER_OF_VISITS.ToString(),
                    ChartTitlesType.AUTOBUILD_COMPONENT.ToString(),
                     ChartTitlesType.NONE.ToString(),
-                   _responseUAD.GetUsePerComponent,
-                    chartType: ChartType.BARCHART);
-            // add it to the list:
-            _AnalyticCharts.Add(mycharts);
+                   responseUAD.GetUsePerComponent,
+                    chartType: ChartType.BARCHART)
+            );
             #endregion
 
 
             #region BAR GRAPH 3
             // for bar graph 3:
+            // add it to the list:
+            analyticCharts.Add(
             new Charts(
                    // "Average session duration of user by account type",
                    ChartTitlesType.ACCOUNT_TYPES.ToString(),
                    ChartTitlesType.TIME_SPENT_PER_HOUR.ToString(),
                     ChartTitlesType.NONE.ToString(),
-                   _responseUAD.GetAvgSessDurPerRole,
-                   chartType: ChartType.LINECHART);
-            // add it to the list:
-            _AnalyticCharts.Add(mycharts);
+                   responseUAD.GetAvgSessDurPerRole,
+                   chartType: ChartType.LINECHART));
             #endregion
 
 
             #region LINE CHART 1:
             // for Line Chart 1:
+            // add it to the list:
+            analyticCharts.Add(
             new Charts(
                   //  "Number os registrations that took place per month by account type",
                   ChartTitlesType.MONTH.ToString(),
                   ChartTitlesType.NUMBER_OF_REGISTRATIONS.ToString(),
                     ChartTitlesType.ACCOUNT_TYPES.ToString(),
-                   _responseUAD.GetRegPerMonthByUserType,
-                   chartType: ChartType.LINECHART);
-            // add it to the list:
-            _AnalyticCharts.Add(mycharts);
+                   responseUAD.GetRegPerMonthByUserType,
+                   chartType: ChartType.LINECHART));
 
             #endregion
 
 
             #region LINE CHART 2:
             // for Line Chart 2:
+            analyticCharts.Add(
             new Charts(
                     // "Number of views that took place by month per AutoBuild Component",
                     ChartTitlesType.MONTH.ToString(),
                     ChartTitlesType.NUMBER_OF_VISITS.ToString(),
                     ChartTitlesType.AUTOBUILD_COMPONENT.ToString(),
-                   _responseUAD.GetPageViewPerMonth,
-                   chartType: ChartType.LINECHART);
-            // add it to the list:
-            _AnalyticCharts.Add(mycharts);
+                   responseUAD.GetPageViewPerMonth,
+                   chartType: ChartType.LINECHART));
 
             #endregion
 
-
-            return _AnalyticCharts;
+            return analyticCharts;
         }
 
     }

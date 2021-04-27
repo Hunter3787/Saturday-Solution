@@ -1,8 +1,14 @@
 ﻿using AutoBuildApp.Api.HelperFunctions;
+using AutoBuildApp.Security.Enumerations;
+using AutoBuildApp.Security.FactoryModels;
+using AutoBuildApp.Security.Interfaces;
+using AutoBuildApp.Security.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
+using System.Threading;
 
 namespace AutoBuildApp.DataAccess.Test
 {
@@ -35,33 +41,67 @@ namespace AutoBuildApp.DataAccess.Test
         public void METHOD()
         { 
             // have a rollback
+
+        }
+
+
+        private static IEnumerable<object[]> GetAllAnalytics_Data()
+        {
+            UserIdentity AdminIdentity = new UserIdentity
+            {
+                Name = "ADMIN USER",
+                IsAuthenticated = true,
+                AuthenticationType = "JWT"
+            };
+
+            ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
+            IClaims adminClaims = claimsFactory.GetClaims(RoleEnumType.SENIOR_ADMIN);
+            IClaims basicClaims = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
+
+            ClaimsIdentity adminClaimsIdentity = new ClaimsIdentity
+            (AdminIdentity, adminClaims.Claims(), AdminIdentity.AuthenticationType, AdminIdentity.Name, " ");
+
+
+            ClaimsIdentity basicClaimsIdentity = new ClaimsIdentity
+            (AdminIdentity, basicClaims.Claims(), AdminIdentity.AuthenticationType, AdminIdentity.Name, " ");
+
+            ResponseUAD expectedSuccessUAD = new ResponseUAD()
+            {
+                SuccessBool = true,
+                ConnectionState = true,
+                IsAuthorized = true
+            };
+            ResponseUAD expectedFailedUAD = new ResponseUAD()
+            {
+                SuccessBool = false,
+                IsAuthorized = false,
+            };
+            return new List<object[]>()
+            {
+               new object[]{ new ClaimsPrincipal(adminClaimsIdentity),expectedSuccessUAD },
+               new object[]{ new ClaimsPrincipal(basicClaimsIdentity),expectedFailedUAD },
+            };
+
         }
 
         [TestMethod]
         [DataTestMethod]
-        //[DynamicData(nameof(getPermissionsData), DynamicDataSourceType.Method)]
-        public void GetAllAnalytics()
+        [DynamicData(nameof(GetAllAnalytics_Data), DynamicDataSourceType.Method)]
+        public void GetAllAnalytics_ResponseReturned
+            (ClaimsPrincipal principalGenerated, ResponseUAD expectedUAD)
         {
-            ResponseUAD _responseUAD = new ResponseUAD();
-
+           Thread.CurrentPrincipal = principalGenerated;
+            ResponseUAD responseUAD = new ResponseUAD();
+            
             string connection = conString.GetConnectionStringByName("MyConnection");
-            _responseUAD = _uadDAO.GetAllAnalytics();
+            responseUAD = _uadDAO.GetAllAnalytics();
+            //Console.WriteLine(expectedUAD.ToString());
+            //Console.WriteLine(responseUAD.ToString());
+            Assert.AreEqual(expectedUAD.ToString(), responseUAD.ToString());
 
-            var BarGraph1 = _responseUAD.GetNumAccountsPerRole;
-
-            var BarGraph2 = _responseUAD.GetUsePerComponent;
-
-            var LineGraph1 = _responseUAD.GetRegPerMonthByUserType;
-
-            var BarGraph3 = _responseUAD.GetAvgSessDurPerRole;
-
-            var LineGraph2 = _responseUAD.GetPageViewPerMonth;
-
-            Assert.IsNotNull(LineGraph2);
-
-
-            // have a rollback
         }
+
+
     }
 
 }

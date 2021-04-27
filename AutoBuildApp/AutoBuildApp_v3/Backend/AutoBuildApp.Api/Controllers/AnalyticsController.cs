@@ -1,4 +1,7 @@
 ﻿using AutoBuildApp.Api.HelperFunctions;
+using AutoBuildApp.DomainModels;
+using AutoBuildApp.DomainModels.Abstractions;
+using AutoBuildApp.DomainModels.Enumerations;
 using AutoBuildApp.Managers.FeatureManagers;
 using AutoBuildApp.Security;
 using AutoBuildApp.Security.Enumerations;
@@ -11,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -37,7 +41,7 @@ namespace AutoBuildApp.Api.Controllers
             /// the user analysis dashboard need admin Priveldges so check:
             /// Step one specify the claim set required
             /// 
-            _admin = _claimsFactory.GetClaims(RoleEnumType.BASIC_ADMIN);
+            _admin = _claimsFactory.GetClaims(RoleEnumType.SENIOR_ADMIN);
 
 
             #region getting the connection string and passing to the loginmanager
@@ -94,25 +98,27 @@ namespace AutoBuildApp.Api.Controllers
         {
 
             /// this will be put into the middleware.
-            Console.WriteLine("we are here22");
-            if (!_threadPrinciple.Identity.IsAuthenticated)
-            {
-                Console.WriteLine("we are here");
-                // Add action logic here
-                return new StatusCodeResult(StatusCodes.Status401Unauthorized);
-            }
-
-
+            //Console.WriteLine("we are here22");
+            //if (!_threadPrinciple.Identity.IsAuthenticated)
+            //{
+            //    Console.WriteLine("we are here");
+            //    // Add action logic here
+            //    return new StatusCodeResult(StatusCodes.Status401Unauthorized);
+            //}
 
             if (!AuthorizationService.checkPermissions(_admin.Claims()))
             {
                 return new StatusCodeResult(StatusCodes.Status403Forbidden);
             }
-            /// 
+            var result = _uadManager.GetAllChartData();
+            Console.WriteLine($" \n\n\n\n RESULT ");
+            foreach (var elem in result.analyticChartsRequisted)
+            {
+                Console.WriteLine($" elem. : {elem.ToString()} ");
 
-            var result = _uadManager.getAllChartData();
-
-            if( result == AuthorizationResultType.NOT_AUTHORIZED.ToString())
+            }
+            Console.WriteLine($"{result.result }");
+            if (result.result == AuthorizationResultType.NOT_AUTHORIZED.ToString())
             {
 
                 return new StatusCodeResult(StatusCodes.Status403Forbidden);
@@ -122,19 +128,7 @@ namespace AutoBuildApp.Api.Controllers
                 return Ok(result);
 
             }
-
         }
 
-
-
-
-
-
-
-
-
-
-
-
-        }
+    }
 }

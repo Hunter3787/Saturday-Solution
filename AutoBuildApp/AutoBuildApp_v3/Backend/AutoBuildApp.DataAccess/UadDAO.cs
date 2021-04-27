@@ -1,4 +1,5 @@
 ﻿using AutoBuildApp.DataAccess.Abstractions;
+using AutoBuildApp.DataAccess.Entities;
 using AutoBuildApp.Security;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
@@ -37,6 +38,8 @@ namespace AutoBuildApp.DataAccess
             }
         }
 
+        /// 
+        /*
         public ResponseUAD GetAnalyticData()
         {
 
@@ -109,16 +112,16 @@ namespace AutoBuildApp.DataAccess
             return _responseUAD;
         }
 
-
-
-
+        */
+        ///
 
         /// <summary>
         /// method to check permissions needed per authorization service.
         /// </summary>
         /// <returns></returns>
-        public bool isAuthorized()
+        public bool IsAuthorized()
         {
+
             IClaims _admin = _claimsFactory.GetClaims(RoleEnumType.SENIOR_ADMIN);
             // FIRST LINE OF DEFENCE 
             if (!AuthorizationService.checkPermissions(_admin.Claims()))
@@ -141,13 +144,13 @@ namespace AutoBuildApp.DataAccess
             _responseUAD = new ResponseUAD();
             ChartData chartData;
 
-
-            if (!isAuthorized())
+            if (!IsAuthorized())
             {
                 _responseUAD.IsAuthorized = false;
                 return _responseUAD;
             }
 
+            _responseUAD.IsAuthorized = true;
             using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
                 Console.WriteLine($"\tRetreiving Graph Data \n");
@@ -193,19 +196,21 @@ namespace AutoBuildApp.DataAccess
                             /// Bar graph 1: The number of accounts (Y Axis) held
                             /// amongst account types(Label: Vendor, Admin,
                             /// Basic, Devoloper) * no legends used
+                            /// 
 
                             while (_reader.Read())
                             {
-                                // each time generate 
                                 chartData = new ChartData();
-
+                                // each time generate 
                                 chartData.XLabelString = (string)_reader[X_Value_ord];
                                 chartData.Legend = (string)_reader[Legend_ord];
                                 chartData.YValueInt = (int)_reader[Y_Value_ord];
                                 // going to take the data! 
+                                Console.WriteLine($" {chartData.ToString()}");
                                 _responseUAD.GetNumAccountsPerRole.Add(chartData);
-                                //Console.WriteLine($"Bar 1: {chartData.ToString()}");
                             }
+                            Console.WriteLine($"is the chartdata null? {_responseUAD.GetNumAccountsPerRole.Count}");
+
                             /// Summary:
                             ///     Advances the data reader to the next result, when reading the results of batch
                             ///     Transact-SQL statements.
@@ -220,7 +225,6 @@ namespace AutoBuildApp.DataAccess
                             /// Y - Axis: usage can be time, or page visits maybe, X - Axis:
                             /// Label is the Autobuild component,*No legends used
 
-
                             while (_reader.Read())
                             {
                                 // each time generate 
@@ -232,7 +236,6 @@ namespace AutoBuildApp.DataAccess
                                 chartData.Legend = (string)_reader[Legend];
                                 // going to take the data! 
                                 _responseUAD.GetUsePerComponent.Add(chartData);
-                                //Console.WriteLine($"Bar 2: {chartData.ToString()}");
                             }
 
                             _reader.NextResult();
@@ -242,6 +245,7 @@ namespace AutoBuildApp.DataAccess
                             /// took place every month(x -axis) and the label show
                             /// the type of user
                             /// 
+
                             while (_reader.Read())
                             {
                                 // each time generate 
@@ -252,7 +256,6 @@ namespace AutoBuildApp.DataAccess
                                 chartData.Legend = (string)_reader[Legend];
                                 // going to take the data! 
                                 _responseUAD.GetRegPerMonthByUserType.Add(chartData);
-                                // Console.WriteLine($"Line Chart 1: {chartData.ToString()}");
                             }
 
 
@@ -261,6 +264,8 @@ namespace AutoBuildApp.DataAccess
                             /// BAR 3:
                             /// ar Graph 3: Average Session duration(yaxis) 
                             /// of user BY ROLE(shown as labels) *no legends used
+                            /// 
+
                             while (_reader.Read())
                             {
                                 // each time generate 
@@ -271,7 +276,6 @@ namespace AutoBuildApp.DataAccess
                                 chartData.Legend = (string)_reader[Legend];
                                 // going to take the data! 
                                 _responseUAD.GetAvgSessDurPerRole.Add(chartData);
-                                // Console.WriteLine($"Bar Graph 3: {chartData.ToString()}");
                             }
 
                             _reader.NextResult();
@@ -291,7 +295,6 @@ namespace AutoBuildApp.DataAccess
                                 chartData.Legend = (int)_reader[Legend];
                                 // going to take the data! 
                                 _responseUAD.GetPageViewPerMonth.Add(chartData);
-                                Console.WriteLine($"line chart 2: {chartData.ToString()}");
                             }
                         }
 

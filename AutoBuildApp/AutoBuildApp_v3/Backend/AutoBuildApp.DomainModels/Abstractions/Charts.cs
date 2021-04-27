@@ -50,6 +50,7 @@ namespace AutoBuildApp.DomainModels.Abstractions
             XScale = 2;
             YScale = 2;
             this.chartType = chartType;
+            ChartDatas = new List<ChartData>();
             ChartDatas = chartDatas;
 
         }
@@ -62,11 +63,20 @@ namespace AutoBuildApp.DomainModels.Abstractions
         /// <returns></returns>
         public override string ToString()
         {
+           
+
+            string ret = "";
+            foreach( var elem in ChartDatas)
+            {
+                ret += elem.ToString();
+            }
+
             return $"ChartTitle : {ChartTitle}\n" +
-                $"YAxisTitle : { YAxisTitle }\n" +
-                $"XAxisTitle : { XAxisTitle}\n" +
-                $"XScale : { XScale}\n" +
-                $"YScale : {YScale}\n.";
+               $"YAxisTitle : { YAxisTitle }\n" +
+               $"XAxisTitle : { XAxisTitle}\n" +
+               $"XScale : { XScale}\n" +
+               $"YScale : {YScale}\n." +
+               $"{ret} \n";
         }
 
     }
