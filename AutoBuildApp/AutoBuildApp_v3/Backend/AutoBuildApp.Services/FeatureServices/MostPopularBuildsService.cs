@@ -155,6 +155,10 @@ namespace AutoBuildApp.Services.FeatureServices
         public async Task<string> UploadImage(string username, List<IFormFile> files)
         {
             string storeIn = " ";
+
+            if (files == null)
+                return storeIn;
+
             foreach (var item in files)
             {
                 if (item.Length > 0)
