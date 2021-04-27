@@ -43,7 +43,7 @@ namespace AutoBuildApp.DomainModels.Abstractions
             IList<ChartData> chartDatas,
             ChartType chartType)
         {
-            ChartTitle =  YTitle + " PER" + XTitle + " BY "+ legendTitle;
+            ChartTitle = YTitle + " PER" + XTitle + " BY "+ legendTitle;
             YAxisTitle = XTitle;
             XAxisTitle = YTitle;
             Legend = legendTitle;

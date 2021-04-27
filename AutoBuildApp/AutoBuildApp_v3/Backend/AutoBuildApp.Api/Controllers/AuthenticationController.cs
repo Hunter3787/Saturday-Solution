@@ -42,8 +42,6 @@ namespace AutoBuildApp.Api.Controllers
         #region variables for the redirect issue, method
 
 
-        private JWTValidator _validateAuthorizationHeader;
-
         // i want to store this into the 
         // http.context.item["ClaimsPrincipal"] =.
         private ClaimsPrincipal _threadPrinciple;

@@ -18,7 +18,6 @@ namespace AutoBuildApp.Api.HelperFunctions
 {
     public class JwtMiddleware
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         /// <summary>
         /// processes http requests.
         /// </summary>

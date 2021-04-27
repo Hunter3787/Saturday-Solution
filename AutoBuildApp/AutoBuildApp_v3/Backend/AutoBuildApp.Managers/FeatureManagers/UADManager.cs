@@ -47,17 +47,41 @@ namespace AutoBuildApp.Managers.FeatureManagers
 
         }
 
-        public IList<Charts> getAllChartData()
+        public string getAllChartData()
         {
-           
+
+           if (!isAuthorized())
+           {
+                AuthorizationResultType.NOT_AUTHORIZED.ToString();
+           }
+           if(!_responseUAD.IsAuthorized)
+           {
+                AuthorizationResultType.NOT_AUTHORIZED.ToString();
+           }
+
            _responseUAD  = _uadDAO.GetAllAnalytics();
 
             if(_responseUAD.SuccessBool == false)
             {
-                return null;
+                // in the case data is not being retrieved
+                return _responseUAD.ResponseString;
             }
             /// time to populate the charts into the list:
-            /// 
+            GetCharts(_responseUAD);
+            return ("");
+
+        }
+
+        /// <summary>
+        /// this method will be triggered upon 
+        /// </summary>
+        /// <param name="responseUAD"></param>
+        /// <returns></returns>
+        public IList<Charts> GetCharts(ResponseUAD responseUAD)
+        {
+            _responseUAD = responseUAD;
+
+
             ///for Bar 1 
             #region BAR GRAPH 1
             Charts mycharts =
@@ -90,7 +114,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             #region BAR GRAPH 3
             // for bar graph 3:
             new Charts(
-                  // "Average session duration of user by account type",
+                   // "Average session duration of user by account type",
                    ChartTitlesType.ACCOUNT_TYPES.ToString(),
                    ChartTitlesType.TIME_SPENT_PER_HOUR.ToString(),
                     ChartTitlesType.NONE.ToString(),
@@ -104,7 +128,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             #region LINE CHART 1:
             // for Line Chart 1:
             new Charts(
-                 //  "Number os registrations that took place per month by account type",
+                  //  "Number os registrations that took place per month by account type",
                   ChartTitlesType.MONTH.ToString(),
                   ChartTitlesType.NUMBER_OF_REGISTRATIONS.ToString(),
                     ChartTitlesType.ACCOUNT_TYPES.ToString(),
@@ -119,7 +143,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             #region LINE CHART 2:
             // for Line Chart 2:
             new Charts(
-                  // "Number of views that took place by month per AutoBuild Component",
+                    // "Number of views that took place by month per AutoBuild Component",
                     ChartTitlesType.MONTH.ToString(),
                     ChartTitlesType.NUMBER_OF_VISITS.ToString(),
                     ChartTitlesType.AUTOBUILD_COMPONENT.ToString(),
@@ -129,10 +153,6 @@ namespace AutoBuildApp.Managers.FeatureManagers
             _AnalyticCharts.Add(mycharts);
 
             #endregion
-
-
-
-
 
 
             return _AnalyticCharts;

@@ -1,4 +1,5 @@
 ﻿using AutoBuildApp.Api.HelperFunctions;
+using AutoBuildApp.Managers.FeatureManagers;
 using AutoBuildApp.Security;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
@@ -27,6 +28,10 @@ namespace AutoBuildApp.Api.Controllers
 
         private ClaimsFactory _claimsFactory = new ConcreteClaimsFactory();
         IClaims _admin;
+
+
+        private UADManager _uadManager;
+
         public AnalyticsController()
         {
             /// the user analysis dashboard need admin Priveldges so check:
@@ -46,7 +51,7 @@ namespace AutoBuildApp.Api.Controllers
             #endregion
 
 
-
+            _uadManager = new UADManager(connection);
 
         }
 
@@ -88,6 +93,7 @@ namespace AutoBuildApp.Api.Controllers
         public IActionResult RetrieveGraphs()
         {
 
+            /// this will be put into the middleware.
             Console.WriteLine("we are here22");
             if (!_threadPrinciple.Identity.IsAuthenticated)
             {
@@ -95,18 +101,27 @@ namespace AutoBuildApp.Api.Controllers
                 // Add action logic here
                 return new StatusCodeResult(StatusCodes.Status401Unauthorized);
             }
+
+
+
             if (!AuthorizationService.checkPermissions(_admin.Claims()))
             {
-
-                return Ok("good2");
-                // Add action logic here
                 return new StatusCodeResult(StatusCodes.Status403Forbidden);
             }
             /// 
 
+            var result = _uadManager.getAllChartData();
 
+            if( result == AuthorizationResultType.NOT_AUTHORIZED.ToString())
+            {
 
-            return Ok("here");
+                return new StatusCodeResult(StatusCodes.Status403Forbidden);
+            }
+            else
+            {
+                return Ok(result);
+
+            }
 
         }
 

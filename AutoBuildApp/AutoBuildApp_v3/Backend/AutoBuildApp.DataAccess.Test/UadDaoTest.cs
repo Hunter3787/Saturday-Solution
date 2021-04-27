@@ -51,7 +51,7 @@ namespace AutoBuildApp.DataAccess.Test
 
             var BarGraph2 = _responseUAD.GetUsePerComponent;
 
-            var LineGraph1 = _responseUAD.GetRegPerMontthByUserType;
+            var LineGraph1 = _responseUAD.GetRegPerMonthByUserType;
 
             var BarGraph3 = _responseUAD.GetAvgSessDurPerRole;
 
