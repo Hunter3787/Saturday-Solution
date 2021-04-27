@@ -63,15 +63,40 @@ namespace AutoBuildApp.Api.Controllers
         [HttpPut]
         public IActionResult EditProductInVendorListOfProducts(AddProductDTO product)
         {
+            Console.WriteLine("image url2 = " + product.ModelNumber);
+            Console.WriteLine("image url2 = " + product.Availability);
+            Console.WriteLine("image url2 = " + product.Company);
+            Console.WriteLine("image url2 = " + product.Name);
             Console.WriteLine("image url2 = " + product.ImageUrl);
+            Console.WriteLine("image url2 = " + product.Price);
 
             bool result = _vendorLinkingManager.EditProductInVendorListOfProducts(product);
             return Ok();
         }
 
+        [HttpDelete]
+        public IActionResult DeleteProductFromVendorList(string modelNumber)
+        {
+            Console.WriteLine("mf = " + modelNumber);
+            Console.ReadLine();
+            var result = _vendorLinkingManager.DeleteProductFromVendorList(modelNumber);
+            return Ok();
+        }
+
+        [HttpGet("modelNumbers")]
+        public IActionResult GetAllModelNumbers()
+        {
+            Console.WriteLine("we are in the get request function");
+
+            var productsByVendor = _vendorLinkingManager.GetAllModelNumbers();
+
+            return Ok(productsByVendor);
+        }
+
         [HttpGet]
         public IActionResult GetAllProductsByVendor(string filtersString, string order)
         {
+            Console.WriteLine("we are in the get request function");
             Console.WriteLine("order = " + order);
             GetProductByFilterDTO filters = null;
             if (filtersString != null)
@@ -82,7 +107,10 @@ namespace AutoBuildApp.Api.Controllers
                 string[] SeparatedFilters = filtersString.Split(',');
                 foreach (string f in SeparatedFilters)
                 {
-                    filters.FilteredListOfProducts.Add(f, true);
+                    if (!filters.FilteredListOfProducts.ContainsKey(f))
+                    {
+                        filters.FilteredListOfProducts.Add(f, true);
+                    }
                 }
             }
             if (!_threadPrinciple.Identity.IsAuthenticated)
@@ -97,7 +125,6 @@ namespace AutoBuildApp.Api.Controllers
                 // Add action logic here
                 return new StatusCodeResult(StatusCodes.Status403Forbidden);
             }
-            Console.WriteLine("here");
             var productsByVendor = _vendorLinkingManager.GetAllProductsByVendor(filters);
 
             return Ok(productsByVendor);
@@ -108,28 +135,28 @@ namespace AutoBuildApp.Api.Controllers
             /// <returns>returns the status of OK as well as teh list of reviews.</returns>
             /// 
 
-        //    [HttpGet]
-        //public IActionResult GetAllProductsByVendor()
-        //{
-        //    if (!_threadPrinciple.Identity.IsAuthenticated)
-        //    {
+            //    [HttpGet]
+            //public IActionResult GetAllProductsByVendor()
+            //{
+            //    if (!_threadPrinciple.Identity.IsAuthenticated)
+            //    {
 
-        //        // Add action logic here
-        //        return new StatusCodeResult(StatusCodes.Status401Unauthorized);
-        //    }
-        //    if (!AuthorizationService.checkPermissions(_vendorClaims.Claims()))
-        //    {
+            //        // Add action logic here
+            //        return new StatusCodeResult(StatusCodes.Status401Unauthorized);
+            //    }
+            //    if (!AuthorizationService.checkPermissions(_vendorClaims.Claims()))
+            //    {
 
-        //        // Add action logic here
-        //        return new StatusCodeResult(StatusCodes.Status403Forbidden);
-        //    }
-        //    var productsByVendor = _vendorLinkingManager.GetAllProductsByVendor("new egg");
-        //    return Ok(productsByVendor);
-        //}
-
-
+            //        // Add action logic here
+            //        return new StatusCodeResult(StatusCodes.Status403Forbidden);
+            //    }
+            //    var productsByVendor = _vendorLinkingManager.GetAllProductsByVendor("new egg");
+            //    return Ok(productsByVendor);
+            //}
 
 
 
-    }
+
+
+        }
 }
