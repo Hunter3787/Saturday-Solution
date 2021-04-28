@@ -1,5 +1,9 @@
 ﻿using AutoBuildApp.Models.Interfaces;
-
+/**
+* Build Management Service is a service that calls a 
+* DAO and translates the returned data into a build type.
+* @Author Nick Marshall-Eminger
+*/
 namespace AutoBuildApp.Services.BuildServices
 {
     public class BuildManagementService
@@ -8,20 +12,24 @@ namespace AutoBuildApp.Services.BuildServices
         {
         }
 
-        public bool ModifyBuild()
+        public bool AddBuild()
         {
             return false;
         }
 
+        public bool CopyBuild()
+        {
+            return false;
+        }
 
         public bool DeleteBuild()
         {
             return false;
         }
 
-        public bool AddBuild()
+        public IBuild GetBuild()
         {
-            return false;
+            return null;
         }
 
         public bool PublishBuild()
@@ -29,9 +37,9 @@ namespace AutoBuildApp.Services.BuildServices
             return false;
         }
 
-        public IBuild GetBuildDetails()
+        public bool ModifyBuild()
         {
-            return null;
+            return false;
         }
     }
 }

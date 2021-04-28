@@ -1,6 +1,11 @@
 ﻿using AutoBuildApp.Models.Interfaces;
 using System.Collections.Generic;
 
+/**
+* This Data Access Object will handle the database
+* operations with regard to Builds, such as "add", "remove", "delete".
+* @Author Nick Marshall-Eminger
+*/
 namespace AutoBuildApp.DataAccess
 {
     public class BuildDAO
@@ -17,7 +22,7 @@ namespace AutoBuildApp.DataAccess
             return null;
         }
 
-        public List<IBuild> GetBuildsByUser(int id)
+        public List<IBuild> GetListOfBuilds(int id)
         {
             List<IBuild> outputList = new List<IBuild>();
 
@@ -38,6 +43,5 @@ namespace AutoBuildApp.DataAccess
         {
             return false;
         }
-
     }
 }
