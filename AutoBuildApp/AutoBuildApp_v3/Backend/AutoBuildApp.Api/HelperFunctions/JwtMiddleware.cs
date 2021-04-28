@@ -22,7 +22,6 @@ namespace AutoBuildApp.Api.HelperFunctions
         /// processes http requests.
         /// </summary>
         private readonly RequestDelegate _next;
-
         private JWTValidator _validateAuthorizationHeader;
 
         // i want to store this into the 
@@ -163,15 +162,12 @@ namespace AutoBuildApp.Api.HelperFunctions
                 Thread.CurrentPrincipal = _threadPrinciple; // SETTING THE PARSED TOKEN, TO THE THREAD.
 
                 Console.WriteLine($"\nIN THE JWT MIDDLEWARE CHEWCKING THE PRINCIPLE NAME: {_threadPrinciple.Identity.Name}\n");
-                /*
-                Console.WriteLine($" " +
-                    $"THE USER CLAIMS PRINCIPLE if jwt it valid. in jwt middleware");
-                foreach (Claim c in _threadPrinciple.Claims)
-                    {
-                        Console.WriteLine($"Permission:  {c.Type}, Scope: {c.Value} ");
-                    }
-                */
+               
                 #endregion
+
+                // here i will be 
+
+
             }
 
             return true;
