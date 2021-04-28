@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <Folder Include="Products\" />
-    <Folder Include="Enumerations\" />
     <Folder Include="Builds\" />
   </ItemGroup>
 
