@@ -123,6 +123,7 @@ namespace AutoBuildApp.DataAccess
         {
 
             IClaims _admin = _claimsFactory.GetClaims(RoleEnumType.SENIOR_ADMIN);
+
             // FIRST LINE OF DEFENCE 
             if (!AuthorizationService.checkPermissions(_admin.Claims()))
             {
@@ -200,11 +201,12 @@ namespace AutoBuildApp.DataAccess
 
                             while (_reader.Read())
                             {
-                                chartData = new ChartData();
-                                // each time generate 
-                                chartData.XLabelString = (string)_reader[X_Value_ord];
-                                chartData.Legend = (string)_reader[Legend_ord];
-                                chartData.YValueInt = (int)_reader[Y_Value_ord];
+                                chartData = 
+                                    new ChartData(
+                                        (string)_reader[X_Value_ord],
+                                        (int)_reader[Y_Value_ord],
+                                        (string)_reader[Legend_ord]
+                                        );
                                 // going to take the data! 
                                 Console.WriteLine($" {chartData.ToString()}");
                                 _responseUAD.GetNumAccountsPerRole.Add(chartData);
@@ -228,12 +230,11 @@ namespace AutoBuildApp.DataAccess
                             while (_reader.Read())
                             {
                                 // each time generate 
-                                chartData = new ChartData();
-
-                                chartData.XLabelInt = (int)_reader[X_Value];
-                                chartData.YValueInt = (int)_reader[Y_Value];
-
-                                chartData.Legend = (string)_reader[Legend];
+                                chartData = new ChartData(
+                                    (int)_reader[X_Value],
+                                    (int)_reader[Y_Value],
+                                    (string)_reader[Legend]
+                                    );
                                 // going to take the data! 
                                 _responseUAD.GetUsePerComponent.Add(chartData);
                             }
@@ -249,11 +250,11 @@ namespace AutoBuildApp.DataAccess
                             while (_reader.Read())
                             {
                                 // each time generate 
-                                chartData = new ChartData();
-
-                                chartData.XLabelInt = (int)_reader[X_Value];
-                                chartData.YValueInt = (int)_reader[Y_Value];
-                                chartData.Legend = (string)_reader[Legend];
+                                chartData = new ChartData(
+                                    (int)_reader[X_Value],
+                                    (int)_reader[Y_Value],
+                                    (string)_reader[Legend]
+                                    );
                                 // going to take the data! 
                                 _responseUAD.GetRegPerMonthByUserType.Add(chartData);
                             }
@@ -269,11 +270,10 @@ namespace AutoBuildApp.DataAccess
                             while (_reader.Read())
                             {
                                 // each time generate 
-                                chartData = new ChartData();
-
-                                chartData.XLabelString = (string)_reader[X_Value];
-                                chartData.YValueInt = (int)_reader[Y_Value];
-                                chartData.Legend = (string)_reader[Legend];
+                                chartData = new ChartData(
+                                    (string)_reader[X_Value],
+                                    (int)_reader[Y_Value],
+                                    (string)_reader[Legend]);
                                 // going to take the data! 
                                 _responseUAD.GetAvgSessDurPerRole.Add(chartData);
                             }
@@ -288,11 +288,10 @@ namespace AutoBuildApp.DataAccess
                             while (_reader.Read())
                             {
                                 // each time generate 
-                                chartData = new ChartData();
-
-                                chartData.XLabelInt = (int)_reader[X_Value];
-                                chartData.YValueInt = (int)_reader[Y_Value];
-                                chartData.Legend = (int)_reader[Legend];
+                                chartData = new ChartData(
+                                    (int)_reader[X_Value],
+                                    (int)_reader[Y_Value],
+                                    (int)_reader[Legend]);
                                 // going to take the data! 
                                 _responseUAD.GetPageViewPerMonth.Add(chartData);
                             }

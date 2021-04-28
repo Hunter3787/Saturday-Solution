@@ -7,6 +7,7 @@ namespace AutoBuildApp.DomainModels
 {
     public class UadDTO
     {
+        public bool SuccessFlag { get; set; }
         public string result { get; set; }
 
         public IList<Charts> analyticChartsRequisted { get; set; }
@@ -14,9 +15,22 @@ namespace AutoBuildApp.DomainModels
 
         public UadDTO()
         {
+            SuccessFlag = false;
             result = " ";
             analyticChartsRequisted = new List<Charts>();
         }
 
+
+        public override string ToString()
+        {
+            string ret = "";
+            foreach (var elem in analyticChartsRequisted)
+            {
+                ret += $" elem. \n: {elem.ToString()} ";
+
+            }
+
+            return ret;
+        }
     }
 }

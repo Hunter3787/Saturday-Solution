@@ -83,6 +83,7 @@ namespace AutoBuildApp.Api.Controllers
         [HttpPost("{Login}")]
         public ActionResult<AuthUserDTO> AuthenticateUser(UserCredentials userCredentials)
         {
+
             this._userCredentials = userCredentials;
             var JWTToken = _loginManager.AuthenticateUser(_userCredentials);
             return Ok(JWTToken);

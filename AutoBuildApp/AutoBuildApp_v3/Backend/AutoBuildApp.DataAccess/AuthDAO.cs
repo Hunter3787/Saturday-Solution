@@ -186,11 +186,13 @@ namespace AutoBuildApp.DataAccess
                         _CRAuth.SuccessString = "User Exists";
                         _CRAuth.IsUserExists = true;
                     }
+                    
                     //READ AND STORE ALL THE ORDINALS YOU NEED
-                    int userID = _reader.GetOrdinal("userCredID");
                     int username = _reader.GetOrdinal("username");
                     int permissions = _reader.GetOrdinal("permission");
                     int scope = _reader.GetOrdinal("scopeOfPermission");
+                    
+               
 
                     while (_reader.Read())
                     {

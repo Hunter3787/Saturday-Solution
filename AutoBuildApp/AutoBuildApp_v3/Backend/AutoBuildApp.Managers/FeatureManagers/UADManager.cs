@@ -1,4 +1,5 @@
 ﻿using AutoBuildApp.DataAccess;
+using AutoBuildApp.DataAccess.Abstractions;
 using AutoBuildApp.DomainModels;
 using AutoBuildApp.DomainModels.Abstractions;
 using AutoBuildApp.DomainModels.Enumerations;
@@ -66,12 +67,24 @@ namespace AutoBuildApp.Managers.FeatureManagers
             }
             if(_responseUAD.SuccessBool == false)
             {
+                _uadDTO.SuccessFlag = false;
                 _uadDTO.result = _responseUAD.ResponseString;
                 return _uadDTO;
             }
-            /// time to populate the charts into the list:
-            _uadDTO.analyticChartsRequisted =  GetCharts(_responseUAD);
-            _uadDTO.result = "this is a tests again";
+            if(GetCharts(_responseUAD) != null)
+            {
+
+                /// time to populate the charts into the list:
+                /// 
+                _uadDTO.SuccessFlag = true;
+                _uadDTO.result = "this istest";
+
+                _uadDTO.analyticChartsRequisted = GetCharts(_responseUAD);
+
+                return _uadDTO;
+
+            }
+
             return _uadDTO;
 
         }
@@ -81,9 +94,9 @@ namespace AutoBuildApp.Managers.FeatureManagers
         /// </summary>
         /// <param name="responseUAD"></param>
         /// <returns></returns>
-        public List<Charts> GetCharts(ResponseUAD responseUAD)
+        public IList<Charts> GetCharts(ResponseUAD responseUAD)
         {
-            List<Charts> analyticCharts = new List<Charts>();
+            IList<Charts> analyticCharts = new List<Charts>();
 
             ///for Bar 1 
             #region BAR GRAPH 1

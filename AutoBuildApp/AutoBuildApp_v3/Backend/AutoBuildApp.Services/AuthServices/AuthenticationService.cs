@@ -113,7 +113,7 @@ namespace AutoBuildApp.Services.Auth_Services
                 /// if the quthentication is a success then we
                 /// add thos new claims to the claims principle
                 UserIdentity userIdentity = new UserIdentity();
-                userIdentity.Name = _authUserDTO.UserEmail;
+                userIdentity.Name = _authUserDTO.UserEmail;// this is username (thewre is typo)
                 userIdentity.IsAuthenticated = true;
 
 
@@ -122,9 +122,14 @@ namespace AutoBuildApp.Services.Auth_Services
                     _securityClaims,
                     userIdentity.AuthenticationType,
                      userIdentity.Name, "");
+
+
+
                 claimsIdentity = new ClaimsIdentity
                   (userIdentity,
                   _securityClaims);
+
+
 
 
                 claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
@@ -165,7 +170,7 @@ namespace AutoBuildApp.Services.Auth_Services
             // so the first thing is taking the auth dto and passing it to form the payload necessary. 
             _payload = new JWTPayload
                 ("Autobuild User", "Autobuild", "US",
-                AuthUserDTO.UserEmail,
+                AuthUserDTO.UserEmail, // username
                 DateTimeOffset.UtcNow.AddDays(7),
                 DateTimeOffset.UtcNow.AddDays(7),
                 DateTimeOffset.UtcNow)

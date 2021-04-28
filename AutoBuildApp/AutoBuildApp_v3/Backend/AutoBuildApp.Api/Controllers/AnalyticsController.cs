@@ -1,4 +1,5 @@
 ﻿using AutoBuildApp.Api.HelperFunctions;
+using AutoBuildApp.DataAccess.Abstractions;
 using AutoBuildApp.DomainModels;
 using AutoBuildApp.DomainModels.Abstractions;
 using AutoBuildApp.DomainModels.Enumerations;
@@ -7,6 +8,7 @@ using AutoBuildApp.Security;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
 using AutoBuildApp.Security.Interfaces;
+using AutoBuildApp.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -32,6 +34,9 @@ namespace AutoBuildApp.Api.Controllers
 
         private ClaimsFactory _claimsFactory = new ConcreteClaimsFactory();
         IClaims _admin;
+
+        // Creates the local instance for the logger
+       // private LoggingProducerService _logger = LoggingProducerService.GetInstance;
 
 
         private UADManager _uadManager;
@@ -78,12 +83,12 @@ namespace AutoBuildApp.Api.Controllers
             Console.WriteLine("we are here22");
             if (!_threadPrinciple.Identity.IsAuthenticated)
             {
-
                 // Add action logic here
                 return new StatusCodeResult(StatusCodes.Status401Unauthorized);
             }
             if (!AuthorizationService.checkPermissions(_admin.Claims()))
              {
+
 
                     // Add action logic here
                     return new StatusCodeResult(StatusCodes.Status403Forbidden);
@@ -91,7 +96,6 @@ namespace AutoBuildApp.Api.Controllers
             return Ok("Good to Continue");
             
         }
-
 
         [HttpGet]
         public IActionResult RetrieveGraphs()
@@ -108,26 +112,35 @@ namespace AutoBuildApp.Api.Controllers
 
             if (!AuthorizationService.checkPermissions(_admin.Claims()))
             {
+
+               // _logger.LogWarning("Unauthorized Access Attempted");
                 return new StatusCodeResult(StatusCodes.Status403Forbidden);
             }
             var result = _uadManager.GetAllChartData();
-            Console.WriteLine($" \n\n\n\n RESULT ");
-            foreach (var elem in result.analyticChartsRequisted)
-            {
-                Console.WriteLine($" elem. : {elem.ToString()} ");
 
-            }
-            Console.WriteLine($"{result.result }");
-            if (result.result == AuthorizationResultType.NOT_AUTHORIZED.ToString())
+            Console.WriteLine($"{result.result }: RESULT \n" +
+                $"{result.ToString()}");
+            
+            
+            if (!result.SuccessFlag)
             {
+                if (result.result == AuthorizationResultType.NOT_AUTHORIZED.ToString())
+                {
 
-                return new StatusCodeResult(StatusCodes.Status403Forbidden);
+                   // _logger.LogWarning("Unauthorized Access Attempted");
+                    return new StatusCodeResult(StatusCodes.Status403Forbidden);
+                }
+                else
+                {
+                   // _logger.LogWarning(result.result);
+                    return new StatusCodeResult(StatusCodes.Status400BadRequest);
+                }
             }
-            else
-            {
-                return Ok(result);
+            // lesson: postman doesnt work with list. move on 
 
-            }
+            return Ok(result);
+
+            
         }
 
     }

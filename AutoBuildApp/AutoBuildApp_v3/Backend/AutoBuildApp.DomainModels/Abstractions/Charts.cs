@@ -9,24 +9,25 @@ namespace AutoBuildApp.DomainModels.Abstractions
     public class Charts
     {
 
-        string ChartTitle { get; set; }
-        string YAxisTitle { get; set; }
-        string XAxisTitle { get; set; }
+        public string ChartTitle { get; set; }
+        public string YAxisTitle { get; set; }
+        public string XAxisTitle { get; set; }
 
-        string Legend { get; set; }
+        public string Legend { get; set; }
 
-        ChartType chartType { get; set; } 
-        int XScale { get; set; }
-        int YScale { get; set; }
+        public ChartType chartType { get; set; }
 
-        public IList<ChartData> ChartDatas;
+        public int XScale { get; set; }
+        public int YScale { get; set; }
+
+        public IList<ChartData> ChartDatas { get; set; }
 
         public Charts()
         {
-            ChartTitle = ChartTitlesType.NONE.ToString();
+            this.ChartTitle = ChartTitlesType.NONE.ToString();
             YAxisTitle = ChartTitlesType.Y_TITLE.ToString();
             XAxisTitle = ChartTitlesType.X_TITLE.ToString();
-            Legend     = ChartTitlesType.LEGEND.ToString();
+            Legend = ChartTitlesType.LEGEND.ToString();
             XScale = 2;
             YScale = 2;
             chartType = ChartType.NONE;
@@ -43,7 +44,7 @@ namespace AutoBuildApp.DomainModels.Abstractions
             IList<ChartData> chartDatas,
             ChartType chartType)
         {
-            ChartTitle = YTitle + " PER" + XTitle + " BY "+ legendTitle;
+            ChartTitle = YTitle + " PER " + XTitle + " BY " + legendTitle;
             YAxisTitle = XTitle;
             XAxisTitle = YTitle;
             Legend = legendTitle;
@@ -63,20 +64,21 @@ namespace AutoBuildApp.DomainModels.Abstractions
         /// <returns></returns>
         public override string ToString()
         {
-           
 
-            string ret = "";
+            string ret = " ";
+
             foreach( var elem in ChartDatas)
             {
-                ret += elem.ToString();
+                ret += $"{elem.ToString()}\n";
             }
 
-            return $"ChartTitle : {ChartTitle}\n" +
-               $"YAxisTitle : { YAxisTitle }\n" +
-               $"XAxisTitle : { XAxisTitle}\n" +
-               $"XScale : { XScale}\n" +
-               $"YScale : {YScale}\n." +
-               $"{ret} \n";
+            return
+               $"ChartTitle : {this.ChartTitle}\n" +
+               $"YAxisTitle : {this.YAxisTitle }\n" +
+               $"XAxisTitle : { this.XAxisTitle}\n" +
+               $"XScale : { this.XScale}\n" +
+               $"YScale : {this.YScale}\n." +
+               $"Points: {ret}\n";
         }
 
     }
