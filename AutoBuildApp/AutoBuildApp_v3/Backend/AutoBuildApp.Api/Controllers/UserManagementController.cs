@@ -69,7 +69,7 @@ namespace AutoBuildApp.Api.Controllers
         {
             Console.WriteLine("Update permissions here");
             username = "SERGE";
-            role = RoleEnumType.BASIC_ROLE;
+            role = RoleEnumType.BASIC_ADMIN;
             UserManagementService userManagementService = new UserManagementService(_userManagementDAO);
             UserManagementManager userManagementManager = new UserManagementManager(userManagementService, ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
             
@@ -81,7 +81,7 @@ namespace AutoBuildApp.Api.Controllers
         {
             Console.WriteLine("Change lock state here");
             username = "SERGE";
-            lockstate = RoleEnumType.BASIC_ROLE;
+            lockstate = RoleEnumType.LOCKED;
             UserManagementService userManagementService = new UserManagementService(_userManagementDAO);
             UserManagementManager userManagementManager = new UserManagementManager(userManagementService, ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
             
