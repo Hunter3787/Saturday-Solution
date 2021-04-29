@@ -1,4 +1,4 @@
-const uri = 'https://localhost:5001/mostpopularbuilds/build/?buildId=';
+const uri = 'https://localhost:5001/mostpopularbuilds/';
 let posts = [];
 let token = ' ';
 const fetchRequest = {
@@ -11,26 +11,45 @@ const fetchRequest = {
     }
 };
 
-function process(){
-    getItem();
-}
+// function process(){
+//     getItem();
+// }
 
-function looping(){
-    setTimeout(process, 3000);
-}
+// function looping(){
+//     setTimeout(process, 3000);
+// }
   
-var refreshData = setInterval(looping, 3000);
+// var refreshData = setInterval(looping, 3000);
 
 async function getItem() {
 
+    let queryString = 'build/?buildId=';
+
     var buildId = sessionStorage.getItem('buildId');
 
-    await fetch(uri + buildId, fetchRequest) // fetches the default URI
+    await fetch(uri + queryString + buildId, fetchRequest) // fetches the default URI
         .then(response => response.json()) // Will receive a response from the default response.json.
         .then(item => displayItem(item)) // will call the display items function.
         .then(console.log("reloaded"))
         .catch(error => console.error('Unable to get items.', error)); // will catch an error and print the appropriate error message in console.
-    refreshData;
+    //refreshData;
+}
+
+async function addLike() {
+
+    let dateTime = new Date();
+
+    const like = {
+        postId: sessionStorage.getItem('buildId').toString(),
+        userId: dateTime.toUTCString() + ' ' + dateTime.getMilliseconds()
+        //userId: "Tommy"
+    };
+
+    let customRequest = Object.assign(fetchRequest, {method: 'POST', body: JSON.stringify(like)});
+
+    await fetch(uri + 'like', customRequest);
+    
+    window.location.reload();
 }
 
 function displayItem(item) {
@@ -39,6 +58,7 @@ function displayItem(item) {
     const innerDiv = document.getElementById('main'); // This will get the id of the form from the HTML.
     innerDiv.innerHTML = ''; // appends a null value to the inner HTML, so that when its reloaded, its not added.
 
+    // This is the HTML that will be created in the header section of the view.
     // <div class="buildheader">
     //     <h1 class="buildtitle">Title</h1>
     //     <h4 class="buildusername">Username</h4>
@@ -92,11 +112,13 @@ function displayItem(item) {
     // appends the build header div element to the main div in the html.
     innerDiv.appendChild(buildHeader);
     
+    // This is the HTML that will be created in the 'body' section of the view.
     // <div class="builddetails">
     //     <div class="buildimage">
     //         <img src="http://cdna.pcpartpicker.com/static/forever/images/userbuild/358512.a97c3b2732e2a4d83247e1105f455c63.512.jpg">
     //     </div>
     //     <h5>Likes:500</h5>
+    //     <button class="like-btn" id="like-button">Like Build</button> 
     //     <h1>Description</h1>
     //     <p class="builddescription">
     //         Description
@@ -114,6 +136,14 @@ function displayItem(item) {
     image.src = item["buildImagePath"];
     buildImage.appendChild(image);
     buildDetails.appendChild(buildImage);
+
+    // These six lines dynamically creates a like button for an individual build post.
+    var likeButton = document.createElement('button');
+    likeButton.classList.add('like-btn');
+    likeButton.setAttribute("id", "like-button");
+    likeButton.textContent = 'Like Build';
+    likeButton.addEventListener("click", () => addLike());
+    buildDetails.appendChild(likeButton);
 
     // These four lines will create a header 5 element, and append the likes data from the http get request.
     var likes = document.createElement('h5');
@@ -137,7 +167,8 @@ function displayItem(item) {
     // append the build details div to the main div.
     innerDiv.appendChild(buildDetails);
 
-    post = item; // will store the data as an array in this variable for local access.
-}
+    console.log(innerDiv);
 
-// let initializeView = document.getElementById("initialize-view").innerHTML = getItem();
+    // will store the data as an array in this variable for local access.
+    post = item; 
+}

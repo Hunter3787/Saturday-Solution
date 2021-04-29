@@ -12,9 +12,7 @@ counter.addEventListener("keyup", () => textCounter(counter, 'counter', 10000));
 
 let form = document.getElementById('publish-form');
  // lambda function for redirecting on click.
-form.addEventListener("submit", () => {
-    postItem();
-});
+form.addEventListener("submit", () => postItem());
 
 // this is the async post item function that posts a build to the DB
 async function postItem() {
