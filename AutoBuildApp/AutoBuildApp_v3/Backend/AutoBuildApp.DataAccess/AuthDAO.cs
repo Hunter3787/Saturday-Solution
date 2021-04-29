@@ -152,64 +152,80 @@ namespace AutoBuildApp.DataAccess
                 string SP_retrievePermissions = "retrievePermissions";
                 using (SqlCommand command = new SqlCommand(SP_retrievePermissions, conn))
                 {
-                    command.Transaction = conn.BeginTransaction();
-                    #region SQL related
-
-                    // https://learning.oreilly.com/library/view/adonet-in-a/0596003617/ch04s05.html
-                    command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
-                    // 1) Create a Command, and set its CommandType property to StoredProcedure.
-                    command.CommandType = CommandType.StoredProcedure;
-                    // 2) Set the CommandText to the name of the stored procedure.
-                    command.CommandText = SP_retrievePermissions;
-                    /// command.Parameters.AddWithValue   -> fix itttttttt!!!!!
-                    //Add any required parameters to the Command.Parameters collection.
-                    // command.Parameters.AddWithValue("@username", userCredentials.Username);
-                    var param = new SqlParameter[2];
-                    param[0] = new SqlParameter("@username", userCredentials.Username);
-                    param[0].Value = userCredentials.Username;
-                    param[1] = new SqlParameter("@passhash", userCredentials.Password);
-                    param[1].Value = userCredentials.Password;
-                    // add the commands the parameters for the stored procedure
-                    command.Parameters.AddRange(param);
-                    #endregion
-
-
-                    var _reader = command.ExecuteReader();
-                    Console.WriteLine($" reader rows: {_reader.HasRows}");
-                    if (!_reader.HasRows) // use the bang!!!!!!! 
+                    try
                     {
-                        _CRAuth.FailureString = "User not found";
-                        _CRAuth.IsUserExists = false;
-                    }
-                    if (_reader.HasRows) // just else is enough 
-                    {
-                        _CRAuth.SuccessString = "User Exists";
-                        _CRAuth.IsUserExists = true;
-                    }
-                    
-                    //READ AND STORE ALL THE ORDINALS YOU NEED
-                    int username = _reader.GetOrdinal("username");
-                    int permissions = _reader.GetOrdinal("permission");
-                    int scope = _reader.GetOrdinal("scopeOfPermission");
-                    
-               
+                        command.Transaction = conn.BeginTransaction();
+                        #region SQL related
 
-                    while (_reader.Read())
-                    {
-                        _userClaims = new Claims();
-                        /// ret = $"user ID: {_reader.GetInt64(0)} Permissions: {_reader.GetString(1)} scopeOfPermission { _reader.GetString(2) }";
-                        ///_userPermissions.UserAccountID = _reader.GetInt64(0);
-                        /// magic values -> will the collumns alwats be the same
-                        /// better to use ordinal names -> no matter where the column just specifiy thr column 
-                        _CRAuth.AuthUserDTO.UserEmail = (string)_reader[username];
-                        _userClaims.Permission = (string)_reader[permissions];
-                        _userClaims.scopeOfPermissions = (string)_reader[scope];
-                        _CRAuth.AuthUserDTO.Claims.Add(_userClaims);
+                        // https://learning.oreilly.com/library/view/adonet-in-a/0596003617/ch04s05.html
+                        command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
+                        // 1) Create a Command, and set its CommandType property to StoredProcedure.
+                        command.CommandType = CommandType.StoredProcedure;
+                        // 2) Set the CommandText to the name of the stored procedure.
+                        command.CommandText = SP_retrievePermissions;
+                        /// command.Parameters.AddWithValue   -> fix itttttttt!!!!!
+                        //Add any required parameters to the Command.Parameters collection.
+                        // command.Parameters.AddWithValue("@username", userCredentials.Username);
+                        var param = new SqlParameter[2];
+                        param[0] = new SqlParameter("@username", userCredentials.Username);
+                        param[0].Value = userCredentials.Username;
+                        param[1] = new SqlParameter("@passhash", userCredentials.Password);
+                        param[1].Value = userCredentials.Password;
+                        // add the commands the parameters for the stored procedure
+                        command.Parameters.AddRange(param);
+                        #endregion
+
+
+                        var _reader = command.ExecuteReader();
+                        Console.WriteLine($" reader rows: {_reader.HasRows}");
+                        if (!_reader.HasRows) // use the bang!!!!!!! 
+                        {
+                            _CRAuth.FailureString = "User not found";
+                            _CRAuth.IsUserExists = false;
+                        }
+                        if (_reader.HasRows) // just else is enough 
+                        {
+                            _CRAuth.SuccessString = "User Exists";
+                            _CRAuth.IsUserExists = true;
+                        }
+
+                        //READ AND STORE ALL THE ORDINALS YOU NEED
+                        int username = _reader.GetOrdinal("username");
+                        int permissions = _reader.GetOrdinal("permission");
+                        int scope = _reader.GetOrdinal("scopeOfPermission");
+
+
+
+                        while (_reader.Read())
+                        {
+                            _userClaims = new Claims();
+                            /// ret = $"user ID: {_reader.GetInt64(0)} Permissions: {_reader.GetString(1)} scopeOfPermission { _reader.GetString(2) }";
+                            ///_userPermissions.UserAccountID = _reader.GetInt64(0);
+                            /// magic values -> will the collumns alwats be the same
+                            /// better to use ordinal names -> no matter where the column just specifiy thr column 
+                            _CRAuth.AuthUserDTO.UserEmail = (string)_reader[username];
+                            _userClaims.Permission = (string)_reader[permissions];
+                            _userClaims.scopeOfPermissions = (string)_reader[scope];
+                            _CRAuth.AuthUserDTO.Claims.Add(_userClaims);
+                        }
+
+                        _reader.Close();
                     }
+                    catch (SqlException ex)
+                    {
+                        command.Transaction.Rollback();
+                        _CRAuth.SuccessBool = false;
+
+                    }
+
+                    command.Transaction.Commit();
                     //Console.WriteLine($"Auth DAO Common response check:: {_CRAuth.ToString()}");
                     _CRAuth.connectionState = true;
+
+                    
                     return _CRAuth;
                 }
+
             }
         }
     }

@@ -77,7 +77,6 @@ namespace AutoBuildApp.Managers.FeatureManagers
                 /// time to populate the charts into the list:
                 /// 
                 _uadDTO.SuccessFlag = true;
-                _uadDTO.result = "this istest";
 
                 _uadDTO.analyticChartsRequisted = GetCharts(_responseUAD);
 

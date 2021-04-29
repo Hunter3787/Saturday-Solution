@@ -184,10 +184,10 @@ namespace AutoBuildApp.Api.HelperFunctions
             #region Instantiating the guest principle
             _threadPrinciple = Guest.DefaultClaimsPrinciple();
             Thread.CurrentPrincipal = _threadPrinciple;
-            foreach (Claim c in _threadPrinciple.Claims)
-            {
-                Console.WriteLine($"Permission:  {c.Type}, Scope: {c.Value} ");
-            }
+            //foreach (Claim c in _threadPrinciple.Claims)
+            //{
+            //    Console.WriteLine($"Permission:  {c.Type}, Scope: {c.Value} ");
+            //}
             #endregion
         }
 

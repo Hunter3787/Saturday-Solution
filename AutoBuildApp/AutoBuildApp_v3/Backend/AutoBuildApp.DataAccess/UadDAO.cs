@@ -211,7 +211,6 @@ namespace AutoBuildApp.DataAccess
                                 Console.WriteLine($" {chartData.ToString()}");
                                 _responseUAD.GetNumAccountsPerRole.Add(chartData);
                             }
-                            Console.WriteLine($"is the chartdata null? {_responseUAD.GetNumAccountsPerRole.Count}");
 
                             /// Summary:
                             ///     Advances the data reader to the next result, when reading the results of batch
