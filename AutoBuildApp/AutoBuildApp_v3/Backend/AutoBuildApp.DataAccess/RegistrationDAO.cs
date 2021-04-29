@@ -29,7 +29,7 @@ namespace AutoBuildApp.DataAccess
             // instantiation of the connections string via a constructor to avoid any hardcoding
             this._connection = connectionString;
         }
-        public bool DoesUserExist(UserAccount user)
+        public bool DoesUserExist(string username, string email)
         {
             bool Flag = false;
             using (SqlConnection connection = new SqlConnection(this._connection))
@@ -41,8 +41,8 @@ namespace AutoBuildApp.DataAccess
                     {
                         String sql = "SELECT COUNT (*) FROM userAccounts WHERE username = @USERNAME OR email = @EMAIL;";
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
-                        adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = user.UserName;
-                        adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = user.UserEmail;
+                        adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = username;
+                        adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = email;
 
                         adapter.InsertCommand.Transaction = transaction;
 
@@ -63,114 +63,93 @@ namespace AutoBuildApp.DataAccess
             }
         }
 
-        public String CreateUserRecord(UserAccount user)
+
+        public string RegisterAccount(UserAccount user)
         {
-            using (SqlConnection connection = new SqlConnection(this._connection))
+            ClaimsFactory _claimsFactory = new ConcreteClaimsFactory();
+            IClaims basicUser = _claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
+         
+            using (SqlConnection connection = new SqlConnection(_connection))
             {
-                if(connection != null && connection.State == ConnectionState.Closed)
-                {
-                    connection.Open();
-                }
+                connection.Open();
                 using (SqlTransaction transaction = connection.BeginTransaction())
                 {
                     try
                     {
-                        if (DoesUserExist(user))
+
+                        SqlDataAdapter adapter = new SqlDataAdapter();
+
+                        string SP_RegisterAccount = "RegisterAccount";
+                        adapter.InsertCommand = new SqlCommand(SP_RegisterAccount, connection, transaction);
+                        adapter.InsertCommand.CommandType = CommandType.StoredProcedure;
+                        adapter.InsertCommand.CommandText = SP_RegisterAccount;
+
+                        DataTable pair = new DataTable();
+
+                        DataColumn column = new DataColumn();
+                        column.ColumnName = "permission";
+                        column.DataType = typeof(string);
+                        pair.Columns.Add(column);
+
+                        column = new DataColumn();
+
+                        column.ColumnName = "scopeOfPermission";
+                        column.DataType = typeof(string);
+                        pair.Columns.Add(column);
+
+
+                        DataRow row;
+                        foreach (var claim in basicUser.Claims())
                         {
-                            connection.Close();
-                            return "User already exists.";
+                            row = pair.NewRow();
+                            row["permission"] = claim.Type.ToString();
+                            row["scopeOfPermission"] = claim.Value.ToString();
+                            pair.Rows.Add(row);
                         }
-                        String sql = "INSERT INTO" +
-                            " userAccounts(username, email, firstName, lastName, roley, passwordHash, registrationDate )" +
-                            " VALUES(@USERNAME,@EMAIL, @FIRSTNAME, @LASTNAME, @ROLEY, @PASSWORD, @REG);";
 
-                        adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
-                        adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = user.UserName;
-                        adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = user.UserEmail;
-                        adapter.InsertCommand.Parameters.Add("@FIRSTNAME", SqlDbType.VarChar).Value = user.FirstName;
-                        adapter.InsertCommand.Parameters.Add("@LASTNAME", SqlDbType.VarChar).Value = user.LastName;
-                        adapter.InsertCommand.Parameters.Add("@ROLEY", SqlDbType.VarChar).Value = user.role;
-                        adapter.InsertCommand.Parameters.Add("@PASSWORD", SqlDbType.VarChar).Value = user.passHash;
-                        adapter.InsertCommand.Parameters.Add("@REG", SqlDbType.Date).Value = user.registrationDate;
-                        adapter.InsertCommand.ExecuteNonQuery();
+                        //foreach (DataRow r in pair.Rows)
+                        //{
+                        //    foreach (DataColumn c in pair.Columns)
+                        //        Console.Write("\t{0}", r[c]);
 
+                        //    Console.WriteLine("\t\t\t" + r.RowState);
+                        //}
+
+                        var param = new SqlParameter[7];
+                        param[0] = adapter.InsertCommand.Parameters.AddWithValue("@PERMISSIONS", pair);
+                        param[1] = adapter.InsertCommand.Parameters.AddWithValue("@USERNAME", user.UserName);
+                        param[2] = adapter.InsertCommand.Parameters.AddWithValue("@FNAME", user.FirstName);
+                        param[3] = adapter.InsertCommand.Parameters.AddWithValue("@LNAME", user.LastName);
+                        param[4] = adapter.InsertCommand.Parameters.AddWithValue("@EMAIL", user.UserEmail);
+                        param[5] = adapter.InsertCommand.Parameters.AddWithValue("@PASSWORD", user.passHash);
+                        param[6] = adapter.InsertCommand.Parameters.AddWithValue("@CREATEDATE", DateTimeOffset.Now);
+
+                        var _reader = adapter.InsertCommand.ExecuteNonQuery();
                         transaction.Commit();
-                        return "Successful user creation";
+                        Console.WriteLine($" reader rows: {_reader}");
+                        if (_reader != 0)
+                        {
+                            return "account has been successfully created";
+                        }
+                        else
+                        {
+                            return "failed to create user1";
+                        }
+
                     }
+
                     catch (SqlException ex)
                     {
-                        if (ex.Number == -2)
+                        if (ex.Number == 2627)
                         {
                             transaction.Rollback();
-                            return ("Data store has timed out.");
+                            return "User already exists";
                         }
+                        transaction.Rollback();
+                        return "failed to create user2";
                     }
-
-                    return "Failed user creation";
                 }
             }
         }
-
-
-
-        public int updatePermissions(IEnumerable<Claim> claims) // youd want to pass in those permissions 
-        {
-
-            ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
-            IClaims basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
-
-
-            using (SqlConnection connection = new SqlConnection(this._connection))
-            {
-                var SP_ChangePermissions = "SP_ChangePermissions";
-                using (var command = new SqlCommand())
-                {
-                    command.Transaction = connection.BeginTransaction();
-                    command.Connection = connection;
-                    command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = SP_ChangePermissions;
-
-                    DataTable pair = new DataTable();
-                    DataColumn column = new DataColumn();
-
-                    column.ColumnName = "UserID";
-                    column.DataType = typeof(Int64);
-                    pair.Columns.Add(column);
-                    column.ColumnName = "permission";
-                    column.DataType = typeof(string);
-                    pair.Columns.Add(column);
-                    column.ColumnName = "scopeOfPermission";
-                    column.DataType = typeof(double);
-                    pair.Columns.Add(column);
-
-                    DataRow row;
-                    foreach (var permissions in basic.Claims())
-                    {
-                        row = pair.NewRow();
-                        row["permission"] = permissions.Type;
-                        row["scopeOfPermission"] = permissions.Value;
-                        pair.Rows.Add(row);
-                    }
-                    var param = new SqlParameter[1];
-                    param[0] = command
-                        .Parameters
-                        .AddWithValue("@permissions", pair);
-                    param[1] = command
-                        .Parameters
-                        .AddWithValue("@username", "new egg");
-
-
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        if (!reader.HasRows) { return 0; }
-                        else if (reader.HasRows) { return 1; }
-                    }
-                    command.Transaction.Commit();
-                }
-            }
-            return 0;
-        }
-
     }
 }

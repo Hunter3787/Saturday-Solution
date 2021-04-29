@@ -21,14 +21,7 @@ namespace AutoBuildApp.Managers
         private readonly UserManagementDAO _userManagementDAO;
         private InputValidityManager _inputValidityManager;
         private readonly UserManagementService _userManagementService;
-
-
-
-        //public UserManagementManager(UserManagementDAO userManagementDAO)
-        //{
-        //    _inputValidityManager = new InputValidityManager();
-        //    _userManagementDAO = userManagementDAO;
-        //}
+        private readonly RegistrationDAO _registrationDAO;
 
         public UserManagementManager(UserManagementService userManagementService, string connectionString)
         {
@@ -38,16 +31,14 @@ namespace AutoBuildApp.Managers
         }
 
 
-        public string UpdatePassword(string password)
+        public string UpdatePassword(string password, string userEmail)
         {
-            //password = "P@ssw0rd!123";
             // get the current principle that is on the thread:
             ClaimsPrincipal _threadPrinciple
                 = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            string userEmail = _threadPrinciple.FindFirst(ClaimTypes.Email).Value;
+            //userEmail = _threadPrinciple.FindFirst(ClaimTypes.Email).Value;
             if (_inputValidityManager.IsPasswordValid(password))
             {
-                //return _userManagementDAO.newDBPassword(password);
                 password = BC.HashPassword(password, BC.GenerateSalt());
                 return _userManagementService._userManagementDAO.UpdatePasswordDB(userEmail, password);
             }
@@ -57,15 +48,20 @@ namespace AutoBuildApp.Managers
             }
         }
 
-        public string UpdateEmail(string userInput)
+        public string UpdateEmail(string userInputEmail, string activeEmail)
         {
-            //userInput = "crkobel@verizon.net";
             ClaimsPrincipal _threadPrinciple
                 = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            string userEmail = _threadPrinciple.FindFirst(ClaimTypes.Email).Value;
-            if (_inputValidityManager.ValidEmail(userInput))
+            //activeEmail = _threadPrinciple.FindFirst(ClaimTypes.Email).Value;
+            if (_inputValidityManager.ValidEmail(userInputEmail))
             {
-                return _userManagementService._userManagementDAO.UpdateEmailDB(userEmail, userInput);
+                if (!_userManagementDAO.DoesEmailExist(userInputEmail)) {
+                    return _userManagementService._userManagementDAO.UpdateEmailDB(activeEmail, userInputEmail);
+                }
+                else
+                {
+                    return "Email already exists";
+                }
             }
             else
             {
@@ -73,15 +69,21 @@ namespace AutoBuildApp.Managers
             }
         }
 
-        public string UpdateUsername(string userInput)
+        public string UpdateUsername(string userInputUsername, string activeEmail)
         {
-            //userInput = "crkobel";
             ClaimsPrincipal _threadPrinciple
                 = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            string userEmail = _threadPrinciple.FindFirst(ClaimTypes.Email).Value;
-            if (_inputValidityManager.ValidUserName(userInput))
+             //activeEmail = _threadPrinciple.FindFirst(ClaimTypes.Email).Value;
+            if (_inputValidityManager.ValidUserName(userInputUsername))
             {
-                return _userManagementService._userManagementDAO.UpdateUserNameDB(userEmail, userInput);
+                if (!_userManagementDAO.DoesUsernameExist(userInputUsername))
+                {
+                    return _userManagementService._userManagementDAO.UpdateUserNameDB(activeEmail, userInputUsername);
+                } 
+                else
+                {
+                    return "Username already exists";
+                }
             }
             else
             {
@@ -96,7 +98,7 @@ namespace AutoBuildApp.Managers
 
 
 
-        public string ChangePermissions(string role)
+        public string ChangePermissions(string username, string role)
         {
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
 
@@ -105,20 +107,19 @@ namespace AutoBuildApp.Managers
             IClaims vendor = claimsFactory.GetClaims(RoleEnumType.VENDOR_ROLE);
             IClaims unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
 
-            string username = "KoolTrini";
+            //username = "KoolTrini";
 
             if (role == RoleEnumType.BASIC_ROLE)
             {
-                return _userManagementDAO.ChangePermissionsDB(username, basic.Claims());
-
+                return _userManagementDAO.ChangePermissionsDB(username, role, basic.Claims());
             }
             else if (role == RoleEnumType.SENIOR_ADMIN)
             {
-                return _userManagementDAO.ChangePermissionsDB(username, seniorAdmin.Claims());
+                return _userManagementDAO.ChangePermissionsDB(username, role, seniorAdmin.Claims());
             }
             else if (role == RoleEnumType.VENDOR_ROLE)
             {
-                return _userManagementDAO.ChangePermissionsDB(username, vendor.Claims());
+                return _userManagementDAO.ChangePermissionsDB(username, role, vendor.Claims());
             }
             //else if (role == "Developer")
             //{
@@ -126,27 +127,27 @@ namespace AutoBuildApp.Managers
             //}
             else if (role == RoleEnumType.UNREGISTERED_ROLE)
             {
-                return _userManagementDAO.ChangePermissionsDB(username, unregistered.Claims());
+                return _userManagementDAO.ChangePermissionsDB(username, role, unregistered.Claims());
             }
             else return "Needs  proper role";
         }
 
-        public string ChangeLockState(string lockState)
+        public string ChangeLockState(string username, string lockState)
         {
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
             IClaims locked = claimsFactory.GetClaims(RoleEnumType.LOCKED);
             IClaims basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
 
 
-            string username = "SERGE";
+            //username = "SERGE";
             if (lockState == RoleEnumType.LOCKED)
             {
-                _userManagementDAO.ChangePermissionsDB(username, locked.Claims());
+                _userManagementDAO.ChangePermissionsDB(username, null, locked.Claims());
                 return _userManagementDAO.Lock(username);
             }
             else if (lockState == RoleEnumType.BASIC_ROLE)
             {
-                _userManagementDAO.ChangePermissionsDB(username, basic.Claims());
+                _userManagementDAO.ChangePermissionsDB(username, null, basic.Claims());
                 return _userManagementDAO.Unlock(username);
             }
             else
@@ -159,101 +160,5 @@ namespace AutoBuildApp.Managers
         {
             return _userManagementService._userManagementDAO.DeleteUserDB(email);
         }
-
-
-        //public String CreateUserRecord(UserAccount caller, UserAccount user)
-        //{
-        //    logger.Log("hello", LogLevel.Information);
-        //    if (caller.role != "ADMIN")
-        //    {
-        //        return "Unauthorized";
-        //    }
-
-        //    if (!IsInformationValid(user))
-        //    {
-        //        return "Invalid input";
-        //    }
-        //    return service.CreateUser(user);
-        //}
-
-        //public String UpdateUserRecord(UserAccount caller, UserAccount user, UpdateUserDTO updatedUser)
-        //{
-
-        //    if (caller.role != "ADMIN")
-        //    {
-        //        return "Unauthorized";
-        //    }
-
-        //    if (!IsInformationValid(updatedUser))
-        //    {
-        //        return "Invalid input";
-        //    }
-
-        //    return service.UpdateUser(user, updatedUser);
-
-        //}
-
-        //public String DeleteUserRecord(UserAccount caller, UserAccount user)
-        //{
-
-        //    if (caller.role != "ADMIN")
-        //    {
-        //        return "Unauthorized";
-        //    }
-
-        //    return service.DeleteUser(user);
-        //}
-
-        //public string EnableUser(UserAccount caller, UserAccount user, string role)
-        //{
-        //    if (caller.role != "ADMIN")
-        //    {
-        //        return "Unauthorized";
-        //    }
-
-        //    return service.EnableUser(user, role); ;
-        //}
-
-        //public String DisableUser(UserAccount caller, UserAccount user)
-        //{
-        //    if (caller.role != "ADMIN")
-        //    {
-        //        return "Unauthorized";
-        //    }
-
-        //    return service.DisableUser(user);
-        //}
-
-        //public bool ValidEmail(string email)
-        //{
-        //    return email.Contains("@") && email.Contains(".");
-        //}
-
-        //public bool ValidUserName(string username)
-        //{
-        //    return !String.IsNullOrEmpty(username) && username.Length >= 4 && username.Length <= 12;
-        //}
-
-        //public bool IsInformationValid(UserAccount user)
-        //{
-        //    return ValidEmail(user.UserEmail)
-        //        && ValidUserName(user.UserName)
-        //        && !String.IsNullOrEmpty(user.FirstName)
-        //        && !String.IsNullOrEmpty(user.LastName);
-        //}
-
-        //public bool IsInformationValid(UpdateUserDTO user)
-        //{
-        //    if (!String.IsNullOrEmpty(user.UserEmail))
-        //    {
-        //        return ValidEmail(user.UserEmail);
-        //    }
-        //    else if (!String.IsNullOrEmpty(user.UserName))
-        //    {
-        //        return ValidUserName(user.UserName);
-        //    }
-        //    return true;
-
-        //}
     }
 }

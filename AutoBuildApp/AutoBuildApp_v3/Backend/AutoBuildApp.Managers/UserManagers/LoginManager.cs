@@ -17,9 +17,9 @@ namespace AutoBuildApp.Managers
         }
 
 
-        public String LoginUser(UserAccount user)
-        {
-                return _LoginDAO.MatchData(user.UserName, user.passHash);
-        }
+        //public String LoginUser(string username, string password)
+        //{
+        //    return _LoginDAO.LoginInformation();
+        //}
     }
 }
