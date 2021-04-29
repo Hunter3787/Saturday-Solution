@@ -1,6 +1,9 @@
 ﻿using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.DataAccess;
 using System.Collections.Generic;
+using AutoBuildApp.Security.FactoryModels;
+using AutoBuildApp.Security.Interfaces;
+using AutoBuildApp.Security.Enumerations;
 
 /**
 * User Garage Manager class that directs 
@@ -12,9 +15,13 @@ namespace AutoBuildApp.Managers
     public class UserGarageManager
     {
         private BuildDAO _buildDAO;
+        private readonly IClaims _basic;
 
         public UserGarageManager(string connectionString)
         {
+            ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
+            _basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
+
             _buildDAO = new BuildDAO(connectionString);
         }
 
