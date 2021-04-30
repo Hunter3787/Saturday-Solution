@@ -329,8 +329,10 @@ namespace AutoBuildApp.DataAccess
 
                     catch (SqlException ex)
                     {
+
                         transaction.Rollback();
-                        return "failed to update permissions2";
+                        return ex.Message;
+                        //return "failed to update permissions2";
                     }
                 }
             }

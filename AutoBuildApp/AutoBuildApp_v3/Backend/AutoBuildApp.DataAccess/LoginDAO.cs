@@ -65,7 +65,7 @@ namespace AutoBuildApp.DataAccess
             {
                 conn.Open();
                 // naming convention SP_ name of procudrure
-                string SP_retrievePermissions = "retrievePermissions";
+                string SP_retrievePermissions = "RetrievePermissions";
                 using (SqlCommand command = new SqlCommand(SP_retrievePermissions, conn))
                 {
                     command.Transaction = conn.BeginTransaction();
@@ -77,7 +77,6 @@ namespace AutoBuildApp.DataAccess
                     command.CommandType = CommandType.StoredProcedure;
                     // 2) Set the CommandText to the name of the stored procedure.
                     command.CommandText = SP_retrievePermissions;
-                    /// command.Parameters.AddWithValue   -> fix itttttttt!!!!!
                     //Add any required parameters to the Command.Parameters collection.
                     // command.Parameters.AddWithValue("@username", userCredentials.Username);
                     var param = new SqlParameter[2];
@@ -120,10 +119,6 @@ namespace AutoBuildApp.DataAccess
                             return _CRAuth;
                         }
                         _userClaims = new Claims();
-                        /// ret = $"user ID: {_reader.GetInt64(0)} Permissions: {_reader.GetString(1)} scopeOfPermission { _reader.GetString(2) }";
-                        ///_userPermissions.UserAccountID = _reader.GetInt64(0);
-                        /// magic values -> will the collumns alwats be the same
-                        /// better to use ordinal names -> no matter where the column just specifiy thr column 
                         _CRAuth.AuthUserDTO.UserEmail = (string)_reader[username];
                         _userClaims.Permission = (string)_reader[permissions];
                         _userClaims.scopeOfPermissions = (string)_reader[scope];

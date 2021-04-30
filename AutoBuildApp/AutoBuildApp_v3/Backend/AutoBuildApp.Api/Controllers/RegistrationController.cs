@@ -22,12 +22,12 @@ namespace AutoBuildApp.Api.Controllers
         public IActionResult RegisterUser(string username, string firstname, string lastname, string email, string password,
             string passwordCheck)
         {
-            username = "spiderman";
-            firstname = "Peter";
-            lastname = "Parker";
-            email = "spiderman@gmail.com";
-            password = "Password123";
-            passwordCheck = "Password123";
+            //username = "spiderman";
+            //firstname = "Peter";
+            //lastname = "Parker";
+            //email = "spiderman@gmail.com";
+            //password = "Password123";
+            //passwordCheck = "Password123";
 
             return Ok(_registrationManager.RegisterUser(username, firstname, lastname, email, password, passwordCheck));
         }
