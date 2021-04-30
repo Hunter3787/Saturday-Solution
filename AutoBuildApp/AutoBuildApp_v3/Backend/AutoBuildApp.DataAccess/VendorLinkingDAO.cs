@@ -122,8 +122,6 @@ namespace AutoBuildApp.DataAccess
                         string sql = "select modelNumber from products";
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
 
-                        //adapter.InsertCommand.Parameters.AddWithValue("@USERNAME", username);
-
                         using (SqlDataReader reader = adapter.InsertCommand.ExecuteReader())
                         {
                             while (reader.Read())
@@ -134,13 +132,11 @@ namespace AutoBuildApp.DataAccess
                         }
 
                         transaction.Commit();
-                        Console.WriteLine("donef2");
-
                     }
                     catch (SqlException ex)
                     {
-                        Console.WriteLine("wrong");
                         transaction.Rollback();
+                        return null;
                     }
                 }
             }
@@ -240,7 +236,7 @@ namespace AutoBuildApp.DataAccess
                                 productInfo.Company = (string)reader["vendorName"];
                                 productInfo.Url = (string)reader["VendorLinkURL"];
                                 productInfo.ModelNumber = (string)reader["modelNumber"];
-                                productInfo.Price = Decimal.ToDouble((decimal)reader["productPrice"]);
+                                productInfo.Price = Decimal.ToDouble(reader["productPrice"] == DBNull.Value ? 0 : (decimal)reader["productPrice"]);
 
                                 allProductsByVendor.Add(productInfo);
                             }
@@ -262,13 +258,14 @@ namespace AutoBuildApp.DataAccess
 
         public bool AddProductToVendorListOfProducts(AddProductDTO product)
         {
-            if(!VendorsProducts.ContainsKey("new egg"))
+            string company = "danny";
+            if(!VendorsProducts.ContainsKey(company))
             {
                 HashSet<string> HashSet = new HashSet<string>();
-                VendorsProducts.TryAdd("new egg", HashSet);
+                VendorsProducts.TryAdd(company, HashSet);
             }
 
-            if(VendorsProducts["new egg"].Contains(product.ModelNumber))
+            if(VendorsProducts[company].Contains(product.ModelNumber))
             {
                 Console.WriteLine("can't add. that model number already exists");
 
@@ -287,7 +284,7 @@ namespace AutoBuildApp.DataAccess
                             "((select vendorID from vendorClub where vendorName = @VENDORNAME), (select productID from products where modelNumber = @MODELNUMBER), @PRODUCTNAME, @VENDORIMAGEURL, @VENDORLINKURL, @PRODUCTSTATUS, @PRODUCTPRICE)";
 
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
-                        adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = "danny";
+                        adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = company;
                         adapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = product.ModelNumber;
                         adapter.InsertCommand.Parameters.Add("@PRODUCTNAME", SqlDbType.VarChar).Value = product.Name;
                         adapter.InsertCommand.Parameters.Add("@VENDORIMAGEURL", SqlDbType.VarChar).Value = product.ImageUrl;
@@ -295,11 +292,13 @@ namespace AutoBuildApp.DataAccess
                         adapter.InsertCommand.Parameters.Add("@PRODUCTSTATUS", SqlDbType.VarChar).Value = product.Availability;
                         adapter.InsertCommand.Parameters.Add("@PRODUCTPRICE", SqlDbType.VarChar).Value = product.Price;
 
-                        adapter.InsertCommand.ExecuteNonQuery();
+                        var y = adapter.InsertCommand.ExecuteNonQuery();
+                        Console.WriteLine(y + " records changed!!!");
                         transaction.Commit();
 
-                        VendorsProducts["new egg"].Add(product.ModelNumber);
+                        VendorsProducts[company].Add(product.ModelNumber);
 
+                        Console.WriteLine("done!!");
                         return true;
                     }
                     catch (SqlException ex)
@@ -314,7 +313,8 @@ namespace AutoBuildApp.DataAccess
 
         public bool EditProductInVendorListOfProducts(AddProductDTO product)
         {
-            if (!VendorsProducts["new egg"].Contains(product.ModelNumber))
+            string company = "danny";
+            if (!VendorsProducts[company].Contains(product.ModelNumber))
             {
                 Console.WriteLine("can't edit. that model number doesn't exist");
 
@@ -339,7 +339,7 @@ namespace AutoBuildApp.DataAccess
                         adapter.InsertCommand.Parameters.Add("@PRODUCTSTATUS", SqlDbType.VarChar).Value = product.Availability;
                         adapter.InsertCommand.Parameters.Add("@PRODUCTPRICE", SqlDbType.Decimal).Value = product.Price;
                         adapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = product.ModelNumber;
-                        adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = "new egg";// product.Company.ToLower();
+                        adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = company;// product.Company.ToLower();
 
                         //adapter.InsertCommand.Parameters.Add("@RATING", SqlDbType.VarChar).Value = product.TotalRating;
                         //adapter.InsertCommand.Parameters.Add("@REVIEWS", SqlDbType.VarChar).Value = product.TotalNumberOfReviews;
@@ -362,6 +362,7 @@ namespace AutoBuildApp.DataAccess
 
         public bool DeleteProductFromVendorList(string modelNumber)
         {
+            Console.WriteLine("mode num = " + modelNumber);
             if (!VendorsProducts["new egg"].Contains(modelNumber))
             {
                 Console.WriteLine("can't delete. that model number doesn't exist");
@@ -383,7 +384,8 @@ namespace AutoBuildApp.DataAccess
                         adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = "new egg";
                         adapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = modelNumber;
 
-                        adapter.InsertCommand.ExecuteNonQuery();
+                        var x = adapter.InsertCommand.ExecuteNonQuery();
+                        Console.WriteLine(x + " rows affected");
                         transaction.Commit();
                         Console.WriteLine("donef2");
                         return true;

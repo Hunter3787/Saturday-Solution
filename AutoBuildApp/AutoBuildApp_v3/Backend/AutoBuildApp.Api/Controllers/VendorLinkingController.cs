@@ -1,10 +1,13 @@
 ﻿using AutoBuildApp.Api.HelperFunctions;
+using AutoBuildApp.Managers;
 using AutoBuildApp.Managers.FeatureManagers;
 using AutoBuildApp.Models.VendorLinking;
+using AutoBuildApp.Models.WebCrawler;
 using AutoBuildApp.Security;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
 using AutoBuildApp.Security.Interfaces;
+using AutoBuildApp.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,129 +37,141 @@ namespace AutoBuildApp.Api.Controllers
         {
             _vendorClaims = _claimsFactory.GetClaims(RoleEnumType.VENDOR_ROLE);
         }
-            // Initializes the DAO that will be used for review ratings.
+        // Initializes the DAO that will be used for review ratings.
 
-            // This will start the logging consumer manager in the background so that logs may be sent to the DB.
-            //private LoggingConsumerManager _loggingConsumerManager = new LoggingConsumerManager();
+        // This will start the logging consumer manager in the background so that logs may be sent to the DB.
+        private LoggingConsumerManager _loggingConsumerManager = new LoggingConsumerManager();
 
-            //private LoggingProducerService _logger = LoggingProducerService.GetInstance;
+        private LoggingProducerService _logger = LoggingProducerService.GetInstance;
 
-            /// <summary>
-            /// This class will show no contend if fetch Options is made.
-            /// </summary>
-            /// <returns>will return a page of no content to the view.</returns>
-            //[HttpOptions]
-            //public IActionResult PreflightRoute()
-            //{
-            //    _logger.LogInformation("HttpOptions was called");
-            //    return NoContent();
-            //}
+        /// <summary>
+        /// This class will show no contend if fetch Options is made.
+        /// </summary>
+        /// <returns>will return a page of no content to the view.</returns>
 
         [HttpPost]
-        public IActionResult AddProductToVendorListOfProducts(AddProductDTO product)
+        public async Task<IActionResult> AddProductToVendorListOfProducts(IFormCollection formData, IFormFile photo)
         {
-            Console.WriteLine("image url = " + product.ImageUrl);
-            bool result = _vendorLinkingManager.AddProductToVendorListOfProducts(product);
+            // Takes the form data from javascript and converts it to an AddProductDTO.
+            AddProductDTO Product = _vendorLinkingManager.ConvertFormToProduct(formData);
+
+            // Product is null if a format exception was thrown
+            if (Product == null)
+            {
+                _logger.LogWarning("AddProductToVendorListOfProducts failed.");
+                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            }
+
+            bool Result = await _vendorLinkingManager.AddProductToVendorListOfProducts(Product, photo);
+
+            if (!Result)
+            {
+                _logger.LogWarning("AddProductToVendorListOfProducts failed.");
+                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            }
+
+            _logger.LogInformation("EditProductInVendorListOfProducts succeeded.");
             return Ok();
+
+
         }
 
         [HttpPut]
-        public IActionResult EditProductInVendorListOfProducts(AddProductDTO product)
+        public async Task<IActionResult> EditProductInVendorListOfProducts(IFormCollection formData, IFormFile photo)
         {
-            Console.WriteLine("image url2 = " + product.ModelNumber);
-            Console.WriteLine("image url2 = " + product.Availability);
-            Console.WriteLine("image url2 = " + product.Company);
-            Console.WriteLine("image url2 = " + product.Name);
-            Console.WriteLine("image url2 = " + product.ImageUrl);
-            Console.WriteLine("image url2 = " + product.Price);
+            // Takes the form data from the front end and converts it to an AddProductDTO.
+            AddProductDTO Product = _vendorLinkingManager.ConvertFormToProduct(formData);
 
-            bool result = _vendorLinkingManager.EditProductInVendorListOfProducts(product);
+            // Product is null if a format exception was thrown
+            if (Product == null)
+            {
+                _logger.LogWarning("EditProductInVendorListOfProducts failed.");
+                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            }
+
+            bool Result = await _vendorLinkingManager.EditProductInVendorListOfProducts(Product, photo);
+
+            if (!Result)
+            {
+                _logger.LogWarning("EditProductInVendorListOfProducts failed.");
+                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            }
+
+            _logger.LogInformation("EditProductInVendorListOfProducts succeeded.");
             return Ok();
         }
+
 
         [HttpDelete]
         public IActionResult DeleteProductFromVendorList(string modelNumber)
         {
-            Console.WriteLine("mf = " + modelNumber);
-            Console.ReadLine();
-            var result = _vendorLinkingManager.DeleteProductFromVendorList(modelNumber);
+            var Result = _vendorLinkingManager.DeleteProductFromVendorList(modelNumber);
+
+            if(!Result)
+            {
+                _logger.LogWarning("DeleteProductFromVendorList failed.");
+                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            }
+
+            _logger.LogInformation("DeleteProductFromVendorList succeeded.");
             return Ok();
         }
 
         [HttpGet("modelNumbers")]
         public IActionResult GetAllModelNumbers()
         {
-            Console.WriteLine("we are in the get request function");
+            var ModelNumbers = _vendorLinkingManager.GetAllModelNumbers();
 
-            var productsByVendor = _vendorLinkingManager.GetAllModelNumbers();
+            // ModelNumbers is null when an SQL exception occurs.
+            if (ModelNumbers == null)
+            {
+                _logger.LogWarning("GetAllModelNumbers failed.");
+                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            }
 
-            return Ok(productsByVendor);
+            _logger.LogInformation("GetAllModelNumbers succeeded.");
+            return Ok(ModelNumbers);
         }
 
         [HttpGet]
-        public IActionResult GetAllProductsByVendor(string filtersString, string order)
+        public IActionResult GetAllProductsByVendor(string FiltersString, string Order)
         {
-            Console.WriteLine("we are in the get request function");
-            Console.WriteLine("order = " + order);
-            GetProductByFilterDTO filters = null;
-            if (filtersString != null)
-            {
-                filters = new GetProductByFilterDTO();
-                filters.PriceOrder = order;
-                filtersString = filtersString.Replace("?filtersString=", "");
-                string[] SeparatedFilters = filtersString.Split(',');
-                foreach (string f in SeparatedFilters)
-                {
-                    if (!filters.FilteredListOfProducts.ContainsKey(f))
-                    {
-                        filters.FilteredListOfProducts.Add(f, true);
-                    }
-                }
-            }
-            if (!_threadPrinciple.Identity.IsAuthenticated)
-            {
-
-                // Add action logic here
-                return new StatusCodeResult(StatusCodes.Status401Unauthorized);
-            }
-            if (!AuthorizationService.checkPermissions(_vendorClaims.Claims()))
-            {
-
-                // Add action logic here
-                return new StatusCodeResult(StatusCodes.Status403Forbidden);
-            }
-            var productsByVendor = _vendorLinkingManager.GetAllProductsByVendor(filters);
-
-            return Ok(productsByVendor);
-        }
-            /// <summary>
-            /// This method will get all reviews from the DB.
-            /// </summary>
-            /// <returns>returns the status of OK as well as teh list of reviews.</returns>
-            /// 
-
-            //    [HttpGet]
-            //public IActionResult GetAllProductsByVendor()
+            #region Authentication stuff?
+            //if (!_threadPrinciple.Identity.IsAuthenticated)
             //{
-            //    if (!_threadPrinciple.Identity.IsAuthenticated)
-            //    {
 
-            //        // Add action logic here
-            //        return new StatusCodeResult(StatusCodes.Status401Unauthorized);
-            //    }
-            //    if (!AuthorizationService.checkPermissions(_vendorClaims.Claims()))
-            //    {
-
-            //        // Add action logic here
-            //        return new StatusCodeResult(StatusCodes.Status403Forbidden);
-            //    }
-            //    var productsByVendor = _vendorLinkingManager.GetAllProductsByVendor("new egg");
-            //    return Ok(productsByVendor);
+            //    // Add action logic here
+            //    return new StatusCodeResult(StatusCodes.Status401Unauthorized);
             //}
+            //if (!AuthorizationService.checkPermissions(_vendorClaims.Claims()))
+            //{
 
+            //    // Add action logic here
+            //    return new StatusCodeResult(StatusCodes.Status403Forbidden);
+            //}
+            #endregion
 
+            // Takes the filters and the order from the front end and converts it into a GetProductByFilterDTO.
+            GetProductByFilterDTO Filters = _vendorLinkingManager.ConvertToGetProductByFilterDTO(FiltersString, Order);
 
+            // Filters is null when FiltersString is null.
+            if (Filters == null)
+            {
+                _logger.LogWarning("FiltersString was null. GetAllProductsByVendor failed.");
+                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            }
 
+            var ProductsByVendor = _vendorLinkingManager.GetAllProductsByVendor(Filters);
 
+            // ProductsByVendor is null when an SQL exception occurs.
+            if(ProductsByVendor == null)
+            {
+                _logger.LogWarning("ProductsByVendor was null. GetAllProductsByVendor failed.");
+                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            }
+
+            _logger.LogInformation("GetAllProductsByVendor succeeded.");
+            return Ok(ProductsByVendor);
         }
+    }
 }
