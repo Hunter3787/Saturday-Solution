@@ -16,8 +16,7 @@ namespace AutoBuildApp.DataAccess
 {
 
     /// <summary>
-    /// Class to access the database while
-    /// using the Recommendation tool.
+    /// Class to get products from DAO.
     /// </summary>
     public class ProductDAO : IProductDAO
     {
@@ -31,7 +30,7 @@ namespace AutoBuildApp.DataAccess
         private readonly string _specsQueryByModel
             = "SELECT * FROM Specs_Table WHERE model = @modelNumber;";
 
-        private readonly string _allProductQuery = $"SELECT * FROM Products;";
+        private readonly string _allProductQuery = $"SELECT * FROM Products AS prod INNER JOIN Products_Specs AS spec ON prod.productID = spec.productID;";
         private readonly string _productTypeString = "@productType";
         private readonly string _modelNumberString = "@modelNumber";
         
@@ -66,39 +65,43 @@ namespace AutoBuildApp.DataAccess
                     command.CommandType = CommandType.Text;
                     command.CommandText = _allProductQuery;
 
-                    using (SqlDataReader outerReader = command.ExecuteReader())
+                    using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        while (outerReader.Read())
+                        while (reader.Read())
                         {
+                            string currentModel = (string)reader[ProductTableColumns.PRODUCT_COLUMN_MODEL];
+
                             // Create new dictionary to store the queried specs.
                             Dictionary<string, string> specsDictionary = new Dictionary<string, string>();
 
+                            var Type = (string)reader[ProductTableColumns.PRODUCT_COLUMN_TYPE];
+                            var Manufacturer = (string)reader[ProductTableColumns.PRODUCT_COLUMN_MANUFACTURER];
+                            var Model = (string)reader[ProductTableColumns.PRODUCT_COLUMN_MODEL];
+
                             ProductEntity tempEntity = new ProductEntity()
                             {
-                                Type = (string)outerReader[ProductTableCollumns.PRODUCT_COLUMN_TYPE],
-                                Name = (string)outerReader[ProductTableCollumns.PRODUCT_COLUMN_NAME],
-                                Manufacturer = (string)outerReader[ProductTableCollumns.PRODUCT_COLUMN_MANUFACTURER],
-                                Model = (string)outerReader[ProductTableCollumns.PRODUCT_COLUMN_MODEL]
+                                Type = (string)reader[ProductTableColumns.PRODUCT_COLUMN_TYPE],
+                                // Name = (string)reader[ProductTableColumns.PRODUCT_COLUMN_NAME],
+                                Manufacturer = (string)reader[ProductTableColumns.PRODUCT_COLUMN_MANUFACTURER],
+                                Model = (string)reader[ProductTableColumns.PRODUCT_COLUMN_MODEL]
                             };
 
-
-
-                            using (SqlDataReader innerReader = command.ExecuteReader())
+                            // Read from Products_Specs until no more results.
+                            var hasMore = true;
+                            while (hasMore && (string)reader[ProductTableColumns.PRODUCT_COLUMN_MODEL] == currentModel)
                             {
+                                specsDictionary.Add(
+                                        (string)reader[ProductTableColumns.PRODUCT_SPECS_COLUMN_KEY],
+                                        (string)reader[ProductTableColumns.PRODUCT_SPECS_COLUMN_VALUE]
+                                    );
 
+                                hasMore = reader.Read();
                             }
-
-                            // For each element in the specs table add
-                            // the spec and details.
-
 
                             tempEntity.Specs = specsDictionary;
 
                             entitiesList.Add(tempEntity);
-                            outerReader.NextResult();
                         }
-
-                        
                     }
                 }
             }
@@ -107,7 +110,8 @@ namespace AutoBuildApp.DataAccess
         }
 
         /// <summary>
-        /// 
+        /// Get product entities from the product table based off a list of passed
+        /// components that may or may not carry a budget.
         /// </summary>
         /// <param name="toFind"></param>
         /// <returns></returns>
@@ -135,7 +139,7 @@ namespace AutoBuildApp.DataAccess
         }
 
         /// <summary>
-        /// 
+        /// Get all entities by product type
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>

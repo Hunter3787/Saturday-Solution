@@ -1,30 +1,76 @@
-﻿using AutoBuildApp.Models.Interfaces;
+﻿using System;
+using AutoBuildApp.DataAccess;
+using AutoBuildApp.Models;
+using AutoBuildApp.Models.Interfaces;
 /**
 * Build Management Service is a service that calls a 
 * DAO and translates the returned data into a build type.
 * @Author Nick Marshall-Eminger
 */
-namespace AutoBuildApp.Services.BuildServices
+namespace AutoBuildApp.Services
 {
     public class BuildManagementService
     {
-        public BuildManagementService()
+        private BuildDAO _dao;
+        private IMessageResponse _response;
+
+        public BuildManagementService(BuildDAO buildDAO)
         {
+            _dao = buildDAO;
         }
 
-        public bool AddBuild()
+        public IMessageResponse AddBuild(IBuild build, string user)
         {
-            return false;
+            _response = new StringBoolResponse();
+
+            try
+            {
+                _response.SuccessBool = true;
+                _response.MessageString = ResponseStringGlobals.SUCCESSFUL_ADDITION;
+            }
+            catch (TimeoutException)
+            {
+                _response.SuccessBool = false;
+                _response.MessageString = ResponseStringGlobals.CALL_TIMEOUT;
+            }
+
+            return _response;
         }
 
-        public bool CopyBuild()
+        public IMessageResponse CopyBuild()
         {
-            return false;
+            _response = new StringBoolResponse();
+
+            try
+            {
+                _response.SuccessBool = true;
+                _response.MessageString = ResponseStringGlobals.SUCCESSFUL_ADDITION;
+            }
+            catch (TimeoutException)
+            {
+                _response.SuccessBool = false;
+                _response.MessageString = ResponseStringGlobals.CALL_TIMEOUT;
+            }
+
+            return _response;
         }
 
-        public bool DeleteBuild()
+        public IMessageResponse DeleteBuild()
         {
-            return false;
+            _response = new StringBoolResponse();
+
+            try
+            {
+                _response.SuccessBool = true;
+                _response.MessageString = ResponseStringGlobals.SUCCESSFUL_DELETION;
+            }
+            catch (TimeoutException)
+            {
+                _response.SuccessBool = false;
+                _response.MessageString = ResponseStringGlobals.CALL_TIMEOUT;
+            }
+
+            return _response;
         }
 
         public IBuild GetBuild()
@@ -32,14 +78,18 @@ namespace AutoBuildApp.Services.BuildServices
             return null;
         }
 
-        public bool PublishBuild()
+        public IMessageResponse PublishBuild()
         {
-            return false;
+            _response = new StringBoolResponse();
+
+            return _response;
         }
 
-        public bool ModifyBuild()
+        public IMessageResponse ModifyBuild()
         {
-            return false;
+            _response = new StringBoolResponse();
+
+            return _response;
         }
     }
 }

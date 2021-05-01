@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using AutoBuildApp.Security.FactoryModels;
 using AutoBuildApp.Security.Interfaces;
 using AutoBuildApp.Security.Enumerations;
+using AutoBuildApp.Services;
+using AutoBuildApp.DataAccess.Abstractions;
+using AutoBuildApp.Models;
 
 /**
 * User Garage Manager class that directs 
@@ -15,29 +18,44 @@ namespace AutoBuildApp.Managers
     public class UserGarageManager
     {
         private BuildDAO _buildDAO;
-        private readonly IClaims _basic;
+        private ShelfDAO _shelfDAO;
+        private readonly IClaims _basic, _vendor, _developer, _admin;
+        private ShelfService _shelfService;
+        private BuildManagementService _buildService;
 
         public UserGarageManager(string connectionString)
         {
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
             _basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
+            _vendor = claimsFactory.GetClaims(RoleEnumType.VENDOR_ROLE);
+            _developer = claimsFactory.GetClaims(RoleEnumType.DEVELOPER_ROLE);
+            _admin = claimsFactory.GetClaims(RoleEnumType.BASIC_ADMIN);
 
             _buildDAO = new BuildDAO(connectionString);
+            _shelfDAO = new ShelfDAO(connectionString);
+            _shelfService = new ShelfService(_shelfDAO);
+            _buildService = new BuildManagementService(_buildDAO);
         }
 
-        public bool AddBuild(IBuild build)
+        public IMessageResponse AddBuild(IBuild build, string user)
         {
-            return false;
+            IMessageResponse response = _buildService.AddBuild(build, user);
+
+            return response;
         }
 
-        public bool CopyBuildToGarage(string buildID)
+        public IMessageResponse CopyBuildToGarage(string buildID)
         {
-            return false;
+            IMessageResponse response = _buildService.CopyBuild();
+
+            return response;
         }
 
-        public bool DeleteBuild(string buildID)
+        public IMessageResponse DeleteBuild(string buildID)
         {
-            return false;
+            IMessageResponse response = _buildService.DeleteBuild();
+
+            return response;
         }
 
         public List<IBuild> GetBuilds(string id, string order)
@@ -47,56 +65,91 @@ namespace AutoBuildApp.Managers
             return outputList;
         }
 
-        public bool PublishBuild(IBuild buildID)
+        public IMessageResponse PublishBuild(IBuild buildID)
         {
-            return false;
+            IMessageResponse response = _buildService.PublishBuild();
+
+            return response;
         }
 
-        public bool ModifyBuild(IBuild build)
+        public IMessageResponse ModifyBuild(IBuild build)
         {
-            return false;
+            IMessageResponse response = _buildService.ModifyBuild();
+
+            return response;
         }
 
-        public bool AddShelf()
+        // Starting point
+        public IMessageResponse CreateShelf(string shelfName, string user)
         {
-            return false;
+            // Add input validation.
+            IMessageResponse response = _shelfService.CreateShelf(shelfName, user);
+
+            return response;
         }
 
-        public bool DeleteShelf(string shelfID)
+        public IMessageResponse RenameShelf(string from, string to, string user)
         {
-            return false;
+            // Add input validation.
+            IMessageResponse response = _shelfService.ChangeShelfName(from, to, user);
+
+            return response;
         }
 
-        public bool AddToShelf(IComponent item, string shelfID)
+        public IMessageResponse DeleteShelf(string shelfName, string user)
         {
-            return false;
+            // Add Business rules
+            
+            // If(user == current)
+            IMessageResponse response = _shelfService.DeleteShelf(shelfName);
+
+            return response;
         }
 
-        public bool CopyToShelf(IComponent item, string originID, string destinationID)
+        public IMessageResponse AddToShelf(IComponent item, string shelfName, string user)
         {
-            return false;
+            // Add Business rules
+            IMessageResponse response = _shelfService.AddToShelf(item, shelfName, user);
+
+            return response;
         }
 
-        public bool RemoveFromShelf(int itemIndex, string shelfID)
+        public IMessageResponse RemoveFromShelf(int itemIndex, string shelfName)
         {
-            return false;
+            // Add Business rules
+            IMessageResponse response = _shelfService.RemoveFromShelf(itemIndex, shelfName);
+
+            return response;
         }
 
-        public bool ModifyCount(int count, int itemIndex, string shelfID)
+        public IMessageResponse ModifyCount(int count, string itemID, string shelfName)
         {
-            return false;
+            // Add Business rules
+            IMessageResponse response = _shelfService.ChangeQuantity(count, itemID, shelfName);
+
+            return response;
         }
 
-        public List<IComponent> GetShelf(string shelfID)
+        public IMessageResponse MoveItemOnShelf(int indexStart, int indexEnd, string user)
         {
-            List<IComponent> outputList = new List<IComponent>();
+            // Add business rules
+            IMessageResponse response = _shelfService.ModifyShelf(indexStart, indexEnd, user);
+
+            return response;
+        }
+
+        public List<IComponent> GetShelf(string shelfName)
+        {
+            // Add Business rules
+            List<IComponent> outputList = _shelfService.GetShelf(shelfName);
 
             return outputList;
         }
 
-        public IComponent GetComponent()
+        public IComponent GetComponent(int index, string shelfName)
         {
-            IComponent output = null;
+            // Add Business rules
+            IComponent output = _shelfService.GetComponent(index, shelfName);
 
             return output;
         }

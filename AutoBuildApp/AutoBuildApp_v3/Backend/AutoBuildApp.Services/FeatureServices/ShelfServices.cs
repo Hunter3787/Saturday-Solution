@@ -1,61 +1,90 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using AutoBuildApp.DataAccess;
+using AutoBuildApp.DataAccess.Abstractions;
+using AutoBuildApp.Models;
 using AutoBuildApp.Models.Interfaces;
 
 /**
 * The ShelfServices will provide the shelf specific operatons.
+* Catches errors, prepares commmon response object.
 * @Author Nick Marshall-Eminger
 */
 namespace AutoBuildApp.Services
 {
-    public class ShelfServices
+    public class ShelfService
     {
-        public ShelfServices()
+        private ShelfDAO _dao;
+
+        public ShelfService(ShelfDAO shelfDAO)
         {
+            _dao = shelfDAO;
         }
 
-        public bool AddShelf()
+        public IMessageResponse CreateShelf(string shelfName, string user)
         {
-            return false;
+            IMessageResponse output = new StringBoolResponse();
+
+            try
+            {
+                output.SuccessBool = _dao.InsertShelf(shelfName, user);
+                output.MessageString = ResponseStringGlobals.SUCCESSFUL_CREATION;
+            }
+            catch (TimeoutException)
+            {
+                output.SuccessBool = false;
+                output.MessageString = ResponseStringGlobals.CALL_TIMEOUT;
+            }
+
+            return output;
         }
 
-        public bool DeleteShelf()
+        public IMessageResponse DeleteShelf(string shelfID)
         {
-            return false;
+            IMessageResponse output = new StringBoolResponse();
+            bool success = _dao.DeleteShelf(shelfID);
+
+            return output;
         }
 
-        public bool ChangeShelfName()
+        public IMessageResponse ChangeShelfName(string oldName, string newName, string user)
         {
-            return false;
+            IMessageResponse output = new StringBoolResponse();
+            return output;
         }
 
-        public bool AddToShelf()
+        public IMessageResponse AddToShelf(IComponent item, string shelfName, string user)
         {
-            return false;
+            IMessageResponse output = new StringBoolResponse();
+            return output;
         }
 
-        public bool RemoveFromShelf()
+        public IMessageResponse RemoveFromShelf(int index, string shelfName)
         {
-            return false;
+            IMessageResponse output = new StringBoolResponse();
+            return output;
         }
 
-        public bool ModifyShelf()
+        public IMessageResponse ModifyShelf(int indexStart, int indexEnd, string user)
         {
-            return false;
+            IMessageResponse output = new StringBoolResponse();
+            return output;
         }
 
-        public bool ChangeQuantity()
+        public IMessageResponse ChangeQuantity(int count, string itemID, string shelfName)
         {
-            return false;
+            IMessageResponse output = new StringBoolResponse();
+            return output;
         }
 
-        public List<IComponent> GetShelf()
+        public List<IComponent> GetShelf(string shelfName)
         {
             List<IComponent> outputList = new List<IComponent>();
 
             return outputList;
         }
 
-        public IComponent GetComponent()
+        public IComponent GetComponent(int index, string shelfName)
         {
             IComponent output = null;
 

@@ -1,10 +1,30 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using AutoBuildApp.Models.Interfaces;
+using AutoBuildApp.Managers;
+using AutoBuildApp.Services;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using AutoBuildApp.Models;
 
 namespace AutoBuildApp.Manger.Tests
 {
     [TestClass]
     public class UserGarageManagerTests
     {
+        private UserGarageManager _testManager;
+        private readonly string _testString = "Data Source=localhost;Initial Catalog=DB;Integrated Security=True; user id=sa; password=Quake3arena!;";
+
+        [TestInitialize]
+        public void Setup()
+        {
+            _testManager = new UserGarageManager(_testString);
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+
+        }
+
         /// <summary>
         /// Tests the initialization and
         /// collection of all the builds from the garage.
@@ -13,7 +33,7 @@ namespace AutoBuildApp.Manger.Tests
         public void UserGarageManager_InitializeGarage_ReturnBuilds()
         {
             // Arrange
-
+            
             // Act
 
             // Assert
@@ -123,10 +143,19 @@ namespace AutoBuildApp.Manger.Tests
         public void UserGarageManager_CreateShelf_True()
         {
             // Arrange
+            IMessageResponse expected = new StringBoolResponse();
+            IMessageResponse actual = new StringBoolResponse();
+            expected.SuccessBool = true;
+            expected.MessageString = ResponseStringGlobals.SUCCESSFUL_CREATION;
+            string user = "Nick";
+            string shelfName = "Tacobell";
 
             // Act
+            actual = _testManager.CreateShelf(shelfName, user);
 
             // Assert
+            Assert.AreEqual(expected.SuccessBool,actual.SuccessBool);
+            Assert.AreEqual(expected.MessageString, actual.MessageString);
         }
 
         /// <summary>

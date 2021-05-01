@@ -4,6 +4,8 @@ using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.DataAccess.Abstractions;
 using AutoBuildApp.DataAccess.Entities;
 using AutoBuildApp.DataAccess;
+using AutoBuildApp.Services.FactoryServices;
+using AutoBuildApp.Models.Products;
 
 /**
  * Getter that uses a data access object to call the and return,
@@ -47,6 +49,8 @@ namespace AutoBuildApp.Services.CatalogServices
                 // Interface : SATA III, SATA 6.0/gb; Form Factor : 2.5" = SSD
                 // Interface : SATA III, SATA 6.0/gb; Form Factor : 3.5" = SATA Drive
                 // 
+
+
             }
 
             // Tokenize strings to fit the product models.
@@ -75,10 +79,5 @@ namespace AutoBuildApp.Services.CatalogServices
         {
             return null;
         }
-    }
-
-    public class ProductParsingService
-    {
-
     }
 }
