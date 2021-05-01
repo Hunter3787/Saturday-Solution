@@ -48,3 +48,7 @@ function register() {
 {
     alert(id);
 }
+
+function changePage() {
+  window.location.href = "LoginPage.html"
+}
