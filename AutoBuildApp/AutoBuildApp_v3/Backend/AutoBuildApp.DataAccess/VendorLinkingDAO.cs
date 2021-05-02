@@ -19,11 +19,11 @@ namespace AutoBuildApp.DataAccess
         public VendorLinkingDAO(string connectionString)
         {
             _connectionString = connectionString;
-            //PopulateAllProducts();
         }
 
-        public void PopulateVendorsProducts(ConcurrentDictionary<string, HashSet<string>>  VendorsProducts)
+        public ConcurrentDictionary<string, HashSet<string>> PopulateVendorsProducts()
         {
+            ConcurrentDictionary<string, HashSet<string>> VendorsProducts = new ConcurrentDictionary<string, HashSet<string>>();
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -67,46 +67,12 @@ namespace AutoBuildApp.DataAccess
                     }
                 }
             }
+            return VendorsProducts;
         }
-
-        //public ConcurrentDictionary<string, byte> PopulateVendors()
-        //{
-        //    ConcurrentDictionary<string, byte> Vendors = new ConcurrentDictionary<string, byte>();
-        //    using (SqlConnection connection = new SqlConnection(_connectionString))
-        //    {
-        //        connection.Open();
-        //        using (SqlTransaction transaction = connection.BeginTransaction())
-        //        {
-        //            try
-        //            {
-        //                SqlDataAdapter adapter = new SqlDataAdapter();
-
-        //                string sql = "select vendorName from vendorClub";
-        //                adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
-
-        //                using (SqlDataReader reader = adapter.InsertCommand.ExecuteReader())
-        //                {
-        //                    while (reader.Read())
-        //                    {
-        //                        string Vendor = (string)reader["vendorName"];
-        //                        Vendors.TryAdd(Vendor, 0);
-        //                    }
-        //                }
-
-        //                transaction.Commit();
-
-        //            }
-        //            catch (SqlException ex)
-        //            {
-        //                transaction.Rollback();
-        //            }
-        //        }
-        //    }
-        //    return Vendors;
-        //}
 
         public List<string> GetAllModelNumbers()
         {
+            string company = "danny";
             List<string> allModelNumbers = new List<string>();
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -117,8 +83,13 @@ namespace AutoBuildApp.DataAccess
                     {
                         SqlDataAdapter adapter = new SqlDataAdapter();
                         //ResponseStringGlobals.FAILED_ADDITION;
-                        string sql = "select modelNumber from products";
+                        //string sql = "select modelNumber from products";
+                        string sql = "select p.modelNumber from products p where p.modelNumber not in " +
+                            "(select modelNumber from products p inner join vendor_product_junction vpj on p.productId = vpj.productID " +
+                            "where vendorID = (select vendorID from vendorclub where vendorName = @VENDORNAME))";
+                        
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
+                        adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = company;
 
                         using (SqlDataReader reader = adapter.InsertCommand.ExecuteReader())
                         {
@@ -298,8 +269,8 @@ namespace AutoBuildApp.DataAccess
 
                         Console.WriteLine("done!!");
 
-                        response.SuccessString = "Successfully added product to vendor list.";
-                        response.SuccessBool = true;
+                        response.ResponseString = "Successfully added product to vendor list.";
+                        response.ResponseBool = true;
 
                         return response;
                     }
@@ -308,11 +279,11 @@ namespace AutoBuildApp.DataAccess
 
                         transaction.Rollback();
 
-                        response.SuccessBool = false;
+                        response.ResponseBool = false;
 
                         if(ex.Number == 2627)
                         {
-                            response.SuccessString = "You already have this model number in your list of products.";
+                            response.ResponseString = "You already have this model number in your list of products.";
                         }
                         else if(ex.Number == -2)
                         {
@@ -320,7 +291,7 @@ namespace AutoBuildApp.DataAccess
                         }
                         else
                         {
-                            response.SuccessString = "Failed to add product to vendor list.";
+                            response.ResponseString = "Failed to add product to vendor list.";
                         }
 
                         return response;
@@ -399,7 +370,7 @@ namespace AutoBuildApp.DataAccess
                             "and productID = (select productID from products where modelNumber = @MODELNUMBER)";
 
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
-                        adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = "new egg";
+                        adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = "danny";
                         adapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = modelNumber;
 
                         var x = adapter.InsertCommand.ExecuteNonQuery();

@@ -22,10 +22,9 @@ namespace AutoBuildApp.Services
             _vendorLinkingDAO = new VendorLinkingDAO(connectionString);
         }
 
-        public void PopulateVendorsProducts(ConcurrentDictionary<string, HashSet<string>> VendorsProducts)
+        public ConcurrentDictionary<string, HashSet<string>> PopulateVendorsProducts()
         {
-            //return _vendorLinkingDAO.PopulateVendorsProducts(VendorsProducts);
-            _vendorLinkingDAO.PopulateVendorsProducts(VendorsProducts);
+            return _vendorLinkingDAO.PopulateVendorsProducts();
         }
 
         public CommonResponse AddProductToVendorListOfProducts(AddProductDTO product)
