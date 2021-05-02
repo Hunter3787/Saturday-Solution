@@ -5,6 +5,8 @@ using System.Data;
 using Microsoft.Data.SqlClient;
 using System.Text;
 
+
+// Could be nixed.
 namespace AutoBuildApp.Models.DTO
 {
     public class SearchGateway

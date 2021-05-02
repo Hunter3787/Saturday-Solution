@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System;
+
 /**
-* This Data Access Object will handle collection and transformation of 
-* infromation coming from the database to be usable inside the Builder.
+* This Data Access Object will handle collection of 
+* infromation from the database to be used inside the Recommender.
 * @Author Nick Marshall-Eminger
 */
 namespace AutoBuildApp.DataAccess
