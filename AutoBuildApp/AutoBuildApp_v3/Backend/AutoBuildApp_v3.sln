@@ -46,7 +46,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoBuildApp.DataAccess.Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoBuildApp.Api", "AutoBuildApp.Api\AutoBuildApp.Api.csproj", "{600C0164-58FB-43C2-8D4F-FAF5F0D5A7A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Connor's Console", "Connor's Console\Connor's Console.csproj", "{CD47C394-039A-400E-93E5-3C7A2F4DDF84}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Connor's Console", "Connor's Console\Connor's Console.csproj", "{CD47C394-039A-400E-93E5-3C7A2F4DDF84}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

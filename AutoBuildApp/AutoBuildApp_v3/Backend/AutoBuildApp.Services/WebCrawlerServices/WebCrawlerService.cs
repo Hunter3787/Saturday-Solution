@@ -54,13 +54,14 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             currentProxy = allProxies[0];
             options = new LaunchOptions()
             {
-                Headless = false,
+                Headless = true,
                 IgnoreHTTPSErrors = true,
                 ExecutablePath = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
                 Args = new[] {
                         $"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}", // ganna take a while = dannu
+                        //"--proxy-server=23.251.138.105:8080",
                         //"--proxy-server=201.45.163.114:80",
-                       // "--proxy-server=208.80.28.208:8080",
+                        //"--proxy-server=208.80.28.208:8080",
                         //"--proxy-server=183.88.226.50:8080",
                         //"--proxy-server=165.225.77.42:80",
                         //"--proxy-server=182.52.83.133:8080",
@@ -255,10 +256,10 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                             string value = specsVals.ElementAt(i).ToString();
                             // assign series first in case there is no model number.
                             //  if it does have a model number, it will just get overridden.
-                            if (key.ToLower().Contains("series"))
-                            {
-                                modelNumberIndex = i;
-                            }
+                            //if (key.ToLower().Contains("series"))
+                            //{
+                            //    modelNumberIndex = i;
+                            //}
                             if (key.ToLower().Contains("model"))
                             {
                                 modelNumberIndex = i;
