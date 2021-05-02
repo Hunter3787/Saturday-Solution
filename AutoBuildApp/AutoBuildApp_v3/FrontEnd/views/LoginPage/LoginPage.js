@@ -1,15 +1,12 @@
 //const uri1 = 'https://localhost:44363/api/TodoItems';
-const uri ='https://localhost:5001/authentication';
+const uri ='https://localhost:5001/login';
 let todos = [];
 var JWT_Token = ' ';
-const token = 'YOUR_TOKEN_HERE';
 
   //https://gomakethings.com/using-oauth-with-fetch-in-vanilla-js/
   // https://www.digitalocean.com/community/tutorials/how-to-use-the-javascript-fetch-api-to-get-data
 
-var msg = 'Hello world';
 
-console.log(msg);
 function getItems() {
   fetch(uri)
     .then(response => response.json())
@@ -29,8 +26,9 @@ function checkCredentials() {
     Username : addNameTextbox.value.trim(),
     Password : addHashTextbox.value.trim()
   };
-  fetch(`https://localhost:5001/authentication/UserCred`, {
+  fetch(`https://localhost:5001/login`, {
     method: 'POST',
+    mode: 'cors',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',

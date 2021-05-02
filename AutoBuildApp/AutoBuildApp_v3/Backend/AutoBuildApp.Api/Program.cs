@@ -1,3 +1,4 @@
+using AutoBuildApp.Api.Controllers;
 using AutoBuildApp.Api.HelperFunctions;
 using AutoBuildApp.DataAccess;
 using AutoBuildApp.Models.WebCrawler;
@@ -58,6 +59,11 @@ namespace AutoBuildApp.Api
             //    }
             //}).Start();
             //#endregion
+            ConnectionManager connectionManager = new ConnectionManager();
+            var con = connectionManager.GetConnectionStringByName(ControllerGlobals.CONNECTION_ADMIN_CREDENTIALS);
+            ProductDAO productDAO = new ProductDAO(con);
+            productDAO.GetAllProductEntities();
+
 
             CreateHostBuilder(args).Build().Run();
         }

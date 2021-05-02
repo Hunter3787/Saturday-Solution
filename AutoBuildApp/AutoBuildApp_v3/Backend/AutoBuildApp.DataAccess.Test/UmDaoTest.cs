@@ -30,11 +30,9 @@ namespace AutoBuildApp.DataAccess.Test
         {
 
             IClaims basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
-            IClaims basicAdmin = claimsFactory.GetClaims(RoleEnumType.BASIC_ADMIN);
-            IClaims midLevelAdmin = claimsFactory.GetClaims(RoleEnumType.MIDLEVEL_ADMIN);
-            IClaims seniorAdmin = claimsFactory.GetClaims(RoleEnumType.SENIOR_ADMIN);
+            IClaims basicAdmin = claimsFactory.GetClaims(RoleEnumType.DELEGATE_ADMIN);
+            IClaims seniorAdmin = claimsFactory.GetClaims(RoleEnumType.SYSTEM_ADMIN);
             IClaims vendor = claimsFactory.GetClaims(RoleEnumType.VENDOR_ROLE);
-            IClaims developer = claimsFactory.GetClaims(RoleEnumType.DEVELOPER_ROLE);
             IClaims unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
 
 
@@ -45,10 +43,8 @@ namespace AutoBuildApp.DataAccess.Test
                 // here I instatiate objects that carry the secret key, the JWTHeader object and the JWTPayload object
                new object[]{basic.Claims()}, 
                new object[]{basicAdmin.Claims()},
-               new object[]{midLevelAdmin.Claims()},
                new object[]{seniorAdmin.Claims()},
                new object[]{vendor.Claims()},
-               new object[]{developer.Claims()},
                new object[]{unregistered.Claims()},
             };
 
@@ -61,7 +57,7 @@ namespace AutoBuildApp.DataAccess.Test
         {
 
             IClaims basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
-            IClaims admin = claimsFactory.GetClaims(RoleEnumType.SENIOR_ADMIN);
+            IClaims admin = claimsFactory.GetClaims(RoleEnumType.SYSTEM_ADMIN);
             IClaims vendor = claimsFactory.GetClaims(RoleEnumType.VENDOR_ROLE);
 
             Console.WriteLine(connection);
@@ -70,7 +66,7 @@ namespace AutoBuildApp.DataAccess.Test
             string result = "";
 
 
-            result = UMDAO.ChangePermissionsDB(username, vendor.Claims());
+            //result = UMDAO.ChangePermissionsDB(username, vendor.Claims());
 
             Assert.AreEqual("permissions have been successfully updated", result);
 
