@@ -3,19 +3,19 @@
 /// [2-6]
 /// </summary>
 
-const uri = 'https://localhost:5001/reviewrating';
+const reviewsUri = 'https://localhost:5001/reviewrating';
 let reviews = [];
 
 // This function will load the page by calling the functions below.
-function getItems() {
+function getReviews() {
     fetch('https://localhost:5001/reviewrating') // fetches the default URI
         .then(response => response.json()) // Will revieve a response from the default response.json.
-        .then(data => _displayItems(data)) // will call the display items function.
+        .then(data => displayReviews(data)) // will call the display items function.
         .catch(error => console.error('Unable to get items.', error)); // will catch an error and print the appropriate error message in console.
 }
 
 // This function will add an item to the DB.
-function addItem() {
+function addReview() {
     var starValue; // this variable will be used to store the value of the selected stars.
     const addUserNameTextbox = document.getElementById('add-username'); // will get the value from the html element and store it.
     var ele = document.getElementsByName('rate'); // will get the value from the html element and store it in ele.
@@ -52,14 +52,14 @@ function addItem() {
   })
     .then(response => response.json())
     .then(() => {
-      getItems(); // will call get items to get items once the add item is made.
+      getReviews(); // will call get items to get items once the add item is made.
     })
     .catch(error => console.error('Unable to add item.', error)); // logs error if it is caught.
 }
 
 // this function will call the delete fetch method.
-function deleteItem(id) {
-    fetch(`${uri}/${id}`, {
+function deleteReview(id) {
+    fetch(`${reviewsUri}/${id}`, {
         method: 'DELETE',
         mode: 'cors',
   })
@@ -79,7 +79,7 @@ function displayEditForm(id) {
 }
 
 // This method will update items in the DB.
-function updateItem() {
+function updateReview() {
     const itemId = document.getElementById('edit-id').value; // This will get the id of the item that has just been updated.
 
     // creates a json item of values that have been updated.
@@ -114,7 +114,7 @@ function closeInput() {
 }
 
 // This function will displat all the items in the fetch GET method.
-function _displayItems(data) {
+function displayReviews(data) {
 
     const allReviews = document.getElementById('all-reviews'); // This will get the id of the form from the HTML.
     allReviews.innerHTML = ''; // appends a null value to the inner HTML, as is not required.

@@ -16,8 +16,87 @@
 
         <div id="main"></div>
 
+        <h1 class="review-title">Write a Review!</h1>
+
+        <form action="javascript:void(0);" method="POST" onsubmit="addItem()">
+            <br /><label>Enter Username:</label><br />
+            <input type="text" id="add-username" placeholder="username">
+            <br />
+            <br />
+            <label>Star Rating:</label><br />
+            <div class="centerStar">
+                <div class="stars">
+                    <input type="radio" id="five" name="rate" value="5">
+                    <label for="five"></label>
+                    <input type="radio" id="four" name="rate" value="4">
+                    <label for="four"></label>
+                    <input type="radio" id="three" name="rate" value="3">
+                    <label for="three"></label>
+                    <input type="radio" id="two" name="rate" value="2">
+                    <label for="two"></label>
+                    <input type="radio" id="one" name="rate" value="1">
+                    <label for="one"></label>
+                </div>
+            </div>
+            <br />
+            <br />
+            <br />
+            <label class="field-label">Enter Review:</label>
+            <div class="description-input">
+                <textarea class="custom-textarea" id="add-description" placeholder="review" required></textarea>
+            </div>            
+            <br />
+            <label>Characters Left:</label>
+            <input disabled maxlength="3" size="3" value="10000" id="counter">
+            <br />
+            <br />
+            <br />
+            <br />
+            <label class="character-count">Characters left:</label>
+            <span class="count" id="counter">10000</span>
+            <br />
+            <br />
+            <input type="file" id="add-imagepath" placeholder="file path">
+            <br />
+            <br />
+            <input type="submit" value="Add" class="submit-btn">
+        </form>
+
+        <br />
+        <br />
+    
+    
+        <div class="all-reviews" id="all-reviews"></div>
+    
+        <br />
+        <br />
+    
+        <div id="editForm">
+            <h3>Edit</h3>
+            <form action="javascript:void(0);" id="review-form">
+                <input type="hidden" id="edit-id">
+                <input type="text" id="edit-message">
+                <input type="text" id="edit-starRating">
+                <input type="text" id="edit-filePath">
+    
+                <input type="submit" value="Save">
+                <a id="close-input" aria-label="Close">&#10006;</a>
+            </form>
+        </div>
+
         <script src="MPBpost.js" asp-append-version="true"></script>
         <script src="../MPBmain/MPB.js" type="text/javascript"></script>
         <script type="text/javascript">getItem();</script>
+        <script>
+            function textCounter(field, field2, maxlimit) {
+                var countfield = document.getElementById(field2);
+                if (field.value.length > maxlimit) {
+                    field.value = field.value.substring(0, maxlimit);
+                    return false;
+                } else {
+                    countfield.value = maxlimit - field.value.length;
+                }
+            }
+        </script>
     </body>
 </html>
