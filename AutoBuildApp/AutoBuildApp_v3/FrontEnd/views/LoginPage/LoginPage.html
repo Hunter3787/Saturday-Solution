@@ -4,29 +4,38 @@
 <head>
     <meta charset="UTF-8">
     <title>To-do DEMO</title>
-    <link rel="stylesheet" href="site.css" />
-    
+    <link rel="stylesheet" href="site.css" />  
 </head>
 <body>
-    <h1>Login Page</h1>
-    <h3>Enter Credentials</h3>
-    <form action="javascript:void(0);" method="POST" id="LoginSubmit">
+    
+    <nav>
+        <h2>LoginPage</h2>
+    </nav>
+        <br />
+        <br />
+        <form action="javascript:void(0);" id="loginForm">
         <input type="text" id="add-username" placeholder="UserName">
+        
+        <br />
+        <br />
         <input type="password" id="add-passHash" placeholder="Password" >
         </b>
+        <br />
+        <br />
+        
         <!-- An element to toggle between password visibility -->
-        <input type="checkbox" onclick="myFunction()">Show Password
-        <input type="submit" value="Authenticate">
-    
+        
+        <input type="checkbox" onclick="myFunction()">
+        Show Password 
+        <br />
+        <br />
+        <div class="field">
+            <input type="submit" class="submit-btn" value="Log in">
+        </div>
     </form>
-    <p id = "JWT-TOKEN">Generated JWT token</p>
+</div>
+    <p id = "Response">Generated Response</p>
 
-    <script> document.getElementById(" ")
-    .addEventListener("click", checkCredentials)</script>
 
     <script src="LoginPage.js" asp-append-version="true"></script>
-    <script type="text/javascript">
-        getItems();
-    </script>
-</body>
 </html>

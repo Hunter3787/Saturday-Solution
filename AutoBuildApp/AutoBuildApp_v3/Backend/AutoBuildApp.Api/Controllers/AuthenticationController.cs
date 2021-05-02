@@ -14,7 +14,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Text.Json;
 using System.Threading;
-
+using Microsoft.AspNetCore.Http;
 
 /// <summary>
 /// Reference: see /AuthReference.
@@ -80,13 +80,26 @@ namespace AutoBuildApp.Api.Controllers
                 $"Checking name per nick: { _threadPrinciple.Identity.Name}!!!!!!");
         }
 
-        [HttpPost("{Login}")]
+        //[HttpPost("{Login}")]
+        [HttpPost]
         public ActionResult<AuthUserDTO> AuthenticateUser(UserCredentials userCredentials)
         {
 
             this._userCredentials = userCredentials;
             var JWTToken = _loginManager.AuthenticateUser(_userCredentials);
-            return Ok(JWTToken);
+            // ok we need to set the JWT into the auth httponly cookie so that the 
+            // browser can store it:
+            /// Summary:
+            ///     Gets or sets a value that indicates whether a cookie is accessible by client-side
+            ///     script.
+            ///
+            /// Returns:
+            ///     true if a cookie must not be accessible by client-side script; otherwise, false.
+            ///     
+
+
+            //HttpContext.Response.Cookies.Append("access_token", JWTToken, new CookieOptions { HttpOnly = true });
+            return Ok("we are here"  + JWTToken);
         }
 
 

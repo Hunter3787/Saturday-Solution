@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Analytics.css" />
+    
+    <title>Analytics</title>
+    
+    <!-- 
+    this is for downloading plotly 
+    https://www.freecodecamp.org/news/an-introduction-to-plotly-js-an-open-source-graphing-library-c036a1876e2e/
+    -->
+    <script src="plotly-latest.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    
+</head>
+<body>
+    
+    <nav>
+        <h2>Analytics</h2>
+    </nav>
+
+        
+    <div id = "GetAnalytics">
+    clcik me 
+    </div>
+
+
+<div id="Analytics">      
+    <!-- Plotly chart will be drawn inside this DIV -->
+    
+
+</div>
+
+<div id="Bar1">      
+    <script>
+            
+        // this data will be from the fetch
+    var data = 
+    [{  
+    x: ['VENDOR', 'ADMIN', 'BASIC'],  
+    y: [200, 140, 230],  type: 'bar'}];
+
+    var layout = {
+        title: 'NUMBER OF AUTOBUILD ACCOUNTS PER Account Type',
+        xaxis: {
+                title: 'Roles',
+                titlefont: {
+                family: 'Arial, sans-serif',
+                size: 18,
+                color: 'lightgrey'
+                }
+                },
+        yaxis: {
+                title: 'Number of AutoBuild Accounts',
+                titlefont: {
+                family: 'Arial, sans-serif',
+                size: 18,
+                color: 'lightgrey',
+                }
+            }
+            };
+
+    Plotly.newPlot('Bar1', data, layout);
+
+    </script>
+
+    </div>
+
+    <div id="Bar2">
+        <script>
+            
+            // this data will be from the fetch
+        var data = 
+        [{  
+        x: ['COMPONENT A', 'COMPONENT B', 'COMPONENT C'],  
+        y: [200, 140, 230],  type: 'bar'}];
+
+        var layout = {
+            title: 'NUMBER OF VISITATIONS PER AUTOBUILD COMPONENT',
+            xaxis: {
+                    title: 'Component',
+                    titlefont: {
+                    family: 'Arial, sans-serif',
+                    size: 18,
+                    color: 'lightgrey'
+                    }
+                    },
+            yaxis: {
+                    title: 'Number of Visits',
+                    titlefont: {
+                    family: 'Arial, sans-serif',
+                    size: 18,
+                    color: 'lightgrey',
+                    }
+                }
+                };
+
+        Plotly.newPlot('Bar2', data, layout);
+
+        </script>
+
+    </div>
+    
+
+
+    <div id="Bar3">
+        <script>
+            
+            // this data will be from the fetch
+        var data = 
+        [{  
+            x: ['VENDOR', 'ADMIN', 'BASIC'],   
+            y: [200, 140, 230],  type: 'bar'}];
+
+        var layout = {
+            title: 'Average session duration of user by Account Type',
+            xaxis: {
+                    title: 'Component',
+                    titlefont: {
+                    family: 'Arial, sans-serif',
+                    size: 18,
+                    color: 'lightgrey'
+                    }
+                    },
+            yaxis: {
+                    title: 'Session Duration',
+                    titlefont: {
+                    family: 'Arial, sans-serif',
+                    size: 18,
+                    color: 'lightgrey',
+                    }
+                }
+                };
+
+        Plotly.newPlot('Bar3', data, layout);
+
+        </script>
+
+
+    </div>
+
+
+    <div id = lineChart1>
+        <!-- Plotly chart will be drawn inside this DIV -->
+    <script>  
+    
+    
+    var layout = {
+            title: 'Number of Registered Users per month by Account Type',
+            xaxis: {
+                    title: 'Time by Month',
+                    titlefont: {
+                    family: 'Arial, sans-serif',
+                    size: 18,
+                    color: 'lightgrey'
+                    }
+                    },
+            yaxis: {
+                    title: 'Number of Registered Users',
+                    titlefont: {
+                    family: 'Arial, sans-serif',
+                    size: 18,
+                    color: 'lightgrey',
+                    }
+                }
+                };
+
+        var trace1 = {  
+             x: [1, 2, 3, 4],        
+              y: [10, 15, 13, 17],       
+              mode: 'lines',    
+              name: 'Admin',   
+              type: 'scatter'
+            };
+
+        var trace2 = {        
+            x: [2, 3, 4, 5],        
+            y: [16, 5, 11, 9],        
+            mode: 'marker',
+            name: 'Vendor',        
+            type: 'scatter'};
+
+
+        var trace3 = {        
+            x: [1, 2, 3, 4],       
+            y: [12, 9, 15, 12],
+            name: 'Basic',     
+            mode: 'lines+markers',        
+            type: 'scatter'      };
+
+            var data = [trace1, trace2, trace3];
+
+        Plotly.newPlot('lineChart1', data,layout);
+         </script>
+    </div>
+
+
+    <div id = lineChart2>
+
+        <script>  
+    
+    
+            var layout = {
+                    title: 'Number of Views per month by Account Type',
+                    xaxis: {
+                            title: 'Time by Month',
+                            titlefont: {
+                            family: 'Arial, sans-serif',
+                            size: 18,
+                            color: 'lightgrey'
+                            }
+                            },
+                    yaxis: {
+                            title: 'Number of Registered Users',
+                            titlefont: {
+                            family: 'Arial, sans-serif',
+                            size: 18,
+                            color: 'lightgrey',
+                            }
+                        }
+                        };
+        
+                var trace1 = {  
+                     x: [1, 2, 3, 4],        
+                      y: [10, 15, 13, 17],       
+                      mode: 'lines',    
+                      name: 'AutoBuild Component 1',   
+                      type: 'scatter'
+                    };
+        
+                var trace2 = {        
+                    x: [2, 3, 4, 5],        
+                    y: [16, 5, 11, 9],        
+                    mode: 'marker',
+                    name: 'AutoBuild Component 3',        
+                    type: 'scatter'};
+        
+        
+                var trace3 = {        
+                    x: [1, 2, 3, 4],       
+                    y: [12, 9, 15, 12],
+                    name: 'AutoBuild Component 3',     
+                    mode: 'lines+markers',        
+                    type: 'scatter'      };
+        
+                    var data = [trace1, trace2, trace3];
+        
+                Plotly.newPlot('lineChart2', data,layout);
+                 </script>
+
+
+
+
+        
+
+    </div>
+
+
+</body>
+
+<script type="text/javascript" src="UADLayout.js"></script>
+
+<script type="text/javascript" src="Analytics.js"></script>
+</html>

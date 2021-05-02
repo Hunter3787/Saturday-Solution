@@ -23,6 +23,9 @@ namespace AutoBuildApp.Managers.FeatureManagers
         private UadDTO _uadDTO;
         private ClaimsFactory _claimsFactory = new ConcreteClaimsFactory();
 
+        private  List<string> _allowedRoles;
+        
+
         public UADManager(string _cnnctString)
         {
            
@@ -31,40 +34,55 @@ namespace AutoBuildApp.Managers.FeatureManagers
 
             _uadDTO = new UadDTO();
 
+            _allowedRoles = new List<string>()
+            { RoleEnumType.SENIOR_ADMIN, };
+
+
         }
        
         /// <summary>
         /// method to check permissions needed per authorization service.
         /// </summary>
         /// <returns></returns>
-        public bool IsAuthorized()
+        public bool IsAuthorized(List<string> _allowedRoles)
         {
-            IClaims _admin = _claimsFactory.GetClaims(RoleEnumType.SENIOR_ADMIN);
-            // FIRST LINE OF DEFENCE 
-            if (!AuthorizationService.checkPermissions(_admin.Claims()))
+            foreach (string role in _allowedRoles)
             {
-                return false;
+                IClaims _claims = _claimsFactory.GetClaims(role);
+            // FIRST LINE OF DEFENCE 
+          
+                if (AuthorizationService.checkPermissions(_claims.Claims()))
+                {
+                    return true;
+                }
             }
-            return true;
-
+            return false;
         }
 
         public UadDTO GetAllChartData()
         {
+            //request hits the manager
+           
+            if (!IsAuthorized( _allowedRoles))
+            {
+                _uadDTO.result = AuthorizationResultType.NOT_AUTHORIZED.ToString();
+                return _uadDTO;
+
+            }
+
+
+
             _responseUAD = _uadDAO.GetAllAnalytics();
 
-           if (!IsAuthorized())
-           {
+            //from dao
+            if (!_responseUAD.IsAuthorized)
+            {
                 _uadDTO.result = AuthorizationResultType.NOT_AUTHORIZED.ToString();
                 return _uadDTO;
 
             }
-           if(!_responseUAD.IsAuthorized)
-           {
-                _uadDTO.result = AuthorizationResultType.NOT_AUTHORIZED.ToString();
-                return _uadDTO;
 
-            }
+
             if(_responseUAD.SuccessBool == false)
             {
                 _uadDTO.SuccessFlag = false;

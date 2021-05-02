@@ -9,7 +9,7 @@ namespace AutoBuildApp.DataAccess.Test
 
     [TestClass]
 
-    public class SessionsDaoTest
+    public class LoggingTest
     {
        private static SessionsDAO _sessionsDAO = 
             new SessionsDAO("Data Source=localhost;Initial Catalog=DB;Integrated Security=True");

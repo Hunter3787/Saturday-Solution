@@ -119,9 +119,8 @@ namespace AutoBuildApp.DataAccess
         /// method to check permissions needed per authorization service.
         /// </summary>
         /// <returns></returns>
-        public bool IsAuthorized()
+        public bool IsAuthorized() //pass a string role
         {
-
             IClaims _admin = _claimsFactory.GetClaims(RoleEnumType.SENIOR_ADMIN);
 
             // FIRST LINE OF DEFENCE 
@@ -290,7 +289,7 @@ namespace AutoBuildApp.DataAccess
                                 chartData = new ChartData(
                                     (int)_reader[X_Value],
                                     (int)_reader[Y_Value],
-                                    (int)_reader[Legend]);
+                                    (string)_reader[Legend]);
                                 // going to take the data! 
                                 _responseUAD.GetPageViewPerMonth.Add(chartData);
                             }

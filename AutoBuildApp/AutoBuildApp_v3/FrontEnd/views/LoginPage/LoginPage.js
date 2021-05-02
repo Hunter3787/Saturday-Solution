@@ -1,27 +1,22 @@
-//const uri1 = 'https://localhost:44363/api/TodoItems';
-const uri ='https://localhost:5001/authentication';
-let todos = [];
-var JWT_Token = ' ';
-const token = 'YOUR_TOKEN_HERE';
 
-  //https://gomakethings.com/using-oauth-with-fetch-in-vanilla-js/
-  // https://www.digitalocean.com/community/tutorials/how-to-use-the-javascript-fetch-api-to-get-data
 
-var msg = 'Hello world';
+const url ='https://localhost:5001/authentication';
 
-console.log(msg);
-function getItems() {
-  fetch(uri)
-    .then(response => response.json())
-    .then(data => _displayItems(data))
-    .catch(error => console.error('Unable to get items.', error));
-}
+const fetchRequest = {
+  method: 'GET',
+  mode:'cors',
+headers: {
+  'Accept': 'application/json',
+  'Content-Type': 'application/json',
+  //'Access-Control-Allow-Origin' : '*',
+  // 'Authorization': 'Bearer ' + ' '
+} };
 
-document.getElementById("LoginSubmit")
-    .addEventListener("click", checkCredentials)
+let Reg = document.getElementById('loginForm');
+Reg.addEventListener("submit", () =>  checkCredentials()); // lambda function for redirecting on click.
+
 
 function checkCredentials() {
-  console.log('Verifying credentials');
   const addNameTextbox = document.getElementById('add-username');
   const addHashTextbox = document.getElementById('add-passHash');
   // this represent the usercredentials object
@@ -29,36 +24,22 @@ function checkCredentials() {
     Username : addNameTextbox.value.trim(),
     Password : addHashTextbox.value.trim()
   };
-  fetch(`https://localhost:5001/authentication/UserCred`, {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + JWT_Token
-    },
-    body: JSON.stringify(UserCred)
-  })
+
+let customRequest = Object.assign( fetchRequest,{ method: 'POST' , body : JSON.stringify(UserCred) });
+
+    fetch(url, customRequest)
     .then(response => response.json())
-    .then(response => displayToken(response))
-    .then(() => {  getItems();  })
+    .then(response => displayResponse(response))
     .catch(error => console.error('Unable to Authenticate.', error));
-    
-  closeInput();
 
-  return false;
 }
-function closeInput() {
-  document.getElementById('editForm').style.display = 'none';
-}
-
 // add notes
-function displayToken(id)
+function displayResponse(id)
 {
-  var getBody = document.getElementById("JWT-TOKEN");
+  var getBody = document.getElementById("Response");
   console.log(id);
   var text =  document.createTextNode(JSON.stringify(id));
-  JWT_Token = id;
-  alert(JWT_Token);
+  alert(id);
   getBody.appendChild(text);
 
 }

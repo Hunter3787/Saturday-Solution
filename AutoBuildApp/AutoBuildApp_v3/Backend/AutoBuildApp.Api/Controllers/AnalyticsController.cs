@@ -80,7 +80,6 @@ namespace AutoBuildApp.Api.Controllers
         public IActionResult Index()
         {
 
-            Console.WriteLine("we are here22");
             if (!_threadPrinciple.Identity.IsAuthenticated)
             {
                 // Add action logic here
