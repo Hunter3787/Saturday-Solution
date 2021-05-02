@@ -86,7 +86,7 @@ namespace Connor_s_Console
             Console.WriteLine("----------------------");
             //Console.WriteLine(registrationManager.RegisterUser(
             //"Superman", "Connor", "Kobel", "Superman@gmail.com", "Password123", "Password123"));
-            //Console.WriteLine(userManagementManager.ChangePermissions(RoleEnumType.SENIOR_ADMIN));
+            //Console.WriteLine(userManagementManager.ChangePermissions(RoleEnumType.SYSTEM_ADMIN));
             //Console.WriteLine(userManagementManager.ChangeLockState("Zeina", RoleEnumType.BASIC_ROLE));
 
             //UserCredentials userLoginInfo = new UserCredentials();
