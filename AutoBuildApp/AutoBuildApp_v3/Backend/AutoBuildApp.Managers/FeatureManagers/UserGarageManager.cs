@@ -212,10 +212,10 @@ namespace AutoBuildApp.Managers
 
         private bool IsAuthorized()
         {
-            return AuthorizationService.checkPermissions(_basic.Claims())
-                || AuthorizationService.checkPermissions(_vendor.Claims())
-                || AuthorizationService.checkPermissions(_developer.Claims())
-                || AuthorizationService.checkPermissions(_admin.Claims());
+            return AuthorizationService.CheckPermissions(_basic.Claims())
+                || AuthorizationService.CheckPermissions(_vendor.Claims())
+                || AuthorizationService.CheckPermissions(_developer.Claims())
+                || AuthorizationService.CheckPermissions(_admin.Claims());
         }
     }
 }

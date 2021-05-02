@@ -35,7 +35,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             _uadDTO = new UadDTO();
 
             _allowedRoles = new List<string>()
-            { RoleEnumType.SENIOR_ADMIN, };
+            { RoleEnumType.SYSTEM_ADMIN };
 
 
         }

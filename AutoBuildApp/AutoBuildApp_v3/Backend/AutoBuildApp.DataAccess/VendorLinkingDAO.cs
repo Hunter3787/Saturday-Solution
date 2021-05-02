@@ -61,7 +61,7 @@ namespace AutoBuildApp.DataAccess
                         transaction.Commit();
 
                     }
-                    catch (SqlException ex)
+                    catch (SqlException)
                     {
                         transaction.Rollback();
                     }
@@ -131,7 +131,7 @@ namespace AutoBuildApp.DataAccess
 
                         transaction.Commit();
                     }
-                    catch (SqlException ex)
+                    catch (SqlException )
                     {
                         transaction.Rollback();
                         return null;
@@ -243,7 +243,7 @@ namespace AutoBuildApp.DataAccess
                         transaction.Commit();
                         Console.WriteLine("donef2");
                     }
-                    catch (SqlException ex)
+                    catch (SqlException )
                     {
                         Console.WriteLine("wrong");
                         transaction.Rollback();
@@ -368,7 +368,7 @@ namespace AutoBuildApp.DataAccess
                         Console.WriteLine("donef2");
                         return true;
                     }
-                    catch (SqlException ex)
+                    catch (SqlException)
                     {
                         Console.WriteLine("wrong");
                         transaction.Rollback();
@@ -408,7 +408,7 @@ namespace AutoBuildApp.DataAccess
                         Console.WriteLine("donef2");
                         return true;
                     }
-                    catch (SqlException ex)
+                    catch (SqlException )
                     {
                         Console.WriteLine("wrong");
                         transaction.Rollback();
@@ -521,7 +521,7 @@ namespace AutoBuildApp.DataAccess
                                 {
                                     Console.WriteLine((string)reader.GetName(i++));
                                 }
-                                catch(Exception e)
+                                catch(Exception)
                                 {
                                     break;
                                     Console.WriteLine("ok");
@@ -554,7 +554,7 @@ namespace AutoBuildApp.DataAccess
                         transaction.Commit();
                         Console.WriteLine("donef2");
                     }
-                    catch (SqlException ex)
+                    catch (SqlException)
                     {
                         Console.WriteLine("wrong");
                         transaction.Rollback();

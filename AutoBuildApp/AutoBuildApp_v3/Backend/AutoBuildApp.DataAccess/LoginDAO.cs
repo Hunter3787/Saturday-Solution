@@ -59,7 +59,8 @@ namespace AutoBuildApp.DataAccess
         /// <returns></returns>
         public CommonReponseAuth LoginInformation(UserCredentials userCredentials)
         {
-            CommonReponseAuth _CRAuth = new CommonReponseAuth(); // EMPHAREL  ( FOR THE MONENT )VALEUE NO NEED TO STORE
+            CommonReponseAuth _CRAuth = new CommonReponseAuth(); 
+            // EMPHAREL  ( FOR THE MONENT )VALEUE NO NEED TO STORE
 
             using (SqlConnection conn = new SqlConnection(_connection))
             {
@@ -68,7 +69,10 @@ namespace AutoBuildApp.DataAccess
                 string SP_retrievePermissions = "RetrievePermissions";
                 using (SqlCommand command = new SqlCommand(SP_retrievePermissions, conn))
                 {
-                    command.Transaction = conn.BeginTransaction();
+
+                    try
+                    {
+                        command.Transaction = conn.BeginTransaction();
                     #region SQL related
 
                     // https://learning.oreilly.com/library/view/adonet-in-a/0596003617/ch04s05.html
@@ -88,44 +92,52 @@ namespace AutoBuildApp.DataAccess
                     command.Parameters.AddRange(param);
                     #endregion
 
-
-                    var _reader = command.ExecuteReader();
-                    if (!_reader.HasRows) // use the bang!!!!!!! 
-                    {
-                        _CRAuth.FailureString = "User not found";
-                        _CRAuth.IsUserExists = false;
-                    }
-                    if (_reader.HasRows) // just else is enough 
-                    {
-                        _CRAuth.SuccessString = "User Exists";
-                        _CRAuth.IsUserExists = true;
-                    }
-
-                    //READ AND STORE ALL THE ORDINALS YOU NEED
-                    int username = _reader.GetOrdinal("username");
-                    int permissions = _reader.GetOrdinal("permission");
-                    int scope = _reader.GetOrdinal("scopeOfPermission");
-                    int locked = _reader.GetOrdinal("locked");
-
-                    
-
-                    while (_reader.Read())
-                    {
-                        if ((bool)_reader[locked])
+                        using (var reader = command.ExecuteReader())
                         {
-                            _CRAuth.FailureString = "Account is locked";
-                            _CRAuth.SuccessBool = false;
-                            _reader.Close();
-                            return _CRAuth;
+                            if (!reader.HasRows) // use the bang!!!!!!! 
+                            {
+                                _CRAuth.FailureString = "User not found";
+                                _CRAuth.IsUserExists = false;
+                            }
+                           
+                            //READ AND STORE ALL THE ORDINALS YOU NEED
+                            int username = reader.GetOrdinal("username");
+                            int permissions = reader.GetOrdinal("permission");
+                            int scope = reader.GetOrdinal("scopeOfPermission");
+                            int locked = reader.GetOrdinal("locked");
+
+
+
+                            while (reader.Read())
+                            {
+                                if ((bool)reader[locked])
+                                {
+                                    _CRAuth.FailureString = "Account is locked";
+                                    _CRAuth.SuccessBool = false;
+                                    reader.Close();
+                                    return _CRAuth;
+                                }
+                                _userClaims = new Claims();
+                                _CRAuth.AuthUserDTO.UserEmail = (string)reader[username];
+                                _userClaims.Permission = (string)reader[permissions];
+                                _userClaims.scopeOfPermissions = (string)reader[scope];
+                                _CRAuth.AuthUserDTO.Claims.Add(_userClaims);
+                            }
+
+                            // auto reader close
                         }
-                        _userClaims = new Claims();
-                        _CRAuth.AuthUserDTO.UserEmail = (string)_reader[username];
-                        _userClaims.Permission = (string)_reader[permissions];
-                        _userClaims.scopeOfPermissions = (string)_reader[scope];
-                        _CRAuth.AuthUserDTO.Claims.Add(_userClaims);
+                    }
+                    catch (SqlException)
+                    {
+                        command.Transaction.Rollback();
+                        _CRAuth.SuccessBool = false;
+
                     }
                     //Console.WriteLine($"Auth DAO Common response check:: {_CRAuth.ToString()}");
                     _CRAuth.connectionState = true;
+                    _CRAuth.SuccessString = "User Exists";
+                    _CRAuth.IsUserExists = true;
+
                     return _CRAuth;
                 }
             }

@@ -121,7 +121,7 @@ namespace AutoBuildApp.DataAccess
         /// <returns></returns>
         public bool IsAuthorized() //pass a string role
         {
-            IClaims _admin = _claimsFactory.GetClaims(RoleEnumType.SENIOR_ADMIN);
+            IClaims _admin = _claimsFactory.GetClaims(RoleEnumType.SYSTEM_ADMIN);
 
             // FIRST LINE OF DEFENCE 
             if (!AuthorizationService.CheckPermissions(_admin.Claims()))

@@ -15,8 +15,6 @@ namespace AutoBuildApp.DataAccess
     public class CommonReponseAuth : CommonResponse, IEquatable<CommonReponseAuth>
     {
 
-        public string SuccessString { get; set; }
-        public string FailureString { get; set; }
         public bool connectionState { get; set; }
 
         public bool IsUserExists { get; set; }

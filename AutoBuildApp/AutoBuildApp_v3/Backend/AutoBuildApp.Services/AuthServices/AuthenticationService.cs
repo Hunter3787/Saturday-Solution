@@ -90,6 +90,8 @@ namespace AutoBuildApp.Services.Auth_Services
             claimsPrincipal = (ClaimsPrincipal)Thread.CurrentPrincipal;
             /// retrieves the result from the query as an object
             /// then we cast it to type Common responde object -> Auth
+            /// 
+
             //_responseAuth = _authDAO.RetrieveUserInformation(credentials);
             _responseAuth = _loginDAO.LoginInformation(credentials);
             // an initial check for connection state:
