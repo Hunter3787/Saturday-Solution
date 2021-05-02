@@ -1,4 +1,5 @@
-﻿using AutoBuildApp.Models.VendorLinking;
+﻿using AutoBuildApp.DataAccess.Abstractions;
+using AutoBuildApp.Models.VendorLinking;
 using AutoBuildApp.Models.WebCrawler;
 using Microsoft.Data.SqlClient;
 using System;
@@ -14,7 +15,7 @@ namespace AutoBuildApp.DataAccess
     public class VendorLinkingDAO
     {
         private string _connectionString;
-        private readonly ConcurrentDictionary<string, HashSet<string>> VendorsProducts;
+        public readonly ConcurrentDictionary<string, HashSet<string>> VendorsProducts;
         public VendorLinkingDAO(string connectionString)
         {
             _connectionString = connectionString;
@@ -256,8 +257,9 @@ namespace AutoBuildApp.DataAccess
             return allProductsByVendor;
         }
 
-        public bool AddProductToVendorListOfProducts(AddProductDTO product)
+        public CommonResponse AddProductToVendorListOfProducts(AddProductDTO product)
         {
+            CommonResponse response = new CommonResponse();
             string company = "danny";
             if(!VendorsProducts.ContainsKey(company))
             {
@@ -299,13 +301,33 @@ namespace AutoBuildApp.DataAccess
                         VendorsProducts[company].Add(product.ModelNumber);
 
                         Console.WriteLine("done!!");
-                        return true;
+
+                        response.SuccessString = "Successfully added product to vendor list.";
+                        response.SuccessBool = true;
+
+                        return response;
                     }
                     catch (SqlException ex)
                     {
-                        Console.WriteLine("wrong");
+
                         transaction.Rollback();
-                        return false;
+
+                        response.SuccessBool = false;
+
+                        if(ex.Number == 2627)
+                        {
+                            response.SuccessString = "You already have this model number in your list of products.";
+                        }
+                        else if(ex.Number == -2)
+                        {
+
+                        }
+                        else
+                        {
+                            response.SuccessString = "Failed to add product to vendor list.";
+                        }
+
+                        return response;
                     }
                 }
             }

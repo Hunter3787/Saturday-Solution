@@ -3,6 +3,7 @@ using AutoBuildApp.Models.WebCrawler;
 using AutoBuildApp.Services;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
     public class VendorLinkingManager
     {
         private readonly LoggingProducerService _logger = LoggingProducerService.GetInstance;
-
+        public readonly ConcurrentDictionary<string, HashSet<string>> VendorsProducts;
         private VendorLinkingService _vendorLinkingService;
 
 
@@ -105,13 +106,26 @@ namespace AutoBuildApp.Managers.FeatureManagers
 
         public async Task<bool> AddProductToVendorListOfProducts(AddProductDTO product, IFormFile photo)
         {
-            //
+            string company = "new egg";
+
             if(photo == null)
             {
                 _logger.LogWarning("Image was not chosen.");
                 return false;
             }
 
+            if (!VendorsProducts.ContainsKey(company))
+            {
+                HashSet<string> HashSet = new HashSet<string>();
+                VendorsProducts.TryAdd(company, HashSet);
+            }
+
+            if (VendorsProducts[company].Contains(product.ModelNumber))
+            {
+                Console.WriteLine("can't add. that model number already exists");
+
+                return false;
+            }
             // Uploads image to the location and saves the path to the product's imageUrl field.
             product.ImageUrl = await _vendorLinkingService.UploadImage("", photo);
             _logger.LogInformation("Successfully added the image.");
