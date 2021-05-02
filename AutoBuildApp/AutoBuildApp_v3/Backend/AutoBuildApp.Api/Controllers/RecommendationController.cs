@@ -45,7 +45,8 @@ namespace AutoBuildApp.Api.Controllers
         public IActionResult GetBuildRecommend(RecommenderReqParams requests)
         {
             manager = new RecommendationManager(_connectionString);
- 
+
+            Console.Write(requests);
 
             try { 
                 var builds = manager.RecommendBuilds(requests.Build, requests.Budget,

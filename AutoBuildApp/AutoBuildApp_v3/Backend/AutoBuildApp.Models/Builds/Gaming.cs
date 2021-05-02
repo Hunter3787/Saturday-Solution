@@ -12,7 +12,6 @@ namespace AutoBuildApp.Models.Builds
 {
     public class Gaming : IBuild
     {
-        public BuildType Type = BuildType.Gaming;
         public List<IHardDrive> HardDrives { get; set; }
         public ComputerCase Case { get; set; }
         public Motherboard Mobo { get; set; }

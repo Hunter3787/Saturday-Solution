@@ -34,7 +34,7 @@ namespace AutoBuildApp.Models.Products
         #endregion
 
         /// <summary>
-        /// Default constructor with no initilization.
+        /// Default constructor.
         /// </summary>
         public ComputerCase()
         {

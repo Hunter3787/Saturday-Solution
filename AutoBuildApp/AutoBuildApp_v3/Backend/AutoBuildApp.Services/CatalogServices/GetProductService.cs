@@ -3,6 +3,9 @@ using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.DataAccess.Abstractions;
 using AutoBuildApp.DataAccess.Entities;
+using AutoBuildApp.DataAccess;
+using AutoBuildApp.Services.FactoryServices;
+using AutoBuildApp.Models.Products;
 
 /**
  * Getter that uses a data access object to call the and return,
@@ -12,17 +15,17 @@ using AutoBuildApp.DataAccess.Entities;
  */
 namespace AutoBuildApp.Services.CatalogServices
 {
-    public class GetComponentsService
+    public class GetProductService
     {
-        private readonly IProductDAO _dao;
+        private ProductDAO _productDao;
 
         /// <summary>
         /// Constructor that takes an injection of a data access object.
         /// </summary>
         /// <param name="acessObject">Data Access Object</param>
-        public GetComponentsService(IProductDAO acessObject)
+        public GetProductService(ProductDAO acessObject)
         {
-            _dao = acessObject;
+            _productDao = acessObject;
         }
 
         /// <summary>
@@ -36,11 +39,22 @@ namespace AutoBuildApp.Services.CatalogServices
             Dictionary<ProductType, List<IComponent>> outputDictionary
                 = new Dictionary<ProductType, List<IComponent>>();
 
-            // call DAO for rows
+            // Call DAO for rows
+            List<ProductEntity> entities = _productDao.GetEntities(components);
 
             // Parse rows by product type
+            foreach(var entity in entities)
+            {
+                // Interface : PCI-Express 3.0 x4 or NVMe; Form Factor : M.2  = NVMe harddrive
+                // Interface : SATA III, SATA 6.0/gb; Form Factor : 2.5" = SSD
+                // Interface : SATA III, SATA 6.0/gb; Form Factor : 3.5" = SATA Drive
+                // 
+
+
+            }
 
             // Tokenize strings to fit the product models.
+
 
             // place into dictionary.
 
@@ -59,6 +73,11 @@ namespace AutoBuildApp.Services.CatalogServices
 
 
             return output;
+        }
+
+        public IComponent GetComponent(string pid)
+        {
+            return null;
         }
     }
 }
