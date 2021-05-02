@@ -50,7 +50,7 @@ namespace AutoBuildApp.DataAccess.Test
             int result = 0;
 
 
-            result = regDAO.updatePermissions(claims);
+            //result = regDAO.updatePermissions(claims);
 
             Assert.AreEqual(1, result);
         }

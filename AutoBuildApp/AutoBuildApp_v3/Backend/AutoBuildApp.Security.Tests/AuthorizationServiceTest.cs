@@ -65,8 +65,8 @@ namespace AutoBuildApp.Security.Tests
             UserCredentials credential1 = new UserCredentials("Zeina", "PassHash");
             CommonReponseAuth _CRAuth = new CommonReponseAuth();
             AuthDAO _authDAO = new AuthDAO("Data Source=localhost;Initial Catalog=DB;Integrated Security=True");
-            AuthenticationService authenticationService = new AuthenticationService(_authDAO);
-            _CRAuth = authenticationService.AuthenticateUser(credential1);
+            //AuthenticationService authenticationService = new AuthenticationService(_authDAO);
+            //_CRAuth = authenticationService.AuthenticateUser(credential1);
             IClaims basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
 
             AuthActual = AuthorizationService.checkPermissions(basic.Claims());
