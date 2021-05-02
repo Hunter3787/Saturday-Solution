@@ -359,7 +359,7 @@ async function submitEditItem(modelNumber, newName, photo, newImageUrl,
   formData.append("url", newUrl);
   formData.append("price", newPrice);
 
-  var x = await fetch(uri, {
+  await fetch(uri, {
     method: 'PUT',
     mode: 'cors',
     headers: {

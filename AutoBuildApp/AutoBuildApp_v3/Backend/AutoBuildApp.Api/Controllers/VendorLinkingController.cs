@@ -1,4 +1,5 @@
 ﻿using AutoBuildApp.Api.HelperFunctions;
+using AutoBuildApp.DataAccess.Abstractions;
 using AutoBuildApp.Managers;
 using AutoBuildApp.Managers.FeatureManagers;
 using AutoBuildApp.Models.VendorLinking;
@@ -62,9 +63,9 @@ namespace AutoBuildApp.Api.Controllers
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
 
-            bool Result = await _vendorLinkingManager.AddProductToVendorListOfProducts(Product, photo);
+            CommonResponse Result = await _vendorLinkingManager.AddProductToVendorListOfProducts(Product, photo);
 
-            if (!Result)
+            if (!Result.SuccessBool)
             {
                 _logger.LogWarning("AddProductToVendorListOfProducts failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);

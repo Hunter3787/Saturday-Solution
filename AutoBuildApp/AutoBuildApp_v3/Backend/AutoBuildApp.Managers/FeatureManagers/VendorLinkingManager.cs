@@ -1,4 +1,5 @@
-﻿using AutoBuildApp.Models.VendorLinking;
+﻿using AutoBuildApp.DataAccess.Abstractions;
+using AutoBuildApp.Models.VendorLinking;
 using AutoBuildApp.Models.WebCrawler;
 using AutoBuildApp.Services;
 using Microsoft.AspNetCore.Http;
@@ -102,30 +103,35 @@ namespace AutoBuildApp.Managers.FeatureManagers
             
             return filters;
         }
-        // NULL CHECKS AND LOGGING
 
-        public async Task<bool> AddProductToVendorListOfProducts(AddProductDTO product, IFormFile photo)
+        public async Task<CommonResponse> AddProductToVendorListOfProducts(AddProductDTO product, IFormFile photo)
         {
-            string company = "new egg";
-
+            string Vendor = "new egg";
+            CommonResponse response = new CommonResponse();
             if(photo == null)
             {
                 _logger.LogWarning("Image was not chosen.");
-                return false;
+                response.SuccessString = "Image was not chosen.";
+                response.SuccessBool = false;
+                return response;
             }
 
-            if (!VendorsProducts.ContainsKey(company))
-            {
-                HashSet<string> HashSet = new HashSet<string>();
-                VendorsProducts.TryAdd(company, HashSet);
-            }
+            // Checks to see if the vendor exists, 
+            //if (!VendorsProducts.ContainsKey(Vendor))
+            //{
+            //    HashSet<string> HashSet = new HashSet<string>();
+            //    VendorsProducts.TryAdd(Vendor, HashSet);
+            //}
 
-            if (VendorsProducts[company].Contains(product.ModelNumber))
-            {
-                Console.WriteLine("can't add. that model number already exists");
+            //if (VendorsProducts[Vendor].Contains(product.ModelNumber))
+            //{
+            //    _logger.LogWarning("This vendor already has this model number.");
+            //    response.SuccessString = "This vendor already has this model number.";
+            //    response.SuccessBool = false;
 
-                return false;
-            }
+            //    return response;
+            //}
+
             // Uploads image to the location and saves the path to the product's imageUrl field.
             product.ImageUrl = await _vendorLinkingService.UploadImage("", photo);
             _logger.LogInformation("Successfully added the image.");

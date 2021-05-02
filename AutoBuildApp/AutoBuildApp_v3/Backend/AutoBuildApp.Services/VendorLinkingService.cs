@@ -1,8 +1,10 @@
 ﻿using AutoBuildApp.DataAccess;
+using AutoBuildApp.DataAccess.Abstractions;
 using AutoBuildApp.Models.VendorLinking;
 using AutoBuildApp.Models.WebCrawler;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -19,10 +21,15 @@ namespace AutoBuildApp.Services
         {
             _vendorLinkingDAO = new VendorLinkingDAO(connectionString);
         }
-        public bool AddProductToVendorListOfProducts(AddProductDTO product)
+
+        public void PopulateVendorsProducts(ConcurrentDictionary<string, HashSet<string>> VendorsProducts)
         {
+            //return _vendorLinkingDAO.PopulateVendorsProducts(VendorsProducts);
+            _vendorLinkingDAO.PopulateVendorsProducts(VendorsProducts);
+        }
 
-
+        public CommonResponse AddProductToVendorListOfProducts(AddProductDTO product)
+        {
             return _vendorLinkingDAO.AddProductToVendorListOfProducts(product);
         }
         public bool EditProductInVendorListOfProducts(AddProductDTO product)

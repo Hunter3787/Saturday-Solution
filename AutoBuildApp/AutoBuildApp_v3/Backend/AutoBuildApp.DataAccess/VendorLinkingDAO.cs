@@ -9,23 +9,21 @@ using System.Data;
 using System.Security.Claims;
 using System.Text;
 using System.Threading;
+using AutoBuildApp.Models;
 
 namespace AutoBuildApp.DataAccess
 {
     public class VendorLinkingDAO
     {
         private string _connectionString;
-        public readonly ConcurrentDictionary<string, HashSet<string>> VendorsProducts;
         public VendorLinkingDAO(string connectionString)
         {
             _connectionString = connectionString;
-            VendorsProducts = PopulateVendorsProducts();
             //PopulateAllProducts();
         }
 
-        public ConcurrentDictionary<string, HashSet<string>> PopulateVendorsProducts()
+        public void PopulateVendorsProducts(ConcurrentDictionary<string, HashSet<string>>  VendorsProducts)
         {
-            ConcurrentDictionary<string, HashSet<string>> VendorsProducts = new ConcurrentDictionary<string, HashSet<string>>();
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -69,7 +67,6 @@ namespace AutoBuildApp.DataAccess
                     }
                 }
             }
-            return VendorsProducts;
         }
 
         //public ConcurrentDictionary<string, byte> PopulateVendors()
@@ -119,7 +116,7 @@ namespace AutoBuildApp.DataAccess
                     try
                     {
                         SqlDataAdapter adapter = new SqlDataAdapter();
-
+                        //ResponseStringGlobals.FAILED_ADDITION;
                         string sql = "select modelNumber from products";
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
 
@@ -261,18 +258,18 @@ namespace AutoBuildApp.DataAccess
         {
             CommonResponse response = new CommonResponse();
             string company = "danny";
-            if(!VendorsProducts.ContainsKey(company))
-            {
-                HashSet<string> HashSet = new HashSet<string>();
-                VendorsProducts.TryAdd(company, HashSet);
-            }
+            //if(!VendorsProducts.ContainsKey(company))
+            //{
+            //    HashSet<string> HashSet = new HashSet<string>();
+            //    VendorsProducts.TryAdd(company, HashSet);
+            //}
 
-            if(VendorsProducts[company].Contains(product.ModelNumber))
-            {
-                Console.WriteLine("can't add. that model number already exists");
+            //if(VendorsProducts[company].Contains(product.ModelNumber))
+            //{
+            //    Console.WriteLine("can't add. that model number already exists");
 
-                return false;
-            }
+            //    return false;
+            //}
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -295,10 +292,9 @@ namespace AutoBuildApp.DataAccess
                         adapter.InsertCommand.Parameters.Add("@PRODUCTPRICE", SqlDbType.VarChar).Value = product.Price;
 
                         var y = adapter.InsertCommand.ExecuteNonQuery();
-                        Console.WriteLine(y + " records changed!!!");
                         transaction.Commit();
 
-                        VendorsProducts[company].Add(product.ModelNumber);
+                        //VendorsProducts[company].Add(product.ModelNumber);
 
                         Console.WriteLine("done!!");
 
@@ -336,12 +332,12 @@ namespace AutoBuildApp.DataAccess
         public bool EditProductInVendorListOfProducts(AddProductDTO product)
         {
             string company = "danny";
-            if (!VendorsProducts[company].Contains(product.ModelNumber))
-            {
-                Console.WriteLine("can't edit. that model number doesn't exist");
+            //if (!VendorsProducts[company].Contains(product.ModelNumber))
+            //{
+            //    Console.WriteLine("can't edit. that model number doesn't exist");
 
-                return false;
-            }
+            //    return false;
+            //}
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -385,11 +381,11 @@ namespace AutoBuildApp.DataAccess
         public bool DeleteProductFromVendorList(string modelNumber)
         {
             Console.WriteLine("mode num = " + modelNumber);
-            if (!VendorsProducts["new egg"].Contains(modelNumber))
-            {
-                Console.WriteLine("can't delete. that model number doesn't exist");
-                return false;
-            }
+            //if (!VendorsProducts["new egg"].Contains(modelNumber))
+            //{
+            //    Console.WriteLine("can't delete. that model number doesn't exist");
+            //    return false;
+            //}
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
