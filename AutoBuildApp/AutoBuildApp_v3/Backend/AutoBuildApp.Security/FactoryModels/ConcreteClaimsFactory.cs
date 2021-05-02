@@ -16,6 +16,10 @@ namespace AutoBuildApp.Security.FactoryModels
 
         public abstract IClaims GetClaims(string type);
 
+        public IClaims GetClaims(object sYSTEM_ADMIN)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 
@@ -34,10 +38,11 @@ namespace AutoBuildApp.Security.FactoryModels
             switch (type)
             {
                 case "BASIC_ROLE": return new Basic();
-                case "SENIOR_ADMIN": return new Admin();
+                case "SYSTEM_ADMIN": return new SysAdmin();
+                case "DELEGATE_ADMIN": return new DelAdmin();
                 case "VENDOR_ROLE": return new Vendor();
                 case "UNREGISTERED_ROLE": return new Unregistered(); // set to the default 
-                case "DEVELOPER": throw new NotImplementedException();
+                //case "DEVELOPER": throw new NotImplementedException();
                 case "LOCKED": return new Locked();
                 default: return new Unregistered();
             }

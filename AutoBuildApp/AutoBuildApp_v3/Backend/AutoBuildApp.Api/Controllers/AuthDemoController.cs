@@ -33,7 +33,7 @@ namespace AutoBuildApp.Api.Controllers
         {
             
             _allowedRoles = new List<string>()
-            { RoleEnumType.BASIC_ROLE,RoleEnumType.SENIOR_ADMIN };
+            { RoleEnumType.BASIC_ROLE,RoleEnumType.SYSTEM_ADMIN };
 
 
         }

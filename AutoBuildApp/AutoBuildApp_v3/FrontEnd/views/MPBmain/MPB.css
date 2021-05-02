@@ -2,7 +2,7 @@
     box-sizing: border-box;
 }
 
-body {
+html, body {
     font-family: Arial;
     margin: 0;
     background-color: whitesmoke; 
@@ -20,8 +20,11 @@ body {
   .formheader .formtitle {
     color: whitesmoke;
   }
+
+  .mpb{
+  }
   
-  .sidenav {
+  .mpb .sidenav {
     margin-top: 100px;
     height: 100%;
     width: 200px;
@@ -37,30 +40,9 @@ body {
   }
 
   .sidenav:hover {
-    margin-top: 100px;
-    height: 100%;
-    width: 200px;
-    position: absolute;
-    z-index: 1;
-    top: 0;
-    left: 0;
     background-color: #E5E7E9;
-    overflow-x: hidden;
-    padding-top: 20px;
-    padding-left: 20px;
+    box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
   }
-  
-  /* .sidenav a {
-    padding: 6px 8px 6px 16px;
-    text-decoration: none;
-    font-size: 25px;
-    color: #818181;
-    display: block;
-  }
-  
-  .sidenav a:hover {
-    color: #f1f1f1;
-  } */
 
   .sidenav h1 {
       color: #191b2b;
@@ -88,10 +70,11 @@ body {
     background-color: #4285f4;
     color: #fff;
     padding: 14px 28px;
-    font-size: 16px;
+    font-size: 15px;
     cursor: pointer;
     border-radius: .25rem;
     text-align: center;
+    text-transform: uppercase;
     transition: .15s ease-in-out;
     transition-property: color, background-color, border-color, box-shadow;
   }
@@ -108,8 +91,8 @@ body {
   }
   
   .main {
-    margin-left: 220px; /* Same as the width of the sidenav */
-    font-size: 28px; /* Increased text to enable scrolling */
+    margin-left: 220px;
+    font-size: 28px; 
     padding: 0px 10px;
   }
 
@@ -172,8 +155,6 @@ body {
     background-color: #CACFD2;
     box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
   }
-
-
 
   @media screen and (max-width: 600px) {
     .gridbuilds {

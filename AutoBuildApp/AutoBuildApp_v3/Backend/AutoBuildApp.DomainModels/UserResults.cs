@@ -32,7 +32,10 @@ namespace AutoBuildApp.DomainModels
         public string ModifiedAt { get; set; }
 
         // Who last modified the user's account
-        public string ModifiedBy { get; set; }
+        //public string ModifiedBy { get; set; }
+
+        // The role of the user
+        public string UserRole { get; set; }
 
     }
 }

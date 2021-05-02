@@ -88,7 +88,7 @@ namespace AutoBuildApp.Managers
             Dictionary<ProductType, List<IComponent>> products = new Dictionary<ProductType, List<IComponent>>();
             Dictionary<IComponent, int> scores = new Dictionary<IComponent, int>();
             //ComponentComparisonService comparator = new ComponentComparisonService();
-            GetComponentsService getter = new GetComponentsService(_dao);
+            GetProductService getter = new GetProductService(_dao);
             PortionBudgetService portioner = new PortionBudgetService();
             HardDriveFactory driveFacorty = new HardDriveFactory();
             BuildParsingService parser = new BuildParsingService();

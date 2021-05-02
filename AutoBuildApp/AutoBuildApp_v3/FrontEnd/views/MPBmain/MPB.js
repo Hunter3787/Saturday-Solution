@@ -1,4 +1,4 @@
-const uri = 'https://localhost:5001/MostPopularBuilds';
+const uri = 'https://localhost:5001/MostPopularBuilds/';
 let posts = [];
 let token = ' ';
 const fetchRequest = {
@@ -11,27 +11,87 @@ const fetchRequest = {
     }
 };
 
+// Adds an event listener for redirecting to a different page when the post build button is clicked.
+let postBuild = document.getElementById('post-build-button');
+postBuild.addEventListener("click", () => window.location.assign("../MPBform/MPBform.html"))
+
+// Adds an event listener foreach radio element in the radio group of build type radio buttons.
+let buildRadio = document.querySelectorAll('input[name="build"]').forEach((elem) => {
+  elem.addEventListener("change", () => getItems())
+})
+
+// Adds an event listener foreach radio element in the radio group of likes radio buttons.
+let likesRadio = document.querySelectorAll('input[name="likes"]').forEach((elem) => {
+  elem.addEventListener("change", () => getItems())
+})
+
+// This function gets the filter string if radio buttons are clicked.
+function getFilterString()
+{
+  
+  let queryString = "?"; // initialize query string with a ? to indicate a query.
+  var buildType = ""; // initialize a null query value for build type since that is the default.
+  var orderLikes = ""; // initialize a null query value for the order of likes since that is the default.
+
+  // will get the value from the html element build and store it in ele.
+  var ele = document.getElementsByName('build'); 
+
+  // This for loop will iterate through the radio elements and find which one is checked.
+  for (var i = 0; i < ele.length; i++)
+  {
+      if (ele[i].checked)
+      {
+          buildType = ele[i].value;
+      }
+  }
+
+  // will get the value from the html element likes and store it in ele.
+  var ele = document.getElementsByName('likes');
+
+  // This for loop will iterate through the radio elements and find which one is checked.
+  for (var i = 0; i < ele.length; i++)
+  {
+      if (ele[i].checked)
+      {
+          orderLikes = ele[i].value;
+      }
+  }
+
+  // This creates a string that will be appended to the query string.
+  const params = new URLSearchParams({
+    buildType: buildType,
+    orderLikes: orderLikes
+  });
+
+  // returns the full query string.
+  return queryString + params.toString();
+}
+
+// creates a function called process that will call the get items function.
 function process(){
   getItems();
 }
 
+// Sets a loop timer of 3 seconds to call the process function -> getItems();
 function looping(){
   setTimeout(process, 3000);
 }
 
+// creates a timer interval of 3 seconds to keep track of the current times, so no concurrency occurs.
 var refreshData = setInterval(looping, 3000);
 
+// This function will call a fetch request.
 async function getItems() {
-    await fetch(uri, fetchRequest) // fetches the default URI
+
+    await fetch(uri + getFilterString(), fetchRequest) // fetches the default URI
         .then(response => response.json()) // Will receive a response from the default response.json.
         .then(data => displayItems(data)) // will call the display items function.
         .then(console.log("reloaded"))
         .catch(error => console.error('Unable to get items.', error)); // will catch an error and print the appropriate error message in console.
-    //refreshData;
+    refreshData;
 }
 
-
-
+// This function will display items received from the http response.
 function displayItems(data) {
 
     const innerDiv = document.getElementById('main'); // This will get the id of the form from the HTML.
@@ -61,7 +121,12 @@ function displayItems(data) {
         // make the div for each individual build and append it to the build block.
         var blockbuild = document.createElement('div');
         blockbuild.classList.add('blockbuild');
-        blockbuild.addEventListener("click", () => window.location.assign("../MPBpost/MPBpost.html")); // lambda function for redirecting on click.
+
+        // lambda function for redirecting on click.
+        blockbuild.addEventListener("click", () => {
+          sessionStorage.setItem('buildId', item["entityId"]);
+          window.location.assign("../MPBpost/MPBpost.html")
+        }); 
 
         // create a title element, appends text to it, and then appends all to a build block.
         var title = document.createElement('p');
@@ -73,7 +138,6 @@ function displayItems(data) {
         var buildimage = document.createElement('div');
         buildimage.classList.add('buildimage');
         var image = document.createElement("img");
-        //image.src = "http://cdna.pcpartpicker.com/static/forever/images/userbuild/359220.7c4372b4c03e37f96b3a4e02c2d1d6f0.512.jpg"
         image.src = item["buildImagePath"];
         buildimage.appendChild(image);
         blockbuild.appendChild(buildimage);
@@ -103,7 +167,6 @@ function displayItems(data) {
         else if (item["buildType"] === 3)
           build = "Word Processing";
 
-        
 
         var buildtypetext = document.createTextNode("Build: " + build);
         buildtype.appendChild(buildtypetext);
@@ -112,10 +175,11 @@ function displayItems(data) {
         // appends the block to the grid of builds.
         gridbuilds.appendChild(blockbuild);
 
-        // gets the div by id in order to append the grid to the html.
-        var main = document.getElementById('main');
-        main.appendChild(gridbuilds);
+        // appends the grid of builds to the main
+        innerDiv.appendChild(gridbuilds);
     });
 
   posts = data; // will store the data as an array in this variable for local access.
 }
+
+//let initializeView = document.getElementById("initialize-view").innerHTML = getItems();

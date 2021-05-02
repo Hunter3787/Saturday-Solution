@@ -1,5 +1,5 @@
 ﻿using AutoBuildApp.DataAccess.Entities;
-using AutoBuildApp.Managers.Registration_PackManger;
+//using AutoBuildApp.Managers.Registration_PackManger;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
 using AutoBuildApp.Security.Interfaces;
@@ -15,6 +15,9 @@ using System.Security.Principal;
 using System.Text.Json;
 using System.Threading;
 using Microsoft.AspNetCore.Http;
+
+
+using AutoBuildApp.Managers.Registration_PackManger;
 
 /// <summary>
 /// Reference: see /AuthReference.
@@ -40,11 +43,6 @@ namespace AutoBuildApp.Api.Controllers
         #endregion
 
         #region variables for the redirect issue, method
-
-
-        // i want to store this into the 
-        // http.context.item["ClaimsPrincipal"] =.
-        private ClaimsPrincipal _threadPrinciple;
 
         #endregion
 
@@ -99,7 +97,7 @@ namespace AutoBuildApp.Api.Controllers
 
 
             //HttpContext.Response.Cookies.Append("access_token", JWTToken, new CookieOptions { HttpOnly = true });
-            return Ok("we are here"  + JWTToken);
+            return Ok( JWTToken);
         }
 
 

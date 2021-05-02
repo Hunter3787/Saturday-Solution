@@ -17,5 +17,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DAOGlobals\" />
+    <Folder Include="GarageDAOs\" />
   </ItemGroup>
 </Project>

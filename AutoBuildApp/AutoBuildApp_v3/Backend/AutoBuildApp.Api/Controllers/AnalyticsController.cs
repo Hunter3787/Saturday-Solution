@@ -46,7 +46,7 @@ namespace AutoBuildApp.Api.Controllers
             /// the user analysis dashboard need admin Priveldges so check:
             /// Step one specify the claim set required
             /// 
-            _admin = _claimsFactory.GetClaims(RoleEnumType.SENIOR_ADMIN);
+            _admin = _claimsFactory.GetClaims(RoleEnumType.SYSTEM_ADMIN);
 
 
             #region getting the connection string and passing to the loginmanager

@@ -53,22 +53,23 @@ namespace AutoBuildApp.Services.Auth_Services
         /// </summary>
         private AuthUserDTO _authUserDTO = new AuthUserDTO();
         private CommonReponseAuth _responseAuth = new CommonReponseAuth();
-        private AuthDAO _authDAO;
+        //private AuthDAO _authDAO;
+        private LoginDAO _loginDAO;
 
         #endregion
 
-        public AuthenticationService(AuthDAO authDAO)
+        public AuthenticationService(LoginDAO loginDAO)
         {
             try
             {
-                if (authDAO == null)
+                if (loginDAO == null)
                 {
                     var expectedParamName = "NULL OBJECT PROVIDED";
                     throw new ArgumentNullException(expectedParamName);
 
                 }
-
-                this._authDAO = authDAO;
+                this._loginDAO = loginDAO;
+                //this._authDAO = authDAO;
             }
             catch (ArgumentNullException)
             {
@@ -89,7 +90,8 @@ namespace AutoBuildApp.Services.Auth_Services
             claimsPrincipal = (ClaimsPrincipal)Thread.CurrentPrincipal;
             /// retrieves the result from the query as an object
             /// then we cast it to type Common responde object -> Auth
-            _responseAuth = _authDAO.RetrieveUserInformation(credentials);
+            //_responseAuth = _authDAO.RetrieveUserInformation(credentials);
+            _responseAuth = _loginDAO.LoginInformation(credentials);
             // an initial check for connection state:
             if (!_responseAuth.connectionState)
             {

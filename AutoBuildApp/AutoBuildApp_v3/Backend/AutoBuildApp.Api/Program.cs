@@ -1,3 +1,4 @@
+using AutoBuildApp.Api.Controllers;
 using AutoBuildApp.Api.HelperFunctions;
 using AutoBuildApp.DataAccess;
 using AutoBuildApp.Models.WebCrawler;
@@ -29,8 +30,26 @@ namespace AutoBuildApp.Api
         ////        newEggBlackList.Add("ComboDealDetails");
         ////        newEggBlackList.Add("newegg.com/p/");
 
-        ////        List<string> amazonBlackList = new List<string>();
-        ////        amazonBlackList.Add("picassoRedirect");
+            //    //AsyncContext.Run(() => wcs.getAllInformationFromPageAsync("https://www.amazon.com/Intel-i7-9700K-Desktop-Processor-Unlocked/dp/B07HHN6KBZ/ref=sr_1_2?_encoding=UTF8&c=ts&dchild=1&keywords=Computer+CPU+Processors&qid=1618022193&s=pc&sr=1-2&ts_id=229189",
+            //    //    "amazon", "cpu", "document.querySelector('#productTitle').innerText", "document.querySelector('#price_inside_buybox').innerText", "Array.from(document.querySelectorAll('.prodDetSectionEntry')).map(a=>a.innerText)",
+            //    //    "Array.from(document.querySelectorAll('.prodDetSectionEntry')).map(a=>a.innerText)", "Array.from(document.querySelectorAll('[data-hook=review] .a-profile-name')).map(a=>a.innerText)",
+            //    //    "Array.from(document.querySelectorAll('[data-hook=review-date]')).map(a=>a.innerText)", "Array.from(document.querySelectorAll('[data-hook=review-body]')).map(a=>a.innerText)"));
+            //    //Console.ReadLine();
+            //    List<StartingLink> task = AsyncContext.Run(() => wcs.grabHrefLinksFromPageAsync(listOfLinks, "Page-", "Array.from(document.querySelectorAll('.item-cell:not(.width-100) .item-img')).map(a=>a.href)", "", newEggBlackList));
+            //    //Console.WriteLine(task.Count);
+            //    for (int i = 0; i < task.Count; i++)
+            //    {
+            //        AsyncContext.Run(() => wcs.getAllInformationFromPageAsync(task[i].Link, "new egg", task[i].ComponentType, "document.querySelector('.product-view-img-original').src", "document.querySelector('.product-title').innerText;", "document.querySelector('.product-pane:not(.is-collapsed) :not(.product-raidobox) .price .price-current').innerText;",
+            //            "Array.from(document.querySelectorAll('.table-horizontal tr th')).map(a => a.children.length != 0 && a.children[0].className == 'popover-question' ? a.children[0].children[1].innerText : a.innerText)", "Array.from(document.querySelectorAll('.table-horizontal tr td')).map(a=>a.innerText);", "Array.from(document.querySelectorAll('.comments-cell-side .comments-name')).map(a=>a.innerText)",
+            //            "Array.from(document.querySelectorAll('.comments-title .comments-text')).map(a=>a.innerText)", "Array.from(document.querySelectorAll('.comments-content:not(.comments-response .comments-content')).map(a=>a.innerText)"));
+            //    }s
+            //}).Start();
+            //#endregion
+            //ConnectionManager connectionManager = new ConnectionManager();
+            //var con = connectionManager.GetConnectionStringByName(ControllerGlobals.CONNECTION_ADMIN_CREDENTIALS);
+            //ProductDAO productDAO = new ProductDAO(con);
+            //productDAO.GetAllProductEntities();
+
 
         ////        List<StartingLink> listOfLinks = new List<StartingLink>
         ////        {

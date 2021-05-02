@@ -18,65 +18,75 @@ namespace AutoBuildApp.DataAccess
             this._connectionString = connectionString;
         }
 
-        //public string newDBPassword(string password)
-        //{
-        //    using (var conn = new SqlConnection(_connectionString))
-        //    {
-        //        conn.Open();
-        //        using (var command = new SqlCommand())
-        //        {
-        //            command.Transaction = conn.BeginTransaction();
-        //            command.Connection = conn;
-        //            command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
-        //            command.CommandType = CommandType.Text;
+        private SqlDataAdapter adapter = new SqlDataAdapter();
 
-        //            command.CommandText = "UPDATE UserAccounts SET PassHash = 'password' WHERE UserEmail = ";
 
-        //            command.Transaction.Commit();
-        //        }
-        //    }
-        //    return "Password has been updated";
-        //}
+        public bool DoesEmailExist(string email)
+        {
+            bool Flag = false;
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        String sql = "SELECT COUNT (*) FROM userAccounts WHERE email = @EMAIL;";
+                        adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
+                        adapter.InsertCommand.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = email;
 
-        //   public string newDBEmail(string userInput)
-        //{
-        //    using (var conn = new SqlConnection(_connectionString))
-        //    {
-        //        conn.Open();
-        //        using (var command = new SqlCommand())
-        //        {
-        //            command.Transaction = conn.BeginTransaction();
-        //            command.Connection = conn;
-        //            command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
-        //            command.CommandType = CommandType.Text;
+                        adapter.InsertCommand.Transaction = transaction;
 
-        //            command.CommandText = "UPDATE UserAccounts SET UserEmail = 'userInput' WHERE UserAccountID = ";
+                        int result = Convert.ToInt32(adapter.InsertCommand.ExecuteScalar());
 
-        //            command.Transaction.Commit();
-        //        }
-        //    }
-        //    return "Email has been updated";
-        //}
+                        transaction.Commit();
+                        connection.Close();
+                        return result != 0;
+                    }
+                    catch (SqlException ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        Console.WriteLine(ex.Source);
 
-        //public string newDBUserName(string userInput)
-        //{
-        //    using (var conn = new SqlConnection(_connectionString))
-        //    {
-        //        conn.Open();
-        //        using (var command = new SqlCommand())
-        //        {
-        //            command.Transaction = conn.BeginTransaction();
-        //            command.Connection = conn;
-        //            command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
-        //            command.CommandType = CommandType.Text;
+                    }
+                    return Flag;
+                }
+            }
+        }
 
-        //            command.CommandText = "UPDATE UserAccounts SET UserName = 'userInput' WHERE UserAccountID = ";
+        public bool DoesUsernameExist(string username)
+        {
+            bool Flag = false;
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        String sql = "SELECT COUNT (*) FROM userCredentials WHERE username = @USERNAME;";
+                        adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
+                        adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = username;
 
-        //            command.Transaction.Commit();
-        //        }
-        //    }
-        //    return "Username has been updated";
-        //}
+                        adapter.InsertCommand.Transaction = transaction;
+
+                        int result = Convert.ToInt32(adapter.InsertCommand.ExecuteScalar());
+
+                        transaction.Commit();
+                        connection.Close();
+                        return result != 0;
+                    }
+                    catch (SqlException ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        Console.WriteLine(ex.Source);
+
+                    }
+                    return Flag;
+                }
+            }
+        }
+
 
         public string UpdatePasswordDB(string email, string password)
         {
@@ -219,8 +229,10 @@ namespace AutoBuildApp.DataAccess
                     command.CommandType = CommandType.Text;
 
                     command.CommandText = "SELECT * FROM UserAccounts " +
-                                            "INNER JOIN UserCredentials " +
-                                            "ON UserCredentials.userCredID = UserAccounts.userID";
+                        "INNER JOIN MappingHash " +
+                        "ON MappingHash.userID = UserAccounts.userID " +
+                        "INNER JOIN UserCredentials " +
+                        "ON UserCredentials.userHashID = MappingHash.userHashID;";
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
@@ -234,12 +246,11 @@ namespace AutoBuildApp.DataAccess
                             userEntity.LastName = (string)reader["lastName"];
                             userEntity.CreatedAt = reader["createdat"].ToString();
                             userEntity.ModifiedAt = reader["modifiedat"].ToString();
-                            userEntity.ModifiedBy = (reader["modifiedby"] == DBNull.Value) ? string.Empty : (string)reader["modifiedby"].ToString();
-                            //userEntity.ModifiedBy = (string)reader["modifiedby"];
+                            userEntity.UserRole = (string)reader["userRole"];
                             userEntityList.Add(userEntity);
                         }
                     }
-                    //command.ExecuteNonQuery();
+                    command.ExecuteNonQuery();
 
                     command.Transaction.Commit();
 
@@ -249,7 +260,7 @@ namespace AutoBuildApp.DataAccess
         }
 
 
-        public string ChangePermissionsDB(string username, IEnumerable<Claim> claims)
+        public string ChangePermissionsDB(string username, string role, IEnumerable<Claim> claims)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -288,17 +299,18 @@ namespace AutoBuildApp.DataAccess
                             pair.Rows.Add(row);
                         }
 
-                        foreach (DataRow r in pair.Rows)
-                        {
-                            foreach (DataColumn c in pair.Columns)
-                                Console.Write("\t{0}", r[c]);
+                        //foreach (DataRow r in pair.Rows)
+                        //{
+                        //    foreach (DataColumn c in pair.Columns)
+                        //        Console.Write("\t{0}", r[c]);
 
-                            Console.WriteLine("\t\t\t" + r.RowState);
-                        }
+                        //    Console.WriteLine("\t\t\t" + r.RowState);
+                        //}
 
-                        var param = new SqlParameter[2];
+                        var param = new SqlParameter[3];
                         param[0] = adapter.InsertCommand.Parameters.AddWithValue("@PERMISSIONS", pair);
                         param[1] = adapter.InsertCommand.Parameters.AddWithValue("@USERNAME", username);
+                        param[2] = adapter.InsertCommand.Parameters.AddWithValue("@USERROLE", role);
 
 
                         var _reader = adapter.InsertCommand.ExecuteNonQuery();
@@ -317,8 +329,10 @@ namespace AutoBuildApp.DataAccess
 
                     catch (SqlException ex)
                     {
+
                         transaction.Rollback();
-                        return "failed to update permissions2";
+                        return ex.Message;
+                        //return "failed to update permissions2";
                     }
                 }
             }
@@ -358,6 +372,7 @@ namespace AutoBuildApp.DataAccess
                     }
                     catch (SqlException ex)
                     {
+                        Console.WriteLine(ex.Message);
                         return "Account was NOT locked";
                     }
                 }
@@ -399,6 +414,7 @@ namespace AutoBuildApp.DataAccess
                     }
                     catch (SqlException ex)
                     {
+                        Console.WriteLine(ex.Message);
                         return "Account has NOT been unlocked";
                     }
                 }
@@ -407,7 +423,7 @@ namespace AutoBuildApp.DataAccess
         }
 
 
-        public string DeleteUserDB(string email)
+        public string DeleteUserDB(string username)
         {
             using (var conn = new SqlConnection(_connectionString))
             {
@@ -419,12 +435,10 @@ namespace AutoBuildApp.DataAccess
                     command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
                     command.CommandType = CommandType.Text;
 
-                    command.CommandText = "DELETE UserAccounts FROM UserAccounts " +
-                        //"INNER JOIN UserCredentials" +
-                        //"ON UserCredentials.userCredID = UserAccounts.userID" +
-                        "WHERE email = @email";
+                    command.CommandText = "DELETE UserCredentials FROM UserCredentials " +
+                        "WHERE username = @username";
                     var parameters = new SqlParameter[1];
-                    parameters[0] = new SqlParameter("@email", email);
+                    parameters[0] = new SqlParameter("@username", username);
 
                     command.Parameters.AddRange(parameters);
                     var rowsDeleted = command.ExecuteNonQuery();
@@ -439,5 +453,43 @@ namespace AutoBuildApp.DataAccess
             }
         }
 
+        public string RoleCheckDB(string username)
+        {
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                using (var command = new SqlCommand())
+                {
+                    string role = "";
+                    command.Transaction = conn.BeginTransaction();
+                    command.Connection = conn;
+                    command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
+                    command.CommandType = CommandType.Text;
+
+                    command.CommandText = "SELECT userRole FROM UserCredentials " +
+                        "WHERE username = @username";
+                    var parameters = new SqlParameter[1];
+                    parameters[0] = new SqlParameter("@username", username);
+
+                    command.Parameters.AddRange(parameters);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            role = (string)reader["userRole"];
+                        }
+                    }
+
+                    // Executes the query.
+                    command.ExecuteNonQuery();
+
+                    // sends the transaction to be commited at the database.
+                    command.Transaction.Commit();
+
+                    // returns the list of entity object.
+                    return role;
+                }
+            }
+        }
     }
 }

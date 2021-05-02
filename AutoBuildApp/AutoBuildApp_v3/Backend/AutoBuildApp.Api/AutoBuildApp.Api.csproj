@@ -15,9 +15,4 @@
     <ProjectReference Include="..\AutoBuildApp.Security\AutoBuildApp.Security.csproj" />
     <ProjectReference Include="..\AutoBuildApp.Services\AutoBuildApp.Services.csproj" />
   </ItemGroup>
-
-
-  <ItemGroup>
-    <Folder Include="Controllers\ControllerGlobals\" />
-  </ItemGroup>
 </Project>
