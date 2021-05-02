@@ -19,75 +19,87 @@ namespace AutoBuildApp.Api.Controllers
     [EnableCors("CorsPolicy")]
     public class UserGarageController : ControllerBase
     {
-        [HttpGet]
+        [HttpGet("getBuilds")]
         public IActionResult GetBuilds()
         {
+            // TODO
             return Ok();
         }
 
-        [HttpPost]
+        [HttpPost("saveBuild")]
         public IActionResult AddBuild()
         {
+            // TODO
             return Ok();
         }
 
-        [HttpPost]
+        [HttpPost("copyBuild")]
         public IActionResult CopyBuildToGarage()
         {
+            // TODO
             return Ok();
         }
 
-        [HttpPut]
+        [HttpPut("modBuild")]
         public IActionResult ModifyBuild()
         {
+            // TODO
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpDelete("deleteBuild")]
         public IActionResult DeleteBuild()
         {
+            // TODO
             return Ok();
         }
 
-        [HttpPost]
+        [HttpPost("publishBuild")]
         public IActionResult PublishBuild()
         {
+            // TODO
             return Ok();
         }
 
-        [HttpGet]
+        [HttpGet("getShelf")]
         public IActionResult GetShelf()
         {
+            // TODO
             return Ok();
         }
 
-        [HttpPost]
+        [HttpPost("addItem")]
         public IActionResult AddToShelf()
         {
+            // TODO
             return Ok();
         }
 
-        [HttpPost]
+        [HttpPost("copyItem")]
         public IActionResult CopyToShelf()
         {
+            // TODO
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpDelete("deleteItem")]
         public IActionResult RemoveFromShelf()
         {
+            // TODO
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpDelete("deleteShelf")]
         public IActionResult DeleteShelf()
         {
+            // TODO
             return Ok();
         }
 
-        [HttpPut]
+        [HttpPut("changeQuantity")]
         public IActionResult ModifyCount()
         {
+            // TODO
             return Ok();
         }
     }

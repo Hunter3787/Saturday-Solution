@@ -42,7 +42,16 @@ namespace AutoBuildApp.Services
         public IMessageResponse DeleteShelf(string shelfID)
         {
             IMessageResponse output = new StringBoolResponse();
-            bool success = _dao.DeleteShelf(shelfID);
+            try
+            {
+                output.SuccessBool = _dao.DeleteShelf(shelfID);
+                output.MessageString = ResponseStringGlobals.SUCCESSFUL_DELETION;
+            }
+            catch (TimeoutException)
+            {
+                output.SuccessBool = false;
+                output.MessageString = ResponseStringGlobals.CALL_TIMEOUT;
+            }
 
             return output;
         }
@@ -50,6 +59,25 @@ namespace AutoBuildApp.Services
         public IMessageResponse ChangeShelfName(string oldName, string newName, string user)
         {
             IMessageResponse output = new StringBoolResponse();
+            try
+            {
+                output.SuccessBool = _dao.UpdateShelf(oldName, newName, user);
+
+                if(output.SuccessBool == false)
+                {
+                    output.MessageString = ResponseStringGlobals.FAILED_MODIFICATION;
+                }
+                else
+                { 
+                    output.MessageString = ResponseStringGlobals.SUCCESSFUL_MODIFICATION;
+                }
+            }
+            catch (TimeoutException)
+            {
+                output.SuccessBool = false;
+                output.MessageString = ResponseStringGlobals.CALL_TIMEOUT;
+            }
+
             return output;
         }
 

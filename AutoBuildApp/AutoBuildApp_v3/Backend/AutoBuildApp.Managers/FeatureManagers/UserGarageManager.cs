@@ -7,6 +7,10 @@ using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Services;
 using AutoBuildApp.DataAccess.Abstractions;
 using AutoBuildApp.Models;
+using AutoBuildApp.Managers.Guards;
+using System.Threading;
+using System.Security.Claims;
+using AutoBuildApp.Security;
 
 /**
 * User Garage Manager class that directs 
@@ -22,6 +26,7 @@ namespace AutoBuildApp.Managers
         private readonly IClaims _basic, _vendor, _developer, _admin;
         private ShelfService _shelfService;
         private BuildManagementService _buildService;
+        private readonly string _currentUser;
 
         public UserGarageManager(string connectionString)
         {
@@ -35,17 +40,32 @@ namespace AutoBuildApp.Managers
             _shelfDAO = new ShelfDAO(connectionString);
             _shelfService = new ShelfService(_shelfDAO);
             _buildService = new BuildManagementService(_buildDAO);
+            _currentUser = Thread.CurrentPrincipal.Identity.Name;
         }
 
-        public IMessageResponse AddBuild(IBuild build, string user)
+        public IMessageResponse AddBuild(IBuild build, string buildname)
         {
-            IMessageResponse response = _buildService.AddBuild(build, user);
+            // temp
+            if (!IsAuthorized())
+            {
+                return new StringBoolResponse()
+                {
+                    MessageString = ResponseStringGlobals.UNAUTHORIZED_ACCESS,
+                    SuccessBool = false
+                };
+            }
+            NullGuard.IsNotNull(build);
+            NullGuard.IsNotNullOrEmpty(buildname);
+
+            IMessageResponse response = _buildService.AddBuild(build, buildname, _currentUser);
 
             return response;
         }
 
         public IMessageResponse CopyBuildToGarage(string buildID)
         {
+            NullGuard.IsNotNullOrEmpty(buildID);
+
             IMessageResponse response = _buildService.CopyBuild();
 
             return response;
@@ -53,27 +73,43 @@ namespace AutoBuildApp.Managers
 
         public IMessageResponse DeleteBuild(string buildID)
         {
+            NullGuard.IsNotNullOrEmpty(buildID);
+
             IMessageResponse response = _buildService.DeleteBuild();
 
             return response;
         }
 
-        public List<IBuild> GetBuilds(string id, string order)
+        public List<IBuild> GetAllUserBuilds(string user, string sorting)
         {
-            List<IBuild> outputList = new List<IBuild>();
+            List<IBuild> outputList;
+            var order = sorting;
+
+            // TODO:Fix guards and parameters.
+            NullGuard.IsNotNullOrEmpty(user);
+            if (string.IsNullOrEmpty(sorting))
+            {
+                order = UserGarageGlobals.DEFAULT_SORT;
+            }
+
+            outputList = _buildService.GetAllUserBuilds(user, order);
 
             return outputList;
         }
 
-        public IMessageResponse PublishBuild(IBuild buildID)
+        public IMessageResponse PublishBuild(string buildID)
         {
+            NullGuard.IsNotNullOrEmpty(buildID);
+
             IMessageResponse response = _buildService.PublishBuild();
 
             return response;
         }
 
-        public IMessageResponse ModifyBuild(IBuild build)
+        public IMessageResponse ModifyBuild(IBuild build, string oldName, string newName)
         {
+            NullGuard.IsNotNull(build);
+
             IMessageResponse response = _buildService.ModifyBuild();
 
             return response;
@@ -82,7 +118,10 @@ namespace AutoBuildApp.Managers
         // Starting point
         public IMessageResponse CreateShelf(string shelfName, string user)
         {
-            // Add input validation.
+            NullGuard.IsNotNullOrEmpty(shelfName);
+            NullGuard.IsNotNullOrEmpty(user);
+
+            // TODO:Add input validation.
             IMessageResponse response = _shelfService.CreateShelf(shelfName, user);
 
             return response;
@@ -90,7 +129,7 @@ namespace AutoBuildApp.Managers
 
         public IMessageResponse RenameShelf(string from, string to, string user)
         {
-            // Add input validation.
+            // TODO:Add input validation.
             IMessageResponse response = _shelfService.ChangeShelfName(from, to, user);
 
             return response;
@@ -99,7 +138,7 @@ namespace AutoBuildApp.Managers
         public IMessageResponse DeleteShelf(string shelfName, string user)
         {
             // Add Business rules
-            
+
             // If(user == current)
             IMessageResponse response = _shelfService.DeleteShelf(shelfName);
 
@@ -152,6 +191,32 @@ namespace AutoBuildApp.Managers
             IComponent output = _shelfService.GetComponent(index, shelfName);
 
             return output;
+        }
+
+        /// <summary>
+        /// Private method to compare the current uesr to the
+        /// user who is currently being viewed. 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        private bool IsCurrentUser(string user)
+        {
+            var valid = false;
+
+            if (_currentUser == user)
+            {
+                valid = true;
+            }
+
+            return valid;
+        }
+
+        private bool IsAuthorized()
+        {
+            return AuthorizationService.checkPermissions(_basic.Claims())
+                || AuthorizationService.checkPermissions(_vendor.Claims())
+                || AuthorizationService.checkPermissions(_developer.Claims())
+                || AuthorizationService.checkPermissions(_admin.Claims());
         }
     }
 }

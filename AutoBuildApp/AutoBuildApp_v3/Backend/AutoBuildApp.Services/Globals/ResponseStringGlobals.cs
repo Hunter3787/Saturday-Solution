@@ -17,5 +17,6 @@ namespace AutoBuildApp.Services
         public const string DATABASE_FAILURE = "Database error.";
         public const string REQUEST_FAILURE = "Request failed.";
         public const string CALL_TIMEOUT = "Timeout error.";
+        public const string UNAUTHORIZED_ACCESS = "Unauthorized access.";
     }
 }

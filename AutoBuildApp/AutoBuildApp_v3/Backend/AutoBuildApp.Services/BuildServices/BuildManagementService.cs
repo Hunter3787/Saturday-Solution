@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AutoBuildApp.DataAccess;
 using AutoBuildApp.Models;
 using AutoBuildApp.Models.Interfaces;
@@ -19,12 +20,15 @@ namespace AutoBuildApp.Services
             _dao = buildDAO;
         }
 
-        public IMessageResponse AddBuild(IBuild build, string user)
+        public IMessageResponse AddBuild(IBuild build, string buildName, string user)
         {
             _response = new StringBoolResponse();
 
             try
             {
+                _dao.InsertBuild(build, buildName, user);
+
+
                 _response.SuccessBool = true;
                 _response.MessageString = ResponseStringGlobals.SUCCESSFUL_ADDITION;
             }
@@ -75,6 +79,12 @@ namespace AutoBuildApp.Services
 
         public IBuild GetBuild()
         {
+            return null;
+        }
+
+        public List<IBuild> GetAllUserBuilds(string user, string sortOrder)
+        {
+
             return null;
         }
 

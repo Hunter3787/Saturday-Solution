@@ -29,7 +29,7 @@ namespace AutoBuildApp.DataAccess
             return outputList;
         }
 
-        public bool InsertBuild(IBuild build)
+        public bool InsertBuild(IBuild build, string buildName, string user)
         {
             return false;
         }

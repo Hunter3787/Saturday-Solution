@@ -18,7 +18,6 @@ namespace AutoBuildApp.DataAccess
         public bool InsertShelf(string shelfID, string user)
         {
             bool success = false;
-            string insertRequest = "";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -26,6 +25,7 @@ namespace AutoBuildApp.DataAccess
 
                 using (SqlCommand command = new SqlCommand())
                 {
+                    string insertRequest = "INSERT INTO ";
                     command.Transaction = connection.BeginTransaction();
                     command.Connection = connection;
                     command.CommandTimeout = DAOGlobals.TIMEOUT_SHORT;
@@ -61,7 +61,7 @@ namespace AutoBuildApp.DataAccess
             return false;
         }
 
-        public bool UpdateShelf(int id)
+        public bool UpdateShelf(string oldName, string newName, string user)
         {
             return false;
         }
