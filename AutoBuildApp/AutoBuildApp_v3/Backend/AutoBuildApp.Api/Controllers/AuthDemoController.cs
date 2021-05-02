@@ -28,7 +28,7 @@ namespace AutoBuildApp.Api.Controllers
         public AuthDemoController()
         {
 
-            _admin = _claimsFactory.GetClaims(RoleEnumType.BASIC_ADMIN);
+            _admin = _claimsFactory.GetClaims(RoleEnumType.SYSTEM_ADMIN);
 
 
         }

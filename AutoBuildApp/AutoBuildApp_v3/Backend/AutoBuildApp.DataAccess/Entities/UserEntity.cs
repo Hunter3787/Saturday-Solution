@@ -33,6 +33,9 @@ namespace AutoBuildApp.DataAccess.Entities
         public string ModifiedAt { [DAO("modifiedat", typeof(string), false)] get; set; }
 
         // Who last modified the user's account
-        public string ModifiedBy { [DAO("modifiedby", typeof(string), false)] get; set; }
+        //public string ModifiedBy { [DAO("modifiedby", typeof(string), false)] get; set; }
+
+        // The role of the user
+        public string UserRole { [DAO("modifiedby", typeof(string), false)] get; set; }
     }
 }

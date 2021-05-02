@@ -28,13 +28,19 @@ namespace AutoBuildApp.Managers.UserManagers
                 && password.Any(char.IsUpper);
         }
 
-        public bool IsInformationValid(UserAccount user)
+        public bool passwordCheck(string password, string password2)
+        {
+            return password == password2;
+        }
+
+        public bool IsInformationValid(UserAccount user, string passCheck)
         {
             return ValidEmail(user.UserEmail)
                 && IsPasswordValid(user.passHash)
                 && ValidUserName(user.UserName)
                 && !String.IsNullOrEmpty(user.FirstName)
                 && !String.IsNullOrEmpty(user.LastName)
+                && passwordCheck(user.passHash, passCheck)
                 ;
         }
     }

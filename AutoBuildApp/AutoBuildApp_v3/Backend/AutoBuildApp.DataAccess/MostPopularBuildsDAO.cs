@@ -114,7 +114,7 @@ namespace AutoBuildApp.DataAccess
                     bool addRemove = true;
 
                     Type t = buildPostEntity.GetType();
-                    DAOAttribute dao;
+                    //DAOAttribute dao;
                     StringCollection Fields = new StringCollection();
 
                     foreach (PropertyInfo pi in pis)

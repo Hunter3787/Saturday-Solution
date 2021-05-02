@@ -1,5 +1,5 @@
 ﻿using AutoBuildApp.DataAccess.Entities;
-using AutoBuildApp.Managers.Registration_PackManger;
+//using AutoBuildApp.Managers.Registration_PackManger;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
 using AutoBuildApp.Security.Interfaces;
@@ -35,7 +35,7 @@ namespace AutoBuildApp.Api.Controllers
     {
         #region  Authentication Controller variables 
 
-        private AuthManager _loginManager;
+        //private AuthManager _loginManager;
         private UserCredentials _userCredentials;
         #endregion
 
@@ -60,7 +60,7 @@ namespace AutoBuildApp.Api.Controllers
             string connection = conString.GetConnectionStringByName("MyConnection");
             // Console.WriteLine($"connection string passed in controller: {connection} ");
             //3) connection string passed to the logIn manager 
-            _loginManager = new AuthManager(connection);
+            //_loginManager = new AuthManager(connection);
             #endregion
 
         }
@@ -86,8 +86,9 @@ namespace AutoBuildApp.Api.Controllers
         public ActionResult<AuthUserDTO> AuthenticateUser(UserCredentials userCredentials)
         {
             this._userCredentials = userCredentials;
-            var JWTToken = _loginManager.AuthenticateUser(_userCredentials);
-            return Ok(JWTToken);
+            //var JWTToken = _loginManager.AuthenticateUser(_userCredentials);
+            //return Ok(JWTToken);
+            return Ok();
         }
 
 

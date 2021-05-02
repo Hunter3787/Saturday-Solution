@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Profile Page(Admin)</title>
+        <link rel="stylesheet" href="UMUser(Admin).css" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+        * {
+        box-sizing: border-box;
+        }
+
+        /* Create two equal columns that floats next to each other */
+        .column {
+        float: left;
+        width: 50%;
+        padding: 10px;
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+        content: "";
+        display: table;
+        clear: both;
+        }
+        </style>
+    </head>
+
+
+<body>
+
+    <h1>Profile Page(Admin)</h1>
+
+    <div class="row">
+        <div class="column">
+           </p> Change username </p>
+                  <input type="text" id="add-username" placeholder="Username"> </br> </br>
+                  <button type="button" id = "updateUsername" >Update username</button>
+                  </br> </br>
+              </p> Change email </p>
+                  <input type="text" id="add-email" placeholder="Email"> </br> </br>
+                  <button type="button" id = "updateEmail" >Update email address</button>
+                  </br> </br>
+              </p> Change password </p>
+                  <input type="password" id="add-password" autocomplete="on" placeholder="Password">
+                  <p>Confirm password.</p>
+                  <input type="password" id="add-passwordCheck" autocomplete="on" placeholder="Password Check">
+      
+                  </br></br>
+                  <button type="button" id = "updatePassword" >Update password</button>
+                </br></br></br>
+                <button type="button" id = "Logout" >Logout</button>
+        </div>
+        <div class="column">
+          </p> Veiw registered users </p>
+                  <button type="button" id = "viewUsers" >View users</button>
+                  </br> </br>
+                  </p> Delete a user </p>
+                  <button type="button" id = "deleteUser" >Delete user</button>
+                  </br> </br>
+                  </p> Modify a user's permissions </p>
+                  <button type="button" id = "modifyUser" >Modify user</button>
+                  </br> </br>
+                  </p> Lock or unlock an account </p>
+                  <button type="button" id = "lockUser" >Lock/Unlock</button>
+        </div>
+      </div>
+
+
+
+
+        <script src="UMUser(Admin).js" asp-append-version="true"></script>
+        <script type="text/javascript">
+        </script>
+
+
+</body>
+</html>

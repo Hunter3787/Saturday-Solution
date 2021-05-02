@@ -43,7 +43,28 @@ namespace AutoBuildApp.Security.FactoryModels
     /// <summary>
     /// This is a class which implements the Product interface.
     /// </summary>
-    public class Admin : IClaims
+    public class SysAdmin : IClaims
+    {
+        public IEnumerable<Claim> Claims()
+        {
+            IEnumerable<Claim> adminUserClaims = new List<Claim>()
+            {
+                new Claim(PermissionEnumType.ALL , ScopeEnumType.ALL),
+            };
+
+            return adminUserClaims;
+        }
+        public void PrintClaims()
+        {
+            foreach (Claim c in Claims())
+            {
+                Console.WriteLine($" claim type: { c.Type } claim value: {c.Value} ");
+
+            }
+        }
+    }
+
+    public class DelAdmin : IClaims
     {
         public IEnumerable<Claim> Claims()
         {
