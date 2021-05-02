@@ -229,8 +229,10 @@ namespace AutoBuildApp.DataAccess
                     command.CommandType = CommandType.Text;
 
                     command.CommandText = "SELECT * FROM UserAccounts " +
-                                            "INNER JOIN UserCredentials " +
-                                            "ON UserCredentials.userCredID = UserAccounts.userID";
+                        "INNER JOIN MappingHash " +
+                        "ON MappingHash.userID = UserAccounts.userID " +
+                        "INNER JOIN UserCredentials " +
+                        "ON UserCredentials.userHashID = MappingHash.userHashID;";
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
@@ -245,12 +247,10 @@ namespace AutoBuildApp.DataAccess
                             userEntity.CreatedAt = reader["createdat"].ToString();
                             userEntity.ModifiedAt = reader["modifiedat"].ToString();
                             userEntity.UserRole = (string)reader["userRole"];
-                            //userEntity.ModifiedBy = (reader["modifiedby"] == DBNull.Value) ? string.Empty : (string)reader["modifiedby"].ToString();
-                            //userEntity.ModifiedBy = (string)reader["modifiedby"];
                             userEntityList.Add(userEntity);
                         }
                     }
-                    //command.ExecuteNonQuery();
+                    command.ExecuteNonQuery();
 
                     command.Transaction.Commit();
 
@@ -372,6 +372,7 @@ namespace AutoBuildApp.DataAccess
                     }
                     catch (SqlException ex)
                     {
+                        Console.WriteLine(ex.Message);
                         return "Account was NOT locked";
                     }
                 }
@@ -413,6 +414,7 @@ namespace AutoBuildApp.DataAccess
                     }
                     catch (SqlException ex)
                     {
+                        Console.WriteLine(ex.Message);
                         return "Account has NOT been unlocked";
                     }
                 }
@@ -421,7 +423,7 @@ namespace AutoBuildApp.DataAccess
         }
 
 
-        public string DeleteUserDB(string email)
+        public string DeleteUserDB(string username)
         {
             using (var conn = new SqlConnection(_connectionString))
             {
@@ -433,12 +435,10 @@ namespace AutoBuildApp.DataAccess
                     command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
                     command.CommandType = CommandType.Text;
 
-                    command.CommandText = "DELETE UserAccounts FROM UserAccounts " +
-                        //"INNER JOIN UserCredentials" +
-                        //"ON UserCredentials.userCredID = UserAccounts.userID" +
-                        "WHERE email = @email";
+                    command.CommandText = "DELETE UserCredentials FROM UserCredentials " +
+                        "WHERE username = @username";
                     var parameters = new SqlParameter[1];
-                    parameters[0] = new SqlParameter("@email", email);
+                    parameters[0] = new SqlParameter("@username", username);
 
                     command.Parameters.AddRange(parameters);
                     var rowsDeleted = command.ExecuteNonQuery();
@@ -449,6 +449,45 @@ namespace AutoBuildApp.DataAccess
                         return "User deleted";
                     }
                     return "User NOT deleted";
+                }
+            }
+        }
+
+        public string RoleCheckDB(string username)
+        {
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                using (var command = new SqlCommand())
+                {
+                    string role = "";
+                    command.Transaction = conn.BeginTransaction();
+                    command.Connection = conn;
+                    command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
+                    command.CommandType = CommandType.Text;
+
+                    command.CommandText = "SELECT userRole FROM UserCredentials " +
+                        "WHERE username = @username";
+                    var parameters = new SqlParameter[1];
+                    parameters[0] = new SqlParameter("@username", username);
+
+                    command.Parameters.AddRange(parameters);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            role = (string)reader["userRole"];
+                        }
+                    }
+
+                    // Executes the query.
+                    command.ExecuteNonQuery();
+
+                    // sends the transaction to be commited at the database.
+                    command.Transaction.Commit();
+
+                    // returns the list of entity object.
+                    return role;
                 }
             }
         }

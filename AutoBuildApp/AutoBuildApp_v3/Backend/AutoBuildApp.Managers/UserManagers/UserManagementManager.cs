@@ -21,7 +21,6 @@ namespace AutoBuildApp.Managers
         private readonly UserManagementDAO _userManagementDAO;
         private InputValidityManager _inputValidityManager;
         private readonly UserManagementService _userManagementService;
-        private readonly RegistrationDAO _registrationDAO;
 
         public UserManagementManager(UserManagementService userManagementService, string connectionString)
         {
@@ -103,33 +102,45 @@ namespace AutoBuildApp.Managers
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
 
             IClaims basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
-            IClaims seniorAdmin = claimsFactory.GetClaims(RoleEnumType.SENIOR_ADMIN);
+            IClaims systemAdmin = claimsFactory.GetClaims(RoleEnumType.SYSTEM_ADMIN);
+            IClaims delegateAdmin = claimsFactory.GetClaims(RoleEnumType.DELEGATE_ADMIN);
             IClaims vendor = claimsFactory.GetClaims(RoleEnumType.VENDOR_ROLE);
             IClaims unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
 
             //username = "KoolTrini";
 
-            if (role == RoleEnumType.BASIC_ROLE)
+            if (_userManagementDAO.RoleCheckDB(username) == RoleEnumType.SYSTEM_ADMIN)
             {
-                return _userManagementDAO.ChangePermissionsDB(username, role, basic.Claims());
+                return "Error: you can't modify the permissions of a system admin";
             }
-            else if (role == RoleEnumType.SENIOR_ADMIN)
+            else
             {
-                return _userManagementDAO.ChangePermissionsDB(username, role, seniorAdmin.Claims());
+                if (role == RoleEnumType.BASIC_ROLE)
+                {
+                    return _userManagementDAO.ChangePermissionsDB(username, role, basic.Claims());
+                }
+                else if (role == RoleEnumType.SYSTEM_ADMIN)
+                {
+                    return _userManagementDAO.ChangePermissionsDB(username, role, systemAdmin.Claims());
+                }
+                else if (role == RoleEnumType.DELEGATE_ADMIN)
+                {
+                    return _userManagementDAO.ChangePermissionsDB(username, role, delegateAdmin.Claims());
+                }
+                else if (role == RoleEnumType.VENDOR_ROLE)
+                {
+                    return _userManagementDAO.ChangePermissionsDB(username, role, vendor.Claims());
+                }
+                //else if (role == "Developer")
+                //{
+                //    return _userManagementDAO.ChangePermissionsDB(username, developer.Claims());
+                //}
+                else if (role == RoleEnumType.UNREGISTERED_ROLE)
+                {
+                    return _userManagementDAO.ChangePermissionsDB(username, role, unregistered.Claims());
+                }
+                else return "Needs  proper role";
             }
-            else if (role == RoleEnumType.VENDOR_ROLE)
-            {
-                return _userManagementDAO.ChangePermissionsDB(username, role, vendor.Claims());
-            }
-            //else if (role == "Developer")
-            //{
-            //    return _userManagementDAO.ChangePermissionsDB(username, developer.Claims());
-            //}
-            else if (role == RoleEnumType.UNREGISTERED_ROLE)
-            {
-                return _userManagementDAO.ChangePermissionsDB(username, role, unregistered.Claims());
-            }
-            else return "Needs  proper role";
         }
 
         public string ChangeLockState(string username, string lockState)
@@ -140,25 +151,43 @@ namespace AutoBuildApp.Managers
 
 
             //username = "SERGE";
-            if (lockState == RoleEnumType.LOCKED)
+            if (_userManagementDAO.RoleCheckDB(username) == RoleEnumType.SYSTEM_ADMIN)
             {
-                _userManagementDAO.ChangePermissionsDB(username, null, locked.Claims());
-                return _userManagementDAO.Lock(username);
-            }
-            else if (lockState == RoleEnumType.BASIC_ROLE)
-            {
-                _userManagementDAO.ChangePermissionsDB(username, null, basic.Claims());
-                return _userManagementDAO.Unlock(username);
+                return "Error: you can't lock a system admin";
             }
             else
             {
-                return "Error: not set to Locked or Unlocked";
+                if (lockState == RoleEnumType.LOCKED)
+                {
+                    _userManagementDAO.ChangePermissionsDB(username, null, locked.Claims());
+                    return _userManagementDAO.Lock(username);
+                }
+                else if (lockState == RoleEnumType.BASIC_ROLE)
+                {
+                    _userManagementDAO.ChangePermissionsDB(username, null, basic.Claims());
+                    return _userManagementDAO.Unlock(username);
+                }
+                else
+                {
+                    return "Error: not set to Locked or Unlocked";
+                }
             }
         }
 
-        public string DeleteUser(string email)
+        public string DeleteUser(string username)
         {
-            return _userManagementService._userManagementDAO.DeleteUserDB(email);
+            if (_userManagementDAO.RoleCheckDB(username) == RoleEnumType.SYSTEM_ADMIN)
+            {
+                return "Error: you can't delete a system admin";
+            } else
+            {
+                return _userManagementService._userManagementDAO.DeleteUserDB(username);
+            }
+        }
+
+        public string RoleCheck(string username)
+        {
+            return _userManagementService._userManagementDAO.RoleCheckDB(username);
         }
     }
 }

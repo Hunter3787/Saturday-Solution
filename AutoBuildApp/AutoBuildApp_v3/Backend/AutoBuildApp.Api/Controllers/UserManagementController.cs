@@ -69,7 +69,7 @@ namespace AutoBuildApp.Api.Controllers
         {
             Console.WriteLine("Update permissions here");
             username = "SERGE";
-            role = RoleEnumType.SENIOR_ADMIN;
+            //role = RoleEnumType.SENIOR_ADMIN;
             UserManagementService userManagementService = new UserManagementService(_userManagementDAO);
             UserManagementManager userManagementManager = new UserManagementManager(userManagementService, ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
             

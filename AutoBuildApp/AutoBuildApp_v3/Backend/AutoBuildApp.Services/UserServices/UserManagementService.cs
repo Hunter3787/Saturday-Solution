@@ -34,9 +34,7 @@ namespace AutoBuildApp.Services.UserServices
                     LastName = userResultEntity.LastName,
                     CreatedAt = userResultEntity.CreatedAt,
                     ModifiedAt = userResultEntity.ModifiedAt,
-                    //ModifiedBy = userResultEntity.ModifiedBy,
-                    UserRole = userResultEntity.UserRole,
-
+                    UserRole = userResultEntity.UserRole
                 };
                 userResults.Add(userResult);
             }
