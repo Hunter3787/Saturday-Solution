@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading;
@@ -24,11 +25,15 @@ namespace AutoBuildApp.Api.Controllers
     {
 
         private ClaimsFactory _claimsFactory = new ConcreteClaimsFactory();
-        IClaims _admin;
+        
+
+        private List<string> _allowedRoles; //specify rles
+
         public AuthDemoController()
         {
-
-            _admin = _claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
+            
+            _allowedRoles = new List<string>()
+            { RoleEnumType.BASIC_ROLE,RoleEnumType.SENIOR_ADMIN };
 
 
         }
@@ -44,9 +49,9 @@ namespace AutoBuildApp.Api.Controllers
                 // Add action logic here
                 return new StatusCodeResult(StatusCodes.Status401Unauthorized);
             }
-            if (!AuthorizationService.checkPermissions(_admin.Claims()))
+            if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
-                Console.WriteLine("we are here C");
+
                 // Add action logic here
                 return new StatusCodeResult(StatusCodes.Status403Forbidden);
             }

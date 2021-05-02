@@ -1,5 +1,5 @@
 
-
+// remove all console stuff -sir
 const url ='https://localhost:5001/authentication';
 
 const fetchRequest = {

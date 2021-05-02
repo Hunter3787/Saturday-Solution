@@ -85,7 +85,7 @@ namespace AutoBuildApp.Api.Controllers
                 // Add action logic here
                 return new StatusCodeResult(StatusCodes.Status401Unauthorized);
             }
-            if (!AuthorizationService.checkPermissions(_admin.Claims()))
+            if (!AuthorizationService.CheckPermissions(_admin.Claims()))
              {
 
 
@@ -109,7 +109,7 @@ namespace AutoBuildApp.Api.Controllers
             //    return new StatusCodeResult(StatusCodes.Status401Unauthorized);
             //}
 
-            if (!AuthorizationService.checkPermissions(_admin.Claims()))
+            if (!AuthorizationService.CheckPermissions(_admin.Claims()))
             {
 
                // _logger.LogWarning("Unauthorized Access Attempted");

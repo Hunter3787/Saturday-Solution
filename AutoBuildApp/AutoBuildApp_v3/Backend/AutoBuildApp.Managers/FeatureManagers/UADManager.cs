@@ -23,7 +23,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
         private UadDTO _uadDTO;
         private ClaimsFactory _claimsFactory = new ConcreteClaimsFactory();
 
-        private  List<string> _allowedRoles;
+        private  List<string> _allowedRoles; //specify rles
         
 
         public UADManager(string _cnnctString)
@@ -40,30 +40,30 @@ namespace AutoBuildApp.Managers.FeatureManagers
 
         }
        
-        /// <summary>
-        /// method to check permissions needed per authorization service.
-        /// </summary>
-        /// <returns></returns>
-        public bool IsAuthorized(List<string> _allowedRoles)
-        {
-            foreach (string role in _allowedRoles)
-            {
-                IClaims _claims = _claimsFactory.GetClaims(role);
-            // FIRST LINE OF DEFENCE 
+        ///// <summary>
+        ///// method to check permissions needed per authorization service.
+        ///// </summary>
+        ///// <returns></returns>
+        //public bool IsAuthorized(List<string> _allowedRoles)
+        //{
+        //    foreach (string role in _allowedRoles)
+        //    {
+        //        IClaims _claims = _claimsFactory.GetClaims(role);
+        //    // FIRST LINE OF DEFENCE 
           
-                if (AuthorizationService.checkPermissions(_claims.Claims()))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+        //        if (AuthorizationService.CheckPermissions(_claims.Claims()))
+        //        {
+        //            return true;
+        //        }
+        //    }
+        //    return false;
+        //}
 
         public UadDTO GetAllChartData()
         {
             //request hits the manager
            
-            if (!IsAuthorized( _allowedRoles))
+            if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
                 _uadDTO.result = AuthorizationResultType.NOT_AUTHORIZED.ToString();
                 return _uadDTO;
@@ -72,7 +72,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
 
 
 
-            _responseUAD = _uadDAO.GetAllAnalytics();
+           _responseUAD = _uadDAO.GetAllAnalytics();
 
             //from dao
             if (!_responseUAD.IsAuthorized)

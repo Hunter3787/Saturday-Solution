@@ -91,7 +91,7 @@ namespace AutoBuildApp.Api.Controllers
                 // Add action logic here
                 return new StatusCodeResult(StatusCodes.Status401Unauthorized);
             }
-            if (!AuthorizationService.checkPermissions(_vendorClaims.Claims()))
+            if (!AuthorizationService.CheckPermissions(_vendorClaims.Claims()))
             {
 
                 // Add action logic here
@@ -117,7 +117,7 @@ namespace AutoBuildApp.Api.Controllers
         //        // Add action logic here
         //        return new StatusCodeResult(StatusCodes.Status401Unauthorized);
         //    }
-        //    if (!AuthorizationService.checkPermissions(_vendorClaims.Claims()))
+        //    if (!AuthorizationService.CheckPermissions(_vendorClaims.Claims()))
         //    {
 
         //        // Add action logic here

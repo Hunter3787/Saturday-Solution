@@ -176,53 +176,50 @@ namespace AutoBuildApp.DataAccess
                         #endregion
 
 
-                        var _reader = command.ExecuteReader();
-                        Console.WriteLine($" reader rows: {_reader.HasRows}");
-                        if (!_reader.HasRows) // use the bang!!!!!!! 
+                        using (var reader = command.ExecuteReader())
                         {
-                            _CRAuth.FailureString = "User not found";
-                            _CRAuth.IsUserExists = false;
+                            Console.WriteLine($" reader rows: {reader.HasRows}");
+                            if (!reader.HasRows) // use the bang!!!!!!! 
+                            {
+                                _CRAuth.FailureString = "User not found";
+                                _CRAuth.IsUserExists = false;
+                                return _CRAuth; //return  
+                            }
+
+                            //READ AND STORE ALL THE ORDINALS YOU NEED
+                            int username = reader.GetOrdinal("username");
+                            int permissions = reader.GetOrdinal("permission");
+                            int scope = reader.GetOrdinal("scopeOfPermission");
+
+
+
+                            while (reader.Read())
+                            {
+                                _userClaims = new Claims();
+                                /// ret = $"user ID: {reader.GetInt64(0)} Permissions: {reader.GetString(1)} scopeOfPermission { reader.GetString(2) }";
+                                ///_userPermissions.UserAccountID = reader.GetInt64(0);
+                                /// magic values -> will the collumns alwats be the same
+                                /// better to use ordinal names -> no matter where the column just specifiy thr column 
+                                _CRAuth.AuthUserDTO.UserEmail = (string)reader[username];
+                                _userClaims.Permission = (string)reader[permissions];
+                                _userClaims.scopeOfPermissions = (string)reader[scope];
+                                _CRAuth.AuthUserDTO.Claims.Add(_userClaims);
+                            }
+                            // auto reader close
                         }
-                        if (_reader.HasRows) // just else is enough 
-                        {
-                            _CRAuth.SuccessString = "User Exists";
-                            _CRAuth.IsUserExists = true;
-                        }
 
-                        //READ AND STORE ALL THE ORDINALS YOU NEED
-                        int username = _reader.GetOrdinal("username");
-                        int permissions = _reader.GetOrdinal("permission");
-                        int scope = _reader.GetOrdinal("scopeOfPermission");
-
-
-
-                        while (_reader.Read())
-                        {
-                            _userClaims = new Claims();
-                            /// ret = $"user ID: {_reader.GetInt64(0)} Permissions: {_reader.GetString(1)} scopeOfPermission { _reader.GetString(2) }";
-                            ///_userPermissions.UserAccountID = _reader.GetInt64(0);
-                            /// magic values -> will the collumns alwats be the same
-                            /// better to use ordinal names -> no matter where the column just specifiy thr column 
-                            _CRAuth.AuthUserDTO.UserEmail = (string)_reader[username];
-                            _userClaims.Permission = (string)_reader[permissions];
-                            _userClaims.scopeOfPermissions = (string)_reader[scope];
-                            _CRAuth.AuthUserDTO.Claims.Add(_userClaims);
-                        }
-
-                        _reader.Close();
                     }
-                    catch (SqlException ex)
+                    catch (SqlException) 
                     {
                         command.Transaction.Rollback();
                         _CRAuth.SuccessBool = false;
 
                     }
 
-                    command.Transaction.Commit();
-                    //Console.WriteLine($"Auth DAO Common response check:: {_CRAuth.ToString()}");
-                    _CRAuth.connectionState = true;
+                    command.Transaction.Commit();_CRAuth.connectionState = true;
+                    _CRAuth.SuccessString = "User Exists";
+                    _CRAuth.IsUserExists = true;
 
-                    
                     return _CRAuth;
                 }
 

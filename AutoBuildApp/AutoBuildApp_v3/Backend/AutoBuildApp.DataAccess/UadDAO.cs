@@ -124,7 +124,7 @@ namespace AutoBuildApp.DataAccess
             IClaims _admin = _claimsFactory.GetClaims(RoleEnumType.SENIOR_ADMIN);
 
             // FIRST LINE OF DEFENCE 
-            if (!AuthorizationService.checkPermissions(_admin.Claims()))
+            if (!AuthorizationService.CheckPermissions(_admin.Claims()))
             {
                 return false;
             }
