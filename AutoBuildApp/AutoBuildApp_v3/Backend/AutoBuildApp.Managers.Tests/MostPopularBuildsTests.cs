@@ -18,6 +18,8 @@ namespace AutoBuildApp.Manger.Tests
     [TestFixture]
     public class MostPopularBuildsTests
     {
+        private const string testConnectionString = "Server = localhost; Database = TestDB; Trusted_Connection = True;";
+
         /// <summary>
         /// This test will check if the publish build method will return false
         /// if the object passed through is null.
@@ -26,7 +28,7 @@ namespace AutoBuildApp.Manger.Tests
         public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfObjectIsNull()
         {
             // Arrange
-            var mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
@@ -47,7 +49,7 @@ namespace AutoBuildApp.Manger.Tests
         public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfAnyNullVarsInBuildPostObject()
         {
             // Arrange
-            var mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
@@ -106,7 +108,7 @@ namespace AutoBuildApp.Manger.Tests
         public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfTitleCharsAreGreaterThan50()
         {
             // Arrange
-            var mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
@@ -145,7 +147,7 @@ namespace AutoBuildApp.Manger.Tests
         public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfDescriptionCharsAreGreaterThan10k()
         {
             // Arrange
-            var mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
@@ -184,7 +186,7 @@ namespace AutoBuildApp.Manger.Tests
         public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfTitleContainsInvalidChars()
         {
             // Arrange
-            var mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
@@ -216,7 +218,7 @@ namespace AutoBuildApp.Manger.Tests
         public async Task MostPopularBuilds_PublishBuild_ReturnTrueIfAllConditionsAreMet()
         {
             // Arrange
-            var mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
@@ -236,35 +238,79 @@ namespace AutoBuildApp.Manger.Tests
         }
 
         /// <summary>
+        /// This test will check if a non-query search is successful.
+        /// </summary>
+        [Test]
+        public void MostPopularBuilds_GetBuildPosts_ReturnTrueIfNormalCallIsSuccessful()
+        {
+            // Arrange
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
+            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+
+            var rowCount = mostPopularBuildsManager.GetBuildPosts(null, null).Count;
+
+            // Initialize the ID to two less of the first DB entity ID.
+            var id = 29998;
+
+            var expectedResultEntityIds = new List<string>();
+
+            for (var i = 0; i < rowCount; i++)
+            {
+                id += 2;
+
+                expectedResultEntityIds.Add(id.ToString());
+            }
+
+            // Act
+            var actualResultList = mostPopularBuildsManager.GetBuildPosts(null, null);
+
+            List<string> actualResultEntityIds = new List<string>();
+
+            foreach (var actualResult in actualResultList)
+                actualResultEntityIds.Add(actualResult.EntityId);
+
+            // Assert Assert.That(actualResult, Is.EquivalentTo(expectedResult));
+            Assert.That(actualResultEntityIds, Is.EquivalentTo(expectedResultEntityIds));
+        }
+
+        /// <summary>
         /// This test will check if a queried search is made.
         /// </summary>
         [Test]
         public void MostPopularBuilds_GetBuildPosts_ReturnTrueIfSortedQueriesCallIsSuccessful()
         {
             // Arrange
-            var mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
-            // Act
+            var expectedResultList = mostPopularBuildsManager.GetBuildPosts(null, null);
 
-            // Assert
-        }
+            expectedResultList.RemoveAll(o => (int)o.BuildType != 2);
 
-        /// <summary>
-        /// This test will check if a non-queries search is successful.
-        /// </summary>
-        [Test]
-        public void MostPopularBuilds_GetBuildPosts_ReturnTrueIfNormalCallIsSuccessful()
-        {
-            // Arrange
-            var mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
-            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
-            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+            expectedResultList.Reverse();
+
+            var expectedListParsed = new List<(string, int)>();
+
+            foreach (var item in expectedResultList)
+            {
+                expectedListParsed.Add((item.EntityId, (int)item.BuildType));
+            }
 
             // Act
+            var actualResultList = mostPopularBuildsManager.GetBuildPosts("AscendingLikes", "BuildType_Gaming");
 
-            // Assert
+            var actualListParsed = new List<(string, int)>();
+
+            foreach (var item in actualResultList)
+            {
+                actualListParsed.Add((item.EntityId, (int)item.BuildType));
+            }
+
+
+            // Assert Assert.That(actualResult, Is.EquivalentTo(expectedResult));
+            Assert.That(actualListParsed, Is.EquivalentTo(expectedListParsed));
         }
 
         /// <summary>
@@ -274,13 +320,17 @@ namespace AutoBuildApp.Manger.Tests
         public void MostPopularBuilds_GetBuildPost_ReturnTrueIfTheReturnedPostIsTheExpectedPost()
         {
             // Arrange
-            var mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
+            var expectedResult = "30000";
+
             // Act
+            var actualResult = mostPopularBuildsManager.GetBuildPost(expectedResult);
 
             // Assert
+            Assert.That(actualResult.EntityId, Is.EquivalentTo(expectedResult));
         }
 
         /// <summary>
@@ -290,13 +340,23 @@ namespace AutoBuildApp.Manger.Tests
         public void MostPopularBuilds_AddLike_ReturnTrueIfALikeWasAdded()
         {
             // Arrange
-            var mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
             // Act
+            var fakeUser = $"TestUser_{DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}";
+
+            var like = new Like()
+            {
+                PostId = "30000",
+                UserId = fakeUser
+            };
+
+            var result = mostPopularBuildsManager.AddLike(like);
 
             // Assert
+            Assert.IsTrue(result);
         }
 
         /// <summary>
@@ -306,14 +366,27 @@ namespace AutoBuildApp.Manger.Tests
         public void MostPopularBuilds_AddLike_ReturnFalseIfALikeWasAddedButAlreadyExistsForUser()
         {
             // Arrange
-            var mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
             // Act
+            var fakeUser = "fakeUser";
+
+            var like = new Like()
+            {
+                PostId = "30000",
+                UserId = fakeUser
+            };
+
+            // This first function creates a like.
+            mostPopularBuildsManager.AddLike(like);
+
+            // This second call creates a second like with the same credentials, returning false, because of duplicate entries.
+            var result = mostPopularBuildsManager.AddLike(like);
 
             // Assert
+            Assert.IsFalse(result);
         }
-
     }
 }
