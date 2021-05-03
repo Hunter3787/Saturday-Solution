@@ -216,7 +216,8 @@ namespace AutoBuildApp.DataAccess
 
                     }
 
-                    command.Transaction.Commit();_CRAuth.connectionState = true;
+                    command.Transaction.Commit();
+                    _CRAuth.connectionState = true;
                     _CRAuth.ResponseString = "User Exists";
                     _CRAuth.IsUserExists = true;
 

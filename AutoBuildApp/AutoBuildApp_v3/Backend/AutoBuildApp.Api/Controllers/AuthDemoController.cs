@@ -24,8 +24,6 @@ namespace AutoBuildApp.Api.Controllers
     public class AuthDemoController : ControllerBase
     {
 
-        private ClaimsFactory _claimsFactory = new ConcreteClaimsFactory();
-        
 
         private List<string> _allowedRoles; //specify rles
 

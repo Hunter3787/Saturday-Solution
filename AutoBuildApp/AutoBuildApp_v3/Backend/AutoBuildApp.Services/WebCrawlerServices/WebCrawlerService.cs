@@ -518,7 +518,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         }
                     }
                 }
-                catch (WebException e)
+                catch (WebException )
                 {
                     Console.WriteLine("Bad Proxy. Rotating...");
                     rotateProxy();
@@ -578,7 +578,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         }
                     }
                 }
-                catch (Exception e)
+                catch (Exception )
                 {
                     rotateProxy();
                 }

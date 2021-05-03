@@ -23,29 +23,41 @@ namespace AutoBuildApp.Managers
     {
         private BuildDAO _buildDAO;
         private ShelfDAO _shelfDAO;
-        private readonly IClaims _basic, _vendor, _developer, _admin;
+
+        private List<string> _allowedRoles; //specify rles
+
+        //private readonly IClaims _basic, _vendor, _developer, _admin;
+        
         private ShelfService _shelfService;
         private BuildManagementService _buildService;
         private readonly string _currentUser;
 
         public UserGarageManager(string connectionString)
         {
-            ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
-            _basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
-            _vendor = claimsFactory.GetClaims(RoleEnumType.VENDOR_ROLE);
-            _admin = claimsFactory.GetClaims(RoleEnumType.DELEGATE_ADMIN);
+
+            //ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
+            _allowedRoles = new List<string>()
+            { RoleEnumType.BASIC_ROLE,RoleEnumType.DELEGATE_ADMIN,
+            RoleEnumType.VENDOR_ROLE, RoleEnumType.SYSTEM_ADMIN};
+
+
+            //_basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
+            //_vendor = claimsFactory.GetClaims(RoleEnumType.VENDOR_ROLE);
+            //_admin = claimsFactory.GetClaims(RoleEnumType.DELEGATE_ADMIN);
 
             _buildDAO = new BuildDAO(connectionString);
             _shelfDAO = new ShelfDAO(connectionString);
             _shelfService = new ShelfService(_shelfDAO);
             _buildService = new BuildManagementService(_buildDAO);
             _currentUser = Thread.CurrentPrincipal.Identity.Name;
+
+
         }
 
         public IMessageResponse AddBuild(IBuild build, string buildname)
         {
             // temp
-            if (!IsAuthorized())
+            if (!AuthorizationCheck.IsAuthorized(_allowedRoles)) // added per Zee
             {
                 return new StringBoolResponse()
                 {
@@ -210,12 +222,17 @@ namespace AutoBuildApp.Managers
             return valid;
         }
 
+        //private bool IsAuthorized()
+        //{
+        //    return AuthorizationService.CheckPermissions(_basic.Claims())
+        //        || AuthorizationService.CheckPermissions(_vendor.Claims())
+        //        || AuthorizationService.CheckPermissions(_developer.Claims())
+        //        || AuthorizationService.CheckPermissions(_admin.Claims());
+        //}
+
         private bool IsAuthorized()
         {
-            return AuthorizationService.CheckPermissions(_basic.Claims())
-                || AuthorizationService.CheckPermissions(_vendor.Claims())
-                || AuthorizationService.CheckPermissions(_developer.Claims())
-                || AuthorizationService.CheckPermissions(_admin.Claims());
+            return AuthorizationCheck.IsAuthorized(_allowedRoles);
         }
     }
 }
