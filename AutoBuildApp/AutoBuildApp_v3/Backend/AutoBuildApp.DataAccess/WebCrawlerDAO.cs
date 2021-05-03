@@ -43,7 +43,7 @@ namespace AutoBuildApp.DataAccess
                         transaction.Commit();
                         Console.WriteLine("vendorlist is done");
                     }
-                    catch (SqlException ex)
+                    catch (SqlException )
                     {
                         Console.WriteLine("wrong");
                         transaction.Rollback();
@@ -76,7 +76,7 @@ namespace AutoBuildApp.DataAccess
                         transaction.Commit();
                         return rowsReturned == 1;
                     }
-                    catch (SqlException ex)
+                    catch (SqlException)
                     {
                         Console.WriteLine("wrong");
                         transaction.Rollback();
@@ -113,7 +113,7 @@ namespace AutoBuildApp.DataAccess
                         Console.WriteLine("done");
 
                     }
-                    catch (SqlException ex)
+                    catch (SqlException )
                     {
                         Console.WriteLine("wrong");
                         transaction.Rollback();
@@ -149,7 +149,7 @@ namespace AutoBuildApp.DataAccess
                         Console.WriteLine("done");
 
                     }
-                    catch (SqlException ex)
+                    catch (SqlException)
                     {
                         Console.WriteLine("wrong");
                         transaction.Rollback();
@@ -181,7 +181,7 @@ namespace AutoBuildApp.DataAccess
                         Console.WriteLine("done");
 
                     }
-                    catch (SqlException ex)
+                    catch (SqlException )
                     {
                         Console.WriteLine("wrong");
                         transaction.Rollback();
@@ -268,7 +268,7 @@ namespace AutoBuildApp.DataAccess
                         Console.WriteLine("vendor product");
 
                     }
-                    catch (SqlException ex)
+                    catch (SqlException )
                     {
                         Console.WriteLine("wrong");
                         transaction.Rollback();
@@ -308,7 +308,7 @@ namespace AutoBuildApp.DataAccess
                         Console.WriteLine("done");
 
                     }
-                    catch (SqlException ex)
+                    catch (SqlException )
                     {
                         Console.WriteLine("wrong");
                         transaction.Rollback();

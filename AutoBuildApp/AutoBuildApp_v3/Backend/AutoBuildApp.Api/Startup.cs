@@ -47,8 +47,7 @@ namespace AutoBuildApp.Api
                     {
                         builder.AllowAnyOrigin()
                                .AllowAnyMethod()
-                               .AllowAnyHeader();
-                    });
+                               .AllowAnyHeader(); });
                 }
                 else
                 {

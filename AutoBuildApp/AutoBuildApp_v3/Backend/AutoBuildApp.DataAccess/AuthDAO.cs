@@ -53,12 +53,12 @@ namespace AutoBuildApp.DataAccess
                 if (this.ConnectionString != null && con.State != ConnectionState.Closed)
                 {
                     _CRAuth.connectionState = true;
-                    _CRAuth.SuccessString = $"The Connection state to DB is true";
+                    _CRAuth.ResponseString = $"The Connection state to DB is true";
                 }
                 else
                 {
                     _CRAuth.connectionState = false;
-                    _CRAuth.FailureString = $"The connection state is false, try again later.";
+                    _CRAuth.ResponseString = $"The connection state is false, try again later.";
                     con.Close();
                 }
             }
@@ -72,8 +72,8 @@ namespace AutoBuildApp.DataAccess
             Console.WriteLine($" in CHECK CONNECTION");
             if (con == null)
             {
-                _CRAuth.SuccessBool = false;
-                _CRAuth.FailureString = "NULL EXCEPTION";
+                _CRAuth.ResponseBool = false;
+                _CRAuth.ResponseString = "NULL EXCEPTION";
                 //Console.WriteLine($" Common response expected for NULL: {_CRAuth.ToString() }" );
                 return _CRAuth;
             }
@@ -152,62 +152,78 @@ namespace AutoBuildApp.DataAccess
                 string SP_retrievePermissions = "retrievePermissions";
                 using (SqlCommand command = new SqlCommand(SP_retrievePermissions, conn))
                 {
-                    command.Transaction = conn.BeginTransaction();
-                    #region SQL related
-
-                    // https://learning.oreilly.com/library/view/adonet-in-a/0596003617/ch04s05.html
-                    command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
-                    // 1) Create a Command, and set its CommandType property to StoredProcedure.
-                    command.CommandType = CommandType.StoredProcedure;
-                    // 2) Set the CommandText to the name of the stored procedure.
-                    command.CommandText = SP_retrievePermissions;
-                    /// command.Parameters.AddWithValue   -> fix itttttttt!!!!!
-                    //Add any required parameters to the Command.Parameters collection.
-                    // command.Parameters.AddWithValue("@username", userCredentials.Username);
-                    var param = new SqlParameter[2];
-                    param[0] = new SqlParameter("@username", userCredentials.Username);
-                    param[0].Value = userCredentials.Username;
-                    param[1] = new SqlParameter("@passhash", userCredentials.Password);
-                    param[1].Value = userCredentials.Password;
-                    // add the commands the parameters for the stored procedure
-                    command.Parameters.AddRange(param);
-                    #endregion
-
-
-                    var _reader = command.ExecuteReader();
-                    Console.WriteLine($" reader rows: {_reader.HasRows}");
-                    if (!_reader.HasRows) // use the bang!!!!!!! 
+                    try
                     {
-                        _CRAuth.FailureString = "User not found";
-                        _CRAuth.IsUserExists = false;
-                    }
-                    if (_reader.HasRows) // just else is enough 
-                    {
-                        _CRAuth.SuccessString = "User Exists";
-                        _CRAuth.IsUserExists = true;
-                    }
-                    //READ AND STORE ALL THE ORDINALS YOU NEED
-                    int userID = _reader.GetOrdinal("userCredID");
-                    int username = _reader.GetOrdinal("username");
-                    int permissions = _reader.GetOrdinal("permission");
-                    int scope = _reader.GetOrdinal("scopeOfPermission");
+                        command.Transaction = conn.BeginTransaction();
+                        #region SQL related
 
-                    while (_reader.Read())
-                    {
-                        _userClaims = new Claims();
-                        /// ret = $"user ID: {_reader.GetInt64(0)} Permissions: {_reader.GetString(1)} scopeOfPermission { _reader.GetString(2) }";
-                        ///_userPermissions.UserAccountID = _reader.GetInt64(0);
-                        /// magic values -> will the collumns alwats be the same
-                        /// better to use ordinal names -> no matter where the column just specifiy thr column 
-                        _CRAuth.AuthUserDTO.UserEmail = (string)_reader[username];
-                        _userClaims.Permission = (string)_reader[permissions];
-                        _userClaims.scopeOfPermissions = (string)_reader[scope];
-                        _CRAuth.AuthUserDTO.Claims.Add(_userClaims);
+                        // https://learning.oreilly.com/library/view/adonet-in-a/0596003617/ch04s05.html
+                        command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
+                        // 1) Create a Command, and set its CommandType property to StoredProcedure.
+                        command.CommandType = CommandType.StoredProcedure;
+                        // 2) Set the CommandText to the name of the stored procedure.
+                        command.CommandText = SP_retrievePermissions;
+                        /// command.Parameters.AddWithValue   -> fix itttttttt!!!!!
+                        //Add any required parameters to the Command.Parameters collection.
+                        // command.Parameters.AddWithValue("@username", userCredentials.Username);
+                        var param = new SqlParameter[2];
+                        param[0] = new SqlParameter("@username", userCredentials.Username);
+                        param[0].Value = userCredentials.Username;
+                        param[1] = new SqlParameter("@passhash", userCredentials.Password);
+                        param[1].Value = userCredentials.Password;
+                        // add the commands the parameters for the stored procedure
+                        command.Parameters.AddRange(param);
+                        #endregion
+
+
+                        using (var reader = command.ExecuteReader())
+                        {
+                            Console.WriteLine($" reader rows: {reader.HasRows}");
+                            if (!reader.HasRows) // use the bang!!!!!!! 
+                            {
+                                _CRAuth.ResponseString = "User not found";
+                                _CRAuth.IsUserExists = false;
+                                return _CRAuth; //return  
+                            }
+
+                            //READ AND STORE ALL THE ORDINALS YOU NEED
+                            int username = reader.GetOrdinal("username");
+                            int permissions = reader.GetOrdinal("permission");
+                            int scope = reader.GetOrdinal("scopeOfPermission");
+
+
+
+                            while (reader.Read())
+                            {
+                                _userClaims = new Claims();
+                                /// ret = $"user ID: {reader.GetInt64(0)} Permissions: {reader.GetString(1)} scopeOfPermission { reader.GetString(2) }";
+                                ///_userPermissions.UserAccountID = reader.GetInt64(0);
+                                /// magic values -> will the collumns alwats be the same
+                                /// better to use ordinal names -> no matter where the column just specifiy thr column 
+                                _CRAuth.AuthUserDTO.UserEmail = (string)reader[username];
+                                _userClaims.Permission = (string)reader[permissions];
+                                _userClaims.scopeOfPermissions = (string)reader[scope];
+                                _CRAuth.AuthUserDTO.Claims.Add(_userClaims);
+                            }
+                            // auto reader close
+                        }
+
                     }
-                    //Console.WriteLine($"Auth DAO Common response check:: {_CRAuth.ToString()}");
+                    catch (SqlException) 
+                    {
+                        command.Transaction.Rollback();
+                        _CRAuth.ResponseBool = false;
+
+                    }
+
+                    command.Transaction.Commit();
                     _CRAuth.connectionState = true;
+                    _CRAuth.ResponseString = "User Exists";
+                    _CRAuth.IsUserExists = true;
+
                     return _CRAuth;
                 }
+
             }
         }
     }

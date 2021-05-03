@@ -38,19 +38,19 @@ namespace AutoBuildApp.Services.Tests
             UserCredentials credential4 = new UserCredentials("Yasolen", "PassHash"); // user does not exist
 
             CommonReponseAuth _CRAuthIsAuthenticated = new CommonReponseAuth();
-            _CRAuthIsAuthenticated.SuccessString = "User Exists";
+            _CRAuthIsAuthenticated.ResponseString = "User Exists";
             _CRAuthIsAuthenticated.IsUserExists = true;
             _CRAuthIsAuthenticated.connectionState = true;
 
-            _CRAuthIsAuthenticated.SuccessBool = true;
+            _CRAuthIsAuthenticated.ResponseBool = true;
             _CRAuthIsAuthenticated.isAuthenticated = true;
 
             CommonReponseAuth _CRAuthNotAuthenticated = new CommonReponseAuth();
-            _CRAuthNotAuthenticated.FailureString = "User not found";
+            _CRAuthNotAuthenticated.ResponseString = "User not found";
             _CRAuthNotAuthenticated.IsUserExists = false;
             _CRAuthNotAuthenticated.connectionState = true;
 
-            _CRAuthNotAuthenticated.SuccessBool = false;
+            _CRAuthNotAuthenticated.ResponseBool = false;
             _CRAuthNotAuthenticated.isAuthenticated = false;
 
 

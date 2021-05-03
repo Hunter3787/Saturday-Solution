@@ -9,21 +9,25 @@ namespace AutoBuildApp.DomainModels.Abstractions
     public class Charts
     {
 
-        string ChartTitle { get; set; }
-        string YAxisTitle { get; set; }
-        string XAxisTitle { get; set; }
+        public string ChartTitle { get; set; }
+        public string YAxisTitle { get; set; }
+        public string XAxisTitle { get; set; }
 
-        ChartType chartType { get; set; } 
-        int XScale { get; set; }
-        int YScale { get; set; }
+        public string Legend { get; set; }
 
-        public IList<ChartData> ChartDatas;
+        public ChartType chartType { get; set; }
+
+        public int XScale { get; set; }
+        public int YScale { get; set; }
+
+        public IList<ChartData> ChartDatas { get; set; }
 
         public Charts()
         {
-            ChartTitle = "ChartTitle";
-            YAxisTitle = "YAxisTitle";
-            XAxisTitle = "XAxisTitle";
+            this.ChartTitle = ChartTitlesType.NONE.ToString();
+            YAxisTitle = ChartTitlesType.Y_TITLE.ToString();
+            XAxisTitle = ChartTitlesType.X_TITLE.ToString();
+            Legend = ChartTitlesType.LEGEND.ToString();
             XScale = 2;
             YScale = 2;
             chartType = ChartType.NONE;
@@ -34,18 +38,20 @@ namespace AutoBuildApp.DomainModels.Abstractions
         // mandatory constructor parameter:
 
         public Charts(
-            string title,
             string XTitle,
             string YTitle,
-            List<ChartData> chartDatas,
+            string legendTitle,
+            IList<ChartData> chartDatas,
             ChartType chartType)
         {
-            ChartTitle = title;
+            ChartTitle = YTitle + " PER " + XTitle + " BY " + legendTitle;
             YAxisTitle = XTitle;
             XAxisTitle = YTitle;
+            Legend = legendTitle;
             XScale = 2;
             YScale = 2;
             this.chartType = chartType;
+            ChartDatas = new List<ChartData>();
             ChartDatas = chartDatas;
 
         }
@@ -58,11 +64,21 @@ namespace AutoBuildApp.DomainModels.Abstractions
         /// <returns></returns>
         public override string ToString()
         {
-            return $"ChartTitle : {ChartTitle}\n" +
-                $"YAxisTitle : { YAxisTitle }\n" +
-                $"XAxisTitle : { XAxisTitle}\n" +
-                $"XScale : { XScale}\n" +
-                $"YScale : {YScale}\n.";
+
+            string ret = " ";
+
+            foreach( var elem in ChartDatas)
+            {
+                ret += $"{elem.ToString()}\n";
+            }
+
+            return
+               $"ChartTitle : {this.ChartTitle}\n" +
+               $"YAxisTitle : {this.YAxisTitle }\n" +
+               $"XAxisTitle : { this.XAxisTitle}\n" +
+               $"XScale : { this.XScale}\n" +
+               $"YScale : {this.YScale}\n." +
+               $"Points: {ret}\n";
         }
 
     }

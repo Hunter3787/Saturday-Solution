@@ -14,7 +14,11 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Text.Json;
 using System.Threading;
+using Microsoft.AspNetCore.Http;
 
+
+using AutoBuildApp.Managers.Registration_PackManger;
+using AutoBuildApp.Services;
 
 /// <summary>
 /// Reference: see /AuthReference.
@@ -35,18 +39,16 @@ namespace AutoBuildApp.Api.Controllers
     {
         #region  Authentication Controller variables 
 
-        //private AuthManager _loginManager;
+        private AuthManager _loginManager;
         private UserCredentials _userCredentials;
         #endregion
 
-        #region variables for the redirect issue, method
+        #region variables for logging
 
+        // Creates the local instance for the logger
+        private LoggingProducerService _logger 
+            = LoggingProducerService.GetInstance;
 
-        private JWTValidator _validateAuthorizationHeader;
-
-        // i want to store this into the 
-        // http.context.item["ClaimsPrincipal"] =.
-        private ClaimsPrincipal _threadPrinciple;
 
         #endregion
 
@@ -60,7 +62,7 @@ namespace AutoBuildApp.Api.Controllers
             string connection = conString.GetConnectionStringByName("MyConnection");
             // Console.WriteLine($"connection string passed in controller: {connection} ");
             //3) connection string passed to the logIn manager 
-            //_loginManager = new AuthManager(connection);
+            _loginManager = new AuthManager(connection);
             #endregion
 
         }
@@ -82,13 +84,26 @@ namespace AutoBuildApp.Api.Controllers
                 $"Checking name per nick: { _threadPrinciple.Identity.Name}!!!!!!");
         }
 
-        [HttpPost("{Login}")]
+        //[HttpPost("{Login}")]
+        [HttpPost]
         public ActionResult<AuthUserDTO> AuthenticateUser(UserCredentials userCredentials)
         {
+
             this._userCredentials = userCredentials;
-            //var JWTToken = _loginManager.AuthenticateUser(_userCredentials);
-            //return Ok(JWTToken);
-            return Ok();
+            var JWTToken = _loginManager.AuthenticateUser(_userCredentials);
+            // ok we need to set the JWT into the auth httponly cookie so that the 
+            // browser can store it:
+            /// Summary:
+            ///     Gets or sets a value that indicates whether a cookie is accessible by client-side
+            ///     script.
+            ///
+            /// Returns:
+            ///     true if a cookie must not be accessible by client-side script; otherwise, false.
+            ///     
+
+            _logger.LogInformation("Authentication attempt n");
+            //HttpContext.Response.Cookies.Append("access_token", JWTToken, new CookieOptions { HttpOnly = true });
+            return Ok( JWTToken);
         }
 
 

@@ -69,7 +69,7 @@ namespace AutoBuildApp.Managers
             int hddCount)
         {
             #region Guards
-            if (!AuthorizationService.checkPermissions(_unregistered.Claims()))
+            if (!AuthorizationService.CheckPermissions(_unregistered.Claims()))
             {
                 throw new UnauthorizedAccessException("Unauthorized user");
             }

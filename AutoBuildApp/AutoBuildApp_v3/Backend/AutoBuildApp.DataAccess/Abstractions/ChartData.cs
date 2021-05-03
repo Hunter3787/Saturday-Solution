@@ -12,13 +12,25 @@ namespace AutoBuildApp.DataAccess.Abstractions
         /// XLabel represents the
         /// X Name Tick in the chart/ graph.
         /// </summary>
-        public string XLabelString { get; set; }
+        public object XLabel { get; set; }
 
         /// <summary>
         /// XLabel represents the
         /// X Name Tick in the chart/ graph.
         /// </summary>
-        public float XLabelInt { get; set; }
+        public object YValue { get; set; }
+
+        /// <summary>
+        /// XLabel represents the
+        /// X Name Tick in the chart/ graph.
+        /// </summary>
+        //public string XLabelString { get; set; }
+
+        /// <summary>
+        /// XLabel represents the
+        /// X Name Tick in the chart/ graph.
+        /// </summary>
+        //public float XLabelInt { get; set; }
 
         /// <summary>
         /// Legend represents essentially 
@@ -29,37 +41,75 @@ namespace AutoBuildApp.DataAccess.Abstractions
         /// YValue represent the corresponding
         /// value to the X-Value.
         /// </summary>
-        public string YValueString { get; set; }
+       // public string YValueString { get; set; }
 
         /// <summary>
         /// YValue represent the corresponding
         /// value to the X-Value.
         /// </summary>
-        public int YValueInt { get; set; }
+        //public int YValueInt { get; set; }
 
 
         public ChartData()
         {
-            XLabelInt = 0;
-            XLabelString = " ";
-            Legend = " ";
-            YValueInt = 0;
-            YValueString = " ";
+            XLabel = (string)" ";
+            Legend = (string)" ";
+            YValue = (string)" ";
         }
 
-        public ChartData(string xLabel, int yValue, string legend)
+        public ChartData(object xLabel, object yValue, object legend)
         {
-            this.XLabelString = xLabel;
-            this.YValueInt = yValue;
-            this.Legend = legend;
 
+            try
+            {
+
+                if (Object.ReferenceEquals(xLabel.GetType(), typeof(System.String)))
+                {
+                    this.XLabel = (string)xLabel;
+                }
+                else
+                {
+                    this.XLabel = (int)xLabel;
+                }
+
+                if (Object.ReferenceEquals(yValue.GetType(), typeof(System.String)))
+                {
+                    this.YValue = (string)yValue;
+                }
+                else
+                {
+                    this.YValue = (int)yValue;
+                }
+
+                if (Object.ReferenceEquals(legend.GetType(), typeof(System.String)))
+                {
+                    this.Legend = (string)legend;
+                }
+                else
+                {
+                    this.Legend = (int)legend;
+                }
+
+            }
+            catch (ArgumentNullException)
+            {
+                if (xLabel == null || yValue == null || legend == null)
+                {
+
+                    var expectedParamName = "NULL OBJECT PROVIDED";
+                    throw new ArgumentNullException(expectedParamName);
+
+                }
+            }
         }
+
         public override string ToString()
         {
 
-            return $"\tXLabelInt : { XLabelInt}\n\tXLabelString : {XLabelString}\n" +
-                $"\tYValueInt : {YValueInt}\n\tYValueString : {YValueString} \n" +
-                $"\tLegend : {  Legend } ";
+            return
+                $"\nXLabel :{XLabel}\n" +
+                $"YValue : {YValue}\n" +
+                $"Legend : {Legend }\n";
         }
 
     }

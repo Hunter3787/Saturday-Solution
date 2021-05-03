@@ -5,6 +5,7 @@ using AutoBuildApp.Security.Models;
 using System;
 using System.Security.Claims;
 using System.Security.Principal;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -41,7 +42,8 @@ namespace AutoBuildApp.Api.HelperFunctions
             {
                 Console.WriteLine($"Permission:  {c.Type}, Scope: {c.Value} ");
             }
-            
+            Console.WriteLine($"\n Current Thread Priciple: " +
+                $"{ JsonSerializer.Serialize(Thread.CurrentPrincipal)} ");
             #endregion
 
             #region NOT NECESSARY BUT WILL KEEP FOR NOW:

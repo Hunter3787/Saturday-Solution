@@ -1,5 +1,5 @@
 ﻿using System;
-namespace AutoBuildApp.Services
+namespace AutoBuildApp.Models
 {
     public static class ResponseStringGlobals
     {
@@ -16,7 +16,8 @@ namespace AutoBuildApp.Services
         public const string SYSTEM_FAILURE = "Internal error.";
         public const string DATABASE_FAILURE = "Database error.";
         public const string REQUEST_FAILURE = "Request failed.";
-        public const string CALL_TIMEOUT = "Timeout error.";
+        public const string DATABASE_TIMEOUT = "The database timed out.";
+        public const string DUPLICATE_VALUE = "Duplicate value.";
         public const string UNAUTHORIZED_ACCESS = "Unauthorized access.";
     }
 }

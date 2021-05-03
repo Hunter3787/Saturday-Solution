@@ -35,7 +35,7 @@ namespace AutoBuildApp.Services
             catch (TimeoutException)
             {
                 _response.SuccessBool = false;
-                _response.MessageString = ResponseStringGlobals.CALL_TIMEOUT;
+                _response.MessageString = ResponseStringGlobals.DATABASE_TIMEOUT;
             }
 
             return _response;
@@ -53,7 +53,7 @@ namespace AutoBuildApp.Services
             catch (TimeoutException)
             {
                 _response.SuccessBool = false;
-                _response.MessageString = ResponseStringGlobals.CALL_TIMEOUT;
+                _response.MessageString = ResponseStringGlobals.DATABASE_TIMEOUT;
             }
 
             return _response;
@@ -71,7 +71,7 @@ namespace AutoBuildApp.Services
             catch (TimeoutException)
             {
                 _response.SuccessBool = false;
-                _response.MessageString = ResponseStringGlobals.CALL_TIMEOUT;
+                _response.MessageString = ResponseStringGlobals.DATABASE_TIMEOUT;
             }
 
             return _response;

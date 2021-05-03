@@ -58,7 +58,7 @@ namespace AutoBuildApp.Security.Tests
             claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
             Thread.CurrentPrincipal = claimsPrincipal;
             AuthorizationService.print();
-           bool AuthActual =  AuthorizationService.checkPermissions(permissionsRequired);
+           bool AuthActual =  AuthorizationService.CheckPermissions(permissionsRequired);
            bool AuthExpected = true;
 
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
@@ -69,7 +69,7 @@ namespace AutoBuildApp.Security.Tests
             //_CRAuth = authenticationService.AuthenticateUser(credential1);
             IClaims basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
 
-            AuthActual = AuthorizationService.checkPermissions(basic.Claims());
+            AuthActual = AuthorizationService.CheckPermissions(basic.Claims());
 
 
             Assert.AreEqual(AuthExpected, AuthActual);
@@ -91,7 +91,7 @@ namespace AutoBuildApp.Security.Tests
         public void CheckNullPermissions_ReturnsBool()
         {
 
-            bool AuthActual = AuthorizationService.checkPermissions(null);
+            bool AuthActual = AuthorizationService.CheckPermissions(null);
             bool AuthExpected = false;
 
             Assert.AreEqual(AuthExpected, AuthActual);
