@@ -101,6 +101,32 @@ namespace AutoBuildApp.Api.Controllers
             }
         }
 
+        [HttpGet("build")]
+        public IActionResult GetAllReviewRatingsByBuildId(string buildId)
+        {
+            _logger.LogInformation("GettAllReviewRatingsById was fetched.");
+
+            // This will start a service when a post fetch is called. and pass in the DAO that will be used.
+            ReviewRatingService reviewRatingService = new ReviewRatingService(_reviewRatingDAO);
+
+            // This will start a manager and pass in the service.
+            ReviewRatingManager reviewRatingManager = new ReviewRatingManager(reviewRatingService);
+
+            // This will try to get all reviews, and if not, it will catch it and return the error code.
+            try
+            {
+                var reviewRatings = reviewRatingManager.GetAllReviewsRatingsByBuildId(buildId); // calls the manager to get all reviews.
+
+                _logger.LogInformation("GettAllReviewRatings was sucessfully fetched.");
+                return Ok(reviewRatings); // sends the review list through the OK to be read from the front end fetch request.
+            }
+            catch
+            {
+                _logger.LogWarning("GettAllReviewRatings was not sucessfully fetched.");
+                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         /// <summary>
         /// This will take in an ID and delete that corresponding review.
         /// </summary>

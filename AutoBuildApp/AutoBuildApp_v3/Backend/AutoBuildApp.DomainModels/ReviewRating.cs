@@ -23,6 +23,8 @@ namespace AutoBuildApp.DomainModels
 
         public string EntityId { get; set; }
 
+        public string BuildId { get; set; }
+
         public string Username { get; set; }
 
         public StarType StarRating { get; set; }

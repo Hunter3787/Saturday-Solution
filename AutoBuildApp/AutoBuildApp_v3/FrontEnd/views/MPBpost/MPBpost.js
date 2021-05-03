@@ -1,4 +1,4 @@
-const uri = 'https://localhost:5001/mostpopularbuilds/';
+const uri = 'https://localhost:5001/mostpopularbuilds';
 const reviewsUri = 'https://localhost:5001/reviewrating';
 let posts = [];
 let reviews = [];
@@ -13,15 +13,15 @@ const fetchRequest = {
     }
 };
 
-// function process(){
-//     getItem();
-// }
+function process(){
+    getItem();
+}
 
-// function looping(){
-//     setTimeout(process, 3000);
-// }
+function looping(){
+    setTimeout(process, 3000);
+}
   
-// var refreshData = setInterval(looping, 3000);
+var refreshData = setInterval(looping, 3000);
 
 async function getItem() {
 
@@ -29,10 +29,24 @@ async function getItem() {
 
     var buildId = sessionStorage.getItem('buildId');
 
-    await fetch(uri + queryString + buildId, fetchRequest) // fetches the default URI
+    const customGetRequest = {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+            'Accept' : 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'bearer ' + token
+        }
+    };
+
+    const customRequest = Object.assign(fetchRequest, {method: 'GET'});
+
+    console.log(fetchRequest);
+
+    await fetch(`${uri}/${queryString}${buildId}`, customGetRequest) // fetches the default URI
         .then(response => response.json()) // Will receive a response from the default response.json.
         .then(item => displayItem(item)) // will call the display items function.
-        .then(getReviews())
+        .then(() => getReviews())
         .then(console.log("reloaded"))
         .catch(error => console.error('Unable to get items.', error)); // will catch an error and print the appropriate error message in console.
     //refreshData;
@@ -50,9 +64,10 @@ async function addLike() {
 
     let customRequest = Object.assign(fetchRequest, {method: 'POST', body: JSON.stringify(like)});
 
-    await fetch(uri + 'like', customRequest);
-    
-    window.location.reload();
+    let uriExtension = "like";
+
+    await fetch(`${uri}/${uriExtension}`, customRequest)
+        .then(() => getItem())
 }
 
 function displayItem(item) {
@@ -139,6 +154,7 @@ function displayItem(item) {
     image.src = item["buildImagePath"];
     buildImage.appendChild(image);
     buildDetails.appendChild(buildImage);
+    buildDetails.appendChild(buildImage);
 
     // These six lines dynamically creates a like button for an individual build post.
     var likeButton = document.createElement('button');
@@ -170,36 +186,56 @@ function displayItem(item) {
     // append the build details div to the main div.
     innerDiv.appendChild(buildDetails);
 
-    console.log(innerDiv);
-
     // will store the data as an array in this variable for local access.
     post = item; 
 }
 
+
+
+
+
+
+
+
+
 //------------------------ The following code is for individual reviews and ratings ----------------------------------------//
 
+
+
+
+
+
 // sets a keyup event listener for the textarea element.
-let counter = document.getElementById('add-description');
+var counter = document.getElementById('add-message');
 counter.addEventListener("keyup", () => textCounter(counter, 'counter', 10000));
 
-// Adds an event listener for the update build form.
+// sets a submit event listener for when the review form is submitted.
 var reviewForm = document.getElementById('review-form');
-reviewForm.addEventListener('submit', () => updateReview());
+reviewForm.addEventListener("submit", () => addReview());
+
+// Adds an event listener for the update build form.
+var updateForm = document.getElementById('update-form');
+updateForm.addEventListener('submit', () => { 
+    updateReview();
+});
 
 // sets up an event listener for the close input button.
 var closeInputButton = document.getElementById('close-input');
 closeInputButton.addEventListener('click', () => closeInput());
 
 // This function will load the page by calling the functions below.
-function getReviews() {
-    fetch('https://localhost:5001/reviewrating') // fetches the default URI
-        .then(response => response.json()) // Will revieve a response from the default response.json.
+async function getReviews() {
+
+    let uriExtension = 'build/?buildId=' + sessionStorage.getItem('buildId');
+
+    await fetch(`${reviewsUri}/${uriExtension}`) // fetches the default URI
+        .then(response => response.json()) // Will retrieve a response from the default response.json.
         .then(data => displayReviews(data)) // will call the display items function.
         .catch(error => console.error('Unable to get items.', error)); // will catch an error and print the appropriate error message in console.
 }
 
 // This function will add an item to the DB.
-function addReview() {
+async function addReview() {
     var starValue; // this variable will be used to store the value of the selected stars.
     const addUserNameTextbox = document.getElementById('add-username'); // will get the value from the html element and store it.
     var ele = document.getElementsByName('rate'); // will get the value from the html element and store it in ele.
@@ -218,36 +254,25 @@ function addReview() {
     // this is the json object of ReviewRating and send the data through to the controller.
     const item =
     {
+      buildId: sessionStorage.getItem('buildId').toString(),
       username: addUserNameTextbox.value.trim(),
       starRating: parseInt(starValue),
       message: addMessageTextbox.value.trim(),
       filePath: addFilePathTextbox.value
     };
 
-    // Will fetch this URI with the POST method.
-    fetch('https://localhost:5001/ReviewRating', {
-        method: 'POST',
-        mode: 'cors',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(item) // will convert the const item into a json object.
-  })
-    .then(response => response.json())
-    .then(() => {
-      getReviews(); // will call get items to get items once the add item is made.
-    })
-    .catch(error => console.error('Unable to add item.', error)); // logs error if it is caught.
+
+    let customRequest = Object.assign(fetchRequest, {method: 'POST', body: JSON.stringify(item)});
+
+    await fetch(reviewsUri, customRequest);
 }
 
 // this function will call the delete fetch method.
-function deleteReview(id) {
-    fetch(`${reviewsUri}/${id}`, {
-        method: 'DELETE',
-        mode: 'cors',
-  })
-  .catch(error => console.error('Unable to delete item.', error)); // logs a caught error
+async function deleteReview(id) {
+
+    let customRequest = Object.assign(fetchRequest, {method: 'DELETE'});
+
+    await fetch(`${reviewsUri}/${id}`, customRequest);
 }
 
 // will display the edit form for the id that is specified.
@@ -263,7 +288,7 @@ function displayEditForm(id) {
 }
 
 // This method will update items in the DB.
-function updateReview() {
+async function updateReview() {
     const itemId = document.getElementById('edit-id').value; // This will get the id of the item that has just been updated.
 
     // creates a json item of values that have been updated.
@@ -275,21 +300,12 @@ function updateReview() {
         filePath: document.getElementById('edit-filePath').value
     };
 
+    let customRequest = Object.assign(fetchRequest, {method: 'PUT', body: JSON.stringify(item)});
+
     // This will fetch the PUT request to send the updated object.
-    fetch('https://localhost:5001/ReviewRating', {
-        method: 'PUT',
-        mode: 'cors',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(item) // This will send the object as a json.
-  })
-  .catch(error => console.error('Unable to update item.', error)); // logs error if caught.
+    await fetch(reviewsUri, customRequest);
 
-  closeInput(); // will close the form when it is complete.
-
-  return false;
+    closeInput(); // will close the form when it is complete.
 }
 
 // This method will change the edit form display from block to none.
@@ -297,7 +313,7 @@ function closeInput() {
     document.getElementById('editForm').style.display = 'none';
 }
 
-// This function will displat all the items in the fetch GET method.
+// This function will display all the items in the fetch GET method.
 function displayReviews(data) {
 
     const allReviews = document.getElementById('all-reviews'); // This will get the id of the form from the HTML.
@@ -305,8 +321,6 @@ function displayReviews(data) {
 
     // This function will create a table, and append values for each column and iterate to the next row of items.
     data.forEach(item => {
-
-
 
       // This is the html code that will be created by the following code.
       // <div class="all-reviews" id="all-reviews">
@@ -410,12 +424,11 @@ function displayReviews(data) {
 
 // This function acts as a counter for the textarea field to show how many characters remain.
 function textCounter(field, field2, maxlimit) {
-    let countfield = document.getElementById(field2);
-
+    var countfield = document.getElementById(field2);
     if (field.value.length > maxlimit) {
         field.value = field.value.substring(0, maxlimit);
         return false;
     } else {
-        countfield.innerText = maxlimit - field.value.length;
+        countfield.value = maxlimit - field.value.length;
     }
 }

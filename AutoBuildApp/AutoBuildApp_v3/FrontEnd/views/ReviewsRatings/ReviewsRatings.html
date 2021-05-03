@@ -34,7 +34,7 @@
         <br />
         <label>Enter Review:</label>
         <br />
-        <textarea onkeyup="textCounter(this,'counter',10000);" id="add-message" rows="10" cols="100" placeholder="review"></textarea>
+        <textarea id="add-message" rows="10" cols="100" placeholder="review"></textarea>
         <br />
         <label>Word Count:</label>
         <input disabled maxlength="3" size="3" value="10000" id="counter">
@@ -82,15 +82,7 @@
         getItems();
     </script>
     <script>
-        function textCounter(field, field2, maxlimit) {
-            var countfield = document.getElementById(field2);
-            if (field.value.length > maxlimit) {
-                field.value = field.value.substring(0, maxlimit);
-                return false;
-            } else {
-                countfield.value = maxlimit - field.value.length;
-            }
-        }
+
     </script>
 </body>
 </html>

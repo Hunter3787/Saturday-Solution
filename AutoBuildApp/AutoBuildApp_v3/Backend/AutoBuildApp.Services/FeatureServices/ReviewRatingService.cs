@@ -45,6 +45,7 @@ namespace AutoBuildApp.Services
             // this converts a ReviewRating object into a ReviewRatingEntity object.
             var reviewRatingEntity = new ReviewRatingEntity()
             {
+                BuildId = reviewRating.BuildId,
                 Username = reviewRating.Username,
                 StarRatingValue = (int)reviewRating.StarRating, // casts the enum into a boolean for easier storage and query in DB.
                 Message = reviewRating.Message,
@@ -71,6 +72,8 @@ namespace AutoBuildApp.Services
             // returns the bool of the success of the DAO method.
             return _reviewRatingDAO.CreateReviewRatingRecord(reviewRatingEntity);
         }
+
+
 
         /// <summary>
         /// This method will get a single review from 
@@ -118,6 +121,66 @@ namespace AutoBuildApp.Services
 
             // returns the object
             return reviewRatings;
+        }
+
+        public List<ReviewRating> GetAllReviewsRatingsByBuildId(string buildId)
+        {
+            var reviewEntities = _reviewRatingDAO.GetAllReviewsRatingsByBuildId(buildId);
+
+            var reviewRatingList = new List<ReviewRating>(); // initilaize a new list that will be used to append values to.
+
+            foreach (ReviewRatingEntity reviewRatingEntity in reviewEntities)
+            {
+                // add entity object values into model object values.
+                var reviewRatings = new ReviewRating()
+                {
+                    EntityId = reviewRatingEntity.EntityId,
+                    BuildId = reviewRatingEntity.BuildId,
+                    Username = reviewRatingEntity.Username,
+                    StarRating = (StarType)reviewRatingEntity.StarRatingValue,
+                    Message = reviewRatingEntity.Message,
+                    DateTime = reviewRatingEntity.DateTime,
+                    ImagePath = reviewRatingEntity.FilePath
+                };
+
+                // This will verify that the byte array is not null, if null, it will return null.
+                if (reviewRatingEntity.ImageBuffer != null)
+                {
+                    // This will start a new memory stream for the duration of the using block
+                    using (var streamBitmap = new MemoryStream(reviewRatingEntity.ImageBuffer))
+                    {
+                        // Will catch the argument null exception, and handle it by retuyrning null
+                        try
+                        {
+                            // this will start the conversion of the byte to an image to be saved locally.
+                            using (Image img = Image.FromStream(streamBitmap))
+                            {
+                                // this will dynamically store the image based on usename and entity id for ease of access.
+                                string path = Directory.GetCurrentDirectory();
+                                string newPath = Path.GetFullPath(Path.Combine(path, $"wwwroot/images/{reviewRatingEntity.Username}_{reviewRatingEntity.EntityId}.jpg"));
+
+                                img.Save(newPath);
+                                reviewRatings.FilePath = $"images/{ reviewRatingEntity.Username}_{ reviewRatingEntity.EntityId}.jpg"; // file path that is accessible by the UI.
+                                //reviewRatings.FilePath = $"C:/Users/Serge/Code/GitHub/Saturday-Solution/Async Logging/backend/APB.App.Apis/wwwroot/images/{reviewRatingEntity.Username}_{reviewRatingEntity.EntityId}.jpg";
+                            }
+                        }
+                        catch (ArgumentException ex)
+                        {
+                            _logger.LogInformation($"Service GetAllReviews was called with {ex}");
+
+                            reviewRatings.Picture = null;
+                            reviewRatings.FilePath = null;
+                        }
+                    }
+                }
+                else
+                {
+                    reviewRatings.Picture = null;
+                }
+
+                reviewRatingList.Add(reviewRatings); // appends the review rating object to the list.
+            }
+            return reviewRatingList; // returns the list.
         }
 
         /// <summary>

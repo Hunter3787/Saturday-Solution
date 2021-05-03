@@ -1,5 +1,6 @@
 ﻿using AutoBuildApp.DomainModels;
 using AutoBuildApp.Services;
+using System;
 using System.Collections.Generic;
 
 /// <summary>
@@ -27,6 +28,8 @@ namespace AutoBuildApp.Managers
             _reviewRatingService = reviewRatingService;
         }
 
+
+
         /// <summary>
         /// This method will be used to communicate with the back end side of the application.
         /// </summary>
@@ -53,6 +56,11 @@ namespace AutoBuildApp.Managers
             };
 
             return _reviewRatingService.GetReviewsRatings(reviewRating); // returns the ReviewRating object
+        }
+
+        public List<ReviewRating> GetAllReviewsRatingsByBuildId(string buildId)
+        {
+            return _reviewRatingService.GetAllReviewsRatingsByBuildId(buildId);
         }
 
         /// <summary>
