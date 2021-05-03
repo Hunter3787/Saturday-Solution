@@ -38,7 +38,7 @@ namespace AutoBuildApp.Managers
             else
             {
                 //return "Authentication Failed, Username or Password Incorrect";
-                return _CRAuth.FailureString;
+                return _CRAuth.ResponseString;
             }
         }
     }

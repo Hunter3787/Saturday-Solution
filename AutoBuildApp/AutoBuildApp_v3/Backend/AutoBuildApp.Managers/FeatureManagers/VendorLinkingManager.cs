@@ -1,4 +1,5 @@
-﻿using AutoBuildApp.DataAccess.Abstractions;
+﻿
+using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.Models.VendorLinking;
 using AutoBuildApp.Models.WebCrawler;
 using AutoBuildApp.Services;
@@ -111,8 +112,8 @@ namespace AutoBuildApp.Managers.FeatureManagers
             if(photo == null)
             {
                 _logger.LogWarning("Image was not chosen.");
-                response.SuccessString = "Image was not chosen.";
-                response.SuccessBool = false;
+                response.ResponseString = "Image was not chosen.";
+                response.ResponseBool = false;
                 return response;
             }
 

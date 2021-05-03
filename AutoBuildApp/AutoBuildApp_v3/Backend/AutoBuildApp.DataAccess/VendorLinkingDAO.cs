@@ -10,6 +10,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading;
 using AutoBuildApp.Models;
+using AutoBuildApp.Models.DataTransferObjects;
 
 namespace AutoBuildApp.DataAccess
 {
@@ -298,8 +299,8 @@ namespace AutoBuildApp.DataAccess
 
                         Console.WriteLine("done!!");
 
-                        response.SuccessString = "Successfully added product to vendor list.";
-                        response.SuccessBool = true;
+                        response.ResponseString= "Successfully added product to vendor list.";
+                        response.ResponseBool = true;
 
                         return response;
                     }
@@ -308,11 +309,11 @@ namespace AutoBuildApp.DataAccess
 
                         transaction.Rollback();
 
-                        response.SuccessBool = false;
+                        response.ResponseBool = false;
 
                         if(ex.Number == 2627)
                         {
-                            response.SuccessString = "You already have this model number in your list of products.";
+                            response.ResponseString= "You already have this model number in your list of products.";
                         }
                         else if(ex.Number == -2)
                         {
@@ -320,7 +321,7 @@ namespace AutoBuildApp.DataAccess
                         }
                         else
                         {
-                            response.SuccessString = "Failed to add product to vendor list.";
+                            response.ResponseString = "Failed to add product to vendor list.";
                         }
 
                         return response;

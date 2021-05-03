@@ -44,7 +44,7 @@ namespace AutoBuildApp.Manger.Tests
             };
 
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
-            IClaims adminClaims = claimsFactory.GetClaims(RoleEnumType.SENIOR_ADMIN);
+            IClaims adminClaims = claimsFactory.GetClaims(RoleEnumType.SYSTEM_ADMIN);
             IClaims basicClaims = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
 
             ClaimsIdentity adminClaimsIdentity = new ClaimsIdentity
@@ -56,13 +56,13 @@ namespace AutoBuildApp.Manger.Tests
 
             ResponseUAD expectedSuccessUAD = new ResponseUAD()
             {
-                SuccessBool = true,
+                ResponseBool = true,
                 ConnectionState = true,
                 IsAuthorized = true
             };
             ResponseUAD expectedFailedUAD = new ResponseUAD()
             {
-                SuccessBool = false,
+                ResponseBool = false,
                 IsAuthorized = false,
             };
             return new List<object[]>()
@@ -108,14 +108,14 @@ namespace AutoBuildApp.Manger.Tests
             };
 
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
-            IClaims adminClaims = claimsFactory.GetClaims(RoleEnumType.SENIOR_ADMIN);
+            IClaims adminClaims = claimsFactory.GetClaims(RoleEnumType.SYSTEM_ADMIN);
 
             ClaimsIdentity adminClaimsIdentity = new ClaimsIdentity
             (AdminIdentity, adminClaims.Claims(), AdminIdentity.AuthenticationType, AdminIdentity.Name, " ");
 
             ResponseUAD expectedResponse = new ResponseUAD()
             {
-                SuccessBool = true,
+                ResponseBool =  true,
                 ConnectionState = true,
                 IsAuthorized = true
             };
@@ -147,6 +147,7 @@ namespace AutoBuildApp.Manger.Tests
             Assert.IsNotNull(result);
 
         }
+
 
 
 

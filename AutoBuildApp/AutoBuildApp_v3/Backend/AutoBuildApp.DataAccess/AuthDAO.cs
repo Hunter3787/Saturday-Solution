@@ -53,12 +53,12 @@ namespace AutoBuildApp.DataAccess
                 if (this.ConnectionString != null && con.State != ConnectionState.Closed)
                 {
                     _CRAuth.connectionState = true;
-                    _CRAuth.SuccessString = $"The Connection state to DB is true";
+                    _CRAuth.ResponseString = $"The Connection state to DB is true";
                 }
                 else
                 {
                     _CRAuth.connectionState = false;
-                    _CRAuth.FailureString = $"The connection state is false, try again later.";
+                    _CRAuth.ResponseString = $"The connection state is false, try again later.";
                     con.Close();
                 }
             }
@@ -72,8 +72,8 @@ namespace AutoBuildApp.DataAccess
             Console.WriteLine($" in CHECK CONNECTION");
             if (con == null)
             {
-                _CRAuth.SuccessBool = false;
-                _CRAuth.FailureString = "NULL EXCEPTION";
+                _CRAuth.ResponseBool = false;
+                _CRAuth.ResponseString = "NULL EXCEPTION";
                 //Console.WriteLine($" Common response expected for NULL: {_CRAuth.ToString() }" );
                 return _CRAuth;
             }
@@ -181,7 +181,7 @@ namespace AutoBuildApp.DataAccess
                             Console.WriteLine($" reader rows: {reader.HasRows}");
                             if (!reader.HasRows) // use the bang!!!!!!! 
                             {
-                                _CRAuth.FailureString = "User not found";
+                                _CRAuth.ResponseString = "User not found";
                                 _CRAuth.IsUserExists = false;
                                 return _CRAuth; //return  
                             }
@@ -212,12 +212,12 @@ namespace AutoBuildApp.DataAccess
                     catch (SqlException) 
                     {
                         command.Transaction.Rollback();
-                        _CRAuth.SuccessBool = false;
+                        _CRAuth.ResponseBool = false;
 
                     }
 
                     command.Transaction.Commit();_CRAuth.connectionState = true;
-                    _CRAuth.SuccessString = "User Exists";
+                    _CRAuth.ResponseString = "User Exists";
                     _CRAuth.IsUserExists = true;
 
                     return _CRAuth;

@@ -55,7 +55,7 @@ namespace AutoBuildApp.DataAccess.Test
             };
 
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
-            IClaims adminClaims = claimsFactory.GetClaims(RoleEnumType.SENIOR_ADMIN);
+            IClaims adminClaims = claimsFactory.GetClaims(RoleEnumType.SYSTEM_ADMIN);
             IClaims basicClaims = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
 
             ClaimsIdentity adminClaimsIdentity = new ClaimsIdentity
@@ -67,13 +67,13 @@ namespace AutoBuildApp.DataAccess.Test
 
             ResponseUAD expectedSuccessUAD = new ResponseUAD()
             {
-                SuccessBool = true,
+                ResponseBool = true,
                 ConnectionState = true,
                 IsAuthorized = true
             };
             ResponseUAD expectedFailedUAD = new ResponseUAD()
             {
-                SuccessBool = false,
+                ResponseBool = false,
                 IsAuthorized = false,
             };
             return new List<object[]>()

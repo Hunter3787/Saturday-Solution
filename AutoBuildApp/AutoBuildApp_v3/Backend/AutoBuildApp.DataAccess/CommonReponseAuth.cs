@@ -1,6 +1,6 @@
-﻿using AutoBuildApp.DataAccess.Abstractions;
-using AutoBuildApp.DataAccess.Entities;
+﻿using AutoBuildApp.DataAccess.Entities;
 using System;
+using AutoBuildApp.Models.DataTransferObjects;
 
 
 namespace AutoBuildApp.DataAccess
@@ -31,10 +31,9 @@ namespace AutoBuildApp.DataAccess
 
         public CommonReponseAuth()
         {
-            SuccessString = " ";
-            FailureString = " ";
+            ResponseString = " ";
             JWTString = " ";
-            SuccessBool = false;
+            ResponseBool = false;
             IsUserExists = false;
             isAuthenticated = false;
             connectionState = false;
@@ -45,25 +44,23 @@ namespace AutoBuildApp.DataAccess
         public override string ToString()
         {
             return $"\nResponse String {ResponseString }\n" +
-                $"\nSuccess string {SuccessString}\nFailure String {FailureString}\n" +
-                $"Success Bool {SuccessBool}\nIsAuthenticated {isAuthenticated}\n" +
-                $"Connection bool {connectionState}\n" +
-                $"IsUser Exists {IsUserExists}" ;
+              $"Success Bool {ResponseBool}\nIsAuthenticated {isAuthenticated}\n" +
+              $"Connection bool {connectionState}\n" +
+              $"IsUser Exists {IsUserExists}";
 
         }
 
         public bool Equals(CommonReponseAuth other)
         {
-           if(other == null)
+            if (other == null)
             {
                 return false;
             }
-           if( this.SuccessString == other.SuccessString &&
-                this.SuccessBool == other.SuccessBool &&
-                this.FailureString == other.FailureString &&
-                this.isAuthenticated == other.isAuthenticated &&
-                this.IsUserExists == other.IsUserExists &&
-                this.connectionState ==  other.connectionState)
+            if (this.ResponseString == other.ResponseString &&
+               this.ResponseBool == other.ResponseBool &&
+               this.isAuthenticated == other.isAuthenticated &&
+               this.IsUserExists == other.IsUserExists &&
+               this.connectionState == other.connectionState)
             {
                 return true;
 

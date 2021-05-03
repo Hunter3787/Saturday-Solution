@@ -106,7 +106,7 @@ namespace AutoBuildApp.Services.Auth_Services
             {
 
                 _authUserDTO = _responseAuth.AuthUserDTO;
-                _responseAuth.SuccessBool = true;
+                _responseAuth.ResponseBool = true;
                 _responseAuth.isAuthenticated = true;
 
                 // conversion of userClaims to the built in claims 
@@ -148,13 +148,12 @@ namespace AutoBuildApp.Services.Auth_Services
             else
             {
                 _responseAuth.isAuthenticated = false;
-                _responseAuth.SuccessBool = false;
+                _responseAuth.ResponseBool = false;
             }
 
             Thread.CurrentPrincipal = claimsPrincipal;
              return _responseAuth;
         }
-
         /// <summary>
         /// this method is responsible for sending back the jwt 
         /// token for authentication

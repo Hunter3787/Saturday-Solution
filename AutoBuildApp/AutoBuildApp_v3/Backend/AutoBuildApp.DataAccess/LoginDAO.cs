@@ -96,7 +96,7 @@ namespace AutoBuildApp.DataAccess
                         {
                             if (!reader.HasRows) // use the bang!!!!!!! 
                             {
-                                _CRAuth.FailureString = "User not found";
+                                _CRAuth.ResponseString = "User not found";
                                 _CRAuth.IsUserExists = false;
                             }
                            
@@ -112,8 +112,8 @@ namespace AutoBuildApp.DataAccess
                             {
                                 if ((bool)reader[locked])
                                 {
-                                    _CRAuth.FailureString = "Account is locked";
-                                    _CRAuth.SuccessBool = false;
+                                    _CRAuth.ResponseString = "Account is locked";
+                                    _CRAuth.ResponseBool = false;
                                     reader.Close();
                                     return _CRAuth;
                                 }
@@ -130,12 +130,12 @@ namespace AutoBuildApp.DataAccess
                     catch (SqlException)
                     {
                         command.Transaction.Rollback();
-                        _CRAuth.SuccessBool = false;
+                        _CRAuth.ResponseBool = false;
 
                     }
                     //Console.WriteLine($"Auth DAO Common response check:: {_CRAuth.ToString()}");
                     _CRAuth.connectionState = true;
-                    _CRAuth.SuccessString = "User Exists";
+                    _CRAuth.ResponseString = "User Exists";
                     _CRAuth.IsUserExists = true;
 
                     return _CRAuth;

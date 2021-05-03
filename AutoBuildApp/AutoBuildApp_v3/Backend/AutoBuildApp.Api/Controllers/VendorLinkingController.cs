@@ -1,7 +1,7 @@
 ﻿using AutoBuildApp.Api.HelperFunctions;
-using AutoBuildApp.DataAccess.Abstractions;
 using AutoBuildApp.Managers;
 using AutoBuildApp.Managers.FeatureManagers;
+using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.Models.VendorLinking;
 using AutoBuildApp.Models.WebCrawler;
 using AutoBuildApp.Security;
@@ -65,7 +65,7 @@ namespace AutoBuildApp.Api.Controllers
 
             CommonResponse Result = await _vendorLinkingManager.AddProductToVendorListOfProducts(Product, photo);
 
-            if (!Result.SuccessBool)
+            if (!Result.ResponseBool)
             {
                 _logger.LogWarning("AddProductToVendorListOfProducts failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);

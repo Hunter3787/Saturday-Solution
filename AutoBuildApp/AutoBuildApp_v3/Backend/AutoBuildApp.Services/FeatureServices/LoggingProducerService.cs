@@ -133,6 +133,8 @@ namespace AutoBuildApp.Services
             // If the connection has not been disposed, then send the object to the Log.
             if (!_isDisposed)
             {
+
+                Console.WriteLine("we are in SendLog");
                 string json = JsonConvert.SerializeObject(log, Formatting.Indented); // Serialize the log object into a JSON to be able to insterted clearly into the Queue.
                 ITextMessage textMessage = _session.CreateTextMessage(json); // This will get the message of the JSON log to be sent to the Queue.
                 _producer.Send(textMessage); // This finally sends the serialized object to the Queue.

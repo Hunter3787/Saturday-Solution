@@ -182,7 +182,7 @@ namespace AutoBuildApp.DataAccess
                         if (!_reader.HasRows) // use the bang!!!!!!! 
                             {
                                 _responseUAD.ResponseString = "No Data At The Moment";
-                                _responseUAD.SuccessBool = false;
+                                _responseUAD.ResponseBool = false;
                                 _reader.Close();
                             }
                         else
@@ -303,7 +303,7 @@ namespace AutoBuildApp.DataAccess
                     conn.Close();
                 }
             }
-            _responseUAD.SuccessBool = true;
+            _responseUAD.ResponseBool = true;
             _responseUAD.ConnectionState = true;
             return _responseUAD;
         }

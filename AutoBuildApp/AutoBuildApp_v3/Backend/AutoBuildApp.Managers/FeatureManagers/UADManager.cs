@@ -83,7 +83,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             }
 
 
-            if(_responseUAD.SuccessBool == false)
+            if(_responseUAD.ResponseBool == false)
             {
                 _uadDTO.SuccessFlag = false;
                 _uadDTO.result = _responseUAD.ResponseString;

@@ -1,5 +1,6 @@
 ﻿using AutoBuildApp.DataAccess.Abstractions;
 using AutoBuildApp.DataAccess.Entities;
+using AutoBuildApp.Models.DataTransferObjects;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,7 +24,7 @@ namespace AutoBuildApp.DataAccess
         {
 
             ResponseString = " ";
-            SuccessBool = false;
+            ResponseBool = false;
             ConnectionState = false;
             // bar graph 1:
             GetNumAccountsPerRole = new List<ChartData>();
@@ -37,7 +38,7 @@ namespace AutoBuildApp.DataAccess
         public override string ToString()
         {
             return $"\nResponse String {ResponseString }\n" +
-                $"Success Bool {SuccessBool}\n" +
+                $"Success Bool {ResponseBool}\n" +
                 $"Connection bool {ConnectionState}\n" +
                 $"IsAuthorized {IsAuthorized}\n";
 
