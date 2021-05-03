@@ -90,12 +90,15 @@ namespace AutoBuildApp.Services.Auth_Services
             claimsPrincipal = (ClaimsPrincipal)Thread.CurrentPrincipal;
             /// retrieves the result from the query as an object
             /// then we cast it to type Common responde object -> Auth
+            /// 
+
             //_responseAuth = _authDAO.RetrieveUserInformation(credentials);
             _responseAuth = _loginDAO.LoginInformation(credentials);
             // an initial check for connection state:
             if (!_responseAuth.connectionState)
             {
                 _responseAuth.isAuthenticated = false;
+                return _responseAuth;
             }
             // return immediately cuz db is off  - do this - dNNY
 
@@ -103,7 +106,7 @@ namespace AutoBuildApp.Services.Auth_Services
             {
 
                 _authUserDTO = _responseAuth.AuthUserDTO;
-                _responseAuth.SuccessBool = true;
+                _responseAuth.ResponseBool = true;
                 _responseAuth.isAuthenticated = true;
 
                 // conversion of userClaims to the built in claims 
@@ -114,7 +117,7 @@ namespace AutoBuildApp.Services.Auth_Services
                 /// if the quthentication is a success then we
                 /// add thos new claims to the claims principle
                 UserIdentity userIdentity = new UserIdentity();
-                userIdentity.Name = _authUserDTO.UserEmail;
+                userIdentity.Name = _authUserDTO.UserEmail;// this is username (thewre is typo)
                 userIdentity.IsAuthenticated = true;
 
 
@@ -123,9 +126,14 @@ namespace AutoBuildApp.Services.Auth_Services
                     _securityClaims,
                     userIdentity.AuthenticationType,
                      userIdentity.Name, "");
+
+
+
                 claimsIdentity = new ClaimsIdentity
                   (userIdentity,
                   _securityClaims);
+
+
 
 
                 claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
@@ -140,13 +148,12 @@ namespace AutoBuildApp.Services.Auth_Services
             else
             {
                 _responseAuth.isAuthenticated = false;
-                _responseAuth.SuccessBool = false;
+                _responseAuth.ResponseBool = false;
             }
 
             Thread.CurrentPrincipal = claimsPrincipal;
              return _responseAuth;
         }
-
         /// <summary>
         /// this method is responsible for sending back the jwt 
         /// token for authentication
@@ -166,7 +173,7 @@ namespace AutoBuildApp.Services.Auth_Services
             // so the first thing is taking the auth dto and passing it to form the payload necessary. 
             _payload = new JWTPayload
                 ("Autobuild User", "Autobuild", "US",
-                AuthUserDTO.UserEmail,
+                AuthUserDTO.UserEmail, // username
                 DateTimeOffset.UtcNow.AddDays(7),
                 DateTimeOffset.UtcNow.AddDays(7),
                 DateTimeOffset.UtcNow)

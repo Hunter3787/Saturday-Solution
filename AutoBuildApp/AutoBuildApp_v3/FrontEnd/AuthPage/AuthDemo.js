@@ -34,10 +34,12 @@ var item = ' ';
 const fetchRequest = {
   method: 'POST',
   mode: 'cors',
+ credentials: 'include', // Useful for including session ID (and, IIRC, authorization headers)
 headers: {
   'Accept': 'application/json',
   'Content-Type': 'application/json',
   'Authorization': 'bearer ' + JWT_Token
+  
 }
 };
 let customRequest = 
@@ -57,9 +59,6 @@ function getItems() {
 //https://www.w3schools.com/js/tryit.asp?filename=tryjs_addeventlistener_displaydate
 document.getElementById("myBtn").addEventListener("click", displayDate);
 
-function displayDate() {
-  document.getElementById("demo").innerHTML = Date();
-}
 
 
 // add notes

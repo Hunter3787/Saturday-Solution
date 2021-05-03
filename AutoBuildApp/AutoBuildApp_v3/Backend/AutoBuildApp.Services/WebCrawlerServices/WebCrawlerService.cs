@@ -56,7 +56,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             {
                 Headless = true,
                 IgnoreHTTPSErrors = true,
-                ExecutablePath = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+                ExecutablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe", // added per danny
                 Args = new[] {
                         $"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}", // ganna take a while = dannu
                         //"--proxy-server=23.251.138.105:8080",
@@ -518,7 +518,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         }
                     }
                 }
-                catch (WebException e)
+                catch (WebException )
                 {
                     Console.WriteLine("Bad Proxy. Rotating...");
                     rotateProxy();
@@ -534,7 +534,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             {
                 Headless = true,
                 IgnoreHTTPSErrors = true,
-                ExecutablePath = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+                ExecutablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe", // edded per danny
                 Args = new[] {
                         //$"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}",
                         "--proxy-server=208.80.28.208:8080",
@@ -578,7 +578,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         }
                     }
                 }
-                catch (Exception e)
+                catch (Exception )
                 {
                     rotateProxy();
                 }

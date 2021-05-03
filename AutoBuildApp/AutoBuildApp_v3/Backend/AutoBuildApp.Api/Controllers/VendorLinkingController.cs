@@ -1,7 +1,7 @@
 ﻿using AutoBuildApp.Api.HelperFunctions;
-using AutoBuildApp.DataAccess.Abstractions;
 using AutoBuildApp.Managers;
 using AutoBuildApp.Managers.FeatureManagers;
+using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.Models.VendorLinking;
 using AutoBuildApp.Models.WebCrawler;
 using AutoBuildApp.Security;

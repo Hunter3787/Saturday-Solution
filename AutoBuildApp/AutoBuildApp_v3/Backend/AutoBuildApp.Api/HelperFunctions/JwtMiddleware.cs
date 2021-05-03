@@ -18,12 +18,10 @@ namespace AutoBuildApp.Api.HelperFunctions
 {
     public class JwtMiddleware
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         /// <summary>
         /// processes http requests.
         /// </summary>
         private readonly RequestDelegate _next;
-
         private JWTValidator _validateAuthorizationHeader;
 
         // i want to store this into the 
@@ -99,7 +97,18 @@ namespace AutoBuildApp.Api.HelperFunctions
                 $"3: {referer}\n" +
                 $"4 query string: { ReturnUrl }\n");
             #endregion
-            
+
+            if (Url_Two.Contains("authentication"))
+            {
+                Console.WriteLine($"YOU ARE REQUESTING THE AUTHENTICATION URL");
+            }
+            else if (Url_Two.Contains("authdemo"))
+            {
+
+                Console.WriteLine($"YOU ARE REQUESTING THE AUTHDEMO URL\n");
+            }
+
+
             if (token != null && token.Length != 0) // there is a JWT token 
             {
                 _validateAuthorizationHeader = new JWTValidator(token); // validate the token 
@@ -124,17 +133,6 @@ namespace AutoBuildApp.Api.HelperFunctions
             }
 
 
-            if (Url_Two.Contains("authentication"))
-            {
-                Console.WriteLine($"YOU ARE REQUESTING THE AUTHENTICATION URL");
-            }
-            else if (Url_Two.Contains("authdemo"))
-            {
-
-                Console.WriteLine($"YOU ARE REQUESTING THE AUTHDEMO URL\n");
-                Console.WriteLine($"Is the user authenticated? ");
-            }
-
 
             Console.WriteLine($"\n\t " +
                 $"END OF THE JWT MIDDLE WARE \n");
@@ -152,6 +150,7 @@ namespace AutoBuildApp.Api.HelperFunctions
             {
 
                 httpContext.Response.StatusCode = StatusCodes.Status404NotFound;//400; //Bad Request   
+                
                 return false;
             }
             else //THE JWT IS VALID, THEREFORE SET THE CLAIMS PRINCIPLE TO THREAD.
@@ -160,19 +159,20 @@ namespace AutoBuildApp.Api.HelperFunctions
 
                 var userPrinciple =
                     _validateAuthorizationHeader.ParseForClaimsPrinciple();
-                _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+                _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal; // get the principle on the thread
+                Console.WriteLine($"\nIN THE JWT MIDDLEWARE CHEWCKING THE PRINCIPLE NAME: {_threadPrinciple.Identity.Name}\n");
+
+
+
                 Thread.CurrentPrincipal = _threadPrinciple; // SETTING THE PARSED TOKEN, TO THE THREAD.
 
-                Console.WriteLine($"\nIN THE JWT MIDDLEWARE CHEWCKING THE PRINCIPLE NAME: {_threadPrinciple.Identity.Name}\n");
-                /*
-                Console.WriteLine($" " +
-                    $"THE USER CLAIMS PRINCIPLE if jwt it valid. in jwt middleware");
-                foreach (Claim c in _threadPrinciple.Claims)
-                    {
-                        Console.WriteLine($"Permission:  {c.Type}, Scope: {c.Value} ");
-                    }
-                */
+               
                 #endregion
+
+                // here i will be 
+
+
             }
 
             return true;
@@ -189,10 +189,6 @@ namespace AutoBuildApp.Api.HelperFunctions
             #region Instantiating the guest principle
             _threadPrinciple = Guest.DefaultClaimsPrinciple();
             Thread.CurrentPrincipal = _threadPrinciple;
-            foreach (Claim c in _threadPrinciple.Claims)
-            {
-                Console.WriteLine($"Permission:  {c.Type}, Scope: {c.Value} ");
-            }
             #endregion
         }
 

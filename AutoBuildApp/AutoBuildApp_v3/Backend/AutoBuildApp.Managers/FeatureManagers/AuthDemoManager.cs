@@ -40,13 +40,13 @@ namespace AutoBuildApp.Managers.FeatureManagers
                 Console.WriteLine($" claim type: { clm.Type } claim value: {clm.Value} \n");
             }
 
-            if (AuthorizationService.checkPermissions(basic.Claims()))
+            if (AuthorizationService.CheckPermissions(basic.Claims()))
             {
 
                 values += $"" +
                     $"Here is the data you asked for" +
                     $"\n\tAuthorization output" +
-                    $" {AuthorizationService.checkPermissions(basic.Claims())}";
+                    $" {AuthorizationService.CheckPermissions(basic.Claims())}";
 
             }
             else

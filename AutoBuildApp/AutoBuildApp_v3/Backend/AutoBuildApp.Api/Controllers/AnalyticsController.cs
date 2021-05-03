@@ -1,8 +1,14 @@
 ﻿using AutoBuildApp.Api.HelperFunctions;
+using AutoBuildApp.DataAccess.Abstractions;
+using AutoBuildApp.DomainModels;
+using AutoBuildApp.DomainModels.Abstractions;
+using AutoBuildApp.DomainModels.Enumerations;
+using AutoBuildApp.Managers.FeatureManagers;
 using AutoBuildApp.Security;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
 using AutoBuildApp.Security.Interfaces;
+using AutoBuildApp.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,6 +34,13 @@ namespace AutoBuildApp.Api.Controllers
 
         private ClaimsFactory _claimsFactory = new ConcreteClaimsFactory();
         IClaims _admin;
+
+        // Creates the local instance for the logger
+       // private LoggingProducerService _logger = LoggingProducerService.GetInstance;
+
+
+        private UADManager _uadManager;
+
         public AnalyticsController()
         {
             /// the user analysis dashboard need admin Priveldges so check:
@@ -46,7 +60,7 @@ namespace AutoBuildApp.Api.Controllers
             #endregion
 
 
-
+            _uadManager = new UADManager(connection);
 
         }
 
@@ -66,15 +80,14 @@ namespace AutoBuildApp.Api.Controllers
         public IActionResult Index()
         {
 
-            Console.WriteLine("we are here22");
             if (!_threadPrinciple.Identity.IsAuthenticated)
             {
-
                 // Add action logic here
                 return new StatusCodeResult(StatusCodes.Status401Unauthorized);
             }
-            if (!AuthorizationService.checkPermissions(_admin.Claims()))
+            if (!AuthorizationService.CheckPermissions(_admin.Claims()))
              {
+
 
                     // Add action logic here
                     return new StatusCodeResult(StatusCodes.Status403Forbidden);
@@ -83,43 +96,51 @@ namespace AutoBuildApp.Api.Controllers
             
         }
 
-
         [HttpGet]
         public IActionResult RetrieveGraphs()
         {
 
-            Console.WriteLine("we are here22");
-            if (!_threadPrinciple.Identity.IsAuthenticated)
+            /// this will be put into the middleware.
+            //Console.WriteLine("we are here22");
+            //if (!_threadPrinciple.Identity.IsAuthenticated)
+            //{
+            //    Console.WriteLine("we are here");
+            //    // Add action logic here
+            //    return new StatusCodeResult(StatusCodes.Status401Unauthorized);
+            //}
+
+            if (!AuthorizationService.CheckPermissions(_admin.Claims()))
             {
-                Console.WriteLine("we are here");
-                // Add action logic here
-                return new StatusCodeResult(StatusCodes.Status401Unauthorized);
+
+               // _logger.LogWarning("Unauthorized Access Attempted");
+                return new StatusCodeResult(StatusCodes.Status403Forbidden);
             }
-            if (!AuthorizationService.checkPermissions(_admin.Claims()))
+            var result = _uadManager.GetAllChartData();
+
+            Console.WriteLine($"{result.result }: RESULT \n" +
+                $"{result.ToString()}");
+            
+            
+            if (!result.SuccessFlag)
             {
+                if (result.result == AuthorizationResultType.NOT_AUTHORIZED.ToString())
+                {
 
-                return Ok("good2");
-                // Add action logic here
-                //return new StatusCodeResult(StatusCodes.Status403Forbidden);
+                   // _logger.LogWarning("Unauthorized Access Attempted");
+                    return new StatusCodeResult(StatusCodes.Status403Forbidden);
+                }
+                else
+                {
+                   // _logger.LogWarning(result.result);
+                    return new StatusCodeResult(StatusCodes.Status400BadRequest);
+                }
             }
-            /// 
+            // lesson: postman doesnt work with list. move on 
 
+            return Ok(result);
 
-
-            return Ok("here");
-
+            
         }
 
-
-
-
-
-
-
-
-
-
-
-
-        }
+    }
 }

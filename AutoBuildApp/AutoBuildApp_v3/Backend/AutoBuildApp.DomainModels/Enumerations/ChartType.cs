@@ -13,6 +13,6 @@ namespace AutoBuildApp.DomainModels.Enumerations
     {
         NONE,
         LINECHART,
-        BARCHART
+        BARCHART 
     }
 }

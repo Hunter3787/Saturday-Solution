@@ -31,7 +31,7 @@ namespace AutoBuildApp.Security
         /// check ther permissions passed to that wihtin the principle object 
         /// </summary>
         /// <returns></returns>
-        public static bool checkPermissions(IEnumerable<Claim> permissionsRequired) // PASS INTO WHY STORE IT???????
+        public static bool CheckPermissions(IEnumerable<Claim> permissionsRequired) // PASS INTO WHY STORE IT???????
         {
             ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
             ///handle the null values
