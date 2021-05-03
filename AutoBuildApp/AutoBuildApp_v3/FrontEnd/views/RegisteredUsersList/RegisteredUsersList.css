@@ -1,0 +1,47 @@
+* {
+    box-sizing: border-box;
+}
+
+
+
+  .formheader {
+    padding: 10px;
+    text-align: center;
+    background: #28B463;
+    color: white;
+    overflow: auto hidden;
+    height: 100px;
+  }
+
+  .formheader .formtitle {
+    color: whitesmoke;
+  }
+
+  .main {
+    margin-left: 220px;
+    font-size: 28px; 
+    padding: 0px 10px;
+  }
+
+  .gridbuilds {
+    float: left;
+    padding: 10px;
+    max-width: 320px;
+    width: 50%;
+  }
+
+  .blockbuild {
+    box-shadow: 0 4px 2px -3px gray;
+    padding: 16px;
+    text-align: left;
+    background-color: #F7F9F9;
+    border: 3px solid transparent;
+    font-size: .5em;
+    min-height: 400px;
+    max-height: 400px;
+    cursor: pointer;
+    border: 1px solid #E5E7E9;
+    transition: .15s ease-in-out;
+    transition-property: color, background-color, border-color, box-shadow;
+  }
+
