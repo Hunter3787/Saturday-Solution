@@ -200,7 +200,7 @@ namespace AutoBuildApp.DataAccess
                                 ///_userPermissions.UserAccountID = reader.GetInt64(0);
                                 /// magic values -> will the collumns alwats be the same
                                 /// better to use ordinal names -> no matter where the column just specifiy thr column 
-                                _CRAuth.AuthUserDTO.UserEmail = (string)reader[username];
+                                _CRAuth.AuthUserDTO.UserName = (string)reader[username];
                                 _userClaims.Permission = (string)reader[permissions];
                                 _userClaims.scopeOfPermissions = (string)reader[scope];
                                 _CRAuth.AuthUserDTO.Claims.Add(_userClaims);

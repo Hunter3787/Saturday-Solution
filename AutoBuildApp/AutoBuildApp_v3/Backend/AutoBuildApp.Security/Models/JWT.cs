@@ -41,6 +41,9 @@ namespace AutoBuildApp.Security.Models
         private JWTHeader Header { get; set; }
         private JWTPayload Payload { get; set; }
 
+        public string JWTToken { get; set; }
+        public string JWTSignature { get; set; }
+
         /// <summary>
         /// For the signiture, a secret key is defined along with 
         /// the algorithmic function
@@ -114,7 +117,6 @@ namespace AutoBuildApp.Security.Models
             //about ASCIIEncoding:  GetBytes(String)
             //Encodes all the characters in the specified
             //string into a sequence of bytes.
-
             byte[] header = Encoding.UTF8.GetBytes(ApplyJson(Header));
             byte[] payload = Encoding.UTF8.GetBytes(ApplyJson(Payload));
 
@@ -132,23 +134,12 @@ namespace AutoBuildApp.Security.Models
                 $"{Base64UrlEncoder.Encode(payload)}." +
                 $"{signature}";
 
-            ///Console.WriteLine($" TESTING THE SIGNATURE: \n\n");
-            ///var handler = new JwtSecurityTokenHandler();
-            ///var decodedValue = handler.ReadToken(jwt);
-            ///Console.WriteLine("Decoded value \n" + decodedValue.ToString());
             JWTToken = jwt;
             JWTSignature = signature;
             return signature;
+        }
 
-        }
-        public string JWTToken { get; set; }
-        public string JWTSignature { get; set; }
-        public string ToString2()
-        {
-            return $"\nThe JWT token: {JWTToken}\n" +
-                $"Header : {ApplyJson(Header)} \n" +
-                $"Payload: {ApplyJson(Payload)} \n";
-        }
+
         public override string ToString()
         {
             return ($"{JWTToken}");
@@ -252,15 +243,15 @@ namespace AutoBuildApp.Security.Models
             #endregion
 
             #region check the header data:
-            if (isValidHeader() == false) { return false; }
+            if (IsValidHeader() == false) { return false; }
             #endregion
 
             #region check the payload data:
-            if (isValidPayload() == false) { return false; }
+            if (IsValidPayload() == false) { return false; }
             #endregion
 
             #region check the signature 
-            if (isValidSignature() == false) { return false; }
+            if (IsValidSignature() == false) { return false; }
 
             #endregion
             return true;
@@ -270,7 +261,7 @@ namespace AutoBuildApp.Security.Models
         /// method isValidSignature() validates the JWT signature
         /// </summary>
         /// <returns></returns>
-        public bool isValidSignature()
+        public bool IsValidSignature()
         {
 
             string[] parseJWT = JWT.Split('.');
@@ -285,17 +276,14 @@ namespace AutoBuildApp.Security.Models
 
 
             string signature = parseJWT[2];
-            ///Console.WriteLine($" the signature passed: {signature}");
-            // so what i will do is regenrate the signature and 
-            // check if the generated signature matches the 
+
+            //  regenrate the signature and check if the generated signature matches the 
             // one passed 
             _jwt = new JWT(SecretKey, payload, header);
             string genratedJWT = _jwt.GenerateJWTSignature();
-            /// Console.WriteLine($"generated JWT signature: { genratedJWT}");
 
             if (genratedJWT.Equals(signature) == false)
             {
-                ///Console.WriteLine($"the signature is not valid.");
                 return false;
             }
 
@@ -311,8 +299,10 @@ namespace AutoBuildApp.Security.Models
 
             //1. is the string empty?
             if (string.IsNullOrWhiteSpace(JWT) || string.IsNullOrEmpty(JWT)) { Console.WriteLine($"null JWT token"); return false; }
+
             //2.Verify that the JWT contains at least one period ('.') character.
             if (JWT.Contains(".") == false) { Console.WriteLine($"not valid JWT token, missing '.'"); return false; }
+
             // I want to split to retrieve the header, payload and signature
             string[] parseJWT = JWT.Split('.');
 
@@ -320,8 +310,10 @@ namespace AutoBuildApp.Security.Models
             //3.Let the Encoded JOSE Header be the portion of the JWT before the
             // first period('.') character.
             string headerAsJson = JsonSerializer.Serialize(_jwtHeaderDefault);
+
             Console.WriteLine($"Default header is: {headerAsJson}");
             Console.WriteLine($"Other header is: {Base64UrlEncoder.Decode(parseJWT[0])}");
+
             // 4. Base64url decode check:
             if (headerAsJson.Equals(Base64UrlEncoder.Decode(parseJWT[0])) == false) { return false; }
 
@@ -332,7 +324,7 @@ namespace AutoBuildApp.Security.Models
         /// choice of algorithm and type values
         /// </summary>
         /// <returns></returns>
-        public bool isValidHeader()
+        public bool IsValidHeader()
         {
             JWTHeader header = GetJWTHeader();
             if (header.typ != _jwtHeaderDefault.typ || header.alg != _jwtHeaderDefault.alg)
@@ -351,7 +343,7 @@ namespace AutoBuildApp.Security.Models
         /// (being the auduence, issuer, and subject line)
         /// </summary>
         /// <returns></returns>
-        public bool isValidPayload()
+        public bool IsValidPayload()
         {
             JWTPayload payload = GetJWTPayload();
             //Console.WriteLine("\n\nPaylaod ToString: " + payload.ToString());

@@ -15,7 +15,7 @@ namespace AutoBuildApp.DomainModels.Abstractions
 
         public string Legend { get; set; }
 
-        public ChartType chartType { get; set; }
+        public string chartType { get; set; }
 
         public int XScale { get; set; }
         public int YScale { get; set; }
@@ -24,14 +24,14 @@ namespace AutoBuildApp.DomainModels.Abstractions
 
         public Charts()
         {
-            this.ChartTitle = ChartTitlesType.NONE.ToString();
-            YAxisTitle = ChartTitlesType.Y_TITLE.ToString();
-            XAxisTitle = ChartTitlesType.X_TITLE.ToString();
-            Legend = ChartTitlesType.LEGEND.ToString();
-            XScale = 2;
-            YScale = 2;
-            chartType = ChartType.NONE;
-            ChartDatas = new List<ChartData>();
+            this.ChartTitle = string.Empty;
+            YAxisTitle      = string.Empty;
+            XAxisTitle      = string.Empty;
+            Legend          = string.Empty;
+            XScale          = 2;
+            YScale          = 2;
+            chartType       = ChartType.None.ToString();
+            ChartDatas      = new List<ChartData>();
 
         }
 
@@ -50,12 +50,11 @@ namespace AutoBuildApp.DomainModels.Abstractions
             Legend = legendTitle;
             XScale = 2;
             YScale = 2;
-            this.chartType = chartType;
+            this.chartType = chartType.ToString();
             ChartDatas = new List<ChartData>();
             ChartDatas = chartDatas;
 
         }
-
 
 
         /// <summary>

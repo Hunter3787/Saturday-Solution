@@ -38,7 +38,7 @@ namespace AutoBuildApp.DataAccess
             isAuthenticated = false;
             connectionState = false;
             AuthUserDTO = new AuthUserDTO();
-            AuthUserDTO.UserEmail = " ";
+            AuthUserDTO.UserName = " ";
 
         }
         public override string ToString()

@@ -6,8 +6,8 @@ namespace AutoBuildApp.Security.Enumerations
 {
     public enum AuthorizationResultType
     {
-        NOT_SPECIFIED,
-        NOT_AUTHORIZED,
-        AUTHORIZED
+        NotSpecified,
+        NotAuthorized,
+        IsAuthorized
     }
 }

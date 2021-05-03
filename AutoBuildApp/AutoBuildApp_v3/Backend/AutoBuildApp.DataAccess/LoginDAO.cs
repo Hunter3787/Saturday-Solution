@@ -118,7 +118,7 @@ namespace AutoBuildApp.DataAccess
                                     return _CRAuth;
                                 }
                                 _userClaims = new Claims();
-                                _CRAuth.AuthUserDTO.UserEmail = (string)reader[username];
+                                _CRAuth.AuthUserDTO.UserName = (string)reader[username];
                                 _userClaims.Permission = (string)reader[permissions];
                                 _userClaims.scopeOfPermissions = (string)reader[scope];
                                 _CRAuth.AuthUserDTO.Claims.Add(_userClaims);

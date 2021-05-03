@@ -14,11 +14,11 @@ namespace AutoBuildApp.DataAccess.Entities
         // the list of credentials 
         public IList<Claims> Claims;
         // the users Email to identify the user.
-        public string UserEmail { get; set; }
+        public string UserName { get; set; }
 
         public AuthUserDTO()
         {
-            this.UserEmail = "";
+            this.UserName = "";
             this.Claims = new List<Claims>();
 
         }
@@ -26,7 +26,7 @@ namespace AutoBuildApp.DataAccess.Entities
         public override string ToString()
         {
             string retVal = " ";
-            retVal += UserEmail;
+            retVal += UserName;
             foreach (Claims claims in Claims)
             {
                 retVal += $" " +
