@@ -65,7 +65,7 @@ namespace AutoBuildApp.Api.Controllers
 
             CommonResponse Result = await _vendorLinkingManager.AddProductToVendorListOfProducts(Product, photo);
 
-            if (!Result.SuccessBool)
+            if (!Result.ResponseBool)
             {
                 _logger.LogWarning("AddProductToVendorListOfProducts failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);

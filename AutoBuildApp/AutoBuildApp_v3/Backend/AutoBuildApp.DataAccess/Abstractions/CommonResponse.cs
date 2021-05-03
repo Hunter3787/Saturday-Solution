@@ -12,16 +12,13 @@ namespace AutoBuildApp.DataAccess.Abstractions
         /// the success string represents a success message
         /// upon success bool =  true
         /// </summary>
-        public string SuccessString { get; set; }
-        /// <summary>
-        /// the failure string corresponds to a failure message in the case of Success bool is false
-        /// </summary>
-        public string FailureString { get; set; }
+        public string ResponseString { get; set; }
         /// <summary>
         /// a bool value to check incoming object if it succeeded or failed 
         /// to cast as necessary 
         /// </summary>
-        public bool SuccessBool { get; set; }
+        public bool ResponseBool { get; set; }
+
 
 
     }
