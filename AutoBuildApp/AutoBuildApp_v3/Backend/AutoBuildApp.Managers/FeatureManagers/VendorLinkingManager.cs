@@ -15,13 +15,14 @@ namespace AutoBuildApp.Managers.FeatureManagers
     public class VendorLinkingManager
     {
         private readonly LoggingProducerService _logger = LoggingProducerService.GetInstance;
-        public readonly ConcurrentDictionary<string, HashSet<string>> VendorsProducts;
+        private readonly ConcurrentDictionary<string, HashSet<string>> VendorsProducts;
         private VendorLinkingService _vendorLinkingService;
 
 
         public VendorLinkingManager(string connectionString)
         {
             _vendorLinkingService = new VendorLinkingService(connectionString);
+            VendorsProducts = _vendorLinkingService.PopulateVendorsProducts();
         }
 
         public AddProductDTO ConvertFormToProduct(IFormCollection formData)
@@ -107,42 +108,44 @@ namespace AutoBuildApp.Managers.FeatureManagers
 
         public async Task<CommonResponse> AddProductToVendorListOfProducts(AddProductDTO product, IFormFile photo)
         {
-            string Vendor = "new egg";
+            string Vendor = "danny";
             CommonResponse response = new CommonResponse();
+
             if(photo == null)
             {
-                _logger.LogWarning("Image was not chosen.");
+                _logger.LogWarning("Image was not chosen. AddProductToVendorListOfProducts manager call failed.");
                 response.ResponseString = "Image was not chosen.";
                 response.ResponseBool = false;
                 return response;
             }
 
-            // Checks to see if the vendor exists, 
-            //if (!VendorsProducts.ContainsKey(Vendor))
-            //{
-            //    HashSet<string> HashSet = new HashSet<string>();
-            //    VendorsProducts.TryAdd(Vendor, HashSet);
-            //}
+            // If vendor doesn't exist, add it to our dictionary.
+            if (!VendorsProducts.ContainsKey(Vendor))
+            {
+                HashSet<string> HashSet = new HashSet<string>();
+                VendorsProducts.TryAdd(Vendor, HashSet);
+            }
 
-            //if (VendorsProducts[Vendor].Contains(product.ModelNumber))
-            //{
-            //    _logger.LogWarning("This vendor already has this model number.");
-            //    response.SuccessString = "This vendor already has this model number.";
-            //    response.SuccessBool = false;
+            // If the model number already exists for the current vendor, return false since it's a duplicate.
+            if (VendorsProducts[Vendor].Contains(product.ModelNumber))
+            {
+                _logger.LogWarning("This vendor already has this model number. AddProductToVendorListOfProducts manager call failed.");
+                response.ResponseString = "This vendor already has this model number. ";
+                response.ResponseBool = false;
 
-            //    return response;
-            //}
+                return response;
+            }
 
             // Uploads image to the location and saves the path to the product's imageUrl field.
             product.ImageUrl = await _vendorLinkingService.UploadImage("", photo);
-            _logger.LogInformation("Successfully added the image.");
+            _logger.LogInformation("Successfully uploaded the image in AddProductToVendorListOfProducts.");
 
             return _vendorLinkingService.AddProductToVendorListOfProducts(product);
         }
 
         public async Task<bool> EditProductInVendorListOfProducts(AddProductDTO product, IFormFile photo)
         {
-            // Only edit the image if a photo is selected.
+            // If a photo is selected, update the image and the image path.
             if(photo != null)
             {
                 // Uploads image to the location and saves the path to the product's imageUrl field.
@@ -150,6 +153,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
                 _logger.LogInformation("Successfully edited the image.");
             }
 
+            _logger.LogInformation("Successfully uploaded the image in AddProductToVendorListOfProducts.");
             return _vendorLinkingService.EditProductInVendorListOfProducts(product);
         }
 
