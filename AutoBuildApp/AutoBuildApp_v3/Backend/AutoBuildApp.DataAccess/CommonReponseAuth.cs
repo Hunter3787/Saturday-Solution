@@ -1,9 +1,9 @@
-﻿using AutoBuildApp.DataAccess.Entities;
+﻿using AutoBuildApp.Models.Entities;
 using System;
 using AutoBuildApp.Models.DataTransferObjects;
 
 
-namespace AutoBuildApp.DataAccess
+namespace AutoBuildApp.Models
 {
     // this is a responce to the Dashboard Bussiness object
     /// <summary>

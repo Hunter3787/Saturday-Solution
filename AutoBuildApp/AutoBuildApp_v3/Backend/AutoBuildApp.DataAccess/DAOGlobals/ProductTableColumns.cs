@@ -2,7 +2,7 @@
  * 
  * @Author Nick Marshall-Eminger
  */
-namespace AutoBuildApp.DataAccess
+namespace AutoBuildApp.Models
 {
     public static class ProductTableColumns
     {

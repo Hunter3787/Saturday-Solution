@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using Microsoft.Data.SqlClient;
 
-namespace AutoBuildApp.DataAccess
+namespace AutoBuildApp.Models
 {
     public class ShelfDAO
     {
@@ -28,7 +28,7 @@ namespace AutoBuildApp.DataAccess
                     string insertRequest = "INSERT INTO ";
                     command.Transaction = connection.BeginTransaction();
                     command.Connection = connection;
-                    command.CommandTimeout = DAOGlobals.TIMEOUT_SHORT;
+                    command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
                     command.CommandType = CommandType.Text;
                     command.CommandText = insertRequest;
 

@@ -81,24 +81,29 @@ namespace AutoBuildApp.Api.Controllers
         public async Task<IActionResult> EditProductInVendorListOfProducts(IFormCollection formData, IFormFile photo)
         {
             // Takes the form data from the front end and converts it to an AddProductDTO.
-            AddProductDTO Product = _vendorLinkingManager.ConvertFormToProduct(formData);
+            AddProductDTO product = _vendorLinkingManager.ConvertFormToProduct(formData);
 
             // Product is null if a format exception was thrown
-            if (Product == null)
+            if (product == null)
             {
+                Console.WriteLine("WRong");
+
                 _logger.LogWarning("EditProductInVendorListOfProducts failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
 
-            bool Result = await _vendorLinkingManager.EditProductInVendorListOfProducts(Product, photo);
+            CommonResponse result = await _vendorLinkingManager.EditProductInVendorListOfProducts(product, photo);
 
-            if (!Result)
+            if (!result.ResponseBool)
             {
+                Console.WriteLine("WRong");
+
                 _logger.LogWarning("EditProductInVendorListOfProducts failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
 
             _logger.LogInformation("EditProductInVendorListOfProducts succeeded.");
+            Console.WriteLine("Correct");
             return Ok();
         }
 
@@ -106,9 +111,9 @@ namespace AutoBuildApp.Api.Controllers
         [HttpDelete]
         public IActionResult DeleteProductFromVendorList(string modelNumber)
         {
-            var Result = _vendorLinkingManager.DeleteProductFromVendorList(modelNumber);
+            CommonResponse result = _vendorLinkingManager.DeleteProductFromVendorList(modelNumber);
 
-            if(!Result)
+            if(!result.ResponseBool)
             {
                 _logger.LogWarning("DeleteProductFromVendorList failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
@@ -121,17 +126,17 @@ namespace AutoBuildApp.Api.Controllers
         [HttpGet("modelNumbers")]
         public IActionResult GetAllModelNumbers()
         {
-            var ModelNumbers = _vendorLinkingManager.GetAllModelNumbers();
+            CollectionCommonResponse<List<string>> modelNumbers = _vendorLinkingManager.GetAllModelNumbers();
 
             // ModelNumbers is null when an SQL exception occurs.
-            if (ModelNumbers == null)
+            if (modelNumbers == null)
             {
                 _logger.LogWarning("GetAllModelNumbers failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
 
             _logger.LogInformation("GetAllModelNumbers succeeded.");
-            return Ok(ModelNumbers);
+            return Ok(modelNumbers.GenericCollection);
         }
 
         [HttpGet]
@@ -162,7 +167,7 @@ namespace AutoBuildApp.Api.Controllers
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
 
-            var ProductsByVendor = _vendorLinkingManager.GetAllProductsByVendor(Filters);
+            CollectionCommonResponse<List<AddProductDTO>> ProductsByVendor = _vendorLinkingManager.GetAllProductsByVendor(Filters);
 
             // ProductsByVendor is null when an SQL exception occurs.
             if(ProductsByVendor == null)
@@ -172,7 +177,7 @@ namespace AutoBuildApp.Api.Controllers
             }
 
             _logger.LogInformation("GetAllProductsByVendor succeeded.");
-            return Ok(ProductsByVendor);
+            return Ok(ProductsByVendor.GenericCollection);
         }
     }
 }

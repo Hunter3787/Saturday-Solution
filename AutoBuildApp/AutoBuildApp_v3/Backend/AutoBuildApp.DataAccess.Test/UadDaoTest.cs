@@ -10,7 +10,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading;
 
-namespace AutoBuildApp.DataAccess.Test
+namespace AutoBuildApp.Models.Test
 {
     [TestClass]
     public class UadDaoTest
