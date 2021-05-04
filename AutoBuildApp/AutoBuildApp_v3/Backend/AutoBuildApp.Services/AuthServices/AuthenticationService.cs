@@ -1,5 +1,5 @@
-﻿using AutoBuildApp.Models;
-using AutoBuildApp.Models.Entities;
+﻿using AutoBuildApp.DataAccess;
+using AutoBuildApp.DataAccess.Entities;
 using AutoBuildApp.Security.Models;
 
 using System;

@@ -10,7 +10,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading;
 
-namespace AutoBuildApp.Models.Test
+namespace AutoBuildApp.DataAccess.Test
 {
     [TestClass]
     public class AnalyticsDaoTest

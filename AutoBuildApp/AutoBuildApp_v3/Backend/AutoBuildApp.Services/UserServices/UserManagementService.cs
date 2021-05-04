@@ -1,10 +1,10 @@
-﻿using AutoBuildApp.Models;
+﻿using AutoBuildApp.DataAccess;
 using AutoBuildApp.Models.Users;
-using AutoBuildApp.Models.DataTransferObjects;
+using AutoBuildApp.Models.DTO;
 using System;
 using AutoBuildApp.DomainModels;
 using System.Collections.Generic;
-using AutoBuildApp.Models.Entities;
+using AutoBuildApp.DataAccess.Entities;
 using System.Text;
 
 

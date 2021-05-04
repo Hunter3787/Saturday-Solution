@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using AutoBuildApp.Models;
-using AutoBuildApp.Models.DataTransferObjects;
+using AutoBuildApp.DataAccess;
+using AutoBuildApp.DataAccess.Abstractions;
 using AutoBuildApp.Models;
 using AutoBuildApp.Models.Interfaces;
 

@@ -1,7 +1,5 @@
-﻿using AutoBuildApp.Models;
+﻿using AutoBuildApp.DataAccess;
 using AutoBuildApp.Models.DataTransferObjects;
-using AutoBuildApp.Models;
-using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.VendorLinking;
 using AutoBuildApp.Models.WebCrawler;
 using Microsoft.AspNetCore.Http;
@@ -11,112 +9,50 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using AutoBuildApp.Services.FeatureServices;
-using AutoBuildApp.Models;
 
 namespace AutoBuildApp.Services
 {
     public class VendorLinkingService
     {
+        private readonly LoggingProducerService _logger = LoggingProducerService.GetInstance;
         private VendorLinkingDAO _vendorLinkingDAO;
-        private CommonResponseService commonResponseService = new CommonResponseService();
+
         public VendorLinkingService(string connectionString)
         {
             _vendorLinkingDAO = new VendorLinkingDAO(connectionString);
         }
 
-        public CollectionCommonResponse<ConcurrentDictionary<string, HashSet<string>>> PopulateVendorsProducts()
+        public ConcurrentDictionary<string, HashSet<string>> PopulateVendorsProducts()
         {
-            // Call the DAO method and return the system code along with the collection
-            SystemCodeWithCollection<ConcurrentDictionary<string, HashSet<string>>> daoResponse = _vendorLinkingDAO.PopulateVendorsProducts();
-
-            // Initialize a Common Response object that has a collection field
-            CollectionCommonResponse<ConcurrentDictionary<string, HashSet<string>>> commonResponse = new CollectionCommonResponse<ConcurrentDictionary<string, HashSet<string>>>();
-
-            // Pass in the response code and the common response object and set the bool and the string fields
-            commonResponseService.SetCommonResponse(daoResponse.Code, commonResponse);
-
-            // Save the collection to the common response object
-            commonResponse.GenericCollection = daoResponse.GenericCollection;
-
-            return commonResponse;
+            return _vendorLinkingDAO.PopulateVendorsProducts();
         }
 
         public CommonResponse AddProductToVendorListOfProducts(AddProductDTO product)
         {
-            // Call the DAO method and return the system code
-            AutoBuildSystemCodes daoResponseCode = _vendorLinkingDAO.AddProductToVendorListOfProducts(product);
-
-            // Initialize a common response object
-            CommonResponse commonResponse = new CommonResponse();
-
-            // Pass in the response code and the common response object and set the bool and the string fields
-            //      The third parameter is for a custom success message
-            commonResponseService.SetCommonResponse(daoResponseCode, commonResponse, ResponseStringGlobals.SUCCESSFUL_ADDITION);
-
-            return commonResponse;
+            return _vendorLinkingDAO.AddProductToVendorListOfProducts(product);
         }
-        public CommonResponse EditProductInVendorListOfProducts(AddProductDTO product)
+        public bool EditProductInVendorListOfProducts(AddProductDTO product)
         {
-            // Call the DAO method and return the system code
-            AutoBuildSystemCodes daoResponseCode = _vendorLinkingDAO.EditProductInVendorListOfProducts(product);
-
-            // Initialize a common response object
-            CommonResponse commonResponse = new CommonResponse();
-
-            // Pass in the response code and the common response object and set the bool and the string fields
-            //      The third parameter is for a custom success message for when the response code is success
-            commonResponseService.SetCommonResponse(daoResponseCode, commonResponse, ResponseStringGlobals.SUCCESSFUL_MODIFICATION);
-
-            return commonResponse;
+            return _vendorLinkingDAO.EditProductInVendorListOfProducts(product);
         }
 
-        public CommonResponse DeleteProductFromVendorList(string modelNumber)
+        public bool DeleteProductFromVendorList(string modelNumber)
         {
-            // Call the DAO method and return the system code
-            AutoBuildSystemCodes daoResponseCode = _vendorLinkingDAO.DeleteProductFromVendorList(modelNumber);
-
-            // Initialize a common response object
-            CommonResponse commonResponse = new CommonResponse();
-
-            // Pass in the response code and the common response object and set the bool and the string fields
-            //      The third parameter is for a custom success message for when the response code is success
-            commonResponseService.SetCommonResponse(daoResponseCode, commonResponse, ResponseStringGlobals.SUCCESSFUL_DELETION);
-
-            return commonResponse;
+            return _vendorLinkingDAO.DeleteProductFromVendorList(modelNumber);
+        }
+        public List<AddProductDTO> GetAllProductsByVendor(GetProductByFilterDTO filters)
+        {
+            return _vendorLinkingDAO.GetProductsByFilter(filters, 1);
+            //return _vendorLinkingDAO.GetAllProductsByVendor(" ");
+        }
+        public List<string> GetAllModelNumbers()
+        {
+            return _vendorLinkingDAO.GetAllModelNumbers();
         }
 
-        public CollectionCommonResponse<List<AddProductDTO>> GetAllProductsByVendor(GetProductByFilterDTO filters)
+        public List<AddProductDTO> GetAllProductsByVendor(string companyName)
         {
-            // Call the DAO method and return the system code along with the collection
-            SystemCodeWithCollection<List<AddProductDTO>> daoResponse = _vendorLinkingDAO.GetVendorProductsByFilter(filters);
-
-            // Initialize a Common Response object that has a collection field
-            CollectionCommonResponse<List<AddProductDTO>> commonResponse = new CollectionCommonResponse<List<AddProductDTO>>();
-
-            // Pass in the response code and the common response object and set the bool and the string fields
-            commonResponseService.SetCommonResponse(daoResponse.Code, commonResponse);
-
-            // Save the collection to the common response object
-            commonResponse.GenericCollection = daoResponse.GenericCollection;
-
-            return commonResponse;
-        }
-        public CollectionCommonResponse<List<string>> GetAllModelNumbers()
-        {
-            // Call the DAO method and return the system code along with the collection
-            SystemCodeWithCollection<List<string>> daoResponse = _vendorLinkingDAO.GetAllModelNumbers();
-
-            // Initialize a Common Response object that has a collection field
-            CollectionCommonResponse<List<string>> commonResponse = new CollectionCommonResponse<List<string>>();
-
-            // Pass in the response code and the common response object and set the bool and the string fields
-            commonResponseService.SetCommonResponse(daoResponse.Code, commonResponse);
-
-            // Save the collection to the common response object
-            commonResponse.GenericCollection = daoResponse.GenericCollection;
-
-            return commonResponse;
+            return _vendorLinkingDAO.GetAllProductsByVendor(companyName);
         }
 
         public async Task<string> UploadImage(string username, IFormFile file)
@@ -140,6 +76,7 @@ namespace AutoBuildApp.Services
                 }
             }
 
+            _logger.LogInformation("Successfully uploaded image to specified location.");
             return storeIn;
         }
     }

@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using AutoBuildApp.Models.Interfaces;
-using AutoBuildApp.Models.Entities;
+using AutoBuildApp.DataAccess.Entities;
 using AutoBuildApp.Models.Enumerations;
 /**
 * IDataAccessObject Interface for AutoBuild App.
 * @Author Nick Marshall-Eminger
 */
-namespace AutoBuildApp.Models.DataTransferObjects
+namespace AutoBuildApp.DataAccess.Abstractions
 {
     public interface IProductDAO
     {

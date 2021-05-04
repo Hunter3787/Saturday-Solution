@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Interfaces;
-using AutoBuildApp.Models.DataTransferObjects;
-using AutoBuildApp.Models.Entities;
-using AutoBuildApp.Models;
+using AutoBuildApp.DataAccess.Abstractions;
+using AutoBuildApp.DataAccess.Entities;
+using AutoBuildApp.DataAccess;
 using AutoBuildApp.Services.FactoryServices;
 using AutoBuildApp.Models.Products;
 

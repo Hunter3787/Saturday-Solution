@@ -1,4 +1,4 @@
-﻿using AutoBuildApp.Models.Entities;
+﻿using AutoBuildApp.DataAccess.Entities;
 using AutoBuildApp.Models.Users;
 using Microsoft.Data.SqlClient;
 using System;
@@ -7,7 +7,7 @@ using System.Data;
 using System.Security.Claims;
 using System.Text;
 
-namespace AutoBuildApp.Models
+namespace AutoBuildApp.DataAccess
 {
     public class UserManagementDAO
     {
