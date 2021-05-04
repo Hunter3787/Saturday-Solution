@@ -265,6 +265,8 @@ async function addReview() {
     let customRequest = Object.assign(fetchRequest, {method: 'POST', body: JSON.stringify(item)});
 
     await fetch(reviewsUri, customRequest);
+
+    getItem();
 }
 
 // this function will call the delete fetch method.
@@ -273,6 +275,8 @@ async function deleteReview(id) {
     let customRequest = Object.assign(fetchRequest, {method: 'DELETE'});
 
     await fetch(`${reviewsUri}/${id}`, customRequest);
+
+    getItem();
 }
 
 // will display the edit form for the id that is specified.
@@ -306,6 +310,8 @@ async function updateReview() {
     await fetch(reviewsUri, customRequest);
 
     closeInput(); // will close the form when it is complete.
+
+    getItem();
 }
 
 // This method will change the edit form display from block to none.
