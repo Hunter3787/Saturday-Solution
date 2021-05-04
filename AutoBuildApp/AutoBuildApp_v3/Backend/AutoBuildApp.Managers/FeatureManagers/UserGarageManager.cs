@@ -37,13 +37,13 @@ namespace AutoBuildApp.Managers
 
             //ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
             _allowedRoles = new List<string>()
-            { RoleEnumType.BASIC_ROLE,RoleEnumType.DELEGATE_ADMIN,
-            RoleEnumType.VENDOR_ROLE, RoleEnumType.SYSTEM_ADMIN};
+            { RoleEnumType.BasicRole,RoleEnumType.DelegateAdmin,
+            RoleEnumType.VendorRole, RoleEnumType.SystemAdmin};
 
 
-            //_basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
-            //_vendor = claimsFactory.GetClaims(RoleEnumType.VENDOR_ROLE);
-            //_admin = claimsFactory.GetClaims(RoleEnumType.DELEGATE_ADMIN);
+            //_basic = claimsFactory.GetClaims(RoleEnumType.BasicRole);
+            //_vendor = claimsFactory.GetClaims(RoleEnumType.VendorRole);
+            //_admin = claimsFactory.GetClaims(RoleEnumType.DelegateAdmin);
 
             _buildDAO = new BuildDAO(connectionString);
             _shelfDAO = new ShelfDAO(connectionString);

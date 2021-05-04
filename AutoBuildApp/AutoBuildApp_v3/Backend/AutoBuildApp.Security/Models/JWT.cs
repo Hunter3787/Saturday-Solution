@@ -55,22 +55,22 @@ namespace AutoBuildApp.Security.Models
         /// secret key, the payload object and
         /// the header object for the JWT generation.
         /// </summary>
-        /// <param name="secretKey"></param>
-        /// <param name="payload"></param>
-        /// <param name="header"></param>
-        public JWT(string secretKey, object payload, object header)
+        /// <param _name="secretKey"></param>
+        /// <param _name="payload"></param>
+        /// <param _name="header"></param>
+        public JWT(string SecretKey, object Payload, object Header)
         {
             try
             {
                 /// checking for null parameters first
-                if (secretKey == null || payload == null || header == null)
+                if (SecretKey == null || Payload == null || Header == null)
                 {
                     // catching any null objects passed.
                     var expectedParamName = "NULL OBJECT PROVIDED";
                     throw new ArgumentNullException(expectedParamName);
                 }
-                SecretKey = secretKey;
-                this.Header = (JWTHeader)header;
+                this.SecretKey = SecretKey;
+                this.Header = (JWTHeader)Header;
                 // here added the ifs should this class want to generate 
                 // a JWT token based of a different algorithm
                 if (this.Header.alg == Algorithm.HS256.AlgValue)
@@ -85,7 +85,7 @@ namespace AutoBuildApp.Security.Models
 
                 }
                 // Finally instatiating the payload.
-                this.Payload = (JWTPayload)payload;
+                this.Payload = (JWTPayload)Payload;
             }
             catch (ArgumentNullException)
             {
@@ -100,7 +100,7 @@ namespace AutoBuildApp.Security.Models
         /// <summary>
         /// serializing a C# object into a JSON formated object
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param _name="obj"></param>
         /// <returns></returns>
         public string ApplyJson(object obj)
         {
@@ -404,7 +404,7 @@ namespace AutoBuildApp.Security.Models
     //        };
     //        foreach (Claims claims in payload.UserCLaims)
     //        { // converting the claims in type System.Security.Claims
-    //            _securityClaims.Add(new Claim(claims.Permission, claims.scopeOfPermissions));
+    //            _securityClaims.Add(new Claim(claims.Permission, claims.ScopeOfPermissions));
     //        }
 
     //        /*

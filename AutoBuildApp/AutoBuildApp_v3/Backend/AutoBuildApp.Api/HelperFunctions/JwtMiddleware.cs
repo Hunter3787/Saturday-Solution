@@ -166,7 +166,7 @@ namespace AutoBuildApp.Api.HelperFunctions
 
                 var userPrinciple = jwtParser.ParseForClaimsPrinciple();
                 _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal; // get the principle on the thread
-                // Console.WriteLine($"\nIN THE JWT MIDDLEWARE CHEWCKING THE PRINCIPLE NAME: {_threadPrinciple.Identity.Name}\n");
+                Console.WriteLine($"\nIN THE JWT MIDDLEWARE CHEWCKING THE PRINCIPLE NAME: {_threadPrinciple.Identity.Name}\n");
                 Thread.CurrentPrincipal = _threadPrinciple; // SETTING THE PARSED TOKEN, TO THE THREAD.
 
                 #endregion

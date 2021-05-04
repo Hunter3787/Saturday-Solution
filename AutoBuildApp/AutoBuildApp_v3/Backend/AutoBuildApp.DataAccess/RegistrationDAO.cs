@@ -67,7 +67,7 @@ namespace AutoBuildApp.Models
         public string RegisterAccount(UserAccount user)
         {
             ClaimsFactory _claimsFactory = new ConcreteClaimsFactory();
-            IClaims basicUser = _claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
+            IClaims basicUser = _claimsFactory.GetClaims(RoleEnumType.BasicRole);
          
             using (SqlConnection connection = new SqlConnection(_connection))
             {

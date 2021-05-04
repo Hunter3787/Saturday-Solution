@@ -55,8 +55,8 @@ namespace AutoBuildApp.Models.Test
             };
 
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
-            IClaims adminClaims = claimsFactory.GetClaims(RoleEnumType.SYSTEM_ADMIN);
-            IClaims basicClaims = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
+            IClaims adminClaims = claimsFactory.GetClaims(RoleEnumType.SystemAdmin);
+            IClaims basicClaims = claimsFactory.GetClaims(RoleEnumType.BasicRole);
 
             ClaimsIdentity adminClaimsIdentity = new ClaimsIdentity
             (AdminIdentity, adminClaims.Claims(), AdminIdentity.AuthenticationType, AdminIdentity.Name, " ");

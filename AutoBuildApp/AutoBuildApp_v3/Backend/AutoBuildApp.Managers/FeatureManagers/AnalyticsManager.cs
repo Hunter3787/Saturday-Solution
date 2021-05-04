@@ -17,16 +17,14 @@ namespace AutoBuildApp.Managers.FeatureManagers
         // principle after they are authenticated 
 
         private AnalyticsDAO _uadDAO;
-        private UadDTO _uadDTO;
-        private  List<string> _allowedRoles; //specify rles
+        private List<string> _allowedRoles; //specify rles
         
 
-        public AnalyticsManager(string _cnnctString)
+        public AnalyticsManager(string ConnectiontString)
         {
-            _uadDAO = new AnalyticsDAO(_cnnctString);
-            _uadDTO = new UadDTO(); // MAY REMOVE 
+            _uadDAO = new AnalyticsDAO(ConnectiontString);
             _allowedRoles = new List<string>()
-            { RoleEnumType.SYSTEM_ADMIN };
+            { RoleEnumType.SystemAdmin };
         }
 
         //public IList<Charts> GetCharts(ResponseUAD responseUAD, DBViews specifiedChart = DBViews.none)
@@ -123,9 +121,10 @@ namespace AutoBuildApp.Managers.FeatureManagers
         //}
 
         // TURN INTO ASYNC 
-        public void GetChartData(int graphType)
+        public void GetChartData(int GraphType)
         {
-            DBViews specifiedChart = (DBViews)graphType;
+            AnalyticsDataDTO dataDTO = new AnalyticsDataDTO();
+
 
             ResponseUAD responseUAD = new ResponseUAD();
             //Initial Authorization Check
@@ -135,7 +134,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
                 return;
 
             }
-            responseUAD = _uadDAO.GetGraphData((DBViews)graphType);
+            responseUAD = _uadDAO.GetGraphData((DBViews)GraphType);
             //from dao
             if (!responseUAD.IsAuthorized)
             {

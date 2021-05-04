@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AutoBuildApp.DomainModels
 {
-    public class UadDTO
+    public class AnalyticsDataDTO
     {
         public bool SuccessFlag { get; set; }
         public string result { get; set; }
@@ -13,7 +13,7 @@ namespace AutoBuildApp.DomainModels
         public IList<Charts> analyticChartsRequisted { get; set; }
 
 
-        public UadDTO()
+        public AnalyticsDataDTO()
         {
             SuccessFlag = false;
             result = " ";

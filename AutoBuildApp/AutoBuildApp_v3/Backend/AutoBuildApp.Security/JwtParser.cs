@@ -34,6 +34,7 @@ namespace AutoBuildApp.Security
         {
             this.JWT = JWTToken;
             this._jwtValidator = new JwtValidator(JWTToken);
+            Console.WriteLine(_jwtValidator.GetJWTPayload());
 
             //Console.WriteLine("Token pased: " + JWTToken);
         }
@@ -63,8 +64,9 @@ namespace AutoBuildApp.Security
             };
             foreach (Claims claims in payload.UserCLaims)
             { // converting the claims in type System.Security.Claims
-                _securityClaims.Add(new Claim(claims.Permission, claims.scopeOfPermissions));
+                _securityClaims.Add(new Claim(claims.Permission, claims.ScopeOfPermissions));
             }
+            Console.WriteLine($" user identity in the parser { userIdentity.ToString()}");
 
             /*
             ClaimsIdentity claimsIdentity = 
@@ -85,6 +87,14 @@ namespace AutoBuildApp.Security
 
             _principalGenerated = new ClaimsPrincipal(claimsIdentity);
 
+            Console.WriteLine($"\n" +
+                $"In the jwt parser");
+            foreach (Claim c in _principalGenerated.Claims)
+            {
+                Console.WriteLine($" " +
+                    $"claim type: { c.Type } claim value: {c.Value} ");
+
+            }
 
             Thread.CurrentPrincipal = _principalGenerated; //setting to the thread.
             return _principalGenerated;
