@@ -5,8 +5,8 @@ using System;
 using System.Collections.Generic;
 using AutoBuildApp.DomainModels;
 using AutoBuildApp.DomainModels.Enumerations;
-using AutoBuildApp.DataAccess;
-using AutoBuildApp.DataAccess.Entities;
+using AutoBuildApp.Models;
+using AutoBuildApp.Models.Entities;
 
 /// <summary>
 /// References used from file: Solution Items/References.txt 

@@ -5,7 +5,7 @@
  * Storing the product table, and specs table.
  * @Author Nick Marshall-Eminger
  */
-namespace AutoBuildApp.DataAccess.Entities
+namespace AutoBuildApp.Models.Entities
 {
     public class ProductEntity
     {

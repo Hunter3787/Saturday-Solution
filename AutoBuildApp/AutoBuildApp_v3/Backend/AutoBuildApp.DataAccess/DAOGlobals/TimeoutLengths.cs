@@ -2,9 +2,9 @@
  * Global values for the Data Access Layer.
  * @Author Nick Marshall-Eminger
  */
-namespace AutoBuildApp.DataAccess
+namespace AutoBuildApp.Models
 {
-    public static class DAOGlobals
+    public static class TimeoutLengths
     {
         public const int TIMEOUT_SHORT = 5;
         public const int TIMEOUT_MEDIUM = 30;

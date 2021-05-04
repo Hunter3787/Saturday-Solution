@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
 
-namespace AutoBuildApp.DataAccess.Test
+namespace AutoBuildApp.Models.Test
 {
     [TestClass]
     public class UmDaoTest

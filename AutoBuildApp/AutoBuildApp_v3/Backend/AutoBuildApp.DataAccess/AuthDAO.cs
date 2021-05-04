@@ -1,12 +1,12 @@
 ﻿using Microsoft.Data.SqlClient;
-using AutoBuildApp.DataAccess.Entities;
+using AutoBuildApp.Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using AutoBuildApp.Security.Models;
 using AutoBuildApp.Security;
 
-namespace AutoBuildApp.DataAccess
+namespace AutoBuildApp.Models
 {
     public class AuthDAO
     {

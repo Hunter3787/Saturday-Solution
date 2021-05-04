@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AutoBuildApp.DataAccess.Entities
+namespace AutoBuildApp.Models.Entities
 {
     public class UserAccountEntity
     {

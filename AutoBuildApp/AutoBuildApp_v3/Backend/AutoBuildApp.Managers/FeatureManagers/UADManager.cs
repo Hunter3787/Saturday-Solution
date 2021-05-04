@@ -1,5 +1,5 @@
-﻿using AutoBuildApp.DataAccess;
-using AutoBuildApp.DataAccess.Abstractions;
+﻿using AutoBuildApp.Models;
+using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.DomainModels;
 using AutoBuildApp.DomainModels.Abstractions;
 using AutoBuildApp.DomainModels.Enumerations;

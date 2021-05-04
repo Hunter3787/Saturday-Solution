@@ -1,4 +1,4 @@
-﻿using AutoBuildApp.DataAccess.Abstractions;
+﻿using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.DomainModels.Enumerations;
 using System;
 using System.Collections.Generic;

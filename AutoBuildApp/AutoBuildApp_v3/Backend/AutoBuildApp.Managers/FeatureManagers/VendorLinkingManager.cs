@@ -22,7 +22,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
         public VendorLinkingManager(string connectionString)
         {
             _vendorLinkingService = new VendorLinkingService(connectionString);
-            VendorsProducts = _vendorLinkingService.PopulateVendorsProducts();
+            //VendorsProducts = _vendorLinkingService.PopulateVendorsProducts();
         }
 
         public AddProductDTO ConvertFormToProduct(IFormCollection formData)
@@ -143,7 +143,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             return _vendorLinkingService.AddProductToVendorListOfProducts(product);
         }
 
-        public async Task<bool> EditProductInVendorListOfProducts(AddProductDTO product, IFormFile photo)
+        public async Task<CommonResponse> EditProductInVendorListOfProducts(AddProductDTO product, IFormFile photo)
         {
             // If a photo is selected, update the image and the image path.
             if(photo != null)
@@ -157,19 +157,19 @@ namespace AutoBuildApp.Managers.FeatureManagers
             return _vendorLinkingService.EditProductInVendorListOfProducts(product);
         }
 
-        public bool DeleteProductFromVendorList(string modelNumber)
+        public CommonResponse DeleteProductFromVendorList(string modelNumber)
         {
             //log
             return _vendorLinkingService.DeleteProductFromVendorList(modelNumber);
         }
 
-        public List<AddProductDTO> GetAllProductsByVendor(GetProductByFilterDTO filters)
+        public CollectionCommonResponse<List<AddProductDTO>> GetAllProductsByVendor(GetProductByFilterDTO filters)
         {
             //log
             return _vendorLinkingService.GetAllProductsByVendor(filters);
         }
 
-        public List<string> GetAllModelNumbers()
+        public CollectionCommonResponse<List<string>> GetAllModelNumbers()
         {
             //log
             return _vendorLinkingService.GetAllModelNumbers();
