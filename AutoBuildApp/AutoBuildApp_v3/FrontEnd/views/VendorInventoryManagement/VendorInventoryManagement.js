@@ -238,7 +238,7 @@ async function addItem() {
     }
   })
   // Refresh the items
-  .then(getItemsByFilter());
+  .then(await getItemsByFilter());
 }
 
 // Submits the edit item to the back end
@@ -253,6 +253,7 @@ async function submitEditItem(modelNumber, newName, photo, newImageUrl,
   formData.append("availability", newAvailability);
   formData.append("url", newUrl);
   formData.append("price", newPrice);
+  console.log(newAvailability);
 
   await fetch(uri, {
     method: 'PUT',
@@ -263,16 +264,16 @@ async function submitEditItem(modelNumber, newName, photo, newImageUrl,
     body:formData
   })
     // Display the output message to the screen
-  .then(response => {
-    if(response.ok) {
-      alert('correct');
-    }
-    else {
-      alert('error');
-    }
- })
+//   .then(response => {
+//     if(response.ok) {
+//       alert('correct');
+//     }
+//     else {
+//       alert('error');
+//     }
+//  })
   // Refresh the items
- .then(getItemsByFilter());
+ .then(await getItemsByFilter());
   
 }
 
@@ -325,7 +326,7 @@ async function submitDeleteItem(modelNumber, newDivRow) {
 // var refreshData = setInterval(looping, 3000);
 
 // Gets the items by a specified list of filters
- function getItemsByFilter() {
+ async function getItemsByFilter() {
   var filtersQueryParameter = "?filtersString=";
   var priceQueryParameter = "&order=";
   var checkboxes = document.querySelectorAll('input[type=checkbox]');
@@ -347,7 +348,7 @@ async function submitDeleteItem(modelNumber, newDivRow) {
     }
   })
 
-  fetch(uri + filtersQueryParameter + priceQueryParameter, fetchRequest)
+  await fetch(uri + filtersQueryParameter + priceQueryParameter, fetchRequest)
   .then(response => response.json())
   .then(getAllModelNumbers())
   .then(async data => await displayItemsFilter(data));
@@ -599,7 +600,7 @@ async function submitDeleteItem(modelNumber, newDivRow) {
     })
     // When the edit button is clicked, remove the text 
     //    and append the editable text for name, url, and price
-    editButton.addEventListener('click', async () => {
+    editButton.addEventListener('click', () => {
       newDivName.removeChild(ProductNameText);
       newDivUrl.removeChild(UrlText);
       priceDiv.removeChild(ProductPriceText);
