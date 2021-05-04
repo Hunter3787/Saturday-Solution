@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using AutoBuildApp.DataAccess.DAOGlobals;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -59,7 +60,7 @@ namespace AutoBuildApp.DataAccess
                         #region SQL related
 
                         // https://learning.oreilly.com/library/view/adonet-in-a/0596003617/ch04s05.html
-                        command.CommandTimeout = TimeSpan.FromSeconds(DAOGlobals2.TIMEOUT_LONG).Seconds;
+                        command.CommandTimeout = TimeSpan.FromSeconds(TimeoutLengths.TIMEOUT_LONG).Seconds;
                         // 1) Create a Command, and set its CommandType property to StoredProcedure.
                         command.CommandType = CommandType.StoredProcedure;
                         // 2) Set the CommandText to the name of the stored procedure.
