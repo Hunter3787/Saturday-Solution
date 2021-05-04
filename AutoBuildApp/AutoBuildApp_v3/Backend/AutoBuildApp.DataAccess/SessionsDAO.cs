@@ -1,4 +1,4 @@
-﻿using AutoBuildApp.DataAccess.DAOGlobals;
+﻿using AutoBuildApp.DataAccess;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;

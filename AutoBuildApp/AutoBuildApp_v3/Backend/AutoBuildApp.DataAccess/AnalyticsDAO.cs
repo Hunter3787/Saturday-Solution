@@ -1,7 +1,6 @@
-﻿using AutoBuildApp.DataAccess.Abstractions;
-using AutoBuildApp.DataAccess.DAOGlobals;
-using AutoBuildApp.DataAccess.Entities;
-﻿using AutoBuildApp.Models.DataTransferObjects;
+﻿
+using AutoBuildApp.DataAccess;
+using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.Models.Entities;
 using AutoBuildApp.Security;
 using AutoBuildApp.Security.Enumerations;

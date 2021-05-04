@@ -2,12 +2,11 @@
 using AutoBuildApp.DomainModels;
 using AutoBuildApp.DomainModels.Abstractions;
 using AutoBuildApp.DomainModels.Enumerations;
+using AutoBuildApp.Models;
 using AutoBuildApp.Security;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
 using System.Collections.Generic;
-
-
 
 
 
@@ -136,7 +135,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
                 return;
 
             }
-            responseUAD = _uadDAO.GetGraphData(specifiedChart);
+            responseUAD = _uadDAO.GetGraphData((DBViews)graphType);
             //from dao
             if (!responseUAD.IsAuthorized)
             {

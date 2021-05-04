@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using AutoBuildApp.Security.Models;
 using AutoBuildApp.Security;
-using AutoBuildApp.DataAccess.DAOGlobals;
+using AutoBuildApp.DataAccess;
 
 namespace AutoBuildApp.Models
 {
