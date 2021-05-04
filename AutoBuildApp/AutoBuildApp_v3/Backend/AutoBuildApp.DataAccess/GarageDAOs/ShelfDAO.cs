@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
+using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models;
 using Microsoft.Data.SqlClient;
+using AutoBuildApp.Models.Products;
+using AutoBuildApp.Models.Enumerations;
 
 namespace AutoBuildApp.DataAccess
 {
@@ -194,7 +196,7 @@ namespace AutoBuildApp.DataAccess
             return success;
         }
 
-        public List<Shelf> GetAllShelves(string user)
+        public List<Shelf> GetAllShelvesByUser(string user)
         {
             List<Shelf> shelves = new List<Shelf>();
 
@@ -207,13 +209,67 @@ namespace AutoBuildApp.DataAccess
 
             }
 
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
 
+                using (var command = new SqlCommand())
+                {
+                    try
+                    {
+                        string GetAllShelvesByUserQuery = "SELECT S.nameOfShelf, SPS.quantity, SPS.itemIndex , P.productType, P.modelNumber, P.manufacturerName " +
+                            "FROM Shelves S " +
+                            "LEFT JOIN Save_Product_Shelf SPS ON S.shelfID = SPS.shelfID " +
+                            "LEFT JOIN Products P ON P.productId = SPS.productID WHERE userID = 2";
+                        command.Transaction = connection.BeginTransaction();
+                        command.Connection = connection;
+                        command.CommandTimeout = DAOGlobals.TIMEOUT_SHORT;
+                        command.CommandType = CommandType.Text;
+                        command.CommandText = GetAllShelvesByUserQuery;
+                        
+                        // Add parameter for userID from username.
 
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string currentShelf = (string)reader[ShelfTableCollumns.SHELF_NAME];
+                                Shelf shelf = new Shelf();
 
+                                shelf.ShelfName = currentShelf;
 
+                                var hasMore = true;
+                                while (hasMore
+                                    && (string)reader[ShelfTableCollumns.SHELF_NAME] == currentShelf
+                                    && (reader[SaveProductTableCollumns.SAVED_PRODUCT_INDEX] != DBNull.Value
+                                    || reader[SaveProductTableCollumns.SAVED_PRODUCT_QUANTITY] != DBNull.Value)
+                                    )
+                                {
+                                    IComponent component = new Component()
+                                    {
+                                        ModelNumber = (string) reader[ProductTableColumns.PRODUCT_COLUMN_MODEL],
+                                       // ProductType = (ProductType) Enum.Parse(typeof(ProductType),(string)reader[ProductTableColumns.PRODUCT_COLUMN_TYPE]),
+                                        ManufacturerName = (string) reader[ProductTableColumns.PRODUCT_COLUMN_MANUFACTURER],
+                                        Quantity = (int) reader[SaveProductTableCollumns.SAVED_PRODUCT_QUANTITY]
+                                    };
 
+                                    int itemIndex = (int) reader[SaveProductTableCollumns.SAVED_PRODUCT_INDEX];
+                                    shelf.ComponentList.Insert(itemIndex , component);
 
+                                    hasMore = reader.Read();
+                                }
 
+                                shelves.Add(shelf);
+                            }
+                        }
+
+                    }
+                    catch (SqlException)
+                    {
+                        
+                    }
+                }
+            }
 
             return shelves;
         }

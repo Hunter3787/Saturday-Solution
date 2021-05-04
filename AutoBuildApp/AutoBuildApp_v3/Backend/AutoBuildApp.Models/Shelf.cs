@@ -11,12 +11,12 @@ namespace AutoBuildApp.Models
 {
     public class Shelf
     {
-        public List<IComponent> _componentList { get; set; }
-        public string _shelfName { get; set; }
+        public List<IComponent> ComponentList { get; set; }
+        public string ShelfName { get; set; }
 
         public Shelf()
         {
-            _componentList = new List<IComponent>();
+            ComponentList = new List<IComponent>();
         }
 
     }
