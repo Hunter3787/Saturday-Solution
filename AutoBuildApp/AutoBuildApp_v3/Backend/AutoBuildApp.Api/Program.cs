@@ -45,10 +45,10 @@ namespace AutoBuildApp.Api
             //    }s
             //}).Start();
             //#endregion
-            //ConnectionManager connectionManager = new ConnectionManager();
-            //var con = connectionManager.GetConnectionStringByName(ControllerGlobals.CONNECTION_ADMIN_CREDENTIALS);
-            //ProductDAO productDAO = new ProductDAO(con);
-            //productDAO.GetAllProductEntities();
+            ConnectionManager connectionManager = new ConnectionManager();
+            var con = connectionManager.GetConnectionStringByName(ControllerGlobals.DOCKER_CONNECTION);
+            ProductDAO productDAO = new ProductDAO(con);
+            productDAO.GetAllProductEntities();
 
 
             ////        List<StartingLink> listOfLinks = new List<StartingLink>

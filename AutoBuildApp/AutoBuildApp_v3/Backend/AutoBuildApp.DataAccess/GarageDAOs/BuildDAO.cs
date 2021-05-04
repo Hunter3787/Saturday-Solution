@@ -19,10 +19,14 @@ namespace AutoBuildApp.DataAccess
 
         public IBuild GetBuildByID(int id)
         {
+
+
+
+
             return null;
         }
 
-        public List<IBuild> GetListOfBuilds(int id)
+        public List<IBuild> GetListOfBuilds(string user)
         {
             List<IBuild> outputList = new List<IBuild>();
 
@@ -39,7 +43,7 @@ namespace AutoBuildApp.DataAccess
             return false;
         }
 
-        public bool ModifyBuild(IBuild incoming)
+        public bool ModifyBuild(IBuild incoming, int buildID)
         {
             return false;
         }

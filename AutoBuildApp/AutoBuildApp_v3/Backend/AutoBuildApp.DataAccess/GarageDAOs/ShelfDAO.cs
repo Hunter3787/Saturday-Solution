@@ -17,6 +17,17 @@ namespace AutoBuildApp.DataAccess
 
         public bool InsertShelf(string shelfID, string user)
         {
+
+            try
+            {
+                IsNotNullOrEmpty(shelfID);
+                IsNotNullOrEmpty(user);
+            }
+            catch (ArgumentNullException ex)
+            {
+                // TODO: return new CommonResponse()
+            }
+
             bool success = false;
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -48,34 +59,214 @@ namespace AutoBuildApp.DataAccess
 
         public bool DeleteShelf(string shelfID)
         {
-            return false;
+            try
+            {
+                IsNotNullOrEmpty(shelfID);
+            }
+            catch(ArgumentNullException ex)
+            {
+                // TODO: return new CommonResponse();
+            }
+
+            bool success = false;
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand())
+                {
+                    string insertRequest = "INSERT INTO ";
+                    command.Transaction = connection.BeginTransaction();
+                    command.Connection = connection;
+                    command.CommandTimeout = DAOGlobals.TIMEOUT_SHORT;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = insertRequest;
+
+
+
+                    var rowsAdded = command.ExecuteNonQuery();
+                    if (rowsAdded == 1)
+                    {
+                        command.Transaction.Commit();
+                        success = true;
+                    }
+                }
+            }
+
+            return success;
         }
 
         public bool AddComponent(IComponent item)
         {
-            return false;
+
+
+
+            bool success = false;
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand())
+                {
+                    string insertRequest = "INSERT INTO ";
+                    command.Transaction = connection.BeginTransaction();
+                    command.Connection = connection;
+                    command.CommandTimeout = DAOGlobals.TIMEOUT_SHORT;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = insertRequest;
+
+
+
+                    var rowsAdded = command.ExecuteNonQuery();
+                    if (rowsAdded == 1)
+                    {
+                        command.Transaction.Commit();
+                        success = true;
+                    }
+                }
+            }
+
+            return success;
         }
 
         public bool RemoveComponent(int id)
         {
-            return false;
+            bool success = false;
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand())
+                {
+                    string insertRequest = "INSERT INTO ";
+                    command.Transaction = connection.BeginTransaction();
+                    command.Connection = connection;
+                    command.CommandTimeout = DAOGlobals.TIMEOUT_SHORT;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = insertRequest;
+
+
+
+                    var rowsAdded = command.ExecuteNonQuery();
+                    if (rowsAdded == 1)
+                    {
+                        command.Transaction.Commit();
+                        success = true;
+                    }
+                }
+            }
+
+            return success;
         }
 
         public bool UpdateShelf(string oldName, string newName, string user)
         {
-            return false;
+            bool success = false;
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand())
+                {
+                    string insertRequest = "INSERT INTO ";
+                    command.Transaction = connection.BeginTransaction();
+                    command.Connection = connection;
+                    command.CommandTimeout = DAOGlobals.TIMEOUT_SHORT;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = insertRequest;
+
+
+
+                    var rowsAdded = command.ExecuteNonQuery();
+                    if (rowsAdded == 1)
+                    {
+                        command.Transaction.Commit();
+                        success = true;
+                    }
+                }
+            }
+
+            return success;
         }
 
         public List<IComponent> GetComponentsByShelf(int id)
         {
             List<IComponent> outputList = new List<IComponent>();
 
+
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand())
+                {
+                    string insertRequest = "INSERT INTO ";
+                    command.Transaction = connection.BeginTransaction();
+                    command.Connection = connection;
+                    command.CommandTimeout = DAOGlobals.TIMEOUT_SHORT;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = insertRequest;
+
+                }
+            }
+
+
+
             return outputList;
         }
 
         public IComponent GetComponentByID(int id)
         {
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand())
+                {
+                    string insertRequest = "INSERT INTO ";
+                    command.Transaction = connection.BeginTransaction();
+                    command.Connection = connection;
+                    command.CommandTimeout = DAOGlobals.TIMEOUT_SHORT;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = insertRequest;
+
+
+                }
+            }
+
             return null;
         }
-    }    
+
+        #region Private Guard Methods
+        /// <summary>
+        /// Throws exception if string is null or empty.
+        /// </summary>
+        /// <param name="toCheck"></param>
+        private void IsNotNullOrEmpty(string toCheck)
+        {
+            if (string.IsNullOrEmpty(toCheck))
+            {
+                throw new ArgumentNullException(nameof(toCheck));
+            }
+        }
+
+        /// <summary>
+        /// Throws exception if object is null.
+        /// </summary>
+        /// <param name="toCheck"></param>
+        private void IsNotNull(object toCheck)
+        {
+            if(toCheck is null)
+            {
+                throw new ArgumentNullException(nameof(toCheck));
+            }
+        }
+        #endregion
+    }
 }
