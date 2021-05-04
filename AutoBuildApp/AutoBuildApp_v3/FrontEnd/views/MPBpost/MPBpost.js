@@ -236,9 +236,15 @@ async function getReviews() {
 
 // This function will add an item to the DB.
 async function addReview() {
+
+    let formData = new FormData();
+
     var starValue; // this variable will be used to store the value of the selected stars.
-    const addUserNameTextbox = document.getElementById('add-username'); // will get the value from the html element and store it.
-    var ele = document.getElementsByName('rate'); // will get the value from the html element and store it in ele.
+
+    let addUserNameTextbox = document.getElementById('add-username'); // will get the value from the html element and store it.
+    let ele = document.getElementsByName('rate'); // will get the value from the html element and store it in ele.
+    let addMessageTextbox = document.getElementById('add-message'); // will get the value from the html element message and store it.
+    let photo = document.getElementById("add-image").files[0]; // store the file in the photo variable.
 
     // This for loop will iterate through the radio elements and find which one is checked.
     for (var i = 0; i < ele.length; i++)
@@ -248,21 +254,21 @@ async function addReview() {
             starValue = ele[i].value
         }
     }
-    const addMessageTextbox = document.getElementById('add-message'); // will get the value from the html element message and store it.
-    const addFilePathTextbox = document.getElementById('add-imagepath'); // will get the value from the image path html element and store it.
 
-    // this is the json object of ReviewRating and send the data through to the controller.
-    const item =
-    {
-      buildId: sessionStorage.getItem('buildId').toString(),
-      username: addUserNameTextbox.value.trim(),
-      starRating: parseInt(starValue),
-      message: addMessageTextbox.value.trim(),
-      filePath: addFilePathTextbox.value
+    // The next 5 lines will store the above data in the formData object.
+    formData.append("buildId", sessionStorage.getItem('buildId').toString());
+    formData.append("username", addUserNameTextbox.value.trim());
+    formData.append("starRating", parseInt(starValue));
+    formData.append("message", addMessageTextbox.value.trim());
+    formData.append("image", photo);
+
+
+    const cooost = {
+        method: 'GET',
+        mode: 'cors',
     };
 
-
-    let customRequest = Object.assign(fetchRequest, {method: 'POST', body: JSON.stringify(item)});
+    let customRequest = Object.assign(cooost, {method: 'POST', body: formData});
 
     await fetch(reviewsUri, customRequest);
 
@@ -287,24 +293,30 @@ function displayEditForm(id) {
     document.getElementById('edit-id').value = item.entityId // sets the table id value equal to the value specified.
     document.getElementById('edit-message').value = item.message; // sets the table message value equal to the value specified.
     document.getElementById('edit-starRating').value = item.starRating; // sets the table starRating value equal to the value specified.
-    document.getElementById('edit-filePath').value = item.imagePath; // sets the table filepath value equal to the value specified.
     document.getElementById('editForm').style.display = 'block'; // sets the table dispaly value to block.
 }
 
 // This method will update items in the DB.
 async function updateReview() {
-    const itemId = document.getElementById('edit-id').value; // This will get the id of the item that has just been updated.
 
-    // creates a json item of values that have been updated.
-    const item =
-    {
-        entityId: itemId.toString(),
-        starRating: parseInt(document.getElementById('edit-starRating').value),
-        message: document.getElementById('edit-message').value.trim(),
-        filePath: document.getElementById('edit-filePath').value
+    let formData = new FormData();
+
+    var itemId = document.getElementById('edit-id').value; // This will get the id of the item that has just been updated.
+
+    let photo = document.getElementById("edit-filePath").files[0]; // store the file in the photo variable.
+
+    // These 5 lines make a form data object and append the following data to it.
+    formData.append("entityId", itemId.toString());
+    formData.append("starRating", parseInt(document.getElementById('edit-starRating').value));
+    formData.append("message", document.getElementById('edit-message').value.trim());
+    formData.append("image", photo);
+
+    const gtgtgtg = {
+        method: 'GET',
+        mode: 'cors',
     };
 
-    let customRequest = Object.assign(fetchRequest, {method: 'PUT', body: JSON.stringify(item)});
+    let customRequest = Object.assign(gtgtgtg, {method: 'PUT', body: formData});
 
     // This will fetch the PUT request to send the updated object.
     await fetch(reviewsUri, customRequest);
@@ -391,7 +403,7 @@ function displayReviews(data) {
       reviewsPhoto.id = "reviews-photo";
       var img = document.createElement('img');
       img.classList.add("reviews-image");
-      img.src = "/assets/images/Reviews/yay.jpg"; // item["imagePath"]
+      img.src = item["imagePath"]; // item["imagePath"]
       reviewsPhoto.appendChild(img);
       reviewsContainer.appendChild(reviewsPhoto);
 

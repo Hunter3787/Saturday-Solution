@@ -2,6 +2,7 @@
 using AutoBuildApp.Services;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 /// <summary>
 /// References used from file: Solution Items/References.txt 
@@ -35,10 +36,13 @@ namespace AutoBuildApp.Managers
         /// </summary>
         /// <param name="reviewRating">ReviewRating object from controller to be sent to the service layer.</param>
         /// <returns>boolean success-state</returns>
-        public bool CreateReviewRating(ReviewRating reviewRating)
+        public async Task<bool> CreateReviewRating(ReviewRating reviewRating)
         {
             _logger.LogInformation($"Review Rating Manager CreateReviewRating was called for User:{reviewRating.Username}");
-            return _reviewRatingService.CreateReviewRating(reviewRating); // returns the boolean success state.
+
+            var result = await _reviewRatingService.CreateReviewRating(reviewRating); // returns the boolean success state.
+
+            return result;
         }
 
         /// <summary>
@@ -89,10 +93,13 @@ namespace AutoBuildApp.Managers
         /// </summary>
         /// <param name="reviewRating">ReviewRating object that will be sent through to the service layer</param>
         /// <returns>bool success state.</returns>
-        public bool EditReviewRating(ReviewRating reviewRating)
+        public async Task<bool> EditReviewRating(ReviewRating reviewRating)
         {
             _logger.LogInformation($"Review Rating Service EditReviewRating was called for ID:{reviewRating.EntityId}");
-            return _reviewRatingService.EditReviewRating(reviewRating); // returns the boolean of the service method.
+
+            var result = await _reviewRatingService.EditReviewRating(reviewRating);
+
+            return result; // returns the boolean of the service method.
         }
     }
 }

@@ -84,12 +84,6 @@ namespace AutoBuildApp.Managers
             // The actual length of the build post description.
             var actualDescriptionLength = buildPost.Description.Length;
 
-            // This sets the characters that will be checked to see if they are valid.
-            var allowedChars = new Regex(@"^[a-zA-Z0-9 !]*$");
-
-            // This will make sure that only the allowed characters are used.
-            var allowed = allowedChars.Match(buildPost.Title);
-
             // This try/catch block checks if the description length is greater than 10,000 characters,
             // if it is greater than 10,000 characters, it will throw a custom exception, if it is less
             // than, the method will continue.
@@ -102,22 +96,6 @@ namespace AutoBuildApp.Managers
             }
             // Exception is caught from above and is returned false to the controller.
             catch (StringTooLongException ex)
-            {
-                _logger.LogWarning(ex.Message);
-                return false;
-            }
-
-            // This try/catch block checks if the regex is less fulfilled.
-            // if it's not, it will throw a custom exception, if does pass
-            // then the method will continue.
-            try
-            {
-                if(!allowed.Success)
-                {
-                    throw new InvalidUsernameException($"Build Post title: {buildPost.Title} contains invalid characters for User:{buildPost.Username}");
-                }
-            }
-            catch(InvalidUsernameException ex)
             {
                 _logger.LogWarning(ex.Message);
                 return false;

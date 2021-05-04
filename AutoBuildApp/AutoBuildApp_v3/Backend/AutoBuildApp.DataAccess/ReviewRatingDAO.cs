@@ -50,28 +50,16 @@ namespace AutoBuildApp.DataAccess
 
                     // Stored the query that will be used for insertion. This is an insertion statement.
                     command.CommandText =
-                        "INSERT INTO reviews(buildId, username, message, star, imagebuffer, filepath, datetime)" +
-                        "SELECT @buildId, @username, @message, @starRating, @imageBuffer, @filePath, @dateTime";
+                        "INSERT INTO reviews(buildId, username, message, star, filepath, datetime)" +
+                        "SELECT @buildId, @username, @message, @starRating, @filePath, @dateTime";
 
-                    var parameters = new SqlParameter[7]; // initialize 5 parameters to be read through incrementally.
+                    var parameters = new SqlParameter[6]; // initialize 5 parameters to be read through incrementally.
                     parameters[0] = new SqlParameter("@buildId", reviewRatingEntity.BuildId); // string build post Id.
                     parameters[1] = new SqlParameter("@username", reviewRatingEntity.Username); // string username
                     parameters[2] = new SqlParameter("@message", reviewRatingEntity.Message); // string message.
                     parameters[3] = new SqlParameter("@starRating", reviewRatingEntity.StarRatingValue); // integer star rating value.
-                    // checks if the image byte array is null, if not null, it will store image as byte.
-
-                    // if it is null, it will store a DBNull value.
-                    if(reviewRatingEntity.ImageBuffer != null) 
-                    {
-                        parameters[4] = new SqlParameter("@imageBuffer", reviewRatingEntity.ImageBuffer);
-                    }
-                    else
-                    {
-                        parameters[4] = new SqlParameter("@imageBuffer", SqlDbType.VarBinary, -1);
-                        parameters[4].Value = DBNull.Value;
-                    }
-                    parameters[5] = new SqlParameter("@filePath", reviewRatingEntity.FilePath);
-                    parameters[6] = new SqlParameter("@dateTime", reviewRatingEntity.DateTime); // string dateTime.
+                    parameters[4] = new SqlParameter("@filePath", reviewRatingEntity.ReviewImagePath);
+                    parameters[5] = new SqlParameter("@dateTime", reviewRatingEntity.DateTime); // string dateTime.
 
                     // This will add the range of parameters to the parameters that will be used in the query.
                     command.Parameters.AddRange(parameters);
@@ -181,15 +169,8 @@ namespace AutoBuildApp.DataAccess
                             reviewRatingEntity.Username = (string)reader["username"]; // store the DB username as a string in Username.
                             reviewRatingEntity.Message = (string)reader["message"]; // store the DB message as a string in Message.
                             reviewRatingEntity.StarRatingValue = (int)reader["star"]; // store the star value int as an int in StarRatingValue.
-
-                            // checks if the image path is not null, if not it will return the imagepath, if not null then it wont.
-                            if(reader["imagebuffer"] != DBNull.Value)
-                            {
-                                reviewRatingEntity.ImageBuffer = (byte[])reader["imagebuffer"];
-                            }
-                            reviewRatingEntity.FilePath = (string)reader["filepath"];
-                            // store the datetime as a string in DateTime.
-                            reviewRatingEntity.DateTime = (string)reader["datetime"];
+                            reviewRatingEntity.ReviewImagePath = (string)reader["filepath"];
+                            reviewRatingEntity.DateTime = (string)reader["datetime"]; // store the datetime as a string in DateTime.
                         }
                     }
 
@@ -298,13 +279,7 @@ namespace AutoBuildApp.DataAccess
                             reviewRatingEntity.Username = (string)reader["username"]; // store the DB username as a string in Username.
                             reviewRatingEntity.Message = (string)reader["message"]; // store the DB message as a string in Message.
                             reviewRatingEntity.StarRatingValue = (int)reader["star"]; // store the star value int as an int in StarRatingValue.
-
-                            // checks if the image path is not null, if not it will return the imagepath, if not null then it wont.
-                            if (reader["imagebuffer"] != DBNull.Value)
-                            {
-                                reviewRatingEntity.ImageBuffer = (byte[])reader["imagebuffer"];
-                            }
-                            reviewRatingEntity.FilePath = (string)reader["filepath"];
+                            reviewRatingEntity.ReviewImagePath = (string)reader["filepath"];
                             reviewRatingEntity.DateTime = (string)reader["datetime"];
 
                             reviewRatingEntityList.Add(reviewRatingEntity); // adds the entity object, with retrieved data to the list.
@@ -359,13 +334,7 @@ namespace AutoBuildApp.DataAccess
                             reviewRatingEntity.Username = (string)reader["username"]; // store the DB username as a string in Username.
                             reviewRatingEntity.Message = (string)reader["message"]; // store the DB message as a string in Message.
                             reviewRatingEntity.StarRatingValue = (int)reader["star"]; // store the star value int as an int in StarRatingValue.
-
-                            // checks if the image path is not null, if not it will return the imagepath, if not null then it wont.
-                            if (reader["imagebuffer"] != DBNull.Value)
-                            {
-                                reviewRatingEntity.ImageBuffer = (byte[])reader["imagebuffer"];
-                            }
-                            reviewRatingEntity.FilePath = (string)reader["filepath"];
+                            reviewRatingEntity.ReviewImagePath = (string)reader["filepath"];
                             reviewRatingEntity.DateTime = (string)reader["datetime"];
 
                             reviewRatingEntityList.Add(reviewRatingEntity); // adds the entity object, with retrieved data to the list.
@@ -507,25 +476,14 @@ namespace AutoBuildApp.DataAccess
                     // Stored the query that will be used to edit a review WHERE the ids match and replacing values via the SET command.
                     command.CommandText =
                         "UPDATE reviews " +
-                        "SET star=@v0, message=@v1, imagebuffer=@v2, filepath=@v3 " +
-                        "WHERE entityId = @v4";
+                        "SET star=@v0, message=@v1, filepath=@v2 " +
+                        "WHERE entityId = @v3";
 
-                    var parameters = new SqlParameter[5]; // initialize four parameters to be sent through.
+                    var parameters = new SqlParameter[4]; // initialize four parameters to be sent through.
                     parameters[0] = new SqlParameter("@v0", reviewRatingEntity.StarRatingValue); // send the star value to be replaced.
                     parameters[1] = new SqlParameter("@v1", reviewRatingEntity.Message); // send the message that will be used to replace.
-
-                    // if it is null, it will store a DBNull value.
-                    if (reviewRatingEntity.ImageBuffer != null)
-                    {
-                        parameters[2] = new SqlParameter("@v2", reviewRatingEntity.ImageBuffer);
-                    }
-                    else
-                    {
-                        parameters[2] = new SqlParameter("@v2", SqlDbType.VarBinary, -1);
-                        parameters[2].Value = DBNull.Value;
-                    }
-                    parameters[3] = new SqlParameter("@v3", reviewRatingEntity.FilePath);
-                    parameters[4] = new SqlParameter("@v4", reviewRatingEntity.EntityId);
+                    parameters[2] = new SqlParameter("@v2", reviewRatingEntity.ReviewImagePath);
+                    parameters[3] = new SqlParameter("@v3", reviewRatingEntity.EntityId);
 
                     // This will add the range of parameters to the parameters that will be used in the query.
                     command.Parameters.AddRange(parameters);

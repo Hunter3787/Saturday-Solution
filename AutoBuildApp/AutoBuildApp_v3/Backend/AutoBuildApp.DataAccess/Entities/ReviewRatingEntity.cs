@@ -24,11 +24,8 @@ namespace AutoBuildApp.DataAccess.Entities
         // This is the review that a user can write, it is stored in the database.
         public string Message { get; set; }
 
-        // This is a byte array, which acts as a buffer to store the byte value of an image.
-        public byte[] ImageBuffer { get; set; }
-
         // This is the file path which store the file path of the image.
-        public string FilePath { get; set; }
+        public string ReviewImagePath { get; set; }
 
         // This is the datetime that is appended in the ReviewRating service layer, as a means to display when a review was effectively made.
         public string DateTime { get; set; }
