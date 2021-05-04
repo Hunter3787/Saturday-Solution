@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AutoBuildApp.DataAccess.DAOGlobals
+namespace AutoBuildApp.DataAccess //.DAOGlobals
 {
     public class TimeoutLengths
     {
