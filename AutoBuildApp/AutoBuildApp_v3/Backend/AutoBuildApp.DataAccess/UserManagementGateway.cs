@@ -16,7 +16,7 @@ using AutoBuildApp.Models.Users;
 using AutoBuildApp.Models.DataTransferObjects;
 
 
-namespace AutoBuildApp.Models
+namespace AutoBuildApp.DataAccess
 {
     public class UserManagementGateway
     {

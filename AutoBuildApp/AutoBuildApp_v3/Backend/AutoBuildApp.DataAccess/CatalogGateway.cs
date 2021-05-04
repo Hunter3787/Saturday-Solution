@@ -12,7 +12,7 @@ using AutoBuildApp.Models.Users;
 using Microsoft.Data.SqlClient;
 using AutoBuildApp.Models;
 
-namespace AutoBuildApp.Models
+namespace AutoBuildApp.DataAccess
 {
     public class CatalogGateway
     {

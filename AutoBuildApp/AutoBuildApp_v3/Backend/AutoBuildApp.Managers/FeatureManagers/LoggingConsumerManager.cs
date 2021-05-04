@@ -4,7 +4,7 @@ using Apache.NMS.ActiveMQ;
 using Newtonsoft.Json;
 using APB.App.DataAccess;
 using AutoBuildApp.DomainModels;
-using AutoBuildApp.Models.Entities;
+using AutoBuildApp.DataAccess.Entities;
 
 /// <summary>
 /// References used from file: Solution Items/References.txt 

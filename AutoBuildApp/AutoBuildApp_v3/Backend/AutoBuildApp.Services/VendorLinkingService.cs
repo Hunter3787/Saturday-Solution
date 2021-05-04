@@ -1,6 +1,6 @@
 ﻿using AutoBuildApp.Models;
 using AutoBuildApp.Models.DataTransferObjects;
-using AutoBuildApp.Models;
+using AutoBuildApp.DataAccess;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.VendorLinking;
 using AutoBuildApp.Models.WebCrawler;
@@ -12,7 +12,6 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using AutoBuildApp.Services.FeatureServices;
-using AutoBuildApp.Models;
 
 namespace AutoBuildApp.Services
 {

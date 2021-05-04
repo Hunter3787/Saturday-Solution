@@ -27,7 +27,7 @@ namespace AutoBuildApp.Api.Controllers
         private readonly string _connectionString =
             ConnectionManager
             .connectionManager
-            .GetConnectionStringByName(ControllerGlobals.CONNECTION_CONFIG_NAME);
+            .GetConnectionStringByName(ControllerGlobals.LOCALHOST_CONNECTION);
 
         private RecommendationManager manager;
 

@@ -2,7 +2,7 @@
 /// References used from file: Solution Items/References.txt 
 /// [1]
 /// </summary>
-namespace AutoBuildApp.Models.Entities
+namespace AutoBuildApp.DataAccess.Entities
 {
     /// <summary>
     /// This is the DTO for a logger object, transfers data through the layers 

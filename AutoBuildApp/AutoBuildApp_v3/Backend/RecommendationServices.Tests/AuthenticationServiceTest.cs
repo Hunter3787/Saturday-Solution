@@ -1,5 +1,5 @@
-﻿using AutoBuildApp.Models;
-using AutoBuildApp.Models.Entities;
+﻿using AutoBuildApp.DataAccess;
+using AutoBuildApp.DataAccess.Entities;
 using AutoBuildApp.Services.Auth_Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;

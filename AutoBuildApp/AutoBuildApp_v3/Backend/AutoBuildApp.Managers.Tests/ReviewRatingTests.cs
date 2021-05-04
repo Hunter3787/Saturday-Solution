@@ -2,7 +2,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using AutoBuildApp.DomainModels;
 using AutoBuildApp.DomainModels.Enumerations;
-using AutoBuildApp.Models;
+using AutoBuildApp.DataAccess;
 using AutoBuildApp.Managers;
 using AutoBuildApp.Services;
 

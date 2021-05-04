@@ -1,11 +1,10 @@
 ﻿using AutoBuildApp.Models.DataTransferObjects;
-using AutoBuildApp.Models.Entities;
-using AutoBuildApp.Models.DataTransferObjects;
+using AutoBuildApp.DataAccess.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AutoBuildApp.Models
+namespace AutoBuildApp.DataAccess
 {
     public class ResponseUAD : CommonResponse
     {

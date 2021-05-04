@@ -6,7 +6,7 @@ using AutoBuildApp.Security.Interfaces;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Services;
 using AutoBuildApp.Models.DataTransferObjects;
-using AutoBuildApp.Models;
+using AutoBuildApp.DataAccess;
 using AutoBuildApp.Managers.Guards;
 using System.Threading;
 using System.Security.Claims;
@@ -24,10 +24,7 @@ namespace AutoBuildApp.Managers
         private BuildDAO _buildDAO;
         private ShelfDAO _shelfDAO;
 
-        private List<string> _allowedRoles; //specify rles
-
-        //private readonly IClaims _basic, _vendor, _developer, _admin;
-        
+        private List<string> _registeredRoles; //specify rles
         private ShelfService _shelfService;
         private BuildManagementService _buildService;
         private readonly string _currentUser;
@@ -36,14 +33,9 @@ namespace AutoBuildApp.Managers
         {
 
             //ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
-            _allowedRoles = new List<string>()
+            _registeredRoles = new List<string>()
             { RoleEnumType.BASIC_ROLE,RoleEnumType.DELEGATE_ADMIN,
             RoleEnumType.VENDOR_ROLE, RoleEnumType.SYSTEM_ADMIN};
-
-
-            //_basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
-            //_vendor = claimsFactory.GetClaims(RoleEnumType.VENDOR_ROLE);
-            //_admin = claimsFactory.GetClaims(RoleEnumType.DELEGATE_ADMIN);
 
             _buildDAO = new BuildDAO(connectionString);
             _shelfDAO = new ShelfDAO(connectionString);
@@ -57,7 +49,7 @@ namespace AutoBuildApp.Managers
         public IMessageResponse AddBuild(IBuild build, string buildname)
         {
             // temp
-            if (!AuthorizationCheck.IsAuthorized(_allowedRoles)) // added per Zee
+            if (!AuthorizationCheck.IsAuthorized(_registeredRoles)) // added per Zee
             {
                 return new StringBoolResponse()
                 {
@@ -232,7 +224,7 @@ namespace AutoBuildApp.Managers
 
         private bool IsAuthorized()
         {
-            return AuthorizationCheck.IsAuthorized(_allowedRoles);
+            return AuthorizationCheck.IsAuthorized(_registeredRoles);
         }
     }
 }

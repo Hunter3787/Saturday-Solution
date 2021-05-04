@@ -1,4 +1,4 @@
-﻿using AutoBuildApp.Models.Entities;
+﻿using AutoBuildApp.DataAccess.Entities;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Data;
