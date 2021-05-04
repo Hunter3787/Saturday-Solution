@@ -1,6 +1,8 @@
 ﻿using AutoBuildApp.DataAccess.Abstractions;
 using AutoBuildApp.DataAccess.DAOGlobals;
 using AutoBuildApp.DataAccess.Entities;
+﻿using AutoBuildApp.Models.DataTransferObjects;
+using AutoBuildApp.Models.Entities;
 using AutoBuildApp.Security;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
@@ -11,7 +13,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
-namespace AutoBuildApp.DataAccess
+namespace AutoBuildApp.Models
 {
     public class AnalyticsDAO
     {
@@ -170,7 +172,7 @@ namespace AutoBuildApp.DataAccess
                     #region SQL related
 
                     // https://learning.oreilly.com/library/view/adonet-in-a/0596003617/ch04s05.html
-                    command.CommandTimeout = TimeSpan.FromSeconds(DAOGlobals.TIMEOUT_LONG).Seconds;
+                    command.CommandTimeout = TimeSpan.FromSeconds(TimeoutLengths.TIMEOUT_LONG).Seconds;
                     // 1) Create a Command, and set its CommandType property to StoredProcedure.
                     command.CommandType = CommandType.StoredProcedure;
                     // 2) Set the CommandText to the name of the stored procedure.

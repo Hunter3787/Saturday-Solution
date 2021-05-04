@@ -1,6 +1,6 @@
 using AutoBuildApp.Api.Controllers;
 using AutoBuildApp.Api.HelperFunctions;
-using AutoBuildApp.DataAccess;
+using AutoBuildApp.Models;
 using AutoBuildApp.Models.WebCrawler;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
@@ -23,12 +23,21 @@ namespace AutoBuildApp.Api
 
         ////    #region zeinab 
 
-        ////    new Thread(() =>
-        ////    {
-        ////        //AsyncContext.Run(async () => await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultRevision));
-        ////        List<string> newEggBlackList = new List<string>();
-        ////        newEggBlackList.Add("ComboDealDetails");
-        ////        newEggBlackList.Add("newegg.com/p/");
+            //    List<StartingLink> listOfLinks = new List<StartingLink>
+            //    {
+            //        //new StartingLink("https://www.newegg.com/AMD-Motherboards/SubCategory/ID-22/Page-1?Tid=7625", "motherboard"),
+            //        new StartingLink("https://www.newegg.com/Processors-Desktops/SubCategory/ID-343/Page-1?Tid=7671", "cpu"),
+            //        new StartingLink("https://www.newegg.com/p/pl?cm_sp=Cat_Motherboards_2-_-Visnav-_-Intel-Motherboards_1&page=1&N=100007627", "motherboard"),
+            //        new StartingLink("https://www.newegg.com/Desktop-Graphics-Cards/SubCategory/ID-48/Page-1?Tid=7709", "gpu"),
+            //        new StartingLink("https://www.newegg.com/Computer-Cases/SubCategory/ID-7/Page-1?Tid=7583", "case"),
+            //        new StartingLink("https://www.newegg.com/Power-Supplies/SubCategory/ID-58/Page-1?Tid=7657", "power supply"),
+            //        new StartingLink("https://www.newegg.com/Desktop-Memory/SubCategory/ID-147/Page-1?Tid=7611", "ram"),
+            //        new StartingLink("https://www.newegg.com/Internal-SSDs/SubCategory/ID-636/Page-1?Tid=11693", "ssd"),
+            //        new StartingLink("https://www.newegg.com/Desktop-Internal-Hard-Drives/SubCategory/ID-14/Page-1?Tid=167523", "hard drive")
+            //    };
+            //    WebCrawlerService wcs = new WebCrawlerService("Server = localhost; Database = DB; Integrated Security = True;");
+            //    //List<string> allLinks = AsyncContext.Run(() => wcs.grabHrefLinksFromPageAsync("https://www.amazon.com/s?k=Computer+CPU+Processors&i=computers&rh=n%3A229189&page=1&_encoding=UTF8&c=ts&qid=1617671746&ts_id=229189&ref=sr_pg_2",
+            //    //    "page=", "Array.from(document.querySelectorAll('.a-size-mini.a-spacing-none.a-color-base.s-line-clamp-2 .a-link-normal.a-text-normal')).map(a=>a.href)", "https://www.amazon.com", amazonBlackList));
 
             //    //AsyncContext.Run(() => wcs.getAllInformationFromPageAsync("https://www.amazon.com/Intel-i7-9700K-Desktop-Processor-Unlocked/dp/B07HHN6KBZ/ref=sr_1_2?_encoding=UTF8&c=ts&dchild=1&keywords=Computer+CPU+Processors&qid=1618022193&s=pc&sr=1-2&ts_id=229189",
             //    //    "amazon", "cpu", "document.querySelector('#productTitle').innerText", "document.querySelector('#price_inside_buybox').innerText", "Array.from(document.querySelectorAll('.prodDetSectionEntry')).map(a=>a.innerText)",

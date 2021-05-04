@@ -1,5 +1,5 @@
-﻿using AutoBuildApp.DataAccess.Entities;
-using AutoBuildApp.DataAccess.Reflections;
+﻿using AutoBuildApp.Models.Entities;
+using AutoBuildApp.Models.Reflections;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Data;
 using System.Reflection;
 using System.Text;
 
-namespace AutoBuildApp.DataAccess
+namespace AutoBuildApp.Models
 {
     /// <summary>
     /// This class is responsible for sending data to the DB.

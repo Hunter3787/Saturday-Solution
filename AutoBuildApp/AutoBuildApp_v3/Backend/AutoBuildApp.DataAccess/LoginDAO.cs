@@ -1,10 +1,10 @@
-﻿using AutoBuildApp.DataAccess.Entities;
+﻿using AutoBuildApp.Models.Entities;
 using AutoBuildApp.Security.Models;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Data;
 
-namespace AutoBuildApp.DataAccess 
+namespace AutoBuildApp.Models 
 { 
     public class LoginDAO
     {

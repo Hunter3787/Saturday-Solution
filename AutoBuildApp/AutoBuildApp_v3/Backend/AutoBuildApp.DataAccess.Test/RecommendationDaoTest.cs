@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AutoBuildApp.DataAccess.Test
+namespace AutoBuildApp.Models.Test
 {
 
     [TestClass]

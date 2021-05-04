@@ -5,7 +5,7 @@ using System.Data;
 using AutoBuildApp.DataAccess.DAOGlobals;
 using Microsoft.Data.SqlClient;
 
-namespace AutoBuildApp.DataAccess
+namespace AutoBuildApp.Models
 {
     public class ShelfDAO
     {

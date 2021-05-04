@@ -1,5 +1,5 @@
-﻿using AutoBuildApp.DataAccess;
-using AutoBuildApp.DataAccess.Entities;
+﻿using AutoBuildApp.Models;
+using AutoBuildApp.Models.Entities;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
 using AutoBuildApp.Security.Interfaces;

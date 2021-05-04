@@ -6,7 +6,7 @@ using System.Text;
 using AutoBuildApp.Models.Users;
 using System.Linq;
 using BC = BCrypt.Net.BCrypt;
-using AutoBuildApp.DataAccess;
+using AutoBuildApp.Models;
 using AutoBuildApp.Managers.UserManagers;
 
 namespace AutoBuildApp.Managers
