@@ -179,38 +179,6 @@ namespace AutoBuildApp.Manger.Tests
         }
 
         /// <summary>
-        /// This test will check if the publish build method will return false
-        /// if the title string contains invalid characters.
-        /// </summary>
-        [Test]
-        public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfTitleContainsInvalidChars()
-        {
-            // Arrange
-            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
-            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
-            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
-
-            var invalidUsernameTest = "%^#TheGreatestTestTitle$#^#";
-
-            // Act
-            var buildPost = new BuildPost()
-            {
-                Username = "Test Username",
-                Title = invalidUsernameTest,
-                Description = "Test Description",
-                LikeIncrementor = 0,
-                BuildType = BuildType.None,
-                BuildImagePath = @"C:\Users\Serge\Desktop\images\test.jpg",
-                DateTime = "2021"
-            };
-
-            var result = await mostPopularBuildsManager.PublishBuild(buildPost);
-
-            // Assert
-            Assert.IsFalse(result);
-        }
-
-        /// <summary>
         /// This test will check if the publish build method will return true
         /// if all conditions are met
         /// </summary>
