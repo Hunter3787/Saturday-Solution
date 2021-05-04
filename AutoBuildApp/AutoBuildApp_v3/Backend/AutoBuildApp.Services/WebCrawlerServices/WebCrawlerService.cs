@@ -58,7 +58,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             {
                 Headless = true,
                 IgnoreHTTPSErrors = true,
-                ExecutablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe", // added per danny
+                ExecutablePath = @"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", // added per danny
                 Args = new[] {
                         //$"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}", // ganna take a while = dannu
                         //"--proxy-server=23.251.138.105:8080",

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using AutoBuildApp.Models;
 using Microsoft.Data.SqlClient;
 
 namespace AutoBuildApp.DataAccess
@@ -193,9 +194,34 @@ namespace AutoBuildApp.DataAccess
             return success;
         }
 
-        public List<IComponent> GetComponentsByShelf(int id)
+        public List<Shelf> GetAllShelves(string user)
         {
-            List<IComponent> outputList = new List<IComponent>();
+            List<Shelf> shelves = new List<Shelf>();
+
+            try
+            {
+                IsNotNullOrEmpty(user);
+            }
+            catch (ArgumentNullException)
+            {
+
+            }
+
+
+
+
+
+
+
+
+
+            return shelves;
+        }
+
+        public Shelf GetSingleShelfByName(int id)
+        {
+            Shelf shelf = new Shelf();
+            
 
 
 
@@ -217,7 +243,7 @@ namespace AutoBuildApp.DataAccess
 
 
 
-            return outputList;
+            return shelf;
         }
 
         public IComponent GetComponentByID(int id)
