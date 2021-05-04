@@ -50,18 +50,20 @@ namespace AutoBuildApp.Services.WebCrawlerServices
         public WebCrawlerService(string connectionString)
         {
             this.webCrawlerDAO = new WebCrawlerDAO(connectionString);
-            allProxies = AsyncContext.Run(() => getAllProxiesAsync());
-            currentProxy = allProxies[0];
+            //allProxies = AsyncContext.Run(() => getAllProxiesAsync());
+            //currentProxy = allProxies[0];
+            currentProxy = new Proxy("208.80.28.208", 8080);
+
             options = new LaunchOptions()
             {
                 Headless = true,
                 IgnoreHTTPSErrors = true,
                 ExecutablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe", // added per danny
                 Args = new[] {
-                        $"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}", // ganna take a while = dannu
+                        //$"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}", // ganna take a while = dannu
                         //"--proxy-server=23.251.138.105:8080",
                         //"--proxy-server=201.45.163.114:80",
-                        //"--proxy-server=208.80.28.208:8080",
+                        "--proxy-server=208.80.28.208:8080",
                         //"--proxy-server=183.88.226.50:8080",
                         //"--proxy-server=165.225.77.42:80",
                         //"--proxy-server=182.52.83.133:8080",
