@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using AutoBuildApp.Models.Entities;
+using AutoBuildApp.DataAccess.Entities;
 
-namespace AutoBuildApp.Models.Test
+namespace AutoBuildApp.DataAccess.Test
 {
     [TestClass]
     public class AuthDaoTest

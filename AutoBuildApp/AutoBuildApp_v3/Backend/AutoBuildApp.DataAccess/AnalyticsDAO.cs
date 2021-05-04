@@ -1,7 +1,7 @@
 ﻿
 using AutoBuildApp.DataAccess;
 using AutoBuildApp.Models.DataTransferObjects;
-using AutoBuildApp.Models.Entities;
+using AutoBuildApp.DataAccess.Entities;
 using AutoBuildApp.Security;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
-namespace AutoBuildApp.Models
+namespace AutoBuildApp.DataAccess
 {
     public class AnalyticsDAO
     {

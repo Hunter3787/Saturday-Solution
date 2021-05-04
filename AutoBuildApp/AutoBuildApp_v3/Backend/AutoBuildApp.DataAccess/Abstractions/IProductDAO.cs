@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using AutoBuildApp.Models.Interfaces;
-using AutoBuildApp.Models.Entities;
+using AutoBuildApp.DataAccess.Entities;
 using AutoBuildApp.Models.Enumerations;
 /**
 * IDataAccessObject Interface for AutoBuild App.

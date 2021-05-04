@@ -12,7 +12,7 @@ using System.Threading;
 using AutoBuildApp.Models;
 using AutoBuildApp.Models.Enumerations;
 
-namespace AutoBuildApp.Models
+namespace AutoBuildApp.DataAccess
 {
     public class VendorLinkingDAO
     {

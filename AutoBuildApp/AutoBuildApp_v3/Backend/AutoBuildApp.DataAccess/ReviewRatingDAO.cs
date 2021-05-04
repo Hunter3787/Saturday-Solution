@@ -1,4 +1,4 @@
-﻿using AutoBuildApp.Models.Entities;
+﻿using AutoBuildApp.DataAccess.Entities;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Data;
 /// [1,15]
 /// </summary>
 
-namespace AutoBuildApp.Models
+namespace AutoBuildApp.DataAccess
 {
     /// <summary>
     /// This class is the data access objects that will interact with the database and send data to be stored.

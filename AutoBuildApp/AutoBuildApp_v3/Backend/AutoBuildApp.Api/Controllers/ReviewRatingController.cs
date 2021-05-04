@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Cors;
 
 using AutoBuildApp.Managers;
 using AutoBuildApp.Services;
-using AutoBuildApp.Models;
+using AutoBuildApp.DataAccess;
 using AutoBuildApp.DomainModels;
 
 /// <summary>

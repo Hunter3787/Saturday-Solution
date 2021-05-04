@@ -38,7 +38,7 @@ namespace AutoBuildApp.DataAccess.Test
                 new Shelf()
                 {
                     ShelfName = "TacoBell",
-                    ComponentList = new List<IComponent>()
+                    ComponentList = new List<Component>()
                     {
                         new Component()
                         {

@@ -2,7 +2,7 @@
 /// References used from file: Solution Items/References.txt 
 /// [1]
 /// </summary>
-namespace AutoBuildApp.Models.Entities
+namespace AutoBuildApp.DataAccess.Entities
 {
     /// <summary>
     /// This is a class that the DAO can access in order to send data to the datastore.

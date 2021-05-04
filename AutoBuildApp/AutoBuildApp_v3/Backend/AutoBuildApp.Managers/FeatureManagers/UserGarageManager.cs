@@ -6,7 +6,7 @@ using AutoBuildApp.Security.Interfaces;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Services;
 using AutoBuildApp.Models.DataTransferObjects;
-using AutoBuildApp.Models;
+using AutoBuildApp.DataAccess;
 using AutoBuildApp.Managers.Guards;
 using System.Threading;
 using System.Security.Claims;

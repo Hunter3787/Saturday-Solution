@@ -1,5 +1,5 @@
 ﻿using AutoBuildApp.Models;
-using AutoBuildApp.Models;
+using AutoBuildApp.DataAccess;
 using HtmlAgilityPack;
 using Fizzler.Systems.HtmlAgilityPack;
 using System;

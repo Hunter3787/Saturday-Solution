@@ -10,7 +10,7 @@ using System;
 * infromation from the database to be used inside the Recommender.
 * @Author Nick Marshall-Eminger
 */
-namespace AutoBuildApp.Models
+namespace AutoBuildApp.DataAccess
 {
 
     /// <summary>
