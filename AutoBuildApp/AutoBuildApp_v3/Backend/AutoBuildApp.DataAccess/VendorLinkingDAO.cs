@@ -1,4 +1,4 @@
-﻿using AutoBuildApp.DataAccess.Abstractions;
+﻿using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.Models.VendorLinking;
 using AutoBuildApp.Models.WebCrawler;
 using Microsoft.Data.SqlClient;
@@ -10,9 +10,9 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading;
 using AutoBuildApp.Models;
-using AutoBuildApp.Models.DataTransferObjects;
+using AutoBuildApp.Models.Enumerations;
 
-namespace AutoBuildApp.DataAccess
+namespace AutoBuildApp.Models
 {
     public class VendorLinkingDAO
     {
@@ -22,14 +22,17 @@ namespace AutoBuildApp.DataAccess
             _connectionString = connectionString;
         }
 
-        public ConcurrentDictionary<string, HashSet<string>> PopulateVendorsProducts()
+        public SystemCodeWithCollection<ConcurrentDictionary<string, HashSet<string>>> PopulateVendorsProducts()
         {
-            ConcurrentDictionary<string, HashSet<string>> VendorsProducts = new ConcurrentDictionary<string, HashSet<string>>();
+            ConcurrentDictionary<string, HashSet<string>> vendorsProducts = new ConcurrentDictionary<string, HashSet<string>>();
+            SystemCodeWithCollection<ConcurrentDictionary<string, HashSet<string>>> response = new SystemCodeWithCollection<ConcurrentDictionary<string, HashSet<string>>>();
+
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 using (SqlTransaction transaction = connection.BeginTransaction())
                 {
+
                     try
                     {
                         SqlDataAdapter adapter = new SqlDataAdapter();
@@ -46,35 +49,42 @@ namespace AutoBuildApp.DataAccess
                                 string ModelNumber = (string)reader["modelNumber"];
 
                                 // Add entry to dictionary. 
-                                if (!VendorsProducts.ContainsKey(VendorName))
+                                if (!vendorsProducts.ContainsKey(VendorName))
                                 {
-                                    VendorsProducts.TryAdd(VendorName, new HashSet<string>());
+                                    vendorsProducts.TryAdd(VendorName, new HashSet<string>());
                                 }
 
                                 // Then, add the model number to the set (dictionary's value)
-                                if (!VendorsProducts[VendorName].Contains(ModelNumber))
+                                if (!vendorsProducts[VendorName].Contains(ModelNumber))
                                 {
-                                    VendorsProducts[VendorName].Add(ModelNumber);
+                                    vendorsProducts[VendorName].Add(ModelNumber);
                                 }
                             }
                         }
 
                         transaction.Commit();
 
+                        response.Code = AutoBuildSystemCodes.Success;
+                        response.GenericCollection = vendorsProducts;
                     }
-                    catch (SqlException)
+                    catch (SqlException ex)
                     {
                         transaction.Rollback();
+
+                        response.GenericCollection = null;
+                        response.Code = SqlExceptionHandler.GetCode(ex.Number);
                     }
                 }
             }
-            return VendorsProducts;
+
+            return response;
         }
 
-        public List<string> GetAllModelNumbers()
+        public SystemCodeWithCollection<List<string>> GetAllModelNumbers()
         {
-            string company = "danny";
+            string company = "new egg";
             List<string> allModelNumbers = new List<string>();
+            SystemCodeWithCollection<List<string>> response = new SystemCodeWithCollection<List<string>>();
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -83,12 +93,10 @@ namespace AutoBuildApp.DataAccess
                     try
                     {
                         SqlDataAdapter adapter = new SqlDataAdapter();
-                        //ResponseStringGlobals.FAILED_ADDITION;
-                        //string sql = "select modelNumber from products";
                         string sql = "select p.modelNumber from products p where p.modelNumber not in " +
                             "(select modelNumber from products p inner join vendor_product_junction vpj on p.productId = vpj.productID " +
                             "where vendorID = (select vendorID from vendorclub where vendorName = @VENDORNAME))";
-                        
+
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
                         adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = company;
 
@@ -102,23 +110,28 @@ namespace AutoBuildApp.DataAccess
                         }
 
                         transaction.Commit();
+
+                        response.Code = AutoBuildSystemCodes.Success;
+                        response.GenericCollection = allModelNumbers;
                     }
-                    catch (SqlException )
+                    catch (SqlException ex)
                     {
-                        transaction.Rollback();
-                        return null;
+                        response.Code = SqlExceptionHandler.GetCode(ex.Number);
+                        response.GenericCollection = null;
                     }
                 }
             }
-            return allModelNumbers;
+            return response;
         }
 
-        public List<AddProductDTO> GetProductsByFilter(GetProductByFilterDTO product, int f)
+        public SystemCodeWithCollection<List<AddProductDTO>> GetVendorProductsByFilter(GetProductByFilterDTO product)
         {
+            SystemCodeWithCollection<List<AddProductDTO>> response = new SystemCodeWithCollection<List<AddProductDTO>>();
+            List<AddProductDTO> allProductsByFilter = new List<AddProductDTO>();
+
             ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
             string username = _threadPrinciple.Identity.Name;
             Console.WriteLine("username - " + username);
-            //string username = "new egg";
             List<AddProductDTO> allProductsByVendor = new List<AddProductDTO>();
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -162,39 +175,6 @@ namespace AutoBuildApp.DataAccess
                         param[2] = adapter.InsertCommand.Parameters.AddWithValue("@ORDER", product.PriceOrder);
 
 
-                        //SqlParameter param = adapter.InsertCommand
-                        //.Parameters
-                        //.AddWithValue("@TYPEBUDGET", pair);
-
-
-                        //command.Transaction = connection.BeginTransaction();
-                        //command.Connection = connection;
-                        //command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
-                        //command.CommandType = CommandType.Text;
-                        //String sql = "select vp.productName, vp.vendorImageURL, vp.productStatus, v.vendorName, vp.VendorLinkURL, p.modelNumber, vp.productPrice from ((vendor_product_junction as vp " +
-                        //                "inner join products as p on vp.productID = p.productID) " +
-                        //                "inner join vendorclub as v on vp.vendorID = v.vendorID)" +
-                        //                "where vp.vendorID = (select userCredID from userCredentials where username = @USERNAME)";
-                        //String sql = "select vp.productStatus from vendor_product_junction as vp";
-
-                        //string sp_GetAllProductsByVendor = "GetAllProductsByVendor";
-
-                        //adapter.InsertCommand.CommandType = CommandType.StoredProcedure;
-                        //adapter.InsertCommand.CommandText = sp_GetAllProductsByVendor;
-                        //adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = username;
-                        //adapter.InsertCommand.Parameters.Add("@MOTHERBOARD", SqlDbType.Bit).Value = product.FilteredListOfProducts["motherboard"];
-                        //adapter.InsertCommand.Parameters.Add("@CPU", SqlDbType.Bit).Value = product.FilteredListOfProducts["cpu"];
-                        //adapter.InsertCommand.Parameters.Add("@GPU", SqlDbType.Bit).Value = product.FilteredListOfProducts["gpu"];
-                        //adapter.InsertCommand.Parameters.Add("@CASE", SqlDbType.Bit).Value = product.FilteredListOfProducts["case"];
-                        //adapter.InsertCommand.Parameters.Add("@PSU", SqlDbType.Bit).Value = product.FilteredListOfProducts["power supply"];
-                        //adapter.InsertCommand.Parameters.Add("@RAM", SqlDbType.Bit).Value = product.FilteredListOfProducts["ram"];
-                        //adapter.InsertCommand.Parameters.Add("@SSD", SqlDbType.Bit).Value = product.FilteredListOfProducts["ssd"];
-                        //adapter.InsertCommand.Parameters.Add("@HD", SqlDbType.Bit).Value = product.FilteredListOfProducts["hd"];
-                        //adapter.InsertCommand.Parameters.Add("@ORDER", SqlDbType.VarChar).Value = product.PriceOrder;
-
-
-                        //adapter.InsertCommand.Parameters.AddWithValue("@USERNAME", username);
-
                         using (SqlDataReader reader = adapter.InsertCommand.ExecuteReader())
                         {
                             while (reader.Read())
@@ -213,23 +193,27 @@ namespace AutoBuildApp.DataAccess
                         }
 
                         transaction.Commit();
-                        Console.WriteLine("donef2");
+
+                        response.Code = AutoBuildSystemCodes.Success;
+                        response.GenericCollection = allProductsByVendor;
                     }
-                    catch (SqlException )
+                    catch (SqlException ex)
                     {
-                        Console.WriteLine("wrong");
                         transaction.Rollback();
+
+                        response.Code = SqlExceptionHandler.GetCode(ex.Number);
+                        response.GenericCollection = null;
+
                     }
                 }
             }
 
-            return allProductsByVendor;
+            return response;
         }
 
-        public CommonResponse AddProductToVendorListOfProducts(AddProductDTO product)
+        public AutoBuildSystemCodes AddProductToVendorListOfProducts(AddProductDTO product)
         {
-            CommonResponse response = new CommonResponse();
-            string company = "danny";
+            string company = "new egg";
             //if(!VendorsProducts.ContainsKey(company))
             //{
             //    HashSet<string> HashSet = new HashSet<string>();
@@ -268,42 +252,21 @@ namespace AutoBuildApp.DataAccess
 
                         //VendorsProducts[company].Add(product.ModelNumber);
 
-                        Console.WriteLine("done!!");
-
-                        response.ResponseString = "Successfully added product to vendor list.";
-                        response.ResponseBool = true;
-
-                        return response;
+                        return AutoBuildSystemCodes.Success;
                     }
                     catch (SqlException ex)
                     {
-
                         transaction.Rollback();
 
-                        response.ResponseBool = false;
-
-                        if(ex.Number == 2627)
-                        {
-                            response.ResponseString = "You already have this model number in your list of products.";
-                        }
-                        else if(ex.Number == -2)
-                        {
-
-                        }
-                        else
-                        {
-                            response.ResponseString = "Failed to add product to vendor list.";
-                        }
-
-                        return response;
+                        return SqlExceptionHandler.GetCode(ex.Number);
                     }
                 }
             }
         }
 
-        public bool EditProductInVendorListOfProducts(AddProductDTO product)
+        public AutoBuildSystemCodes EditProductInVendorListOfProducts(AddProductDTO product)
         {
-            string company = "danny";
+            string company = "new egg";
             //if (!VendorsProducts[company].Contains(product.ModelNumber))
             //{
             //    Console.WriteLine("can't edit. that model number doesn't exist");
@@ -320,7 +283,6 @@ namespace AutoBuildApp.DataAccess
                         SqlDataAdapter adapter = new SqlDataAdapter();
                         String sql = "update vendor_product_junction set productName = @PRODUCTNAME, vendorImageUrl = @VENDORIMAGEURL, vendorLinkUrl = @VENDORLINKURL, productStatus = @PRODUCTSTATUS, productPrice = @PRODUCTPRICE where productID =" +
                         "(select productID from products where modelNumber = @MODELNUMBER) and vendorID = (select vendorID from vendorclub where vendorName = @VENDORNAME)";
-                        //String sql = "update vendor_product_junction set productName = @productname where productID = (select productID from products where modelNumber = @modelnumber)" ;
 
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
                         adapter.InsertCommand.Parameters.Add("@PRODUCTNAME", SqlDbType.VarChar).Value = product.Name;
@@ -331,27 +293,25 @@ namespace AutoBuildApp.DataAccess
                         adapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = product.ModelNumber;
                         adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = company;// product.Company.ToLower();
 
-                        //adapter.InsertCommand.Parameters.Add("@RATING", SqlDbType.VarChar).Value = product.TotalRating;
-                        //adapter.InsertCommand.Parameters.Add("@REVIEWS", SqlDbType.VarChar).Value = product.TotalNumberOfReviews;
-
-
                         adapter.InsertCommand.ExecuteNonQuery();
                         transaction.Commit();
-                        Console.WriteLine("donef2");
-                        return true;
+
+                        return AutoBuildSystemCodes.Success;
                     }
-                    catch (SqlException)
+                    catch (SqlException ex)
                     {
-                        Console.WriteLine("wrong");
                         transaction.Rollback();
-                        return false;
+
+                        return SqlExceptionHandler.GetCode(ex.Number);
+
                     }
                 }
             }
         }
 
-        public bool DeleteProductFromVendorList(string modelNumber)
+        public AutoBuildSystemCodes DeleteProductFromVendorList(string modelNumber)
         {
+            string company = "new egg";
             Console.WriteLine("mode num = " + modelNumber);
             //if (!VendorsProducts["new egg"].Contains(modelNumber))
             //{
@@ -371,169 +331,22 @@ namespace AutoBuildApp.DataAccess
                             "and productID = (select productID from products where modelNumber = @MODELNUMBER)";
 
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
-                        adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = "danny";
+                        adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = company;
                         adapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = modelNumber;
 
-                        var x = adapter.InsertCommand.ExecuteNonQuery();
-                        Console.WriteLine(x + " rows affected");
+                        adapter.InsertCommand.ExecuteNonQuery();
                         transaction.Commit();
-                        Console.WriteLine("donef2");
-                        return true;
+
+                        return AutoBuildSystemCodes.Success;
                     }
-                    catch (SqlException )
+                    catch (SqlException ex)
                     {
-                        Console.WriteLine("wrong");
                         transaction.Rollback();
-                        return false;
+
+                        return SqlExceptionHandler.GetCode(ex.Number);
                     }
                 }
             }
-        }
-
-        //public List<AddProductDTO> GetAllProductsByVendor(string companyName)
-        //{
-        //    ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
-        //    string username = _threadPrinciple.Identity.Name;
-        //    Console.WriteLine("username = " + username);
-        //    List<AddProductDTO> allProductsByVendor = new List<AddProductDTO>();
-        //    using (SqlConnection connection = new SqlConnection(_connectionString))
-        //    {
-        //        connection.Open();
-        //        using (SqlTransaction transaction = connection.BeginTransaction())
-        //        {
-        //            try
-        //            {
-        //                SqlDataAdapter adapter = new SqlDataAdapter();
-        //                //command.Transaction = connection.BeginTransaction();
-        //                //command.Connection = connection;
-        //                //command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
-        //                //command.CommandType = CommandType.Text;
-        //                //String sql = "select vp.productName, vp.vendorImageURL, vp.productStatus, v.vendorName, vp.VendorLinkURL, p.modelNumber, vp.productPrice from ((vendor_product_junction as vp " +
-        //                //                "inner join products as p on vp.productID = p.productID) " +
-        //                //                "inner join vendorclub as v on vp.vendorID = v.vendorID)" +
-        //                //                "where vp.vendorID = (select userCredID from userCredentials where username = @USERNAME)";
-        //                //String sql = "select vp.productStatus from vendor_product_junction as vp";
-
-        //                string sp_GetAllProductsByVendor = "GetAllProductsByVendor";
-        //                adapter.InsertCommand = new SqlCommand(sp_GetAllProductsByVendor, connection, transaction);
-        //                adapter.InsertCommand.CommandType = CommandType.StoredProcedure;
-        //                adapter.InsertCommand.CommandText = sp_GetAllProductsByVendor;
-        //                adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = username;
-
-        //                //adapter.InsertCommand.Parameters.AddWithValue("@USERNAME", username);
-
-        //                using (SqlDataReader reader = adapter.InsertCommand.ExecuteReader())
-        //                {
-        //                    while (reader.Read())
-        //                    {
-        //                        AddProductDTO productInfo = new AddProductDTO();
-        //                        productInfo.Name = (string)reader["productName"];
-        //                        productInfo.ImageUrl = (string)reader["vendorImageURL"];
-        //                        productInfo.Availability = (bool)reader["productStatus"];
-        //                        productInfo.Company = (string)reader["vendorName"];
-        //                        productInfo.Url = (string)reader["VendorLinkURL"];
-        //                        productInfo.ModelNumber = (string)reader["modelNumber"];
-        //                        productInfo.Price = Decimal.ToDouble((decimal)reader["productPrice"]);
-
-        //                        allProductsByVendor.Add(productInfo);
-        //                    }
-        //                }
-
-        //                transaction.Commit();
-        //                Console.WriteLine("donef2");
-        //            }
-        //            catch (SqlException ex)
-        //            {
-        //                Console.WriteLine("wrong");
-        //                transaction.Rollback();
-        //            }
-        //        }
-        //    }
-        //    return allProductsByVendor;
-        //} 
-
-        public List<AddProductDTO> GetAllProductsByVendor(string companyName)
-        {
-            ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            string username = _threadPrinciple.Identity.Name;
-            Console.WriteLine("username = " + username);
-            List<AddProductDTO> allProductsByVendor = new List<AddProductDTO>();
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                using (SqlTransaction transaction = connection.BeginTransaction())
-                {
-                    try
-                    {
-                        SqlDataAdapter adapter = new SqlDataAdapter();
-                        //command.Transaction = connection.BeginTransaction();
-                        //command.Connection = connection;
-                        //command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
-                        //command.CommandType = CommandType.Text;
-                        //String sql = "select vp.productName, vp.vendorImageURL, vp.productStatus, v.vendorName, vp.VendorLinkURL, p.modelNumber, vp.productPrice from ((vendor_product_junction as vp " +
-                        //                "inner join products as p on vp.productID = p.productID) " +
-                        //                "inner join vendorclub as v on vp.vendorID = v.vendorID)" +
-                        //                "where vp.vendorID = (select userCredID from userCredentials where username = @USERNAME)";
-                        //String sql = "select vp.productStatus from vendor_product_junction as vp";
-
-                        string sp_GetAllProductsByVendor = "nickProc";
-                        adapter.InsertCommand = new SqlCommand(sp_GetAllProductsByVendor, connection, transaction);
-                        adapter.InsertCommand.CommandType = CommandType.StoredProcedure;
-                        adapter.InsertCommand.CommandText = sp_GetAllProductsByVendor;
-                        //adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = username;
-
-                        //adapter.InsertCommand.Parameters.AddWithValue("@USERNAME", username);
-
-                        using (SqlDataReader reader = adapter.InsertCommand.ExecuteReader())
-                        {
-                            int i = 0;
-                            while (reader.Read())
-                            {
-                                try
-                                {
-                                    Console.WriteLine((string)reader.GetName(i++));
-                                }
-                                catch(Exception)
-                                {
-                                    break;
-                                    Console.WriteLine("ok");
-                                }
-
-                                //while()
-                                //AddProductDTO productInfo = new AddProductDTO();
-                                //productInfo.Name = (string)reader["productName"];
-                                //productInfo.ImageUrl = (string)reader["vendorImageURL"];
-                                //productInfo.Availability = (bool)reader["productStatus"];
-                                //productInfo.Company = (string)reader["vendorName"];
-                                //productInfo.Url = (string)reader["VendorLinkURL"];
-                                //productInfo.ModelNumber = (string)reader["modelNumber"];
-                                //productInfo.Price = Decimal.ToDouble((decimal)reader["productPrice"]);
-
-                                //allProductsByVendor.Add(productInfo);
-                            }
-
-                            reader.NextResult();
-                            i = 0;
-                            while(reader.Read())
-                            {
-                                Console.WriteLine("hello");
-                                Console.WriteLine((string)reader.GetName(i++));
-                            }
-                            
-
-                        }
-
-                        transaction.Commit();
-                        Console.WriteLine("donef2");
-                    }
-                    catch (SqlException)
-                    {
-                        Console.WriteLine("wrong");
-                        transaction.Rollback();
-                    }
-                }
-            }
-            return allProductsByVendor;
         }
     }
 }

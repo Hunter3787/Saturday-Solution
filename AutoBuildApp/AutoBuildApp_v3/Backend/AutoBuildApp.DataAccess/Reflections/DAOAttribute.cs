@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AutoBuildApp.DataAccess.Reflections
+namespace AutoBuildApp.Models.Reflections
 {
     public class DAOAttribute : Attribute
     {

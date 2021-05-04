@@ -1,7 +1,7 @@
-﻿using AutoBuildApp.DataAccess.Abstractions;
+﻿using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Enumerations;
-using AutoBuildApp.DataAccess.Entities;
+using AutoBuildApp.Models.Entities;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Data;
@@ -13,7 +13,7 @@ using AutoBuildApp.DataAccess.DAOGlobals;
 * infromation coming from the database to be usable inside the Builder.
 * @Author Nick Marshall-Eminger
 */
-namespace AutoBuildApp.DataAccess
+namespace AutoBuildApp.Models
 {
 
     /// <summary>

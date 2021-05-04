@@ -1,4 +1,4 @@
-﻿using AutoBuildApp.DataAccess.Entities;
+﻿using AutoBuildApp.Models.Entities;
 //using AutoBuildApp.Managers.Registration_PackManger;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;

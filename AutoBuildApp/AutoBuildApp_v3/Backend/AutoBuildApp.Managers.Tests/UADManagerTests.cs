@@ -1,5 +1,5 @@
 ﻿using AutoBuildApp.Api.HelperFunctions;
-using AutoBuildApp.DataAccess;
+using AutoBuildApp.Models;
 using AutoBuildApp.DomainModels.Abstractions;
 using AutoBuildApp.Managers.FeatureManagers;
 using AutoBuildApp.Security.Enumerations;

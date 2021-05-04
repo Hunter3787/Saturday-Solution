@@ -13,10 +13,10 @@ using System.Text;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using AutoBuildApp.Models.Users;
-using AutoBuildApp.Models.DTO;
+using AutoBuildApp.Models.DataTransferObjects;
 
 
-namespace AutoBuildApp.DataAccess
+namespace AutoBuildApp.Models
 {
     public class UserManagementGateway
     {

@@ -1,10 +1,10 @@
-﻿using AutoBuildApp.DataAccess.Reflections;
+﻿using AutoBuildApp.Models.Reflections;
 using AutoBuildApp.Models.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AutoBuildApp.DataAccess.Entities
+namespace AutoBuildApp.Models.Entities
 {
     /// <summary>
     /// This class contains the entity objects that will be
