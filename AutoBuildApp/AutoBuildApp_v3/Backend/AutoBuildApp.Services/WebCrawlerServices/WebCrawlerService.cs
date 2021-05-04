@@ -1,4 +1,4 @@
-﻿using AutoBuildApp.DataAccess;
+﻿using AutoBuildApp.Models;
 using AutoBuildApp.Models;
 using HtmlAgilityPack;
 using Fizzler.Systems.HtmlAgilityPack;
@@ -56,8 +56,11 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             {
                 Headless = true,
                 IgnoreHTTPSErrors = true,
+                ExecutablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe", // added per danny
                 Args = new[] {
-                        $"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}",
+                        $"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}", // ganna take a while = dannu
+                        //"--proxy-server=23.251.138.105:8080",
+                        //"--proxy-server=201.45.163.114:80",
                         //"--proxy-server=208.80.28.208:8080",
                         //"--proxy-server=183.88.226.50:8080",
                         //"--proxy-server=165.225.77.42:80",
@@ -240,6 +243,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
 
                         var price = await page.EvaluateExpressionAsync(priceQuerySelector);
                         Console.Write("price\t");
+                        string priceString = (price == null) || String.IsNullOrEmpty(price.ToString()) ? null : price.ToString();
 
 
                         Dictionary<string, string> specsDictionary = new Dictionary<string, string>();
@@ -252,10 +256,10 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                             string value = specsVals.ElementAt(i).ToString();
                             // assign series first in case there is no model number.
                             //  if it does have a model number, it will just get overridden.
-                            if (key.ToLower().Contains("series"))
-                            {
-                                modelNumberIndex = i;
-                            }
+                            //if (key.ToLower().Contains("series"))
+                            //{
+                            //    modelNumberIndex = i;
+                            //}
                             if (key.ToLower().Contains("model"))
                             {
                                 modelNumberIndex = i;
@@ -353,7 +357,6 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         bool availability = price != null;
                         string modelNumber = specsVals.ElementAt(modelNumberIndex).ToString();
                         string brand = specsVals.ElementAt(brandIndex).ToString();
-                        string priceString = price == null ? "N/A" : price.ToString();
                         Models.WebCrawler.Product product = new Models.WebCrawler.Product(imageUrl.ToString(), availability, companyName, url, modelNumber, title.ToString(), productType,
                             brand, totalStarRatingString, totalNumberOfReviewsString, priceString, specsDictionary, reviews);
 
@@ -372,12 +375,13 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         if (validProduct)
                         {
                             webCrawlerDAO.PostSpecsOfProductsToDatabase(product);
+                            if (reviewCount > 0)
+                            {
+                                webCrawlerDAO.PostToVendorProductReviewsTable(product);
+                            }
                         }
                         webCrawlerDAO.PostToVendorProductsTable(product);
-                        if (reviewCount > 0)
-                        {
-                            webCrawlerDAO.PostToVendorProductReviewsTable(product);
-                        }
+
                     }
                     validIP = true;
                 }
@@ -388,6 +392,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         Console.WriteLine("yo man");
                         continue;
                     }
+                    Console.WriteLine(e.Message);
                     Console.WriteLine("BAD PROXY " + ": " + currentProxy.IPAddress + " - " + currentProxy.Port + "\t\t" + e.Message);
                     rotateProxy();
                     options.Args[0] = $"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}";
@@ -513,7 +518,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         }
                     }
                 }
-                catch (WebException e)
+                catch (WebException )
                 {
                     Console.WriteLine("Bad Proxy. Rotating...");
                     rotateProxy();
@@ -529,6 +534,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             {
                 Headless = true,
                 IgnoreHTTPSErrors = true,
+                ExecutablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe", // edded per danny
                 Args = new[] {
                         //$"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}",
                         "--proxy-server=208.80.28.208:8080",
@@ -572,7 +578,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         }
                     }
                 }
-                catch (Exception e)
+                catch (Exception )
                 {
                     rotateProxy();
                 }

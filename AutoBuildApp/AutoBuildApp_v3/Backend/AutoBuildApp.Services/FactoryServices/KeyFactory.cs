@@ -1,5 +1,4 @@
-﻿
-using AutoBuildApp.Models.Enumerations;
+﻿using AutoBuildApp.Models.Enumerations;
 using System.Collections.Generic;
 
 /**

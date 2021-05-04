@@ -38,7 +38,8 @@ namespace AutoBuildApp.Models.Users
             this.UserName = "";
             this.FirstName = "";
             this.LastName = "";
-            this.passHash = " ";
+            this.UserEmail = "";
+            this.passHash = "";
 
             this.registrationDate = DateTime.MinValue;
             this.role = "";

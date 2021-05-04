@@ -1,42 +1,46 @@
-﻿using AutoBuildApp.DataAccess.Abstractions;
+﻿using AutoBuildApp.Models.DataTransferObjects;
+using AutoBuildApp.Models.Entities;
+using AutoBuildApp.Models.DataTransferObjects;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AutoBuildApp.DataAccess
+namespace AutoBuildApp.Models
 {
     public class ResponseUAD : CommonResponse
     {
 
-        public IList<ChartData> _chartDatas;
+        public IList<ChartData> GetNumAccountsPerRole { get; set; }
+        public IList<ChartData> GetUsePerComponent { get; set; }
+        public IList<ChartData> GetRegPerMonthByUserType { get; set; }
+
+        public IList<ChartData> GetAvgSessDurPerRole { get; set; }
+        public IList<ChartData> GetPageViewPerMonth{ get; set; }
+        public bool ConnectionState { get; set; }
+
+        public bool IsAuthorized { get; set; }
 
         public ResponseUAD()
         {
 
             ResponseString = " ";
-            SuccessString = " ";
-            FailureString = " ";
-            SuccessBool = false;
-            connectionState = false;
-
+            ResponseBool = false;
+            ConnectionState = false;
+            // bar graph 1:
+            GetNumAccountsPerRole = new List<ChartData>();
+            GetUsePerComponent = new List<ChartData>();
+            GetRegPerMonthByUserType = new List<ChartData>();
+            GetAvgSessDurPerRole = new List<ChartData>();
+            GetPageViewPerMonth = new List<ChartData>();
         }
-
-
-        public string SuccessString { get; set; }
-        public string FailureString { get; set; }
-
-        public string ResponseString { get; set; }
-        public bool SuccessBool { get; set; }
-        public bool connectionState { get; set; }
-
 
 
         public override string ToString()
         {
             return $"\nResponse String {ResponseString }\n" +
-                $"Success string {SuccessString}\nFailure String {FailureString}\n" +
-                $"Success Bool {SuccessBool}\n" +
-                $"Connection bool {connectionState}\n";
+                $"Success Bool {ResponseBool}\n" +
+                $"Connection bool {ConnectionState}\n" +
+                $"IsAuthorized {IsAuthorized}\n";
 
         }
 

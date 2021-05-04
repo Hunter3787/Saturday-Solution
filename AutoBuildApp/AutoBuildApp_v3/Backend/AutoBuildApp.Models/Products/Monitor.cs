@@ -12,42 +12,38 @@ namespace AutoBuildApp.Models.Products
 {
     public class Monitor : IComponent
     {
-        #region "Field Declarations, get; set;"
-        public readonly int MIN_LIST_SIZE = 1;
-        public readonly int MIN_INDEX = 0;
-        public readonly int MIN_VALUE = 0;
-
+        #region "Field Declarations: get; set;"
         public ProductType ProductType { get; set; }
         public string ModelNumber { get; set; }
         public string ProductName { get; set; }
         public string ManufacturerName { get; set; }
         public int Quantity { get; set; }
-        public List<byte[]> ProductImages { get; set; }
+        public List<string> ProductImageStrings { get; set; }
         public double Price { get; set; }
         public double Budget { get; set; }
         public double ScreenSize { get; set; }
         public string Resolution { get; set; }
         public double RefreshRate { get; set; }
         public double ResponseTime { get; set; }
-        public List<string> Color { get; set; }
+        public List<string> Colors { get; set; }
         public int Brightness { get; set; }
         public bool Widescreen { get; set; }
         public bool CurvedScreen { get; set; }
         public string HDRTier { get; set; }
-        public List<string> InterfacePort { get; set; }
-        public List<string> FrameSync { get; set; }
-        public Dictionary<string, int> DisplayPortCount { get; set; }
+        public List<string> InterfacePorts { get; set; }
+        public List<string> FrameSyncList { get; set; }
+        public Dictionary<string, int> DisplayPortCounts { get; set; }
         public bool Speakers { get; set; }
         public string ViewingAngle { get; set; }
         #endregion
 
         public Monitor()
         {
-            ProductImages = new List<byte[]>();
-            Color = new List<string>();
-            InterfacePort = new List<string>();
-            FrameSync = new List<string>();
-            DisplayPortCount = new Dictionary<string, int>();
+            ProductImageStrings = new List<string>();
+            Colors = new List<string>();
+            InterfacePorts = new List<string>();
+            FrameSyncList = new List<string>();
+            DisplayPortCounts = new Dictionary<string, int>();
         }
 
         #region "Color Add/Remove"
@@ -58,10 +54,15 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool AddColor(string input)
         {
-            if (string.IsNullOrWhiteSpace(input) || Color.Contains(input))
-                return false;
+            ProductGuard.Exists(Colors, nameof(Colors));
+            ProductGuard.IsNotEmpty(input, nameof(input));
 
-            Color.Add(input);
+            if (Colors.Contains(input))
+            {
+                return false;
+            }
+
+            Colors.Add(input);
             return true;
         }
 
@@ -73,10 +74,11 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveColor(string toRemove)
         {
-            if (Color == null || string.IsNullOrWhiteSpace(toRemove) || !Color.Contains(toRemove))
-                return false;
+            ProductGuard.Exists(Colors, nameof(Colors));
+            ProductGuard.IsNotEmpty(toRemove, nameof(toRemove));
+            ProductGuard.ContainsElement(Colors, toRemove, nameof(Colors));
 
-            return RemoveColor(Color.IndexOf(toRemove));
+            return RemoveColor(Colors.IndexOf(toRemove));
         }
 
         /// <summary>
@@ -86,27 +88,27 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveColor(int index)
         {
-            if (Color == null || index > Color.Count || index < MIN_INDEX)
-                return false;
+            ProductGuard.Exists(Colors, nameof(Colors));
+            ProductGuard.IsInRange(Colors, index, nameof(Colors));
 
-            Color.RemoveAt(index);
+            Colors.RemoveAt(index);
             return true;
         }
         #endregion
 
-        #region "Interface port Add/Remove"
+        #region "I/O port Add/Remove"
         /// <summary>
-        /// Add a string representation of a interface port to the monitor
+        /// Add a string representation of a interface ports to the monitor
         /// InterfacePorts list.
         /// </summary>
         /// <param name="input"></param>
         /// <returns>Boolean</returns>
         public bool AddInterfacePort(string input)
         {
-            if (string.IsNullOrWhiteSpace(input) || InterfacePort.Contains(input))
-                return false;
+            ProductGuard.Exists(InterfacePorts, nameof(InterfacePorts));
+            ProductGuard.IsNotEmpty(input, nameof(input));
 
-            Color.Add(input);
+            Colors.Add(input);
             return true;
         }
 
@@ -118,10 +120,11 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveInterfacePort(string toRemove)
         {
-            if (InterfacePort == null || string.IsNullOrWhiteSpace(toRemove) || !InterfacePort.Contains(toRemove))
-                return false;
+            ProductGuard.Exists(InterfacePorts, nameof(Colors));
+            ProductGuard.IsNotEmpty(toRemove, nameof(toRemove));
+            ProductGuard.ContainsElement(InterfacePorts, toRemove, nameof(InterfacePorts));
 
-            return RemoveInterfacePort(InterfacePort.IndexOf(toRemove));
+            return RemoveInterfacePort(InterfacePorts.IndexOf(toRemove));
         }
 
         /// <summary>
@@ -131,10 +134,10 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveInterfacePort(int index)
         {
-            if (InterfacePort == null || index > InterfacePort.Count || index < MIN_INDEX)
-                return false;
+            ProductGuard.Exists(Colors, nameof(Colors));
+            ProductGuard.IsInRange(Colors, index, nameof(Colors));
 
-            InterfacePort.RemoveAt(index);
+            InterfacePorts.RemoveAt(index);
             return true;
         }
         #endregion
@@ -148,10 +151,10 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool AddFrameSync(string input)
         {
-            if (string.IsNullOrWhiteSpace(input) || FrameSync.Contains(input))
+            if (string.IsNullOrWhiteSpace(input) || FrameSyncList.Contains(input))
                 return false;
 
-            FrameSync.Add(input);
+            FrameSyncList.Add(input);
             return true;
         }
 
@@ -163,10 +166,10 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveFrameSync(string toRemove)
         {
-            if (FrameSync == null || string.IsNullOrWhiteSpace(toRemove) || !FrameSync.Contains(toRemove))
+            if (FrameSyncList == null || string.IsNullOrWhiteSpace(toRemove) || !FrameSyncList.Contains(toRemove))
                 return false;
 
-            return RemoveFrameSync(FrameSync.IndexOf(toRemove));
+            return RemoveFrameSync(FrameSyncList.IndexOf(toRemove));
         }
 
         /// <summary>
@@ -176,10 +179,10 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveFrameSync(int index)
         {
-            if (FrameSync == null || index > FrameSync.Count || index < MIN_INDEX)
+            if (FrameSyncList == null || index > FrameSyncList.Count || index < ProductGlobals.MIN_INDEX)
                 return false;
 
-            FrameSync.RemoveAt(index);
+            FrameSyncList.RemoveAt(index);
             return true;
         }
         #endregion
@@ -194,11 +197,14 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool AddDisplayPort(string input, int value)
         {
-            if (string.IsNullOrWhiteSpace(input) || value < MIN_VALUE ||
-                    DisplayPortCount.ContainsKey(input))
+            if (string.IsNullOrWhiteSpace(input)
+                || value < ProductGlobals.MIN_VALUE
+                || DisplayPortCounts.ContainsKey(input))
+            {
                 return false;
+            }
 
-            DisplayPortCount.Add(input, value);
+            DisplayPortCounts.Add(input, value);
             return true;
         }
 
@@ -210,15 +216,20 @@ namespace AutoBuildApp.Models.Products
         /// <returns></returns>
         public bool SetDisplayPortCount(string input, int value)
         {
-
-            if (DisplayPortCount == null || string.IsNullOrWhiteSpace(input) || value < MIN_VALUE)
+            if (DisplayPortCounts == null
+                || string.IsNullOrWhiteSpace(input)
+                || value < ProductGlobals.MIN_VALUE)
+            {
                 return false;
+            }
 
             // If display port does not yet contain the key, call add for convenience.
-            if (!DisplayPortCount.ContainsKey(input))
+            if (!DisplayPortCounts.ContainsKey(input))
+            {
                 return AddDisplayPort(input, value);
+            }
 
-            DisplayPortCount[input] = value;
+            DisplayPortCounts[input] = value;
             return true;
         }
 
@@ -229,10 +240,14 @@ namespace AutoBuildApp.Models.Products
         /// <returns>Boolean</returns>
         public bool RemoveDisplayPort(string toRemove)
         {
-            if (DisplayPortCount == null || string.IsNullOrWhiteSpace(toRemove) ||
-                    !DisplayPortCount.ContainsKey(toRemove))
+            if (DisplayPortCounts == null
+                || string.IsNullOrWhiteSpace(toRemove)
+                || !DisplayPortCounts.ContainsKey(toRemove))
+            {
                 return false;
-            return DisplayPortCount.Remove(toRemove);
+            }
+
+            return DisplayPortCounts.Remove(toRemove);
         }
         #endregion
 
@@ -242,13 +257,28 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         /// <param name="image">Byte Array representing an image.</param>
         /// <returns></returns>
-        public bool AddImage(byte[] image)
+        public bool AddImage(string location)
         {
-            if (image == null)
-                return false;
+            ProductGuard.Exists(ProductImageStrings, nameof(ProductImageStrings));
+            ProductGuard.IsNotEmpty(location, nameof(location));
 
-            ProductImages.Add(image);
+            ProductImageStrings.Add(location);
             return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public bool RemoveImage(string location)
+        {
+            ProductGuard.Exists(ProductImageStrings, nameof(ProductImageStrings));
+            ProductGuard.IsNotEmpty(location, nameof(location));
+            ProductGuard.ContainsElement(ProductImageStrings, location, nameof(location));
+
+            var index = ProductImageStrings.IndexOf(location);
+            return RemoveImage(index);
         }
 
         /// <summary>
@@ -258,19 +288,11 @@ namespace AutoBuildApp.Models.Products
         /// <returns></returns>
         public bool RemoveImage(int index)
         {
-            if (ProductImages == null)
-                return false;
-            var success = false;
-            var endOfList = ProductImages.Count - 1;
+            ProductGuard.Exists(ProductImageStrings, nameof(ProductImageStrings));
+            ProductGuard.IsInRange(ProductImageStrings, index, nameof(ProductImageStrings));
 
-            if (index >= MIN_INDEX && ProductImages.Count >= MIN_LIST_SIZE
-                && index <= endOfList)
-            {
-                ProductImages.RemoveAt(index);
-                success = true;
-            }
-
-            return success;
+            ProductImageStrings.RemoveAt(index);
+            return true;
         }
 
         /// <summary>

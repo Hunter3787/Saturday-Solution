@@ -1,0 +1,170 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    font-family: Arial;
+    margin: 0;
+    background-color: whitesmoke; 
+  }
+
+  .formheader {
+    padding: 10px;
+    text-align: center;
+    background: #28B463;
+    color: white;
+    overflow: auto hidden;
+    height: 100px;
+  }
+
+  .formheader .formtitle {
+    color: whitesmoke;
+  }
+
+  .mpb{
+  }
+  
+  .mpb .sidenav {
+    margin-top: 100px;
+    height: 100%;
+    width: 200px;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: whitesmoke;
+    overflow-x: hidden;
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .sidenav:hover {
+    background-color: #E5E7E9;
+    box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
+  }
+
+  .sidenav h1 {
+      color: #191b2b;
+      text-align: left;
+      border-bottom: 1px solid black;
+  }
+
+  .sidenav h3 {
+      font-size: 1em;
+      font-weight: bold;
+      color: #707B7C;
+      text-align: left;
+      border-bottom: 1px solid #B2BABB;
+  }
+  
+  .sidenav label {
+      font-size: smaller;
+      color: #191b2b;
+  }
+
+  .sidenav .postbutton {
+    display: block;
+    width: 100%;
+    border: none;
+    background-color: #4285f4;
+    color: #fff;
+    padding: 14px 28px;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: .25rem;
+    text-align: center;
+    text-transform: uppercase;
+    transition: .15s ease-in-out;
+    transition-property: color, background-color, border-color, box-shadow;
+  }
+
+  .sidenav .postbutton:hover {
+    border-color: #0062cc;
+    box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
+  }
+
+  .sidenav .postbutton:active {
+    border-color: #005cbf;
+    background-color: #0b51c5;
+    box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
+  }
+  
+  .main {
+    margin-left: 220px;
+    font-size: 28px; 
+    padding: 0px 10px;
+  }
+
+  .gridbuilds {
+    float: left;
+    padding: 10px;
+    max-width: 320px;
+    width: 50%;
+  }
+
+  .blockbuild {
+    box-shadow: 0 4px 2px -3px gray;
+    padding: 16px;
+    text-align: left;
+    background-color: #F7F9F9;
+    border: 3px solid transparent;
+    font-size: .5em;
+    min-height: 400px;
+    max-height: 400px;
+    cursor: pointer;
+    border: 1px solid #E5E7E9;
+    transition: .15s ease-in-out;
+    transition-property: color, background-color, border-color, box-shadow;
+  }
+
+  .blockbuild:hover {
+    box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
+    background-color: #ECF0F1;
+    border: 3px solid #28B463;
+  }
+
+  .blockbuild:active {
+    border: 3px solid #28B463;
+    background-color: #CACFD2;
+    box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
+  }
+
+   .buildimage {
+    width: 100%;
+    min-width: 100%;
+    height: 200px;
+    max-height: 200px;
+    overflow: hidden;
+  }
+
+  .buildimage img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .blockbuild:hover {
+      box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
+      background-color: #ECF0F1;
+      border: 3px solid #28B463;
+  }
+
+  .blockbuild:active {
+    border: 3px solid #28B463;
+    background-color: #CACFD2;
+    box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
+  }
+
+  @media screen and (max-width: 600px) {
+    .gridbuilds {
+      width: 100%;
+      display: block;
+      margin-bottom: 20px;
+    }
+  }
+  
+  @media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+  }

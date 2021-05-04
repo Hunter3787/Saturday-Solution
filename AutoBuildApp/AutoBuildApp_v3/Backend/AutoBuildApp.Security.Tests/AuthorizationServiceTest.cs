@@ -1,5 +1,5 @@
-﻿using AutoBuildApp.DataAccess;
-using AutoBuildApp.DataAccess.Entities;
+﻿using AutoBuildApp.Models;
+using AutoBuildApp.Models.Entities;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
 using AutoBuildApp.Security.Interfaces;
@@ -58,18 +58,18 @@ namespace AutoBuildApp.Security.Tests
             claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
             Thread.CurrentPrincipal = claimsPrincipal;
             AuthorizationService.print();
-           bool AuthActual =  AuthorizationService.checkPermissions(permissionsRequired);
+           bool AuthActual =  AuthorizationService.CheckPermissions(permissionsRequired);
            bool AuthExpected = true;
 
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
             UserCredentials credential1 = new UserCredentials("Zeina", "PassHash");
             CommonReponseAuth _CRAuth = new CommonReponseAuth();
             AuthDAO _authDAO = new AuthDAO("Data Source=localhost;Initial Catalog=DB;Integrated Security=True");
-            AuthenticationService authenticationService = new AuthenticationService(_authDAO);
-            _CRAuth = authenticationService.AuthenticateUser(credential1);
+            //AuthenticationService authenticationService = new AuthenticationService(_authDAO);
+            //_CRAuth = authenticationService.AuthenticateUser(credential1);
             IClaims basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
 
-            AuthActual = AuthorizationService.checkPermissions(basic.Claims());
+            AuthActual = AuthorizationService.CheckPermissions(basic.Claims());
 
 
             Assert.AreEqual(AuthExpected, AuthActual);
@@ -91,7 +91,7 @@ namespace AutoBuildApp.Security.Tests
         public void CheckNullPermissions_ReturnsBool()
         {
 
-            bool AuthActual = AuthorizationService.checkPermissions(null);
+            bool AuthActual = AuthorizationService.CheckPermissions(null);
             bool AuthExpected = false;
 
             Assert.AreEqual(AuthExpected, AuthActual);

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AutoBuildApp.DataAccess.Entities
+namespace AutoBuildApp.Models.Entities
 {
     public class UserCredentials
     {

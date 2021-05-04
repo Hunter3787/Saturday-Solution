@@ -1,5 +1,6 @@
-﻿using AutoBuildApp.DataAccess.Entities;
+﻿using AutoBuildApp.Models.Entities;
 using Microsoft.Data.SqlClient;
+using System;
 using System.Data;
 
 /// <summary>
@@ -34,6 +35,7 @@ namespace APB.App.DataAccess
                     // Will try to insert into the logs table.
                     try
                     {
+                        Console.WriteLine("in the loger DAO");
                         // Specifies the SQL command and parameters that will be used to send data to the database.
                         string sql = "INSERT INTO logs(message, loglevel, dateTime) VALUES(@MESSAGE,@LOGLEVEL,@DATETIME);"; 
 

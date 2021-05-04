@@ -20,18 +20,20 @@ namespace AutoBuildApp.Services.RecommendationServices.Tests
         private ComputerCase _compCase;
         private Motherboard _mobo;
         private PowerSupplyUnit _psu;
-        private GPU _graphics;
-        private CPU _processor;
+        private GraphicsProcUnit _graphics;
+        private CentralProcUnit _processor;
         private RAM _ram;
         private ICooler _cooler;
         private List<IComponent> _periphs;
         private IBuild _gamingBuild;
+        private BuildFactory _build;
 
         // Initialize test class
         [TestInitialize]
         public void Initialize()
         {
-            _gamingBuild = BuildFactory.CreateBuild(BuildType.Gaming);
+            _build = new BuildFactory();
+            _gamingBuild = _build.CreateBuild(BuildType.Gaming);
             _hd1 = new NVMeDrive
             {
                 DriveType = HardDriveType.NVMe,
@@ -101,7 +103,7 @@ namespace AutoBuildApp.Services.RecommendationServices.Tests
                 "DDR4 - 3600",
                 "DDR5 - 50000"
             },
-                Color = new List<string> { "black" },
+                Colors = new List<string> { "black" },
                 PCIEXSixTeenSlots = 3,
                 PCIEXEightSlots = 1,
                 PCIEXFourSlots = 1,
@@ -139,7 +141,7 @@ namespace AutoBuildApp.Services.RecommendationServices.Tests
                 SixPlusTwoConnectors = 3
 
             };
-            _graphics = new GPU
+            _graphics = new GraphicsProcUnit
             {
                 ProductType = ProductType.GPU,
                 ModelNumber = "34124n",
@@ -166,7 +168,7 @@ namespace AutoBuildApp.Services.RecommendationServices.Tests
                 Cooling = 2,
                 ExternalPower = "1 PCIe 12-pin"
             };
-            _processor = new CPU
+            _processor = new CentralProcUnit
             {
                 ProductType = ProductType.CPU,
                 ModelNumber = "AMD3",
@@ -217,10 +219,10 @@ namespace AutoBuildApp.Services.RecommendationServices.Tests
                 ManufacturerName = "Fan Maker",
                 Price = 22,
                 Quantity = 1,
-                Color = new List<string> { "Black", "Silver" },
+                Colors = new List<string> { "Black", "Silver" },
                 FanRPM = "1200 RPM",
                 NoiseVolume = "34 dB",
-                CompatableSocket = new List<string> { "Many", "different", "Sockets" },
+                CompatableSockets = new List<string> { "Many", "different", "Sockets" },
                 Fanless = false,
                 WaterCooling = false
             };
@@ -254,9 +256,10 @@ namespace AutoBuildApp.Services.RecommendationServices.Tests
             BuildType type = BuildType.Gaming;
             double expected = 1700 * .35/(.35+.25);
             expected = Math.Round(expected, 2, MidpointRounding.AwayFromZero);
+            PortionBudgetService portion = new PortionBudgetService();
 
             // Act
-            var result = BudgetPortionService.BudgetComponents(list, type, budget);
+            var result = portion.PortionOutBudget(list, type, budget);
 
             double actual = 0;
             foreach (var add in result)

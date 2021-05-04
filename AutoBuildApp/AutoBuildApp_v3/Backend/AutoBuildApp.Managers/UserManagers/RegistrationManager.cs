@@ -6,7 +6,7 @@ using System.Text;
 using AutoBuildApp.Models.Users;
 using System.Linq;
 using BC = BCrypt.Net.BCrypt;
-using AutoBuildApp.DataAccess;
+using AutoBuildApp.Models;
 using AutoBuildApp.Managers.UserManagers;
 
 namespace AutoBuildApp.Managers
@@ -18,20 +18,28 @@ namespace AutoBuildApp.Managers
 
         public RegistrationManager(String _cnnctString)
         {
+            _inputValidityManager = new InputValidityManager();
             _RegistrationDAO = new RegistrationDAO(_cnnctString);
         }
 
         
 
 
-        public String RegisterUser(UserAccount user)
+        public String RegisterUser(string username, string firstname, string lastname, string email, string password,
+            string passwordCheck)
         {
-            if (!_inputValidityManager.IsInformationValid(user))
+            UserAccount user = new UserAccount();
+            user.UserName = username;
+            user.FirstName = firstname;
+            user.LastName = lastname;
+            user.UserEmail = email;
+            user.passHash = password;
+            if (!_inputValidityManager.IsInformationValid(user, passwordCheck))
             {
                 return "Invalid Input!";
             }
             user.passHash = BC.HashPassword(user.passHash, BC.GenerateSalt());
-            return _RegistrationDAO.CreateUserRecord(user);
+            return _RegistrationDAO.RegisterAccount(user);
         }
     }
 }

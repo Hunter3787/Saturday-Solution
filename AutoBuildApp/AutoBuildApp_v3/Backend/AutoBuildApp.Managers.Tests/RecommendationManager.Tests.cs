@@ -23,19 +23,21 @@ namespace AutoBuildApp.Managers.Tests
         private ComputerCase _compCase;
         private Motherboard _mobo;
         private PowerSupplyUnit _psu;
-        private GPU _graphics;
-        private CPU _processor;
+        private GraphicsProcUnit _graphics;
+        private CentralProcUnit _processor;
         private RAM _ram;
         private ICooler _cooler;
         private List<IComponent> _periphs;
         private IBuild _gamingBuild;
+        private BuildFactory _build;
 
         // Initialize test class
         [TestInitialize]
         public void Initialize()
         {
-            _manager = new RecommendationManager();
-            _gamingBuild = BuildFactory.CreateBuild(BuildType.Gaming);
+            _build = new BuildFactory();
+            _manager = new RecommendationManager("testString");
+            _gamingBuild = _build.CreateBuild(BuildType.Gaming);
             _hd1 = new NVMeDrive
             {
                 DriveType = HardDriveType.NVMe,
@@ -105,7 +107,7 @@ namespace AutoBuildApp.Managers.Tests
                     "DDR4 - 3600",
                     "DDR5 - 50000"
                 },
-                Color = new List<string> { "black" },
+                Colors = new List<string> { "black" },
                 PCIEXSixTeenSlots = 3,
                 PCIEXEightSlots = 1,
                 PCIEXFourSlots = 1,
@@ -143,7 +145,7 @@ namespace AutoBuildApp.Managers.Tests
                 SixPlusTwoConnectors = 3
 
             };
-            _graphics = new GPU
+            _graphics = new GraphicsProcUnit
             {
                 ProductType = ProductType.GPU,
                 ModelNumber = "34124n",
@@ -170,7 +172,7 @@ namespace AutoBuildApp.Managers.Tests
                 Cooling = 2,
                 ExternalPower = "1 PCIe 12-pin"
             };
-            _processor = new CPU
+            _processor = new CentralProcUnit
             {
                 ProductType = ProductType.CPU,
                 ModelNumber = "AMD3",
@@ -221,10 +223,10 @@ namespace AutoBuildApp.Managers.Tests
                 ManufacturerName = "Fan Maker",
                 Price = 22,
                 Quantity = 1,
-                Color = new List<string> { "Black", "Silver" },
+                Colors = new List<string> { "Black", "Silver" },
                 FanRPM = "1200 RPM",
                 NoiseVolume = "34 dB",
-                CompatableSocket = new List<string> { "Many", "different", "Sockets" },
+                CompatableSockets = new List<string> { "Many", "different", "Sockets" },
                 Fanless = false,
                 WaterCooling = false
             };

@@ -2,10 +2,14 @@
 using AutoBuildApp.DomainModels.Exceptions;
 using AutoBuildApp.Services;
 using AutoBuildApp.Services.FeatureServices;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace AutoBuildApp.Managers
 {
@@ -35,7 +39,7 @@ namespace AutoBuildApp.Managers
         /// </summary>
         /// <param name="buildPost">takes in a build post object from the controller.</param>
         /// <returns>success state bool value.</returns>
-        public bool PublishBuild(BuildPost buildPost)
+        public async Task<bool> PublishBuild(BuildPost buildPost)
         {
             // This try/catch block checks for a null BuildPost object.
             try
@@ -48,15 +52,16 @@ namespace AutoBuildApp.Managers
             catch (ArgumentNullException ex)
             {
                 _logger.LogWarning(ex.Message);
-                Console.WriteLine(ex.Message);
                 return false;
             }
+
+            // Logs the calling event of the method.
+            _logger.LogInformation($"Most Popular Builds Manager PublishBuild was called for User:{buildPost.Username}");
 
             // This try/catch block checks for a null var in a BuildPost object.
             try
             {
-                if (buildPost.Username == null || buildPost.Title == null || buildPost.Description == null ||
-                    buildPost.BuildImagePath == null || buildPost.DateTime == null)
+                if (buildPost.Username == null || buildPost.Title == null || buildPost.Description == null)
                 {
                     throw new NullReferenceException("A null object variable was passed through the method parameters");
                 }
@@ -64,12 +69,8 @@ namespace AutoBuildApp.Managers
             catch (NullReferenceException ex)
             {
                 _logger.LogWarning(ex.Message);
-                Console.WriteLine(ex.Message);
                 return false;
             }
-
-            // Logs the calling event of the method.
-            _logger.LogInformation($"Most Popular Builds Manager PublishBuild was called for User:{buildPost.Username}");
 
             // This var stores the maximum possible length of a title string.
             var maxTitleLength = 50;
@@ -103,7 +104,6 @@ namespace AutoBuildApp.Managers
             catch (StringTooLongException ex)
             {
                 _logger.LogWarning(ex.Message);
-                Console.WriteLine(ex.Message);
                 return false;
             }
 
@@ -120,7 +120,6 @@ namespace AutoBuildApp.Managers
             catch(InvalidUsernameException ex)
             {
                 _logger.LogWarning(ex.Message);
-                Console.WriteLine(ex.Message);
                 return false;
             }
 
@@ -137,24 +136,127 @@ namespace AutoBuildApp.Managers
             catch (StringTooLongException ex)
             {
                 _logger.LogWarning(ex.Message);
-                Console.WriteLine(ex.Message);
                 return false;
             }
+
+            buildPost.LikeIncrementor = 0; // A new post should have a start of 0 likes. This ensures that.
+
+            buildPost.DateTime = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF"); // sets the current date time to this variable.
+
+            // async call to save an image to a filepath.
+            buildPost.BuildImagePath = await _mostPopularBuildsService.UploadImage(buildPost.Username, buildPost.Image);
 
             // TODO: implement service return method.
             return _mostPopularBuildsService.PublishBuild(buildPost);
         }
 
         /// <summary>
-        /// This method will retrieve the list from the service and send it
-        /// to the controller after doing checks.
+        /// This method returns a single build post from manager
         /// </summary>
-        /// <returns>returns the list of build posts.</returns>
-        public List<BuildPost> GetBuildPosts()
+        /// <param name="buildId">takes in an id string</param>
+        /// <returns>returns a build post.</returns>
+        public BuildPost GetBuildPost(string buildId)
+        {
+            // Log the manager get build posts being called
+            _logger.LogInformation("Most Popular Builds Manager GetBuildPost was called.");
+
+            // This try/catch block checks for a null string.
+            try
+            {
+                if (buildId == null)
+                {
+                    throw new ArgumentNullException("A null argument was passed through the method parameters");
+                }
+            }
+            catch (ArgumentNullException ex)
+            {
+                _logger.LogWarning(ex.Message);
+                return null;
+            }
+
+            return _mostPopularBuildsService.GetBuildPost(buildId);
+        }
+
+        /// <summary>
+        /// This method will be called to validate/invalidate BRD reqs.
+        /// </summary>
+        /// <param name="orderLikes">query string to determing which order to list elements by likes</param>
+        /// <param name="buildType">query string to determinw which order to list builds</param>
+        /// <returns>retruns a list of Build Posts.</returns>
+        public List<BuildPost> GetBuildPosts(string orderLikes, string buildType)
         {
             // Log the manager get build posts being called
             _logger.LogInformation("Most Popular Builds Manager GetBuildPosts was called.");
-            return _mostPopularBuildsService.GetBuildPosts();
+
+            var defaultOrderLikes = "";
+            var defaultBuildType = "";
+
+            // The following if conditions will check all possible conditions and assign values accordingly,
+            // else it will insert the default parameters.
+            // conditions: GA and ASC, G and ASC, WP and ASC
+            //             GA and DESC, G and DESC, WP and DESC
+            //             GA, G, WP
+            //             ASC
+            // default:    DESC
+
+            if ((buildType == "BuildType_GraphicArtist" && (orderLikes == "AscendingLikes" || orderLikes == "DescendingLikes"))|| 
+                (buildType == "BuildType_Gaming" && (orderLikes == "AscendingLikes" || orderLikes == "DescendingLikes")) || 
+                (buildType == "BuildType_WordProcessing" && (orderLikes == "AscendingLikes" || orderLikes == "DescendingLikes")))
+            {
+                return _mostPopularBuildsService.GetBuildPosts(orderLikes, buildType);
+            }
+
+            if (buildType == "BuildType_GraphicArtist" || buildType == "BuildType_Gaming" || buildType == "BuildType_WordProcessing")
+            {
+                return _mostPopularBuildsService.GetBuildPosts(defaultOrderLikes, buildType);
+            }
+
+            if (orderLikes == "AscendingLikes")
+            {
+                return _mostPopularBuildsService.GetBuildPosts(orderLikes, defaultBuildType);
+            }
+
+            return _mostPopularBuildsService.GetBuildPosts(defaultOrderLikes, defaultBuildType);
+        }
+
+        /// <summary>
+        /// This is the manager method that calls the add like service function.
+        /// </summary>
+        /// <param name="like">takes in a like object to send to service.</param>
+        /// <returns>returns a success state bool.</returns>
+        public bool AddLike(Like like)
+        {
+            // This try/catch block checks for a null BuildPost object.
+            try
+            {
+                if (like == null)
+                {
+                    throw new ArgumentNullException("A null argument was passed through the method parameters");
+                }
+            }
+            catch (ArgumentNullException ex)
+            {
+                _logger.LogWarning(ex.Message);
+                return false;
+            }
+
+            // This try/catch block checks for a null var in a BuildPost object.
+            try
+            {
+                if (like.UserId == null || like.PostId == null)
+                {
+                    throw new NullReferenceException("A null object variable was passed through the method parameters");
+                }
+            }
+            catch (NullReferenceException ex)
+            {
+                _logger.LogWarning(ex.Message);
+                return false;
+            }
+
+            // logs when the method is called.
+            _logger.LogInformation($"Most Popular Builds Manager addLike was called for user:{like.UserId} and post:{like.PostId}");
+            return _mostPopularBuildsService.AddLike(like);
         }
     }
 }

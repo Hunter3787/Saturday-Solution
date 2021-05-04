@@ -15,4 +15,7 @@
     <PackageReference Include="Microsoft.Data.SqlClient" Version="2.1.2" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="GarageDAOs\" />
+  </ItemGroup>
 </Project>

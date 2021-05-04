@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+
 using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Products;
 using AutoBuildApp.Models.Enumerations;
@@ -14,37 +14,6 @@ namespace AutoBuildApp.Services.RecommendationServices
 {
     public class ComponentScoringService
     {
-        public readonly int BONUS_VALUE = 100;
-        public readonly double[] GAMING_GPU_WEIGHTS = { -1.75, 1.1, 1.3, 1.1, 1.15, -1.4 };
-        public readonly double[] GAMING_CPU_WEIGHTS = { -1.75, 1.5, -1.3 };
-        public readonly double[] GAMING_PSU_WEIGHTS = { -1.75, 1.4 };
-        public readonly double[] GAMING_RAM_WEIGHTS = { -1.75, 1.3, -2 };
-        public readonly double[] GAMING_CASE_WEIGHTS = { -1.75, 1, 1 };
-        public readonly double[] GAMING_COOLER_WEIGHTS = { -1.75, 1.3, 1 };
-        //public readonly double[] GAMING_MONITOR_WEIGHTS = { -1.75 };
-        public readonly double[] GAMING_MOTHERBOARD_WEIGHTS = { -1.75, 2 };
-        public readonly double[] GAMING_HARDDRIVE_WEIGHTS = { -1.75, 2, 1.1 };
-
-        public readonly double[] ARTIST_GPU_WEIGHTS = { -1.75, 1.3, 1.1, 1.1, 1.15, -1.4 };
-        public readonly double[] ARTIST_CPU_WEIGHTS = { -1.75, 1.6 , -1.3 };
-        public readonly double[] ARTIST_PSU_WEIGHTS = { -1.75, 1.4 };
-        public readonly double[] ARTIST_RAM_WEIGHTS = { -1.75, 1.3, -1.2 };
-        public readonly double[] ARTIST_CASE_WEIGHTS = { -1.75, 1, 1.2 };
-        public readonly double[] ARTIST_COOLER_WEIGHTS = { -1.75, 1.2, -1.1 };
-        //public readonly double[] ARTIST_MONITOR_WEIGHTS = { -1.75 };
-        public readonly double[] ARTIST_MOTHERBOARD_WEIGHTS = { -1.75, 2 };
-        public readonly double[] ARTIST_HARDDRIVE_WEIGHTS = { -1.75, 2, 2 };
-
-        public readonly double[] WORK_GPU_WEIGHTS = { -1.75, 1.1, 1, .8, 1, -1.5};
-        public readonly double[] WORK_CPU_WEIGHTS = { -1.75, 1.5, -1.5};
-        public readonly double[] WORK_PSU_WEIGHTS = { -1.75, 1 };
-        public readonly double[] WORK_RAM_WEIGHTS = { -1.75, 1.4, -1 };
-        public readonly double[] WORK_CASE_WEIGHTS = { -1.75, .8, 1.2 };
-        public readonly double[] WORK_COOLER_WEIGHTS = { -1.75, .8, -1.2 };
-        //public readonly double[] WORK_MONITOR_WEIGHTS = {-1.75 };
-        public readonly double[] WORK_MOTHERBOARD_WEIGHTS = { -1.75, 2 };
-        public readonly double[] WORK_HARDDRIVE_WEIGHTS = { -1.75, 2, 1 };
-
         public ComponentScoringService()
         {
         }
@@ -59,37 +28,39 @@ namespace AutoBuildApp.Services.RecommendationServices
         public int ScoreComponent(IComponent input, BuildType type)
         {
             if (input == null)
-                return 0;
+            {
+                throw new ArgumentNullException("Input is missing");
+            }
 
             var score = 0;
 
             switch (input) {
-                case GPU gpu:
-                    score = OverloadedScore(gpu, type);
+                case GraphicsProcUnit gpu:
+                    score = Score(gpu, type);
                     break;
-                case CPU cpu:
-                    score = OverloadedScore(cpu, type);
+                case CentralProcUnit cpu:
+                    score = Score(cpu, type);
                     break;
                 case PowerSupplyUnit psu:
-                    score = OverloadedScore(psu, type);
+                    score = Score(psu, type);
                     break;
                 case RAM ram:
-                    score = OverloadedScore(ram, type);
+                    score = Score(ram, type);
                     break;
                 case ComputerCase cCase:
-                    score = OverloadedScore(cCase, type);
+                    score = Score(cCase, type);
                     break;
                 case ICooler cooler:
-                    score = OverloadedScore(cooler, type);
+                    score = Score(cooler, type);
                     break;
                 //case Monitor monitor:
                 //    score = OverloadedScore(monitor, type);
                 //    break;
                 case Motherboard mobo:
-                    score = OverloadedScore(mobo, type);
+                    score = Score(mobo, type);
                     break;
                 case IHardDrive hardDrive:
-                    score = OverloadedScore(hardDrive, type);
+                    score = Score(hardDrive, type);
                     break;
                 default:
                     break;
@@ -98,7 +69,7 @@ namespace AutoBuildApp.Services.RecommendationServices
             return score;
         }
 
-        #region "Private Overload Methods"
+        #region Private Scoring Helper Methods
         /// <summary>
         /// Overloaded methods that take in a product and build type
         /// to determine a score based off of stat weights. 
@@ -106,7 +77,7 @@ namespace AutoBuildApp.Services.RecommendationServices
         /// <param name="input"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        private int OverloadedScore(GPU input, BuildType type)
+        private int Score(GraphicsProcUnit input, BuildType type)
         {
             if (input.Price == 0 || input.Memory == null || input.CoreClock == null ||
                 input.BoostClock == null || input.EffectiveMemClock == null ||
@@ -125,39 +96,39 @@ namespace AutoBuildApp.Services.RecommendationServices
             if (frameSync != null || frameSync.ToLower().Contains("g-sync")
                 || frameSync.ToLower().Contains("freesync")
                 || frameSync.ToLower().Contains("gsync"))
-                frameSyncScore += BONUS_VALUE;
+                frameSyncScore += RecWeightGlobals.BONUS_VALUE;
 
             // Bonus score to gigabyte memory value.
             if (input.Memory.ToLower().Contains("gb"))
-                mem *= BONUS_VALUE;
+                mem *= RecWeightGlobals.BONUS_VALUE;
 
             double scoreTotal = 0;
 
             switch (type)
             {
                 case BuildType.Gaming:
-                    scoreTotal = price * GAMING_GPU_WEIGHTS[0] +
-                    mem * GAMING_GPU_WEIGHTS[1] +
-                    coreClock * GAMING_GPU_WEIGHTS[2] +
-                    boostClock * GAMING_GPU_WEIGHTS[3] +
-                    effectiveMem * GAMING_GPU_WEIGHTS[4] +
-                    powerDraw * GAMING_GPU_WEIGHTS[5];
+                    scoreTotal = price * RecWeightGlobals.GAMING_GPU_WEIGHTS[0] +
+                    mem * RecWeightGlobals.GAMING_GPU_WEIGHTS[1] +
+                    coreClock * RecWeightGlobals.GAMING_GPU_WEIGHTS[2] +
+                    boostClock * RecWeightGlobals.GAMING_GPU_WEIGHTS[3] +
+                    effectiveMem * RecWeightGlobals.GAMING_GPU_WEIGHTS[4] +
+                    powerDraw * RecWeightGlobals.GAMING_GPU_WEIGHTS[5];
                     break;
                 case BuildType.WordProcessing:
-                    scoreTotal = price * WORK_GPU_WEIGHTS[0] +
-                    mem * WORK_GPU_WEIGHTS[1] +
-                    coreClock * WORK_GPU_WEIGHTS[2] +
-                    boostClock * WORK_GPU_WEIGHTS[3] +
-                    effectiveMem * WORK_GPU_WEIGHTS[4] +
-                    powerDraw * WORK_GPU_WEIGHTS[5];
+                    scoreTotal = price * RecWeightGlobals.WORK_GPU_WEIGHTS[0] +
+                    mem * RecWeightGlobals.WORK_GPU_WEIGHTS[1] +
+                    coreClock * RecWeightGlobals.WORK_GPU_WEIGHTS[2] +
+                    boostClock * RecWeightGlobals.WORK_GPU_WEIGHTS[3] +
+                    effectiveMem * RecWeightGlobals.WORK_GPU_WEIGHTS[4] +
+                    powerDraw * RecWeightGlobals.WORK_GPU_WEIGHTS[5];
                     break;
                 case BuildType.GraphicArtist:
-                    scoreTotal = price * ARTIST_GPU_WEIGHTS[0] +
-                    mem * ARTIST_GPU_WEIGHTS[1] +
-                    coreClock * ARTIST_GPU_WEIGHTS[2] +
-                    boostClock * ARTIST_GPU_WEIGHTS[3] +
-                    effectiveMem * ARTIST_GPU_WEIGHTS[4] +
-                    powerDraw * ARTIST_GPU_WEIGHTS[5];
+                    scoreTotal = price * RecWeightGlobals.ARTIST_GPU_WEIGHTS[0] +
+                    mem * RecWeightGlobals.ARTIST_GPU_WEIGHTS[1] +
+                    coreClock * RecWeightGlobals.ARTIST_GPU_WEIGHTS[2] +
+                    boostClock * RecWeightGlobals.ARTIST_GPU_WEIGHTS[3] +
+                    effectiveMem * RecWeightGlobals.ARTIST_GPU_WEIGHTS[4] +
+                    powerDraw * RecWeightGlobals.ARTIST_GPU_WEIGHTS[5];
                     break;
                 default:
                     break;
@@ -168,7 +139,7 @@ namespace AutoBuildApp.Services.RecommendationServices
             return (int)Math.Round(scoreTotal, MidpointRounding.AwayFromZero);
         }
 
-        private int OverloadedScore(CPU input, BuildType type)
+        private int Score(CentralProcUnit input, BuildType type)
         {
             if (input.Price == 0 || input.CoreCount == 0 || input.CoreClock == null ||
                 input.BoostClock == null || input.PowerDraw == 0)
@@ -182,29 +153,29 @@ namespace AutoBuildApp.Services.RecommendationServices
             var errCorrection = 0;
 
             if (input.ErrCorrectionCodeSupport)
-                errCorrection += BONUS_VALUE;
+                errCorrection += RecWeightGlobals.BONUS_VALUE;
 
             double scoreTotal = 0;
 
             switch (type)
             {
                 case BuildType.GraphicArtist:
-                    scoreTotal = price * ARTIST_CPU_WEIGHTS[0] +
-                        coreCount * ARTIST_CPU_WEIGHTS[1] *
+                    scoreTotal = price * RecWeightGlobals.ARTIST_CPU_WEIGHTS[0] +
+                        coreCount * RecWeightGlobals.ARTIST_CPU_WEIGHTS[1] *
                         (coreClock + boostClock) / 2 +
-                        powerDraw * ARTIST_CPU_WEIGHTS[2];
+                        powerDraw * RecWeightGlobals.ARTIST_CPU_WEIGHTS[2];
                     break;
                 case BuildType.WordProcessing:
-                    scoreTotal = price * WORK_CPU_WEIGHTS[0] +
-                        coreCount * WORK_CPU_WEIGHTS[1] *
+                    scoreTotal = price * RecWeightGlobals.WORK_CPU_WEIGHTS[0] +
+                        coreCount * RecWeightGlobals.WORK_CPU_WEIGHTS[1] *
                         (coreClock + boostClock) / 2 +
-                        powerDraw * WORK_CPU_WEIGHTS[2];
+                        powerDraw * RecWeightGlobals.WORK_CPU_WEIGHTS[2];
                     break;
                 case BuildType.Gaming:
-                    scoreTotal = price * GAMING_CPU_WEIGHTS[0] +
-                        coreCount * GAMING_CPU_WEIGHTS[1] *
+                    scoreTotal = price * RecWeightGlobals.GAMING_CPU_WEIGHTS[0] +
+                        coreCount * RecWeightGlobals.GAMING_CPU_WEIGHTS[1] *
                         (coreClock + boostClock) / 2 +
-                        powerDraw * GAMING_CPU_WEIGHTS[2];
+                        powerDraw * RecWeightGlobals.GAMING_CPU_WEIGHTS[2];
                     break;
                 default:
                     break;
@@ -214,7 +185,7 @@ namespace AutoBuildApp.Services.RecommendationServices
             return (int)Math.Round(scoreTotal, MidpointRounding.AwayFromZero);
         }
 
-        private int OverloadedScore(PowerSupplyUnit input, BuildType type)
+        private int Score(PowerSupplyUnit input, BuildType type)
         {
             if (input.Price == 0 || input.Wattage == 0 || input.EfficiencyRating == null)
                 return -1;
@@ -224,31 +195,31 @@ namespace AutoBuildApp.Services.RecommendationServices
             var efRating = input.EfficiencyRating.ToLower().Trim();
 
             if (efRating == "80+ Bronze")
-                efficancyBonus = BONUS_VALUE;
+                efficancyBonus = RecWeightGlobals.BONUS_VALUE;
             else if (efRating == "80+ Silver")
-                efficancyBonus = BONUS_VALUE * 2;
+                efficancyBonus = RecWeightGlobals.BONUS_VALUE * 2;
             else if (efRating == "80+ Gold")
-                efficancyBonus = BONUS_VALUE * 3;
+                efficancyBonus = RecWeightGlobals.BONUS_VALUE * 3;
             else if (efRating == "80+ Platinum")
-                efficancyBonus = BONUS_VALUE * 4;
+                efficancyBonus = RecWeightGlobals.BONUS_VALUE * 4;
             else if (efRating == "80+ Titanium")
-                efficancyBonus = BONUS_VALUE * 5;
+                efficancyBonus = RecWeightGlobals.BONUS_VALUE * 5;
 
             double scoreTotal = 0;
 
             switch (type)
             {
                 case BuildType.GraphicArtist:
-                    scoreTotal = price * ARTIST_PSU_WEIGHTS[0] +
-                        wattage * ARTIST_PSU_WEIGHTS[1];
+                    scoreTotal = price * RecWeightGlobals.ARTIST_PSU_WEIGHTS[0] +
+                        wattage * RecWeightGlobals.ARTIST_PSU_WEIGHTS[1];
                     break;
                 case BuildType.WordProcessing:
-                    scoreTotal = price * WORK_PSU_WEIGHTS[0] +
-                        wattage * WORK_PSU_WEIGHTS[1];
+                    scoreTotal = price * RecWeightGlobals.WORK_PSU_WEIGHTS[0] +
+                        wattage * RecWeightGlobals.WORK_PSU_WEIGHTS[1];
                     break;
                 case BuildType.Gaming:
-                    scoreTotal = price * GAMING_PSU_WEIGHTS[0] +
-                        wattage * GAMING_PSU_WEIGHTS[1];
+                    scoreTotal = price * RecWeightGlobals.GAMING_PSU_WEIGHTS[0] +
+                        wattage * RecWeightGlobals.GAMING_PSU_WEIGHTS[1];
                     break;
                 default:
                     break;
@@ -258,7 +229,7 @@ namespace AutoBuildApp.Services.RecommendationServices
             return (int)Math.Round(scoreTotal, MidpointRounding.AwayFromZero);
         }
 
-        private int OverloadedScore(RAM input, BuildType type)
+        private int Score(RAM input, BuildType type)
         {
             if (input.Price == 0 || input.NumOfModules == 0 || input.ModuleSize == 0
                 || input.FirstWordLat == null || input.CASLat == null)
@@ -275,19 +246,19 @@ namespace AutoBuildApp.Services.RecommendationServices
             switch (type)
             {
                 case BuildType.GraphicArtist:
-                    scoreTotal = price * ARTIST_RAM_WEIGHTS[0] +
-                        numOfModules * moduleSize / firstWord * ARTIST_RAM_WEIGHTS[1] +
-                        casLat * ARTIST_RAM_WEIGHTS[2];
+                    scoreTotal = price * RecWeightGlobals.ARTIST_RAM_WEIGHTS[0] +
+                        numOfModules * moduleSize / firstWord * RecWeightGlobals.ARTIST_RAM_WEIGHTS[1] +
+                        casLat * RecWeightGlobals.ARTIST_RAM_WEIGHTS[2];
                     break;
                 case BuildType.WordProcessing:
-                    scoreTotal = price * WORK_RAM_WEIGHTS[0] +
-                        numOfModules * moduleSize / firstWord * WORK_RAM_WEIGHTS[1] +
-                        casLat * WORK_RAM_WEIGHTS[2];
+                    scoreTotal = price * RecWeightGlobals.WORK_RAM_WEIGHTS[0] +
+                        numOfModules * moduleSize / firstWord * RecWeightGlobals.WORK_RAM_WEIGHTS[1] +
+                        casLat * RecWeightGlobals.WORK_RAM_WEIGHTS[2];
                     break;
                 case BuildType.Gaming:
-                    scoreTotal = price * GAMING_RAM_WEIGHTS[0] +
-                        numOfModules * moduleSize / firstWord * GAMING_RAM_WEIGHTS[1] +
-                        casLat * ARTIST_RAM_WEIGHTS[2];
+                    scoreTotal = price * RecWeightGlobals.GAMING_RAM_WEIGHTS[0] +
+                        numOfModules * moduleSize / firstWord * RecWeightGlobals.GAMING_RAM_WEIGHTS[1] +
+                        casLat * RecWeightGlobals.ARTIST_RAM_WEIGHTS[2];
                     break;
                 default:
                     break;
@@ -296,7 +267,7 @@ namespace AutoBuildApp.Services.RecommendationServices
             return (int)Math.Round(scoreTotal, MidpointRounding.AwayFromZero);
         }
 
-        private int OverloadedScore(ComputerCase input, BuildType type)
+        private int Score(ComputerCase input, BuildType type)
         {
             if (input.Price == 0)
                 return -1;
@@ -310,24 +281,24 @@ namespace AutoBuildApp.Services.RecommendationServices
             double scoreTotal = 0;
 
             if (psuShroud)
-                scoreTotal += BONUS_VALUE;
+                scoreTotal += RecWeightGlobals.BONUS_VALUE;
 
             switch (type)
             {
                 case BuildType.GraphicArtist:
-                    scoreTotal = price * ARTIST_CASE_WEIGHTS[0] +
-                        expansion * ARTIST_CASE_WEIGHTS[1] +
-                        frontPanel * ARTIST_CASE_WEIGHTS[2];
+                    scoreTotal = price * RecWeightGlobals.ARTIST_CASE_WEIGHTS[0] +
+                        expansion * RecWeightGlobals.ARTIST_CASE_WEIGHTS[1] +
+                        frontPanel * RecWeightGlobals.ARTIST_CASE_WEIGHTS[2];
                     break;
                 case BuildType.WordProcessing:
-                    scoreTotal = price * WORK_CASE_WEIGHTS[0] +
-                        expansion * WORK_CASE_WEIGHTS[1] +
-                        frontPanel * WORK_CASE_WEIGHTS[2];
+                    scoreTotal = price * RecWeightGlobals.WORK_CASE_WEIGHTS[0] +
+                        expansion * RecWeightGlobals.WORK_CASE_WEIGHTS[1] +
+                        frontPanel * RecWeightGlobals.WORK_CASE_WEIGHTS[2];
                     break;
                 case BuildType.Gaming:
-                    scoreTotal = price * GAMING_CASE_WEIGHTS[0] +
-                        expansion * GAMING_CASE_WEIGHTS[1] +
-                        frontPanel * GAMING_CASE_WEIGHTS[2];
+                    scoreTotal = price * RecWeightGlobals.GAMING_CASE_WEIGHTS[0] +
+                        expansion * RecWeightGlobals.GAMING_CASE_WEIGHTS[1] +
+                        frontPanel * RecWeightGlobals.GAMING_CASE_WEIGHTS[2];
                     break;
                 default:
                     break;
@@ -336,7 +307,7 @@ namespace AutoBuildApp.Services.RecommendationServices
             return (int)Math.Round(scoreTotal, MidpointRounding.AwayFromZero);
         }
 
-        private int OverloadedScore(ICooler input, BuildType type)
+        private int Score(ICooler input, BuildType type)
         {
             if (input.Price == 0 || input.FanRPM == null || input.NoiseVolume == null)
                 return -1;
@@ -350,19 +321,19 @@ namespace AutoBuildApp.Services.RecommendationServices
             switch (type)
             {
                 case BuildType.GraphicArtist:
-                    scoreTotal = price * ARTIST_COOLER_WEIGHTS[0] +
-                        speed * ARTIST_COOLER_WEIGHTS[1] +
-                        noise * ARTIST_COOLER_WEIGHTS[2];
+                    scoreTotal = price * RecWeightGlobals.ARTIST_COOLER_WEIGHTS[0] +
+                        speed * RecWeightGlobals.ARTIST_COOLER_WEIGHTS[1] +
+                        noise * RecWeightGlobals.ARTIST_COOLER_WEIGHTS[2];
                     break;
                 case BuildType.WordProcessing:
-                    scoreTotal = price * WORK_COOLER_WEIGHTS[0] +
-                        speed * WORK_COOLER_WEIGHTS[1] +
-                        noise * WORK_COOLER_WEIGHTS[2];
+                    scoreTotal = price * RecWeightGlobals.WORK_COOLER_WEIGHTS[0] +
+                        speed * RecWeightGlobals.WORK_COOLER_WEIGHTS[1] +
+                        noise * RecWeightGlobals.WORK_COOLER_WEIGHTS[2];
                     break;
                 case BuildType.Gaming:
-                    scoreTotal = price * GAMING_COOLER_WEIGHTS[0] +
-                        speed * GAMING_COOLER_WEIGHTS[1] +
-                        noise * GAMING_COOLER_WEIGHTS[2];
+                    scoreTotal = price * RecWeightGlobals.GAMING_COOLER_WEIGHTS[0] +
+                        speed * RecWeightGlobals.GAMING_COOLER_WEIGHTS[1] +
+                        noise * RecWeightGlobals.GAMING_COOLER_WEIGHTS[2];
                     break;
                 default:
                     break;
@@ -395,7 +366,7 @@ namespace AutoBuildApp.Services.RecommendationServices
         //    return (int)Math.Round(scoreTotal, MidpointRounding.AwayFromZero);
         //}
 
-        private int OverloadedScore(IHardDrive input, BuildType type)
+        private int Score(IHardDrive input, BuildType type)
         {
             if (input.Price == 0 || input.Capacity == null)
                 return -1;
@@ -410,31 +381,31 @@ namespace AutoBuildApp.Services.RecommendationServices
             switch (type)
             {
                 case BuildType.GraphicArtist:
-                    scoreTotal = price * ARTIST_HARDDRIVE_WEIGHTS[0] +
-                        capacity * ARTIST_HARDDRIVE_WEIGHTS[1] +
-                        cache * ARTIST_HARDDRIVE_WEIGHTS[2];
+                    scoreTotal = price * RecWeightGlobals.ARTIST_HARDDRIVE_WEIGHTS[0] +
+                        capacity * RecWeightGlobals.ARTIST_HARDDRIVE_WEIGHTS[1] +
+                        cache * RecWeightGlobals.ARTIST_HARDDRIVE_WEIGHTS[2];
                     break;
                 case BuildType.WordProcessing:
-                    scoreTotal = price * WORK_HARDDRIVE_WEIGHTS[0] +
-                        capacity * WORK_HARDDRIVE_WEIGHTS[1] +
-                        cache * WORK_HARDDRIVE_WEIGHTS[2];
+                    scoreTotal = price * RecWeightGlobals.WORK_HARDDRIVE_WEIGHTS[0] +
+                        capacity * RecWeightGlobals.WORK_HARDDRIVE_WEIGHTS[1] +
+                        cache * RecWeightGlobals.WORK_HARDDRIVE_WEIGHTS[2];
                     break;
                 case BuildType.Gaming:
-                    scoreTotal = price * GAMING_HARDDRIVE_WEIGHTS[0] +
-                        capacity * GAMING_HARDDRIVE_WEIGHTS[1] +
-                        cache * GAMING_HARDDRIVE_WEIGHTS[2];
+                    scoreTotal = price * RecWeightGlobals.GAMING_HARDDRIVE_WEIGHTS[0] +
+                        capacity * RecWeightGlobals.GAMING_HARDDRIVE_WEIGHTS[1] +
+                        cache * RecWeightGlobals.GAMING_HARDDRIVE_WEIGHTS[2];
                     break;
                 default:
                     break;
             }
 
             if (driveType != HardDriveType.NVMe)
-                scoreTotal += BONUS_VALUE;
+                scoreTotal += RecWeightGlobals.BONUS_VALUE;
 
             return (int)Math.Round(scoreTotal, MidpointRounding.AwayFromZero);
         }
 
-        private int OverloadedScore(Motherboard input, BuildType type)
+        private int Score(Motherboard input, BuildType type)
         {
             if(input.Price == 0 || input.Socket == null || input.MaxMemory == null ||
                 input.SupportedMemory == null)
@@ -449,23 +420,23 @@ namespace AutoBuildApp.Services.RecommendationServices
             switch (type)
             {
                 case BuildType.GraphicArtist:
-                    scoreTotal = price * ARTIST_MOTHERBOARD_WEIGHTS[0] +
-                        maxMem * ARTIST_MOTHERBOARD_WEIGHTS[1];
+                    scoreTotal = price * RecWeightGlobals.ARTIST_MOTHERBOARD_WEIGHTS[0] +
+                        maxMem * RecWeightGlobals.ARTIST_MOTHERBOARD_WEIGHTS[1];
                     break;
                 case BuildType.WordProcessing:
-                    scoreTotal = price * WORK_MOTHERBOARD_WEIGHTS[0] +
-                        maxMem * WORK_MOTHERBOARD_WEIGHTS[1];
+                    scoreTotal = price * RecWeightGlobals.WORK_MOTHERBOARD_WEIGHTS[0] +
+                        maxMem * RecWeightGlobals.WORK_MOTHERBOARD_WEIGHTS[1];
                     break;
                 case BuildType.Gaming:
-                    scoreTotal = price * GAMING_MOTHERBOARD_WEIGHTS[0] +
-                        maxMem * GAMING_MOTHERBOARD_WEIGHTS[1];
+                    scoreTotal = price * RecWeightGlobals.GAMING_MOTHERBOARD_WEIGHTS[0] +
+                        maxMem * RecWeightGlobals.GAMING_MOTHERBOARD_WEIGHTS[1];
                     break;
                 default:
                     break;
             }
 
             if (maxMemSupport == MemoryType.DDR4)
-                scoreTotal += BONUS_VALUE;
+                scoreTotal += RecWeightGlobals.BONUS_VALUE;
 
             return (int)Math.Round(scoreTotal, MidpointRounding.AwayFromZero);
         }

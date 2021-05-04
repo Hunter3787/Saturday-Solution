@@ -1,9 +1,10 @@
-﻿using AutoBuildApp.DataAccess;
+﻿using AutoBuildApp.Api.HelperFunctions;
+using AutoBuildApp.Models;
+using AutoBuildApp.Models.Entities;
 using AutoBuildApp.Managers;
+using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.Models;
 using AutoBuildApp.Services.UserServices;
-using AutoBuildSecure.ConsoleApp;
-using AutoBuildSecure.WebApi.HelperFunctions;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -21,7 +22,7 @@ namespace Connor_s_Console
             UserIdentity userId = new UserIdentity();
             userId.Name = "this is my name";
             IEnumerable<Claim> connorClaims = new List<Claim>() {
-                new Claim(ClaimTypes.Email,"bob111@gmail.com"),
+                new Claim(ClaimTypes.Email,"crkobel@verizon.net"),
             };
             ClaimsIdentity _claimsId =
                 new ClaimsIdentity(
@@ -37,8 +38,8 @@ namespace Connor_s_Console
             {
                 Console.WriteLine($" claim type: {clm.Type} claim value: {clm.Value}");
             }
-            CP test = new CP();
-            test.updateEmailThread();
+            //CP test = new CP();
+            //test.updateEmailThread();
 
             // created a connection manager to access the connection strings in 
             // 1) the app settings .json file
@@ -52,21 +53,23 @@ namespace Connor_s_Console
 
             UserManagementService userManagementService = new UserManagementService(userManagementDAO);
 
-            UserManagementManager userManagementManager = new UserManagementManager(userManagementService);
+            UserManagementManager userManagementManager = new UserManagementManager(userManagementService, connection);
+
+            RegistrationManager registrationManager = new RegistrationManager(connection);
 
             _prince = (ClaimsPrincipal)Thread.CurrentPrincipal;
             Console.WriteLine($"this is updated email: " +
                 $"{_prince.FindFirst(ClaimTypes.Email).Value}\n");
 
 
-            Console.WriteLine(userManagementManager.UpdatePassword("P@ssword!12356"));
+            //Console.WriteLine(userManagementManager.UpdatePassword("P@ssword!12356"));
 
-            Console.WriteLine(userManagementManager.UpdateEmail("crkobel@verizon.net"));
+            //Console.WriteLine(userManagementManager.UpdateEmail("crkobel@verizon.net"));
 
-            Console.WriteLine(userManagementManager.UpdateUsername("Bobb"));
+            //Console.WriteLine(userManagementManager.UpdateUsername("Bobb"));
 
             Console.WriteLine("\nList should appear here:");
-            foreach(var user in userManagementManager.GetUsersList())
+            foreach (var user in userManagementManager.GetUsersList())
             {
                 Console.WriteLine(user.UserID);
                 Console.WriteLine(user.UserName);
@@ -75,10 +78,43 @@ namespace Connor_s_Console
                 Console.WriteLine(user.LastName);
                 Console.WriteLine(user.CreatedAt);
                 Console.WriteLine(user.ModifiedAt);
+                Console.WriteLine(user.UserRole);
             }
-            //Console.WriteLine(userManagementManager.GetUsersList());
 
-            Console.WriteLine(userManagementManager.DeleteUser("pepper@gmail.com"));
+            //Console.WriteLine(userManagementManager.DeleteUser("pepper@gmail.com"));
+
+            Console.WriteLine("----------------------");
+            //Console.WriteLine(registrationManager.RegisterUser(
+            //"Superman", "Connor", "Kobel", "Superman@gmail.com", "Password123", "Password123"));
+            //Console.WriteLine(userManagementManager.ChangePermissions(RoleEnumType.SYSTEM_ADMIN));
+            //Console.WriteLine(userManagementManager.ChangeLockState("Zeina", RoleEnumType.BASIC_ROLE));
+
+            //UserCredentials userLoginInfo = new UserCredentials();
+            //userLoginInfo.Username = "Superman";
+            //userLoginInfo.Password = "PassHash";
+            //LoginDAO _loginDAO = new LoginDAO(connection);
+            //CommonReponseAuth _CRAuth = new CommonReponseAuth();
+
+            //_CRAuth = _loginDAO.LoginInformation(userLoginInfo);
+            //Console.WriteLine("-----------here-------------------");
+            //Console.WriteLine(_CRAuth.FailureString);
+            //Console.WriteLine(_CRAuth.AuthUserDTO.UserEmail);
+
+            Console.WriteLine(userManagementManager.ChangePermissions("SERGE", RoleEnumType.BASIC_ROLE));
+            Console.WriteLine(userManagementManager.RoleCheck("SERGE"));
+            Console.WriteLine(userManagementManager.ChangePermissions("SERGE", RoleEnumType.DELEGATE_ADMIN));
+            Console.WriteLine(userManagementManager.RoleCheck("SERGE"));
+            Console.WriteLine(userManagementManager.ChangeLockState("SERGE", RoleEnumType.LOCKED));
+            Console.WriteLine(userManagementManager.RoleCheck("SERGE"));
+            Console.WriteLine(userManagementManager.ChangePermissions("SERGE", RoleEnumType.SYSTEM_ADMIN));
+            Console.WriteLine(userManagementManager.RoleCheck("SERGE"));
+            Console.WriteLine(userManagementManager.ChangePermissions("SERGE", RoleEnumType.UNREGISTERED_ROLE));
+            Console.WriteLine(userManagementManager.RoleCheck("SERGE"));
+            Console.WriteLine(userManagementManager.ChangePermissions("SERGE", RoleEnumType.VENDOR_ROLE));
+            Console.WriteLine(userManagementManager.RoleCheck("SERGE"));
+
+            Console.WriteLine(userManagementManager.DeleteUser("SERGE"));
         }
     }
 }
+

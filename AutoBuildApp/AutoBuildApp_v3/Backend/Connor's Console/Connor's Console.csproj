@@ -7,9 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AutoBuildApp.DataAccess\AutoBuildApp.DataAccess.csproj" />
-    <ProjectReference Include="..\AutoBuildSecure.ConsoleApp\AutoBuildSecure.ConsoleApp.csproj" />
-    <ProjectReference Include="..\AutoBuildSecure.WebApi\AutoBuildSecure.WebApi.csproj" />
+    <ProjectReference Include="..\AutoBuildApp.Api\AutoBuildApp.Api.csproj" />
   </ItemGroup>
 
 </Project>

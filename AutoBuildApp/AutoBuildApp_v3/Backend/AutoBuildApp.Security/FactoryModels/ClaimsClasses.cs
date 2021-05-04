@@ -43,7 +43,28 @@ namespace AutoBuildApp.Security.FactoryModels
     /// <summary>
     /// This is a class which implements the Product interface.
     /// </summary>
-    public class Admin : IClaims
+    public class SysAdmin : IClaims
+    {
+        public IEnumerable<Claim> Claims()
+        {
+            IEnumerable<Claim> adminUserClaims = new List<Claim>()
+            {
+                new Claim(PermissionEnumType.ALL , ScopeEnumType.ALL),
+            };
+
+            return adminUserClaims;
+        }
+        public void PrintClaims()
+        {
+            foreach (Claim c in Claims())
+            {
+                Console.WriteLine($" claim type: { c.Type } claim value: {c.Value} ");
+
+            }
+        }
+    }
+
+    public class DelAdmin : IClaims
     {
         public IEnumerable<Claim> Claims()
         {
@@ -111,7 +132,8 @@ namespace AutoBuildApp.Security.FactoryModels
         {
             IEnumerable<Claim> UnregisteredUserClaims = new List<Claim>()
             {
-                new Claim( PermissionEnumType.READ_ONLY,ScopeEnumType.AUTOBUILD)
+                new Claim( PermissionEnumType.READ_ONLY,ScopeEnumType.AUTOBUILD),
+                new Claim( PermissionEnumType.CREATE,ScopeEnumType.REGISTRATION)
             };
 
             return UnregisteredUserClaims;
@@ -127,6 +149,27 @@ namespace AutoBuildApp.Security.FactoryModels
 
     }
 
+    public class Locked : IClaims
+    {
+        public IEnumerable<Claim> Claims()
+        {
+            IEnumerable<Claim> LockedUserClaims = new List<Claim>()
+            {
+                new Claim( PermissionEnumType.READ_ONLY,ScopeEnumType.AUTOBUILD),
+                new Claim( PermissionEnumType.BLOCK,ScopeEnumType.REGISTRATION),
+                new Claim( PermissionEnumType.BLOCK,ScopeEnumType.LOGIN)
+            };
 
+            return LockedUserClaims;
+        }
+        public void PrintClaims()
+        {
+            foreach (Claim c in Claims())
+            {
+                Console.WriteLine($" claim type: { c.Type } claim value: {c.Value} ");
+
+            }
+        }
+    }
 
 }

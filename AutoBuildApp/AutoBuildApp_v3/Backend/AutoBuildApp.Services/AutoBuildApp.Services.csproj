@@ -16,7 +16,9 @@
   <ItemGroup>
     <Folder Include="FactoryServices\" />
     <Folder Include="UserServices\" />
-    <Folder Include="RecommendatIonServices\" />
+    <Folder Include="RecommendationServices\" />
+    <Folder Include="CatalogServices\" />
+    <Folder Include="BuildServices\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Apache.NMS" Version="1.8.0" />

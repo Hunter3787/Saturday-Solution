@@ -1,10 +1,10 @@
-﻿using AutoBuildApp.DataAccess.Reflections;
+﻿using AutoBuildApp.Models.Reflections;
 using AutoBuildApp.Models.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AutoBuildApp.DataAccess.Entities
+namespace AutoBuildApp.Models.Entities
 {/// <summary>
 /// This class contains entity objects that will be 
 /// transferred to the DAO for DB interactions
@@ -33,6 +33,9 @@ namespace AutoBuildApp.DataAccess.Entities
         public string ModifiedAt { [DAO("modifiedat", typeof(string), false)] get; set; }
 
         // Who last modified the user's account
-        public string ModifiedBy { [DAO("modifiedby", typeof(string), false)] get; set; }
+        //public string ModifiedBy { [DAO("modifiedby", typeof(string), false)] get; set; }
+
+        // The role of the user
+        public string UserRole { [DAO("modifiedby", typeof(string), false)] get; set; }
     }
 }

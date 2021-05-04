@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System;
+
 /**
-* This Data Access Object will handle collection and transformation of 
-* infromation coming from the database to be usable inside the Builder.
+* This Data Access Object will handle collection of 
+* infromation from the database to be used inside the Recommender.
 * @Author Nick Marshall-Eminger
 */
-namespace AutoBuildApp.DataAccess
+namespace AutoBuildApp.Models
 {
 
     /// <summary>
@@ -46,39 +47,62 @@ namespace AutoBuildApp.DataAccess
                     command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = stored;
+                    string productType = "productType";
+                    string productPrice = "productPrice";
+
 
                     DataTable pair = new DataTable();
                     DataColumn column = new DataColumn();
-                    column.ColumnName = "productType";
+                    column.ColumnName = productType;
                     column.DataType = typeof(string);
                     pair.Columns.Add(column);
-                    column.ColumnName = "productPrice";
+
+                    column = new DataColumn();
+                    column.ColumnName = productPrice;
                     column.DataType = typeof(double);
                     pair.Columns.Add(column);
 
                     DataRow row;
-                    foreach (var elements in input)
-                    {
-                        row = pair.NewRow();
-                        row["productType"] = elements.ProductType;
-                        row["productPrice"] = elements.Budget;
-                        pair.Rows.Add(row);
-                    }
+                    //foreach (var elements in input)
+                    //{
+                    //    row = pair.NewRow();
+                    //    row[productType] = elements.ProductType;
+                    //    row[productPrice] = elements.Budget;
+                    //    pair.Rows.Add(row);
+                    //}
 
-                    SqlParameter param = command
+                     row = pair.NewRow();
+                        row[productType] = "cpu";
+                        row[productPrice] = 200.00;
+                        pair.Rows.Add(row);
+                    
+                    var param = new SqlParameter[1];
+                    param[0] = command
                         .Parameters
-                        .AddWithValue("@TYPEBUDGET", pair);
+                        .AddWithValue("@PRODUCTS", pair);
 
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
+                        //int type = reader.GetOrdinal(productType);
+                        //int price = reader.GetOrdinal(productPrice);
+
+                        string URL = "VendorLinkURL";
+                        int VendorLinkURL = reader.GetOrdinal(URL);
+                        int pPrice = reader.GetOrdinal(productPrice);
+
                         if (reader.HasRows == false)
                             return null;
 
                         while (reader.Read())
                         {
-                            var key = reader.GetString(0);
-                            var value = reader.GetFloat(1);
+                            //var key = (string)reader[type];
+                            //var value = (float)reader[price];
+                            var key = (string)reader[VendorLinkURL];
+                            var value = (System.Decimal)reader[pPrice];
+
+                            Console.WriteLine($" the existing components:\n" +
+                                $"type: {key } , current value:{value }\n");
                         }
                     }
                     command.Transaction.Commit();

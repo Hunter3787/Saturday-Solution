@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoBuildApp.Models.Products;
 using System.Collections.Generic;
+using AutoBuildApp.Models.Enumerations;
 
 /**
  * IBuild Interface for AutoBuild App
@@ -12,13 +13,13 @@ namespace AutoBuildApp.Models.Interfaces
     /// Generic build type interface. 
     /// </summary>
     public interface IBuild
-    {
+    { 
         List<IHardDrive> HardDrives { get; set; }
         ComputerCase Case { get; set; }
         Motherboard Mobo { get; set; }
         PowerSupplyUnit Psu { get; set; }
-        GPU Gpu { get; set; }
-        CPU Cpu { get; set; }
+        GraphicsProcUnit Gpu { get; set; }
+        CentralProcUnit Cpu { get; set; }
         RAM Ram { get; set; }
         ICooler CPUCooler { get; set; }
         List<IComponent> Peripherals { get; set; }

@@ -1,5 +1,5 @@
-﻿using AutoBuildApp.DataAccess;
-using AutoBuildApp.DataAccess.Entities;
+﻿using AutoBuildApp.Models;
+using AutoBuildApp.Models.Entities;
 using AutoBuildApp.Security.Models;
 using AutoBuildApp.Services.Auth_Services;
 using System;
@@ -15,22 +15,27 @@ namespace AutoBuildApp.Managers.Registration_PackManger
         // principle after they are authenticated 
 
 
-        private AuthenticationService authenticationService;
-        private AuthDAO _authDAO;
+        private AuthenticationService _authenticationService;
+        // private AuthDAO _authDAO;
 
+
+        private LoginDAO _loginDAO;
 
         public AuthManager(string _cnnctString)
         {
             Console.WriteLine($"connection string passed: { _cnnctString} ");
-            _authDAO = new AuthDAO(_cnnctString);
-            authenticationService = new AuthenticationService(_authDAO);
+             //_authDAO = new AuthDAO(_cnnctString);
+            //authenticationService = new AuthenticationService(_authDAO);
+
+            _loginDAO = new LoginDAO(_cnnctString);
+            _authenticationService = new AuthenticationService(_loginDAO);
+
 
         }
 
         public string AuthenticateUser(UserCredentials userCredentials)
         {
-
-            var _CRAuth = authenticationService.AuthenticateUser(userCredentials);
+            var _CRAuth = _authenticationService.AuthenticateUser(userCredentials);
             if (_CRAuth.isAuthenticated)
             {
                 //COMMON RESPONSE ALL THE WAYYY - WHAT I HAVE IS :  THATS BAD -
@@ -40,8 +45,9 @@ namespace AutoBuildApp.Managers.Registration_PackManger
             else
             {
                 //return "Authentication Failed, Username or Password Incorrect";
-                return _CRAuth.FailureString;
+                return _CRAuth.ResponseString;
             }
+
 
 
 

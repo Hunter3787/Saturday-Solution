@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Most Popular Builds</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="MPB.css">
+    </head>
+    <body>
+
+        <div class="formheader">
+            <h1 class="formtitle">Most Popular Builds</h1>
+        </div>
+
+        <div class="mpb">
+            <div class="sidenav">
+                <button type="button" class="postbutton" id="post-build-button">Post a build</button>
+                <h1>Filters</h1>
+                <h3>Build Type</h3>
+                    <input type="radio" class="checkbox-filter" name="build" id="bta" value="">
+                    <label for="F1">All</label><br>
+                    <input type="radio" class="checkbox-filter" name="build" id="bt1" value="BuildType_GraphicArtist">
+                    <label for="F1">Graphic Artist</label><br>
+                    <input type="radio" class="checkbox-filter" name="build" id="bt2" value="BuildType_Gaming">
+                    <label for="F2">Gaming</label><br>
+                    <input type="radio" class="checkbox-filter" name="build" id="bt3" value="BuildType_WordProcessing">
+                    <label for="F2">Word Processing</label><br>
+                <h3>Likes</h3>
+                    <input type="radio" class="checkbox-filter" name="likes" id="ld" value="DescendingLikes">
+                    <label for="F1">Most Likes</label><br>
+                    <input type="radio" class="checkbox-filter" name="likes" id="la" value="AscendingLikes">
+                    <label for="F1">Least Likes</label><br>
+            </div>
+
+            <div class="main" id="main"></div>
+        </div>
+        <script src="MPB.js" asp-append-version="true"></script>
+        <script src="../MPBpost/MPBpost.js" asp-append-version="true"></script>
+        <script type="text/javascript">getItems();</script>
+    </body>
+</html>

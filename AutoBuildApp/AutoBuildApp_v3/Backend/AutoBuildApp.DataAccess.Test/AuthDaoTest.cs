@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using AutoBuildApp.DataAccess.Entities;
+using AutoBuildApp.Models.Entities;
 
-namespace AutoBuildApp.DataAccess.Test
+namespace AutoBuildApp.Models.Test
 {
     [TestClass]
     public class AuthDaoTest
@@ -29,8 +29,8 @@ namespace AutoBuildApp.DataAccess.Test
 
             CommonReponseAuth ExpectedReponseNULL =
                 new CommonReponseAuth();
-            ExpectedReponseNULL.SuccessBool = false;
-            ExpectedReponseNULL.FailureString = "NULL EXCEPTION";
+            ExpectedReponseNULL.ResponseBool= false;
+            ExpectedReponseNULL.ResponseString = "NULL EXCEPTION";
 
 
             return new List<object[]>()
@@ -65,12 +65,12 @@ namespace AutoBuildApp.DataAccess.Test
             UserCredentials credential4 = new UserCredentials("Yasolen", "PassHash"); // does not exist
 
             CommonReponseAuth _CRAuthIsAuthenticated = new CommonReponseAuth();
-            _CRAuthIsAuthenticated.SuccessString = "User Exists";
+            _CRAuthIsAuthenticated.ResponseString  = "User Exists";
             _CRAuthIsAuthenticated.IsUserExists = true;
             _CRAuthIsAuthenticated.connectionState = true;
 
             CommonReponseAuth _CRAuthNotAuthenticated = new CommonReponseAuth();
-            _CRAuthNotAuthenticated.FailureString = "User not found";
+            _CRAuthNotAuthenticated.ResponseString  = "User not found";
             _CRAuthNotAuthenticated.IsUserExists = false;
             _CRAuthNotAuthenticated.connectionState = true;
 

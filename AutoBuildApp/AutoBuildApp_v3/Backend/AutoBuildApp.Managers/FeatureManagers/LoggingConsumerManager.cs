@@ -4,7 +4,7 @@ using Apache.NMS.ActiveMQ;
 using Newtonsoft.Json;
 using APB.App.DataAccess;
 using AutoBuildApp.DomainModels;
-using AutoBuildApp.DataAccess.Entities;
+using AutoBuildApp.Models.Entities;
 
 /// <summary>
 /// References used from file: Solution Items/References.txt 
@@ -25,7 +25,7 @@ namespace AutoBuildApp.Managers
         private readonly IMessageConsumer _consumer; // This is the interface that a client uses to consume/recieve messages from the ActiveMQ.
         private bool _isDisposed = false; // Bool to check if items have been disposed of, initialized to false because no items shall be pre-disposed.
 
-        private const string _URI = "tcp://localhost:61616"; // This sets a constant connection string to the Queue.
+        private const string _URI = "tcp://localhost:61616?wireFormat.maxInactivityDuration=0"; // This sets a constant connection string to the Queue.
         private const string _DESTINATION = "LoggingQueue"; // Destination or the name of the Queue that the JSON strings are stored into.
 
         // Desfault constructor for the LoggingManager, will establish connections to the Queue.

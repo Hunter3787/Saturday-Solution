@@ -14,13 +14,13 @@ document.getElementById("myBtn")
 console.log(msg);
 
 
-function getItems() {
+function getItemsggg() {
   fetch('https://localhost:5001/authdemo', {
   method: 'GET',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + JWT_Token
+      'Authorization': 'bearer ' + JWT_Token
     },
     //body: JSON.stringify()
   })
@@ -29,12 +29,36 @@ function getItems() {
     .catch(error => console.error('Unable to get items.', error));
 }
 
+
+var item = ' ';
+const fetchRequest = {
+  method: 'POST',
+  mode: 'cors',
+ credentials: 'include', // Useful for including session ID (and, IIRC, authorization headers)
+headers: {
+  'Accept': 'application/json',
+  'Content-Type': 'application/json',
+  'Authorization': 'bearer ' + JWT_Token
+  
+}
+};
+let customRequest = 
+Object.assign( 
+  fetchRequest,
+   { method: 'GET', body : JSON.stringify(item) })
+
+function getItems() {
+  fetch(uri, customRequest)
+    //body: JSON.stringify()
+    .then(response => response.json())
+    .then(response => displayToken(response))
+    .catch(error => console.error('Unable to get items.', error));
+}
+
+
 //https://www.w3schools.com/js/tryit.asp?filename=tryjs_addeventlistener_displaydate
 document.getElementById("myBtn").addEventListener("click", displayDate);
 
-function displayDate() {
-  document.getElementById("demo").innerHTML = Date();
-}
 
 
 // add notes
