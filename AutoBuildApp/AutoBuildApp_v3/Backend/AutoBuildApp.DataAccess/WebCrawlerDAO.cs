@@ -2,6 +2,7 @@
 using AutoBuildApp.Models.WebCrawler;
 using Microsoft.Data.SqlClient;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
@@ -11,16 +12,14 @@ namespace AutoBuildApp.DataAccess
     public class WebCrawlerDAO
     {
         private string _connectionString;
-        private List<string> listOfVendors;
         public WebCrawlerDAO(string connectionString)
         {
             this._connectionString = connectionString;
-            listOfVendors = getAllVendors();
         }
 
-        public List<string> getAllVendors()
+        public ConcurrentBag<string> getAllVendors()
         {
-            List<string> vendorList = new List<string>();
+            ConcurrentBag<string> vendors = new ConcurrentBag<string>();
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -36,7 +35,7 @@ namespace AutoBuildApp.DataAccess
                         {
                             while (reader.Read())
                             {
-                                vendorList.Add((string)reader["vendorname"]);
+                                vendors.Add((string)reader["vendorname"]);
                             }
                         }
 
@@ -50,7 +49,7 @@ namespace AutoBuildApp.DataAccess
                     }
                 }
             }
-            return vendorList;
+            return vendors;
         }
         public bool ProductExists(string modelNumber)
         {
@@ -101,9 +100,11 @@ namespace AutoBuildApp.DataAccess
                         }
 
                         SqlDataAdapter adapter = new SqlDataAdapter();
-                        String sql = "insert into products(modelNumber, productType, manufacturerName)Values(@MODELNUMBER, @PRODTYPE, @MANUFACTURERNAME)";
+                        String sql = "insert into products(productName, imageUrl, modelNumber, productType, manufacturerName)Values(@PRODUCTNAME, @IMAGEURL, @MODELNUMBER, @PRODTYPE, @MANUFACTURERNAME)";
 
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
+                        adapter.InsertCommand.Parameters.Add("@PRODUCTNAME", SqlDbType.VarChar).Value = product.Name;
+                        adapter.InsertCommand.Parameters.Add("@IMAGEURL", SqlDbType.VarChar).Value = product.ImageUrl;
                         adapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = product.ModelNumber;
                         adapter.InsertCommand.Parameters.Add("@PRODTYPE", SqlDbType.VarChar).Value = product.ProductType;
                         adapter.InsertCommand.Parameters.Add("@MANUFACTURERNAME", SqlDbType.VarChar).Value = product.ManufacturerName;
@@ -171,12 +172,11 @@ namespace AutoBuildApp.DataAccess
                         String sql = "insert into vendorClub(vendorName)Values(@VENDORNAME)";
 
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
-                        adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = vendorName.ToLower();
+                        adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = vendorName;
 
                         adapter.InsertCommand.ExecuteNonQuery();
                         
                         transaction.Commit();
-                        listOfVendors.Add(vendorName.ToLower());
 
                         Console.WriteLine("done");
 
@@ -232,11 +232,6 @@ namespace AutoBuildApp.DataAccess
                 {
                     try
                     {
-                        string vendor = product.Company.ToLower();
-                        if(!listOfVendors.Contains(vendor))
-                        {
-                            AddVendor(vendor);
-                        }
                         SqlDataAdapter adapter = new SqlDataAdapter();
                         String sql = "insert into vendor_product_junction(vendorID, productID, productName, vendorImageUrl, vendorLinkURL, productStatus, productPrice, rating, reviews)Values(" +
                             "(select vendorID from vendorclub where vendorName = @VENDORNAME),(select productID from products where modelNumber = @MODELNUMBER), @PRODUCTNAME, @VENDORIMAGEURL, " +
@@ -245,7 +240,7 @@ namespace AutoBuildApp.DataAccess
                         //double parsedPrice = (product.Price == null) ? DBNull. : Double.Parse(product.Price.Replace("$", "").Replace(",", ""));
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
                         adapter.InsertCommand.Parameters.Add("@VENDORIMAGEURL", SqlDbType.VarChar).Value = product.ImageUrl;
-                        adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = vendor;
+                        adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = product.Company;
                         adapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = product.ModelNumber;
                         adapter.InsertCommand.Parameters.Add("@PRODUCTNAME", SqlDbType.VarChar).Value = product.Name;
                         adapter.InsertCommand.Parameters.Add("@VENDORLINKURL", SqlDbType.VarChar).Value = product.Url;

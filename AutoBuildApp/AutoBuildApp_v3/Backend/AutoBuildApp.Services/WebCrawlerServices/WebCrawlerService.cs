@@ -15,6 +15,7 @@ using AutoBuildApp.Models.WebCrawler;
 using PuppeteerSharp;
 using Newtonsoft.Json.Linq;
 using Nito.AsyncEx;
+using System.Collections.Concurrent;
 
 namespace AutoBuildApp.Services.WebCrawlerServices
 {
@@ -29,6 +30,9 @@ namespace AutoBuildApp.Services.WebCrawlerServices
         private const string PROXY_WEBSITE_QUERYSELECTOR = "Array.from(document.querySelectorAll('#proxylisttable tbody [role=row]')).map(a => a.innerText)";
         private const int NUMBER_OF_PAGES_TO_CRAWL = 1;
         private LaunchOptions options;
+
+        private ConcurrentBag<string> vendors = new ConcurrentBag<string>();
+        private ConcurrentBag<string> modelNumbers = new ConcurrentBag<string>();
         private NavigationOptions navigationOptions = new NavigationOptions
         {
             WaitUntil = new[]
@@ -359,6 +363,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         bool availability = price != null;
                         string modelNumber = specsVals.ElementAt(modelNumberIndex).ToString();
                         string brand = specsVals.ElementAt(brandIndex).ToString();
+                        companyName = companyName.ToLower();
                         Models.WebCrawler.Product product = new Models.WebCrawler.Product(imageUrl.ToString(), availability, companyName, url, modelNumber, title.ToString(), productType,
                             brand, totalStarRatingString, totalNumberOfReviewsString, priceString, specsDictionary, reviews);
 
@@ -381,6 +386,11 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                             {
                                 webCrawlerDAO.PostToVendorProductReviewsTable(product);
                             }
+                        }
+
+                        if(!vendors.Contains(companyName)) {
+                            webCrawlerDAO.AddVendor(companyName);
+                            vendors.Add(companyName);
                         }
                         webCrawlerDAO.PostToVendorProductsTable(product);
 
@@ -539,7 +549,8 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                 ExecutablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe", // edded per danny
                 Args = new[] {
                         //$"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}",
-                        "--proxy-server=208.80.28.208:8080",
+                        //"--proxy-server=208.80.28.208:8080",
+                        "--proxy-server=132.248.196.2:8080",
                         "--no-sandbox",
                         "--disable-gpu",
                         "--ignore-certificate-errors",
