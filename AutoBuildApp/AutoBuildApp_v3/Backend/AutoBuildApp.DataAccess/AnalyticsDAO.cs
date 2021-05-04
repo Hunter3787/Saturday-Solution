@@ -1,4 +1,5 @@
 ﻿using AutoBuildApp.DataAccess.Abstractions;
+using AutoBuildApp.DataAccess.DAOGlobals;
 using AutoBuildApp.DataAccess.Entities;
 using AutoBuildApp.Security;
 using AutoBuildApp.Security.Enumerations;
@@ -344,7 +345,7 @@ namespace AutoBuildApp.DataAccess
                         #region SQL related
 
                         // https://learning.oreilly.com/library/view/adonet-in-a/0596003617/ch04s05.html
-                        command.CommandTimeout = TimeSpan.FromSeconds(DAOGlobals.TIMEOUT_LONG).Seconds;
+                        command.CommandTimeout = TimeSpan.FromSeconds(DAOGlobal.TIMEOUT_LONG).Seconds;
                         // 1) Create a Command, and set its CommandType property to StoredProcedure.
                         command.CommandType = CommandType.Text;
                         // 2) Set the CommandText to the name of the stored procedure.
@@ -405,7 +406,7 @@ namespace AutoBuildApp.DataAccess
                     catch(SqlException e)
                     {
                         command.Transaction.Rollback();
-                        if (conn.State is ConnectionState.Open)
+                        if (!conn.State.Equals(ConnectionState.Open))
                         {
                             _responseUAD.ConnectionState = false;
                         }

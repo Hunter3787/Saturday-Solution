@@ -61,7 +61,7 @@ namespace AutoBuildApp.DataAccess
                 {
                     command.Transaction = connection.BeginTransaction();
                     command.Connection = connection;
-                    command.CommandTimeout = DAOGlobals.TIMEOUT_SHORT;
+                    command.CommandTimeout = DAOGlobals2.TIMEOUT_SHORT;
                     command.CommandType = CommandType.Text;
                     command.CommandText = _allProductQuery;
 
@@ -127,7 +127,7 @@ namespace AutoBuildApp.DataAccess
                 {
                     command.Transaction = conn.BeginTransaction();
                     command.Connection = conn;
-                    command.CommandTimeout = DAOGlobals.TIMEOUT_SHORT;
+                    command.CommandTimeout = DAOGlobals2.TIMEOUT_SHORT;
                     command.CommandType = CommandType.Text;
 
 
@@ -155,7 +155,7 @@ namespace AutoBuildApp.DataAccess
                 {
                     command.Transaction = conn.BeginTransaction();
                     command.Connection = conn;
-                    command.CommandTimeout = DAOGlobals.TIMEOUT_SHORT;
+                    command.CommandTimeout = DAOGlobals2.TIMEOUT_SHORT;
                     command.CommandType = CommandType.Text;
 
 

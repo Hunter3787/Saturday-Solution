@@ -123,7 +123,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
         //    return analyticCharts;
         //}
 
-
+        // TURN INTO ASYNC 
         public void GetChartData(int graphType)
         {
             DBViews specifiedChart = (DBViews)graphType;

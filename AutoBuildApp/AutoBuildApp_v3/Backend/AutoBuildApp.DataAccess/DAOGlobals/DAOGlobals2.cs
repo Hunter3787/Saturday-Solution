@@ -4,7 +4,7 @@
  */
 namespace AutoBuildApp.DataAccess
 {
-    public static class DAOGlobals
+     static class DAOGlobals2
     {
         public const int TIMEOUT_SHORT = 5;
         public const int TIMEOUT_MEDIUM = 30;

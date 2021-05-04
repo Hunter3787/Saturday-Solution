@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using AutoBuildApp.DataAccess.DAOGlobals;
 using Microsoft.Data.SqlClient;
 
 namespace AutoBuildApp.DataAccess
@@ -28,11 +29,9 @@ namespace AutoBuildApp.DataAccess
                     string insertRequest = "INSERT INTO ";
                     command.Transaction = connection.BeginTransaction();
                     command.Connection = connection;
-                    command.CommandTimeout = DAOGlobals.TIMEOUT_SHORT;
+                    command.CommandTimeout = DAOGlobal.TIMEOUT_SHORT;
                     command.CommandType = CommandType.Text;
                     command.CommandText = insertRequest;
-
-                    
 
                     var rowsAdded = command.ExecuteNonQuery();
                     if(rowsAdded == 1)

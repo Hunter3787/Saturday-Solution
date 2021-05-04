@@ -1,8 +1,4 @@
 ﻿using AutoBuildApp.Api.HelperFunctions;
-using AutoBuildApp.DataAccess.Abstractions;
-using AutoBuildApp.DomainModels;
-using AutoBuildApp.DomainModels.Abstractions;
-using AutoBuildApp.DomainModels.Enumerations;
 using AutoBuildApp.Managers.FeatureManagers;
 using AutoBuildApp.Security;
 using AutoBuildApp.Security.Enumerations;
@@ -12,13 +8,8 @@ using AutoBuildApp.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text.Json;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace AutoBuildApp.Api.Controllers
 {

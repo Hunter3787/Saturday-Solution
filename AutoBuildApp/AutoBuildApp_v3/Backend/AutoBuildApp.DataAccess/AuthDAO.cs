@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using AutoBuildApp.Security.Models;
 using AutoBuildApp.Security;
+using AutoBuildApp.DataAccess.DAOGlobals;
 
 namespace AutoBuildApp.DataAccess
 {
@@ -158,7 +159,7 @@ namespace AutoBuildApp.DataAccess
                         #region SQL related
 
                         // https://learning.oreilly.com/library/view/adonet-in-a/0596003617/ch04s05.html
-                        command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
+                        command.CommandTimeout = TimeSpan.FromSeconds(DAOGlobal.TIMEOUT_LONG).Seconds;
                         // 1) Create a Command, and set its CommandType property to StoredProcedure.
                         command.CommandType = CommandType.StoredProcedure;
                         // 2) Set the CommandText to the name of the stored procedure.
