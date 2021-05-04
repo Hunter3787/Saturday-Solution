@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using AutoBuildApp.Models.Interfaces;
+using AutoBuildApp.Models.Products;
 
 /**
  * Shelf class to carry the shelf name 
@@ -11,12 +11,12 @@ namespace AutoBuildApp.Models
 {
     public class Shelf
     {
-        public List<IComponent> ComponentList { get; set; }
+        public List<Component> ComponentList { get; set; }
         public string ShelfName { get; set; }
 
         public Shelf()
         {
-            ComponentList = new List<IComponent>();
+            ComponentList = new List<Component>();
         }
 
     }

@@ -245,7 +245,7 @@ namespace AutoBuildApp.DataAccess
                                     || reader[SaveProductTableCollumns.SAVED_PRODUCT_QUANTITY] != DBNull.Value)
                                     )
                                 {
-                                    IComponent component = new Component()
+                                    Component component = new Component()
                                     {
                                         ModelNumber = (string) reader[ProductTableColumns.PRODUCT_COLUMN_MODEL],
                                        // ProductType = (ProductType) Enum.Parse(typeof(ProductType),(string)reader[ProductTableColumns.PRODUCT_COLUMN_TYPE]),
