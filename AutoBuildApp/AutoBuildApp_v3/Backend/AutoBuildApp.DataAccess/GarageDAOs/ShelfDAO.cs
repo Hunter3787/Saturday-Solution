@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using AutoBuildApp.DataAccess;
 using Microsoft.Data.SqlClient;
 
 namespace AutoBuildApp.Models
@@ -31,8 +32,6 @@ namespace AutoBuildApp.Models
                     command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
                     command.CommandType = CommandType.Text;
                     command.CommandText = insertRequest;
-
-                    
 
                     var rowsAdded = command.ExecuteNonQuery();
                     if(rowsAdded == 1)

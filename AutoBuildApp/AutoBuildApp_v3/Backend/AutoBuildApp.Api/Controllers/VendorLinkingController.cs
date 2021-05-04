@@ -86,8 +86,6 @@ namespace AutoBuildApp.Api.Controllers
             // Product is null if a format exception was thrown
             if (product == null)
             {
-                Console.WriteLine("WRong");
-
                 _logger.LogWarning("EditProductInVendorListOfProducts failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
@@ -96,14 +94,11 @@ namespace AutoBuildApp.Api.Controllers
 
             if (!result.ResponseBool)
             {
-                Console.WriteLine("WRong");
-
                 _logger.LogWarning("EditProductInVendorListOfProducts failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
 
             _logger.LogInformation("EditProductInVendorListOfProducts succeeded.");
-            Console.WriteLine("Correct");
             return Ok();
         }
 

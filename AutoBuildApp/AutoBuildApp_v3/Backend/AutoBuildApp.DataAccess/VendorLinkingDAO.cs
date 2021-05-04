@@ -82,7 +82,7 @@ namespace AutoBuildApp.Models
 
         public SystemCodeWithCollection<List<string>> GetAllModelNumbers()
         {
-            string company = "new egg";
+            string company = "danny";
             List<string> allModelNumbers = new List<string>();
             SystemCodeWithCollection<List<string>> response = new SystemCodeWithCollection<List<string>>();
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -213,7 +213,7 @@ namespace AutoBuildApp.Models
 
         public AutoBuildSystemCodes AddProductToVendorListOfProducts(AddProductDTO product)
         {
-            string company = "new egg";
+            string company = "danny";
             //if(!VendorsProducts.ContainsKey(company))
             //{
             //    HashSet<string> HashSet = new HashSet<string>();
@@ -266,7 +266,7 @@ namespace AutoBuildApp.Models
 
         public AutoBuildSystemCodes EditProductInVendorListOfProducts(AddProductDTO product)
         {
-            string company = "new egg";
+            string company = "danny";
             //if (!VendorsProducts[company].Contains(product.ModelNumber))
             //{
             //    Console.WriteLine("can't edit. that model number doesn't exist");
@@ -311,7 +311,7 @@ namespace AutoBuildApp.Models
 
         public AutoBuildSystemCodes DeleteProductFromVendorList(string modelNumber)
         {
-            string company = "new egg";
+            string company = "danny";
             Console.WriteLine("mode num = " + modelNumber);
             //if (!VendorsProducts["new egg"].Contains(modelNumber))
             //{

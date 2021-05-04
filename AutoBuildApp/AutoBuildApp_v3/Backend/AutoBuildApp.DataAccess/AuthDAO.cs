@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using AutoBuildApp.Security.Models;
 using AutoBuildApp.Security;
+using AutoBuildApp.DataAccess;
 
 namespace AutoBuildApp.Models
 {
@@ -158,7 +159,7 @@ namespace AutoBuildApp.Models
                         #region SQL related
 
                         // https://learning.oreilly.com/library/view/adonet-in-a/0596003617/ch04s05.html
-                        command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
+                        command.CommandTimeout = TimeSpan.FromSeconds(TimeoutLengths.TIMEOUT_LONG).Seconds;
                         // 1) Create a Command, and set its CommandType property to StoredProcedure.
                         command.CommandType = CommandType.StoredProcedure;
                         // 2) Set the CommandText to the name of the stored procedure.
@@ -200,7 +201,7 @@ namespace AutoBuildApp.Models
                                 ///_userPermissions.UserAccountID = reader.GetInt64(0);
                                 /// magic values -> will the collumns alwats be the same
                                 /// better to use ordinal names -> no matter where the column just specifiy thr column 
-                                _CRAuth.AuthUserDTO.UserEmail = (string)reader[username];
+                                _CRAuth.AuthUserDTO.UserName = (string)reader[username];
                                 _userClaims.Permission = (string)reader[permissions];
                                 _userClaims.scopeOfPermissions = (string)reader[scope];
                                 _CRAuth.AuthUserDTO.Claims.Add(_userClaims);

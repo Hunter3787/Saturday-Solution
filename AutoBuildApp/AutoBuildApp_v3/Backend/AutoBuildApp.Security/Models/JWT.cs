@@ -41,6 +41,9 @@ namespace AutoBuildApp.Security.Models
         private JWTHeader Header { get; set; }
         private JWTPayload Payload { get; set; }
 
+        public string JWTToken { get; set; }
+        public string JWTSignature { get; set; }
+
         /// <summary>
         /// For the signiture, a secret key is defined along with 
         /// the algorithmic function
@@ -114,7 +117,6 @@ namespace AutoBuildApp.Security.Models
             //about ASCIIEncoding:  GetBytes(String)
             //Encodes all the characters in the specified
             //string into a sequence of bytes.
-
             byte[] header = Encoding.UTF8.GetBytes(ApplyJson(Header));
             byte[] payload = Encoding.UTF8.GetBytes(ApplyJson(Payload));
 
@@ -132,23 +134,12 @@ namespace AutoBuildApp.Security.Models
                 $"{Base64UrlEncoder.Encode(payload)}." +
                 $"{signature}";
 
-            ///Console.WriteLine($" TESTING THE SIGNATURE: \n\n");
-            ///var handler = new JwtSecurityTokenHandler();
-            ///var decodedValue = handler.ReadToken(jwt);
-            ///Console.WriteLine("Decoded value \n" + decodedValue.ToString());
             JWTToken = jwt;
             JWTSignature = signature;
             return signature;
+        }
 
-        }
-        public string JWTToken { get; set; }
-        public string JWTSignature { get; set; }
-        public string ToString2()
-        {
-            return $"\nThe JWT token: {JWTToken}\n" +
-                $"Header : {ApplyJson(Header)} \n" +
-                $"Payload: {ApplyJson(Payload)} \n";
-        }
+
         public override string ToString()
         {
             return ($"{JWTToken}");
@@ -180,303 +171,269 @@ namespace AutoBuildApp.Security.Models
      */
 
 
-    /// <summary>
-    /// okay time to validate jwt tokens
-    /// https://tools.ietf.org/html/rfc7519#section-7.2
-    /// 
-    /// </summary>
-    public class JWTValidator
-    {
-        //Represents an ASCII character encoding of Unicode characters.
-        private ASCIIEncoding _encoding = new ASCIIEncoding();
-        private JWTHeader _jwtHeaderDefault = new JWTHeader(Algorithm.HS256.AlgValue);
-        private JWTPayload _jwtPayloadDefault = new JWTPayload();
-        private JWT _jwt;
+    ///// <summary>
+    ///// okay time to validate jwt tokens
+    ///// https://tools.ietf.org/html/rfc7519#section-7.2
+    ///// 
+    ///// </summary>
+    //public class JWTValidator
+    //{
+    //    //Represents an ASCII character encoding of Unicode characters.
+    //    private ASCIIEncoding _encoding = new ASCIIEncoding();
+    //    private JWTHeader _jwtHeaderDefault = new JWTHeader(Algorithm.HS256.AlgValue);
+    //    private JWTPayload _jwtPayloadDefault = new JWTPayload();
+    //    private JWT _jwt;
 
 
-        #region claims priciple built in
-        private IList<Claim> _securityClaims = new List<Claim>();
+    //    #region claims priciple built in
+    //    private IList<Claim> _securityClaims = new List<Claim>();
 
-        ClaimsPrincipal _principalGenerated;
+    //    ClaimsPrincipal _principalGenerated;
 
-        #endregion
-
-
-        public string JWT { get; set; }
-        private string SecretKey { get { return "Secret"; } set { value = "Secret"; } }
-
-        public JWTValidator()
-        {
-            this.JWT = " ";
-        }
-        public JWTValidator(string JWTToken)
-        {
-            this.JWT = JWTToken;
-
-            Console.WriteLine("Token pased: " + JWTToken);
-        }
+    //    #endregion
 
 
-        public JWTPayload GetJWTPayload()
-        {
-            string[] parseJWT = JWT.Split('.');
-            string payloadJSON = Base64UrlEncoder.Decode(parseJWT[1]);
-           /// Console.WriteLine($"\n\nJson payload: {payloadJSON}");
-            JWTPayload payload = JsonSerializer.Deserialize<JWTPayload>(payloadJSON);
-            return payload;
-        }
+    //    public string JWT { get; set; }
+    //    private string SecretKey { get { return "Secret"; } set { value = "Secret"; } }
 
-        public JWTHeader GetJWTHeader()
-        {
-            string[] parseJWT = JWT.Split('.');
-            string headerJSON = Base64UrlEncoder.Decode(parseJWT[0]);
-            JWTHeader header = JsonSerializer.Deserialize<JWTHeader>(headerJSON);
-            return header;
+    //    public JWTValidator()
+    //    {
+    //        this.JWT = " ";
+    //    }
+    //    public JWTValidator(string JWTToken)
+    //    {
+    //        this.JWT = JWTToken;
+    //        //Console.WriteLine("Token pased: " + JWTToken);
+    //    }
 
 
-        }
+    //    public JWTPayload GetJWTPayload()
+    //    {
+    //        string[] parseJWT = JWT.Split('.');
+    //        string payloadJSON = Base64UrlEncoder.Decode(parseJWT[1]);
+    //        /// Console.WriteLine($"\n\nJson payload: {payloadJSON}");
+    //        JWTPayload payload = JsonSerializer.Deserialize<JWTPayload>(payloadJSON);
+    //        return payload;
+    //    }
 
-        #region Validating a JWT
-
-        /// <summary>
-        /// IsValidJWT runs all the checks for the jwt and returns true 
-        /// upon success or false upon invalid jwt
-        /// </summary>
-        /// <returns></returns>
-        public bool IsValidJWT()
-        {
-            #region check the JWT state:
-
-            if (isValidJWTFormat() == false) { return false; }
-
-            #endregion
-
-            #region check the header data:
-            if (isValidHeader() == false) { return false; }
-            #endregion
-
-            #region check the payload data:
-            if (isValidPayload() == false) { return false; }
-            #endregion
-
-            #region check the signature 
-            if (isValidSignature() == false) { return false; }
-
-            #endregion
-            return true;
-        }
-
-        /// <summary>
-        /// method isValidSignature() validates the JWT signature
-        /// </summary>
-        /// <returns></returns>
-        public bool isValidSignature()
-        {
-
-            string[] parseJWT = JWT.Split('.');
-            string headerJSON = Base64UrlEncoder.Decode(parseJWT[0]);
-            JWTHeader header = JsonSerializer.Deserialize<JWTHeader>(headerJSON);
-
-            string payloadJSON = Base64UrlEncoder.Decode(parseJWT[1]);
-            ///Console.WriteLine($"\n\nJson payload: {payloadJSON}");
-            JWTPayload payload = JsonSerializer.Deserialize<JWTPayload>(payloadJSON);
-            ///Console.WriteLine("\n\nPaylaod ToString: " + payload.ToString());
+    //    public JWTHeader GetJWTHeader()
+    //    {
+    //        string[] parseJWT = JWT.Split('.');
+    //        string headerJSON = Base64UrlEncoder.Decode(parseJWT[0]);
+    //        JWTHeader header = JsonSerializer.Deserialize<JWTHeader>(headerJSON);
+    //        return header;
 
 
+    //    }
 
-            string signature = parseJWT[2];
-            ///Console.WriteLine($" the signature passed: {signature}");
-            // so what i will do is regenrate the signature and 
-            // check if the generated signature matches the 
-            // one passed 
-            _jwt = new JWT(SecretKey, payload, header);
-            string genratedJWT = _jwt.GenerateJWTSignature();
-            /// Console.WriteLine($"generated JWT signature: { genratedJWT}");
+    //    #region Validating a JWT
 
-            if (genratedJWT.Equals(signature) == false)
-            {
-                ///Console.WriteLine($"the signature is not valid.");
-                return false;
-            }
+    //    /// <summary>
+    //    /// IsValidJWT runs all the checks for the jwt and returns true 
+    //    /// upon success or false upon invalid jwt
+    //    /// </summary>
+    //    /// <returns></returns>
+    //    public bool IsValidJWT()
+    //    {
+    //        #region check the JWT state:
 
-            return true;
-        }
+    //        if (IsValidJWTFormat() == false) { return false; }
 
-        /// <summary>
-        /// checks the JWT form itself
-        /// </summary>
-        /// <returns></returns>
-        public bool isValidJWTFormat()
-        {
+    //        #endregion
 
-            //1. is the string empty?
-            if (string.IsNullOrWhiteSpace(JWT) || string.IsNullOrEmpty(JWT)) { Console.WriteLine($"null JWT token"); return false; }
-            //2.Verify that the JWT contains at least one period ('.') character.
-            if (JWT.Contains(".") == false) { Console.WriteLine($"not valid JWT token, missing '.'"); return false; }
-            // I want to split to retrieve the header, payload and signature
-            string[] parseJWT = JWT.Split('.');
+    //        #region check the header data:
+    //        if (IsValidHeader() == false) { return false; }
+    //        #endregion
 
-            if (parseJWT.Length != 3) { Console.WriteLine($" JWT length not valid."); return false; }
-            //3.Let the Encoded JOSE Header be the portion of the JWT before the
-            // first period('.') character.
-            string headerAsJson = JsonSerializer.Serialize(_jwtHeaderDefault);
-            Console.WriteLine($"Default header is: {headerAsJson}");
-            Console.WriteLine($"Other header is: {Base64UrlEncoder.Decode(parseJWT[0])}");
-            // 4. Base64url decode check:
-            if (headerAsJson.Equals(Base64UrlEncoder.Decode(parseJWT[0])) == false) { return false; }
+    //        #region check the payload data:
+    //        if (IsValidPayload() == false) { return false; }
+    //        #endregion
 
-            return true;
-        }
-        /// <summary>
-        /// checks if the header values are in line with Autobuilds 
-        /// choice of algorithm and type values
-        /// </summary>
-        /// <returns></returns>
-        public bool isValidHeader()
-        {
-            JWTHeader header = GetJWTHeader();
-            if (header.typ != _jwtHeaderDefault.typ || header.alg != _jwtHeaderDefault.alg)
-            {
-                Console.WriteLine($"not vaild type or algorithm");
-                return false;
-            }
-            return true;
-        }
+    //        #region check the signature 
+    //        if (IsValidSignature() == false) { return false; }
 
+    //        #endregion
+    //        return true;
+    //    }
 
-        /// <summary>
-        /// checks the JWT payload data such as 
-        /// expiration of the JWT token, the not before time,
-        /// and whether the default values by Autobuild match. 
-        /// (being the auduence, issuer, and subject line)
-        /// </summary>
-        /// <returns></returns>
-        public bool isValidPayload()
-        {
-            JWTPayload payload = GetJWTPayload();
-            //Console.WriteLine("\n\nPaylaod ToString: " + payload.ToString());
+    //    /// <summary>
+    //    /// method isValidSignature() validates the JWT signature
+    //    /// </summary>
+    //    /// <returns></returns>
+    //    public bool IsValidSignature()
+    //    {
 
-            if (payload.exp <= payload.ToUnixTimestamp(DateTimeOffset.UtcNow))
-            {
-                Console.WriteLine($"not vaild experation time.");
-                if (payload.nbf <= payload.ToUnixTimestamp(DateTimeOffset.UtcNow))
-                {
-                    Console.WriteLine($"not vaild not before time.");
-                    return false;
-                }
-            }
-            if (payload.Equals(_jwtPayloadDefault) == false)
-            {
-                Console.WriteLine($"payload not valid in JWT token");
-                return false;
-            }
-            return true;
-        }
+    //        string[] parseJWT = JWT.Split('.');
+    //        string headerJSON = Base64UrlEncoder.Decode(parseJWT[0]);
+    //        JWTHeader header = JsonSerializer.Deserialize<JWTHeader>(headerJSON);
 
-        /// <summary>
-        /// Base64url decode the Encoded JOSE Header following the
-        /// restriction that no line breaks, whitespace, or other additional
-        /// characters have been used.
-        /// </summary>
-        /// <param name="input"></param>
-        public bool checkBase64urlDecode(string encodedString)
-        {
-            /*
-            * note the only thing you will see in a base 64:
-            * A-Z, a-z, 0-9, + / =
-            *  padded in the end with three: = to make it a length of mulitple four
-            *  
-            * but for jwt we are using!!BASE 64 URL ENCODING (might see _)
-            * 
-            * so i guess when you decode , - => + and _ => / and adding three === at the end.
-            * (opposite of encoding)
-            */
-            var output = Base64UrlEncoder.Decode(encodedString);
-            Console.WriteLine($"Decoded value: {output} ");
-
-            string start = encodedString;
-
-            start = start.Replace('_', '/');
-            start = start.Replace('-', '+');
-
-            // also the ecoded string is a length of multiple of four:
-            switch (start.Length % 4) // goes throu the string by four
-            {
-                //length 0
-                case 0:
-                    break;
-                //length 2
-                case 2:
-                    start += "=";
-                    break;
-
-                case 3:
-                    start += "=+";
-                    break;
-                default:
-                    return false;
-
-            }
-            Convert.FromBase64String(start);
-
-            return true;
-
-        }
-
-        #endregion
-
-        /// <summary>
-        /// returns the user Object to be stored to the thread 
-        /// upon complete verfifcatons.
-        /// </summary>
-        /// <returns></returns>
-        public ClaimsPrincipal ParseForClaimsPrinciple()
-        {
-
-            if (IsValidJWT() == true)
-            {
-                /// here we assign the user information 
-                ///  from the JWT token to the UserPrinciple Object
-                JWTPayload payload = GetJWTPayload();
-                UserIdentity userIdentity = new UserIdentity
-                {
-                    Name = payload.Username,
-                    IsAuthenticated = true,
-                    AuthenticationType = "JWT"
-                };
-                foreach (Claims claims in payload.UserCLaims)
-                { // converting the claims in type System.Security.Claims
-                    //Console.WriteLine($"{ claims.Permission} ,{claims.scopeOfPermissions} ");
-                    _securityClaims.Add(new Claim(claims.Permission, claims.scopeOfPermissions));
-                }
-                /*
-                ClaimsIdentity claimsIdentity = 
-                    new ClaimsIdentity(
-                        userIdentity,
-                        _securityClaims,
-                userIdentity.AuthenticationType, userIdentity.Name, " ");
-                _principalGenerated.AddIdentity(claimsIdentity);
-
-                */
-                //_securityClaims.Add(new Claim("USERNAME", userIdentity.Name));
-                ClaimsIdentity claimsIdentity = new ClaimsIdentity
-                ( userIdentity, _securityClaims, userIdentity.AuthenticationType, userIdentity.Name, " ");
-
-                //claimsIdentity.RemoveClaim(claimsIdentity.FindFirst(userIdentity.Name));
-                //_principalGenerated.FindFirst("USERNAME").Value
-
-                _principalGenerated = new ClaimsPrincipal(claimsIdentity);
-
-            }
-            Console.WriteLine($"\t In the jwt validator class: \n" +
-                $" Identity.name: {_principalGenerated.Identity.Name} ");
-            //setting to the thread.
-            Thread.CurrentPrincipal = _principalGenerated;
-            return _principalGenerated;
-        }
+    //        string payloadJSON = Base64UrlEncoder.Decode(parseJWT[1]);
+    //        ///Console.WriteLine($"\n\nJson payload: {payloadJSON}");
+    //        JWTPayload payload = JsonSerializer.Deserialize<JWTPayload>(payloadJSON);
+    //        ///Console.WriteLine("\n\nPaylaod ToString: " + payload.ToString());
 
 
 
-    }
+    //        string signature = parseJWT[2];
+
+    //        //  regenrate the signature and check if the generated signature matches the 
+    //        // one passed 
+    //        _jwt = new JWT(SecretKey, payload, header);
+    //        string genratedJWT = _jwt.GenerateJWTSignature();
+
+    //        if (genratedJWT.Equals(signature) == false)
+    //        {
+    //            return false;
+    //        }
+
+    //        return true;
+    //    }
+
+    //    /// <summary>
+    //    /// checks the JWT form itself
+    //    /// </summary>
+    //    /// <returns></returns>
+    //    public bool IsValidJWTFormat()
+    //    {
+
+    //        //1. is the string empty?
+    //        if (string.IsNullOrWhiteSpace(JWT) || string.IsNullOrEmpty(JWT))
+    //        {
+    //            //Console.WriteLine($"null JWT token"); 
+    //            return false;
+    //        }
+
+    //        //2.Verify that the JWT contains at least one period ('.') character.
+    //        if (JWT.Contains(".") == false)
+    //        {
+    //            //Console.WriteLine($"not valid JWT token, missing '.'"); 
+    //            return false;
+    //        }
+
+    //        // I want to split to retrieve the header, payload and signature
+    //        string[] parseJWT = JWT.Split('.');
+
+    //        //3. id JWT split at 3?
+    //        if (parseJWT.Length != 3)
+    //        {
+    //            //Console.WriteLine($" JWT length not valid.");
+    //            return false;
+    //        }
+
+    //        //3.Let the Encoded JOSE Header be the portion of the JWT before the
+    //        // first period('.') character.
+    //        string headerAsJson = JsonSerializer.Serialize(_jwtHeaderDefault);
+
+    //        // 4. Base64url decode check:
+    //        if (headerAsJson.Equals(Base64UrlEncoder.Decode(parseJWT[0])) == false) { return false; }
+
+    //        return true;
+    //    }
+    //    /// <summary>
+    //    /// checks if the header values are in line with Autobuilds 
+    //    /// choice of algorithm and type values
+    //    /// </summary>
+    //    /// <returns></returns>
+    //    public bool IsValidHeader()
+    //    {
+    //        JWTHeader header = GetJWTHeader();
+    //        if (header.typ != _jwtHeaderDefault.typ || header.alg != _jwtHeaderDefault.alg)
+    //        {
+    //            //Console.WriteLine($"not vaild type or algorithm");
+    //            return false;
+    //        }
+    //        return true;
+    //    }
+
+
+    //    /// <summary>
+    //    /// checks the JWT payload data such as 
+    //    /// expiration of the JWT token, the not before time,
+    //    /// and whether the default values by Autobuild match. 
+    //    /// (being the auduence, issuer, and subject line)
+    //    /// </summary>
+    //    /// <returns></returns>
+    //    public bool IsValidPayload()
+    //    {
+    //        JWTPayload payload = GetJWTPayload();
+    //        //Console.WriteLine("\n\nPaylaod ToString: " + payload.ToString());
+
+    //        if (payload.exp <= payload.ToUnixTimestamp(DateTimeOffset.UtcNow))
+    //        {
+    //            //Console.WriteLine($"Not vaild experation time.");
+    //            if (payload.nbf <= payload.ToUnixTimestamp(DateTimeOffset.UtcNow))
+    //            {
+    //                // Console.WriteLine($"Not vaild not before time.");
+    //                return false;
+    //            }
+    //        }
+    //        if (payload.Equals(_jwtPayloadDefault) == false)
+    //        {
+    //            //Console.WriteLine($"Payload not valid in JWT token");
+    //            return false;
+    //        }
+
+    //        return true;
+    //    }
+
+
+    //    #endregion
+
+    //    #region EXTRACT JWT TOKEN INTO CLAIMS PRINCIPAL
+
+    //    /// <summary>
+    //    /// returns the user Object to be stored to the thread 
+    //    /// upon complete verfifcatons.
+    //    /// </summary>
+    //    /// <returns></returns>
+    //    public ClaimsPrincipal ParseForClaimsPrinciple()
+    //    {
+    //        if (!IsValidJWT())
+    //        {
+    //            return null;
+    //        }
+
+    //        /// here we assign the user information 
+    //        ///  from the JWT token to the UserPrinciple Object
+    //        JWTPayload payload = GetJWTPayload();
+    //        UserIdentity userIdentity = new UserIdentity
+    //        {
+    //            Name = payload.Username,
+    //            IsAuthenticated = true,
+    //            AuthenticationType = "JWT"
+    //        };
+    //        foreach (Claims claims in payload.UserCLaims)
+    //        { // converting the claims in type System.Security.Claims
+    //            _securityClaims.Add(new Claim(claims.Permission, claims.scopeOfPermissions));
+    //        }
+
+    //        /*
+    //        ClaimsIdentity claimsIdentity = 
+    //            new ClaimsIdentity(
+    //                userIdentity,
+    //                _securityClaims,
+    //        userIdentity.AuthenticationType, userIdentity.Name, " ");
+    //        _principalGenerated.AddIdentity(claimsIdentity);
+
+    //        */
+
+    //        //_securityClaims.Add(new Claim("USERNAME", userIdentity.Name));
+    //        ClaimsIdentity claimsIdentity = new ClaimsIdentity
+    //        (userIdentity, _securityClaims, userIdentity.AuthenticationType, userIdentity.Name, " ");
+
+    //        //claimsIdentity.RemoveClaim(claimsIdentity.FindFirst(userIdentity.Name));
+    //        //_principalGenerated.FindFirst("USERNAME").Value
+
+    //        _principalGenerated = new ClaimsPrincipal(claimsIdentity);
+
+
+    //        Thread.CurrentPrincipal = _principalGenerated; //setting to the thread.
+    //        return _principalGenerated;
+    //    }
+
+    //    #endregion
+
+
+    //}
 
 }

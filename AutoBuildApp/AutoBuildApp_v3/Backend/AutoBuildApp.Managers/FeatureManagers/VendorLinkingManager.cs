@@ -22,7 +22,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
         public VendorLinkingManager(string connectionString)
         {
             _vendorLinkingService = new VendorLinkingService(connectionString);
-            VendorsProducts = _vendorLinkingService.PopulateVendorsProducts().GenericCollection;
+            //VendorsProducts = _vendorLinkingService.PopulateVendorsProducts();
         }
 
         public AddProductDTO ConvertFormToProduct(IFormCollection formData)
