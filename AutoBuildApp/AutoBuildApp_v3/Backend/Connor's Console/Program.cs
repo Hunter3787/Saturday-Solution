@@ -1,6 +1,6 @@
 ﻿using AutoBuildApp.Api.HelperFunctions;
-using AutoBuildApp.DataAccess;
-using AutoBuildApp.DataAccess.Entities;
+using AutoBuildApp.Models;
+using AutoBuildApp.Models.Entities;
 using AutoBuildApp.Managers;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.Models;

@@ -42,8 +42,7 @@ namespace AutoBuildApp.Api.HelperFunctions
             {
                 Console.WriteLine($"Permission:  {c.Type}, Scope: {c.Value} ");
             }
-            Console.WriteLine($"\n Current Thread Priciple: " +
-                $"{ JsonSerializer.Serialize(Thread.CurrentPrincipal)} ");
+            
             #endregion
 
             #region NOT NECESSARY BUT WILL KEEP FOR NOW:

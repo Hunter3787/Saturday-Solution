@@ -1,5 +1,5 @@
 ﻿using AutoBuildApp.Api.HelperFunctions;
-using AutoBuildApp.DataAccess.Abstractions;
+using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.DomainModels;
 using AutoBuildApp.DomainModels.Abstractions;
 using AutoBuildApp.DomainModels.Enumerations;
@@ -12,13 +12,8 @@ using AutoBuildApp.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text.Json;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace AutoBuildApp.Api.Controllers
 {
@@ -39,7 +34,7 @@ namespace AutoBuildApp.Api.Controllers
        // private LoggingProducerService _logger = LoggingProducerService.GetInstance;
 
 
-        private UADManager _uadManager;
+        private AnalyticsManager _uadManager;
 
         public AnalyticsController()
         {
@@ -60,7 +55,7 @@ namespace AutoBuildApp.Api.Controllers
             #endregion
 
 
-            _uadManager = new UADManager(connection);
+            _uadManager = new AnalyticsManager(connection);
 
         }
 
@@ -115,16 +110,11 @@ namespace AutoBuildApp.Api.Controllers
                // _logger.LogWarning("Unauthorized Access Attempted");
                 return new StatusCodeResult(StatusCodes.Status403Forbidden);
             }
-            var result = _uadManager.GetAllChartData();
-
-            Console.WriteLine($"{result.result }: RESULT \n" +
-                $"{result.ToString()}");
+            _uadManager.GetChartData(0);
             
-            
-            if (!result.SuccessFlag)
+            if(true)
             {
-                if (result.result == AuthorizationResultType.NOT_AUTHORIZED.ToString())
-                {
+                if (0 == (int)AuthorizationResultType.NotAuthorized){
 
                    // _logger.LogWarning("Unauthorized Access Attempted");
                     return new StatusCodeResult(StatusCodes.Status403Forbidden);
@@ -137,7 +127,7 @@ namespace AutoBuildApp.Api.Controllers
             }
             // lesson: postman doesnt work with list. move on 
 
-            return Ok(result);
+            return Ok();
 
             
         }

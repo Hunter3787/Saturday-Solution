@@ -1,11 +1,11 @@
 ﻿using AutoBuildApp.Models.Interfaces;
-using AutoBuildApp.DataAccess;
+using AutoBuildApp.Models;
 using System.Collections.Generic;
 using AutoBuildApp.Security.FactoryModels;
 using AutoBuildApp.Security.Interfaces;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Services;
-using AutoBuildApp.DataAccess.Abstractions;
+using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.Models;
 using AutoBuildApp.Managers.Guards;
 using System.Threading;

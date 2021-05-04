@@ -42,11 +42,9 @@ namespace AutoBuildApp.DataAccess
                     string insertRequest = "INSERT INTO ";
                     command.Transaction = connection.BeginTransaction();
                     command.Connection = connection;
-                    command.CommandTimeout = DAOGlobals.TIMEOUT_SHORT;
+                    command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
                     command.CommandType = CommandType.Text;
                     command.CommandText = insertRequest;
-
-                    
 
                     var rowsAdded = command.ExecuteNonQuery();
                     if(rowsAdded == 1)
@@ -82,7 +80,7 @@ namespace AutoBuildApp.DataAccess
                     string insertRequest = "INSERT INTO ";
                     command.Transaction = connection.BeginTransaction();
                     command.Connection = connection;
-                    command.CommandTimeout = DAOGlobals.TIMEOUT_SHORT;
+                    command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
                     command.CommandType = CommandType.Text;
                     command.CommandText = insertRequest;
 
@@ -116,7 +114,7 @@ namespace AutoBuildApp.DataAccess
                     string insertRequest = "INSERT INTO ";
                     command.Transaction = connection.BeginTransaction();
                     command.Connection = connection;
-                    command.CommandTimeout = DAOGlobals.TIMEOUT_SHORT;
+                    command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
                     command.CommandType = CommandType.Text;
                     command.CommandText = insertRequest;
 
@@ -147,7 +145,7 @@ namespace AutoBuildApp.DataAccess
                     string insertRequest = "INSERT INTO ";
                     command.Transaction = connection.BeginTransaction();
                     command.Connection = connection;
-                    command.CommandTimeout = DAOGlobals.TIMEOUT_SHORT;
+                    command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
                     command.CommandType = CommandType.Text;
                     command.CommandText = insertRequest;
 
@@ -178,7 +176,7 @@ namespace AutoBuildApp.DataAccess
                     string insertRequest = "INSERT INTO ";
                     command.Transaction = connection.BeginTransaction();
                     command.Connection = connection;
-                    command.CommandTimeout = DAOGlobals.TIMEOUT_SHORT;
+                    command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
                     command.CommandType = CommandType.Text;
                     command.CommandText = insertRequest;
 
@@ -223,7 +221,7 @@ namespace AutoBuildApp.DataAccess
                             "LEFT JOIN Products P ON P.productId = SPS.productID WHERE userID = 2";
                         command.Transaction = connection.BeginTransaction();
                         command.Connection = connection;
-                        command.CommandTimeout = DAOGlobals.TIMEOUT_SHORT;
+                        command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
                         command.CommandType = CommandType.Text;
                         command.CommandText = GetAllShelvesByUserQuery;
                         
@@ -290,7 +288,7 @@ namespace AutoBuildApp.DataAccess
                     string insertRequest = "INSERT INTO ";
                     command.Transaction = connection.BeginTransaction();
                     command.Connection = connection;
-                    command.CommandTimeout = DAOGlobals.TIMEOUT_SHORT;
+                    command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
                     command.CommandType = CommandType.Text;
                     command.CommandText = insertRequest;
 
@@ -314,7 +312,7 @@ namespace AutoBuildApp.DataAccess
                     string insertRequest = "INSERT INTO ";
                     command.Transaction = connection.BeginTransaction();
                     command.Connection = connection;
-                    command.CommandTimeout = DAOGlobals.TIMEOUT_SHORT;
+                    command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
                     command.CommandType = CommandType.Text;
                     command.CommandText = insertRequest;
 

@@ -1,5 +1,5 @@
 ﻿using AutoBuildApp.Api.HelperFunctions;
-using AutoBuildApp.DataAccess;
+using AutoBuildApp.Models;
 using AutoBuildApp.DomainModels.Abstractions;
 using AutoBuildApp.Managers.FeatureManagers;
 using AutoBuildApp.Security.Enumerations;
@@ -86,11 +86,11 @@ namespace AutoBuildApp.Manger.Tests
 
             string connection = conString.GetConnectionStringByName("MyConnection");
 
-            UADManager _uadManager = new UADManager(connection);
+            AnalyticsManager _uadManager = new AnalyticsManager(connection);
 
            // string actual = _uadManager.GetAllChartData();
            
-            string expected = AuthorizationResultType.NOT_AUTHORIZED.ToString();
+            string expected = AuthorizationResultType.NotAuthorized.ToString();
 
            // Assert.AreEqual(expected, actual);
 
@@ -139,12 +139,12 @@ namespace AutoBuildApp.Manger.Tests
 
             string connection = conString.GetConnectionStringByName("MyConnection");
 
-            UADManager _uadManager = new UADManager(connection);
+            AnalyticsManager _uadManager = new AnalyticsManager(connection);
 
-            var result = _uadManager.GetAllChartData();
+            _uadManager.GetChartData(0);
 
 
-            Assert.IsNotNull(result);
+            Assert.IsNotNull(1);
 
         }
 

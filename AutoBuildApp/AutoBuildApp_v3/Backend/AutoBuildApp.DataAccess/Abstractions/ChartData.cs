@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AutoBuildApp.DataAccess.Abstractions
+namespace AutoBuildApp.Models.DataTransferObjects
 {
     ///will be treating this as a base class
     /// for now.

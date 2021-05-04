@@ -1,4 +1,5 @@
 ﻿using AutoBuildApp.Api.HelperFunctions;
+using AutoBuildApp.DataAccess;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
 using AutoBuildApp.Security.Interfaces;
@@ -7,23 +8,22 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
-using System.Text;
 using System.Threading;
 
-namespace AutoBuildApp.DataAccess.Test
+namespace AutoBuildApp.Models.Test
 {
     [TestClass]
-    public class UadDaoTest
+    public class AnalyticsDaoTest
     {
         // since this is a test for the DAO: will instantiate here
 
         ConnectionManager conString = ConnectionManager.connectionManager;
         // 2) passing in the name I assigned my connection string 
-        private UadDAO _uadDAO;
-        public UadDaoTest()
+        private AnalyticsDAO _uadDAO;
+        public AnalyticsDaoTest()
         {
             string connection = conString.GetConnectionStringByName("MyConnection");
-             _uadDAO = new UadDAO(connection);
+             _uadDAO = new AnalyticsDAO(connection);
         }
 
         private static IEnumerable<object[]> FORMETHOD()
@@ -94,9 +94,12 @@ namespace AutoBuildApp.DataAccess.Test
             ResponseUAD responseUAD = new ResponseUAD();
             
             string connection = conString.GetConnectionStringByName("MyConnection");
-            responseUAD = _uadDAO.GetAllAnalytics();
+            responseUAD = _uadDAO.GetGraphData(DBViews.PageViewsPerMonth);
+
+
             //Console.WriteLine(expectedUAD.ToString());
-            //Console.WriteLine(responseUAD.ToString());
+            Console.WriteLine(responseUAD.ToString());
+
             Assert.AreEqual(expectedUAD.ToString(), responseUAD.ToString());
 
         }

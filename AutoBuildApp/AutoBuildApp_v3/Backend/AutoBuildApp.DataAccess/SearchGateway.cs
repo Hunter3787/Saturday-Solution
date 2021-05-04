@@ -7,7 +7,7 @@ using System.Text;
 
 
 // Could be nixed.
-namespace AutoBuildApp.Models.DTO
+namespace AutoBuildApp.Models.DataTransferObjects
 {
     public class SearchGateway
     {

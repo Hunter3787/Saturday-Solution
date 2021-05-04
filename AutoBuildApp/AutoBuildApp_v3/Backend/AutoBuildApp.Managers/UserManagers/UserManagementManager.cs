@@ -1,6 +1,6 @@
-﻿using AutoBuildApp.DataAccess;
+﻿using AutoBuildApp.Models;
 using AutoBuildApp.Models.Users;
-using AutoBuildApp.Models.DTO;
+using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.Services;
 using System;
 using AutoBuildApp.Managers.UserManagers;

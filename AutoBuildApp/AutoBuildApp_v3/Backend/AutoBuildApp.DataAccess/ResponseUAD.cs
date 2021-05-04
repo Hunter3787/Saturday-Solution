@@ -1,23 +1,20 @@
-﻿using AutoBuildApp.DataAccess.Abstractions;
-using AutoBuildApp.DataAccess.Entities;
+﻿using AutoBuildApp.Models.DataTransferObjects;
+using AutoBuildApp.Models.Entities;
 using AutoBuildApp.Models.DataTransferObjects;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AutoBuildApp.DataAccess
+namespace AutoBuildApp.Models
 {
     public class ResponseUAD : CommonResponse
     {
+        public IList<ChartData> GetChartDatas { get; set; }
+        public string XTitle { get; set; }
+        public string YTitle { get; set; }
+        public string LegendTitle { get; set; }
 
-        public IList<ChartData> GetNumAccountsPerRole { get; set; }
-        public IList<ChartData> GetUsePerComponent { get; set; }
-        public IList<ChartData> GetRegPerMonthByUserType { get; set; }
-
-        public IList<ChartData> GetAvgSessDurPerRole { get; set; }
-        public IList<ChartData> GetPageViewPerMonth{ get; set; }
         public bool ConnectionState { get; set; }
-
         public bool IsAuthorized { get; set; }
 
         public ResponseUAD()
@@ -25,19 +22,18 @@ namespace AutoBuildApp.DataAccess
 
             ResponseString = " ";
             ResponseBool = false;
-            ConnectionState = false;
-            // bar graph 1:
-            GetNumAccountsPerRole = new List<ChartData>();
-            GetUsePerComponent = new List<ChartData>();
-            GetRegPerMonthByUserType = new List<ChartData>();
-            GetAvgSessDurPerRole = new List<ChartData>();
-            GetPageViewPerMonth = new List<ChartData>();
+            ConnectionState = true;
+            GetChartDatas = new List<ChartData>();
+            LegendTitle = " ";
+            XTitle = " ";
+            YTitle = " ";
         }
 
 
         public override string ToString()
         {
-            return $"\nResponse String {ResponseString }\n" +
+            return 
+                $"\nResponse String {ResponseString }\n" +
                 $"Success Bool {ResponseBool}\n" +
                 $"Connection bool {ConnectionState}\n" +
                 $"IsAuthorized {IsAuthorized}\n";
