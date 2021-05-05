@@ -44,7 +44,7 @@ namespace AutoBuildApp.Services
             IMessageResponse output = new StringBoolResponse();
             try
             {
-                output.SuccessBool = _dao.DeleteShelf(shelfID);
+                //output.SuccessBool = _dao.DeleteShelf(shelfID);
                 output.MessageString = ResponseStringGlobals.SUCCESSFUL_DELETION;
             }
             catch (TimeoutException)
@@ -61,7 +61,7 @@ namespace AutoBuildApp.Services
             IMessageResponse output = new StringBoolResponse();
             try
             {
-                output.SuccessBool = _dao.UpdateShelf(oldName, newName, user);
+                //output.SuccessBool = _dao.UpdateShelf(oldName, newName, user);
 
                 if(output.SuccessBool == false)
                 {

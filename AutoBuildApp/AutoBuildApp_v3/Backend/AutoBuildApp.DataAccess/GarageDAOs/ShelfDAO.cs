@@ -12,43 +12,84 @@ namespace AutoBuildApp.DataAccess
 {
     public class ShelfDAO
     {
+        #region Sql Strings
         private readonly string _connectionString;
+        private readonly string _insertShelf =
+           "INSERT INTO Shelves (userID, nameOfShelf) " +
+           "VALUES( " +
+           "(SELECT UA.userID " +
+           "FROM UserAccounts UA " +
+           "INNER JOIN MappingHash MH ON UA.userID = MH.userID " +
+           "INNER JOIN UserCredentials UC ON MH.userHashID = UC.userHashID " +
+           "WHERE username = @USERNAME) , @SHELFNAME);";
+        private readonly string _deleteShelf =
+            "DELETE FROM Shelves " +
+            "WHERE nameOfShelf = @SHELFNAME " +
+            "AND userID = (SELECT UA.userID " +
+            "FROM UserAccounts UA " +
+            "INNER JOIN MappingHash MH ON UA.userID = MH.userID " +
+            "INNER JOIN UserCredentials UC ON MH.userHashID = UC.userHashID " +
+            "WHERE username = @USERNAME);";
+        private readonly string _addComponentQuery =
+            "INSERT INTO Save_Product_Shelf (shelfID, productID, quantity, itemIndex) " +
+            "VALUES(" +
+            "(SELECT shelfID " +
+            "FROM Shelves " +
+            "WHERE nameOfShelf = @SHELFNAME), " +
+            "(SELECT productID " +
+            "FROM Products " +
+            "WHERE modelNumber = @MODELNUMBER), " +
+            "@QUANTITY, " +
+            "(SELECT COUNT(itemIndex) " +
+            "FROM Save_Product_Shelf " +
+            "WHERE shelfID = " +
+            "(SELECT shelfID " +
+            "FROM Shelves " +
+            "WHERE nameOfShelf = @SHELFNAME)));";
+        private readonly string _removeProduct =
+            "DELETE FROM Save_Product_Shelf " +
+            "WHERE itemIndex = @ITEMINDEX " +
+            "AND shelfId = " +
+            "(SELECT shelfID " +
+            "FROM Shelves " +
+            "WHERE nameOfShelf = @SHELFNAME " +
+            "AND userID = " +
+            "(SELECT UA.userID " +
+            "FROM UserAccounts UA " +
+            "INNER JOIN MappingHash MH ON UA.userID = MH.userID " +
+            "INNER JOIN UserCredentials UC ON MH.userHashID = UC.userHashID " +
+            "WHERE username = @USERNAME));";
+        private readonly string _updateShelf = "";
         private readonly string _getAllShelvesByUserQuery =
             "SELECT S.nameOfShelf, SPS.quantity, SPS.itemIndex , P.productType, P.modelNumber, P.manufacturerName " +
             "FROM Shelves S " +
             "LEFT JOIN Save_Product_Shelf SPS ON S.shelfID = SPS.shelfID " +
-            "LEFT JOIN Products P ON P.productId = SPS.productID WHERE userID = 2";
+            "LEFT JOIN Products P ON P.productId = SPS.productID " +
+            "WHERE userID = " +
+            "(SELECT UA.userID  " +
+            "FROM UserAccounts UA " +
+            "INNER JOIN MappingHash MH ON UA.userID = MH.userID " +
+            "INNER JOIN UserCredentials UC ON MH.userHashID = UC.userHashID " +
+            "WHERE username = @USERNAME)" +
+            "";
         private readonly string _getShelfByNameAndUser =
             "SELECT S.nameOfShelf, SPS.quantity, SPS.itemIndex , P.productType, P.modelNumber, P.manufacturerName " +
             "FROM Shelves S " +
             "LEFT JOIN Save_Product_Shelf SPS ON S.shelfID = SPS.shelfID " +
             "LEFT JOIN Products P ON P.productId = SPS.productID " +
-            "WHERE userID = 2 AND nameOfShelf = 'tacobell'";
-        private readonly string _getProductByModel =
-            "SELECT productType, manufacturerName, modelNumber, productSpecs, productSpecsValue " +
-            "FROM Products P " +
-            "INNER JOIN Products_Specs PS ON p.productID = ps.productID " +
-            "WHERE p.modelNumber = '100-100000071BOX';";
-        private readonly string _updateShelf = "";
-        private readonly string _removeProduct = "";
-        private readonly string _addProduct = "";
-        private readonly string _deleteShelf =
-            "DELETE FROM Shelves " +
-            "WHERE nameOfShelf = 'TestShelf' " +
-            "AND userID = (SELECT UA.userID " +
-            "FROM UserAccounts UA " +
-            "INNER JOIN MappingHash MH ON UA.userID = MH.userID " +
-            "INNER JOIN UserCredentials UC ON MH.userHashID = UC.userHashID " +
-            "WHERE username = 'Zeina');";
-        private readonly string _insertShelf =
-            "INSERT INTO Shelves (userID, nameOfShelf) " +
-            "VALUES( " +
+            "WHERE userID = " +
             "(SELECT UA.userID " +
             "FROM UserAccounts UA " +
             "INNER JOIN MappingHash MH ON UA.userID = MH.userID " +
             "INNER JOIN UserCredentials UC ON MH.userHashID = UC.userHashID " +
-            "WHERE username = 'Zeina') , 'TestShelf');";
-
+            "WHERE username = @USERNAME) " +
+            "AND nameOfShelf = @SHELFNAME";
+        //private readonly string _getProductByModel =
+        //    "SELECT productType, manufacturerName, modelNumber, productSpecs, productSpecsValue " +
+        //    "FROM Products P " +
+        //    "INNER JOIN Products_Specs PS ON p.productID = ps.productID " +
+        //    "WHERE p.modelNumber = '100-100000071BOX';";
+        #endregion
 
         public ShelfDAO(string connectionString)
         {
@@ -150,7 +191,7 @@ namespace AutoBuildApp.DataAccess
                     command.Connection = connection;
                     command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
                     command.CommandType = CommandType.Text;
-                    command.CommandText = _addProduct;
+                    command.CommandText = _addComponentQuery;
 
 
 
@@ -245,9 +286,9 @@ namespace AutoBuildApp.DataAccess
         /// Get all Shelves from the Database using the collections with code
         /// class.
         /// </summary>
-        /// <param name="user">User name</param>
+        /// <param name="username">User name</param>
         /// <returns></returns>
-        public SystemCodeWithCollection<List<Shelf>> GetAllShelvesByUser(string user)
+        public SystemCodeWithCollection<List<Shelf>> GetAllShelvesByUser(string username)
         {
             SystemCodeWithCollection<List<Shelf>> output = new SystemCodeWithCollection<List<Shelf>>();
             output.GenericCollection = new List<Shelf>();
@@ -255,7 +296,7 @@ namespace AutoBuildApp.DataAccess
 
             try
             {
-                IsNotNullOrEmpty(user);
+                IsNotNullOrEmpty(username);
             }
             catch (ArgumentNullException)
             {
@@ -276,13 +317,15 @@ namespace AutoBuildApp.DataAccess
                         command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
                         command.CommandType = CommandType.Text;
                         command.CommandText = _getAllShelvesByUserQuery;
-                        
+                        command.Parameters.Add(new SqlParameter("@USERNAME", username));
+
                         // Add parameter for userID from username.
 
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {
+                                SortedDictionary<int, Component> toShelfList = new SortedDictionary<int, Component>();
                                 string currentShelf = (string)reader[ShelfTableCollumns.SHELF_NAME];
                                 Shelf shelf = new Shelf();
 
@@ -299,9 +342,14 @@ namespace AutoBuildApp.DataAccess
                                     PopulateComponent(component, reader);
 
                                     int itemIndex = (int) reader[SaveProductTableCollumns.SAVED_PRODUCT_INDEX];
-                                    shelf.ComponentList.Insert(itemIndex , component);
+                                    toShelfList.Add(itemIndex , component);
 
                                     hasMore = reader.Read();
+                                }
+
+                                foreach(int value in toShelfList.Keys)
+                                {
+                                    shelf.ComponentList.Add(toShelfList[value]);
                                 }
 
                                 shelves.Add(shelf);
@@ -420,7 +468,7 @@ namespace AutoBuildApp.DataAccess
                         command.Connection = connection;
                         command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
                         command.CommandType = CommandType.Text;
-                        command.CommandText = _getProductByModel;
+                        //command.CommandText = _getProductByModel;
 
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
@@ -480,8 +528,7 @@ namespace AutoBuildApp.DataAccess
             // TODO
             switch (component.ProductType)
             {
-                case ProductType.CPU:
-                    
+                case ProductType.CPU: 
                     break;
                 case ProductType.Case:
                     break;

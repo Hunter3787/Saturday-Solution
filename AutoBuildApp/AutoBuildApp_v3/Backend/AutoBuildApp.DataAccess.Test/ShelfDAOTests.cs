@@ -234,7 +234,7 @@ namespace AutoBuildApp.DataAccess.Test
             // Arrange
             var expected = new SystemCodeWithCollection<List<Shelf>>();
             ShelfDAO shelfDAO = new ShelfDAO(_conString);
-            var username = "Zeinab";
+            var username = "Zeina";
 
             List<Shelf> shelves = new List<Shelf>()
             {
@@ -259,6 +259,13 @@ namespace AutoBuildApp.DataAccess.Test
                             Quantity = 2,
                             ProductType = ProductType.CPU,
                             ModelNumber = "100-100000063WOF",
+                            ManufacturerName = "AMD"
+                        },
+                        new Component()
+                        {
+                            Quantity = 1,
+                            ProductType = ProductType.CPU,
+                            ModelNumber = "100-100000071BOX",
                             ManufacturerName = "AMD"
                         }
                     }
@@ -322,6 +329,56 @@ namespace AutoBuildApp.DataAccess.Test
             Assert.AreEqual(expectedShelf, actualShelf);
         }
 
+        [TestMethod]
+        public void ShelfDAO_InsertShelf_ReturnTrueAndSuccessMessage()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+
+        }
+
+        [TestMethod]
+        public void ShelfDAO_()
+        {
+
+        }
+
+        [TestMethod]
+        public void ShelfDAO_UpdateShelf_ReturnTrueAndSuccessMessage()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+
+        }
+
+
+        [TestMethod]
+        public void ShelfDAO_AddComponent_ReturnTrueAndSuccessMessage()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+
+        }
+
+        [TestMethod]
+        public void ShelfDAO_RemoveComponent_ReturnTrueAndSuccessMessage()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+
+        }
 
     }
 }
