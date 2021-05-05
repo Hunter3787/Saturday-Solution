@@ -27,22 +27,6 @@ namespace AutoBuildApp.Api.Controllers
     [ApiController]
     public class VendorLinkingController : ControllerBase
     {
-<<<<<<< HEAD
-        private ClaimsFactory _claimsFactory = new ConcreteClaimsFactory();
-        private IClaims _vendorClaims;
-
-        ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
-
-        private VendorLinkingManager _vendorLinkingManager = new VendorLinkingManager(ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
-
-        public VendorLinkingController()
-        {
-            _vendorClaims = _claimsFactory.GetClaims(RoleEnumType.VendorRole);
-        }
-        // Initializes the DAO that will be used for review ratings.
-
-=======
->>>>>>> 18b9172... implemented security + fully commented, logged, and error checked
         // This will start the logging consumer manager in the background so that logs may be sent to the DB.
         private LoggingConsumerManager _loggingConsumerManager = new LoggingConsumerManager();
         private LoggingProducerService _logger = LoggingProducerService.GetInstance;
@@ -53,8 +37,8 @@ namespace AutoBuildApp.Api.Controllers
         {
             _allowedRoles = new List<string>()
             { 
-                RoleEnumType.SYSTEM_ADMIN,
-                RoleEnumType.VENDOR_ROLE
+                RoleEnumType.SystemAdmin,
+                RoleEnumType.VendorRole
             };
 
             _vendorLinkingManager = new VendorLinkingManager(ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));

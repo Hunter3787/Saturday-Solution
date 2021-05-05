@@ -29,8 +29,8 @@ namespace AutoBuildApp.Services
             _vendorLinkingDAO = new VendorLinkingDAO(connectionString);
             _allowedRoles = new List<string>()
             {
-                RoleEnumType.SYSTEM_ADMIN,
-                RoleEnumType.VENDOR_ROLE
+                RoleEnumType.SystemAdmin,
+                RoleEnumType.VendorRole
             };
         }
 

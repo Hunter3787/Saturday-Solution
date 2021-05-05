@@ -31,8 +31,8 @@ namespace AutoBuildApp.Managers.FeatureManagers
             vendorsProducts = _vendorLinkingService.PopulateVendorsProducts().GenericObject;
             _allowedRoles = new List<string>()
             {
-                RoleEnumType.SYSTEM_ADMIN,
-                RoleEnumType.VENDOR_ROLE
+                RoleEnumType.SystemAdmin,
+                RoleEnumType.VendorRole
             };
         }
 

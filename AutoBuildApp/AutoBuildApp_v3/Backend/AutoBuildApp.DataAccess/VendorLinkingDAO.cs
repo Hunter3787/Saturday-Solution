@@ -26,8 +26,8 @@ namespace AutoBuildApp.DataAccess
             _connectionString = connectionString;
             _allowedRoles = new List<string>()
             {
-                RoleEnumType.SYSTEM_ADMIN,
-                RoleEnumType.VENDOR_ROLE
+                RoleEnumType.SystemAdmin,
+                RoleEnumType.VendorRole
             };
         }
 
