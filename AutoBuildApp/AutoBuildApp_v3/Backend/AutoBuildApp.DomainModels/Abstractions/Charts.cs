@@ -77,7 +77,7 @@ namespace AutoBuildApp.DomainModels.Abstractions
                $"XAxisTitle : { this.XAxisTitle}\n" +
                $"XScale : { this.XScale}\n" +
                $"YScale : {this.YScale}\n." +
-               $"Points: {ret}\n";
+               $"Points : {ret}\n";
         }
 
     }
