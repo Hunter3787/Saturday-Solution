@@ -332,18 +332,7 @@ headers: {
 //body: JSON.stringify(item)
 body: formData
 })
-// Display the output message to the screen
-// .then(response => {
-// if(response.ok) {
-// alert('correct');
-// }
-// else {
-// alert('error')
-// }
-// })
-// Refresh the items
 .then(await savePermission(username, permission));
-//.then(getUsers());
 }
 
 async function savePermission(username, permission) {
@@ -363,16 +352,10 @@ headers: {
 body: formData
 })
 // Display the output message to the screen
-.then(response => {
-// if(response.ok) {
-// alert('correct');
-// }
-// else {
-// alert('error')
-// }
-})
-// Refresh the items
-.then(await displayUsers());
+.then(response => response.json())
+.then(response => displayResponse(response))
+.catch(error => console.error('Unable to Authenticate.', error));
+location.reload();
 }
 
 async function deleteUser(username) {
@@ -396,14 +379,13 @@ headers: {
 body: formData
 })
 // Display the output message to the screen
-.then(response => {
-// if(response.ok) {
-// alert('correct');
-// }
-// else {
-// alert('error')
-// }
-})
-// Refresh the items
-.then(await displayUsers());
+.then(response => response.json())
+.then(response => displayResponse(response))
+.catch(error => console.error('Unable to Authenticate.', error));
+location.reload();
+}
+
+function displayResponse(id)
+{
+    alert(id);
 }

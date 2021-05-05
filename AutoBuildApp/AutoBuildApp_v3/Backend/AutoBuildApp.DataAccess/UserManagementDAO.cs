@@ -130,7 +130,7 @@ namespace AutoBuildApp.DataAccess
             return "Password WAS NOT successfully updated";
         }
 
-        public string UpdateEmailDB(string email, string updatedEmail)
+        public string UpdateEmailDB(string inputEmail, string activeEmail)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -151,10 +151,10 @@ namespace AutoBuildApp.DataAccess
                     command.CommandText = SP_UpdateEmail;
                     //Add any required parameters to the Command.Parameters collection.
                     var param = new SqlParameter[2];
-                    param[0] = new SqlParameter("@USEREMAIL", email);
-                    param[0].Value = email;
-                    param[1] = new SqlParameter("@EMAIL", updatedEmail);
-                    param[1].Value = updatedEmail;
+                    param[0] = new SqlParameter("@ACTIVEEMAIL", activeEmail);
+                    param[0].Value = activeEmail;
+                    param[1] = new SqlParameter("@INPUTEMAIL", inputEmail);
+                    param[1].Value = inputEmail;
                     // add the commands the parameters for the stored procedure
                     command.Parameters.AddRange(param);
                     #endregion
@@ -173,15 +173,15 @@ namespace AutoBuildApp.DataAccess
         }
 
 
-        public string UpdateUserNameDB(string email, string updatedUserName)
+        public string UpdateUserNameDB(string username, string activeEmail)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 Console.WriteLine($"\tRetrieveUserPermissions METHOD \n");
                 conn.Open();
                 // naming convention SP name of procudrure
-                string SP_UpdateUserName = "UpdateUserName";
-                using (SqlCommand command = new SqlCommand(SP_UpdateUserName, conn))
+                string SP_UpdateUsername = "UpdateUsername";
+                using (SqlCommand command = new SqlCommand(SP_UpdateUsername, conn))
                 {
                     command.Transaction = conn.BeginTransaction();
                     #region SQL related
@@ -191,13 +191,13 @@ namespace AutoBuildApp.DataAccess
                     // 1) Create a Command, and set its CommandType property to StoredProcedure.
                     command.CommandType = CommandType.StoredProcedure;
                     // 2) Set the CommandText to the name of the stored procedure.
-                    command.CommandText = SP_UpdateUserName;
+                    command.CommandText = SP_UpdateUsername;
                     //Add any required parameters to the Command.Parameters collection.
                     var param = new SqlParameter[2];
-                    param[0] = new SqlParameter("@USEREMAIL", email);
-                    param[0].Value = email;
-                    param[1] = new SqlParameter("@USERNAME", updatedUserName);
-                    param[1].Value = updatedUserName;
+                    param[0] = new SqlParameter("@USEREMAIL", activeEmail);
+                    param[0].Value = activeEmail;
+                    param[1] = new SqlParameter("@USERNAME", username);
+                    param[1].Value = username;
                     // add the commands the parameters for the stored procedure
                     command.Parameters.AddRange(param);
                     #endregion

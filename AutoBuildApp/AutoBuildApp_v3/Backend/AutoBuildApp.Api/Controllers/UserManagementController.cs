@@ -36,25 +36,29 @@ namespace AutoBuildApp.Api.Controllers
         }
 
         [HttpPut("email")]
-        public IActionResult UpdateEmail(string inputEmail, string email)
+        public IActionResult UpdateEmail(IFormCollection formCollection)
         {
+            var inputEmail = formCollection["inputEmail"];
+            var activeEmail = formCollection["activeEmail"];
             //inputEmail = "bobross@gmail.com";
             //string email = "ZeinabFarhat@gmail.com";
             UserManagementService userManagementService = new UserManagementService(_userManagementDAO);
             UserManagementManager userManagementManager = new UserManagementManager(userManagementService, ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
             
-            return Ok(userManagementManager.UpdateEmail(inputEmail, email));
+            return Ok(userManagementManager.UpdateEmail(inputEmail, activeEmail));
         }
 
         [HttpPut("username")]
-        public IActionResult UpdateUsername(string username, string email)
+        public IActionResult UpdateUsername(IFormCollection formCollection)
         {
+            var username = formCollection["username"];
+            var activeEmail = formCollection["activeEmail"];
             //username = "Charley";
             //string email = "ZeinabFarhat@gmail.com";
             UserManagementService userManagementService = new UserManagementService(_userManagementDAO);
             UserManagementManager userManagementManager = new UserManagementManager(userManagementService, ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
             
-            return Ok(userManagementManager.UpdateUsername(username, email));
+            return Ok(userManagementManager.UpdateUsername(username, activeEmail));
         }
 
 
