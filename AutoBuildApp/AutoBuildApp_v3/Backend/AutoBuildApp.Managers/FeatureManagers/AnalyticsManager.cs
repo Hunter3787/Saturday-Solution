@@ -6,6 +6,7 @@ using AutoBuildApp.Models;
 using AutoBuildApp.Security;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
+using System;
 using System.Collections.Generic;
 
 
@@ -121,36 +122,50 @@ namespace AutoBuildApp.Managers.FeatureManagers
         //}
 
         // TURN INTO ASYNC 
-        public void GetChartData(int GraphType)
+        public AnalyticsDataDTO GetChartData(int GraphType)
         {
             AnalyticsDataDTO dataDTO = new AnalyticsDataDTO();
-
 
             ResponseUAD responseUAD = new ResponseUAD();
             //Initial Authorization Check
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
-                var result = AuthorizationResultType.NotAuthorized.ToString();
-                return;
+                Console.WriteLine($" IF STATEMENT 1");
+  
+                  var result = AuthorizationResultType.NotAuthorized.ToString();
+                dataDTO.SuccessFlag = false;
+                dataDTO.Result = result;
+                return dataDTO;
 
             }
             responseUAD = _uadDAO.GetGraphData((DBViews)GraphType);
+            Console.WriteLine($" THE RESPONSE ANALYTICS: {responseUAD.ToString()}");
             //from dao
             if (!responseUAD.IsAuthorized)
             {
+
+                Console.WriteLine($" IF STATEMENT 2");
                 var result = AuthorizationResultType.NotAuthorized.ToString();
-                return;
-
+                dataDTO.SuccessFlag = false;
+                dataDTO.Result = result;
+                return dataDTO;
             }
 
-            if (responseUAD.ResponseBool == false || responseUAD.GetChartDatas == null)
-            {
-                return ;
-            }
-            if (responseUAD.GetChartDatas != null)
+            if (!responseUAD.ResponseBool|| responseUAD.GetChartDatas == null)
             {
 
-                Charts analyticsChart = new Charts();
+                Console.WriteLine($" IF STATEMENT 3");
+                dataDTO.SuccessFlag = responseUAD.ResponseBool;
+                dataDTO.Result = responseUAD.ResponseString;
+                return dataDTO;
+            }
+            else if(responseUAD.ResponseBool)
+            {
+
+                Console.WriteLine($" ELSE IF STATEMENT 4");
+
+
+               Charts analyticsChart = new Charts();
                 #region GRAPHS
                 analyticsChart =
                      new Charts(
@@ -162,9 +177,20 @@ namespace AutoBuildApp.Managers.FeatureManagers
                         chartType: ChartType.Bar);
                 #endregion
 
-                return;
+
+                Console.WriteLine($" THE DATA BROUGHT BACK: {analyticsChart.ToString()}");
+                dataDTO.analyticChartsRequisted = analyticsChart;
+
+                Console.WriteLine($"\nTHE DATA BROUGHT BACK PART 2: " +
+                    $"{dataDTO.ToString()}");
+
+
+                return dataDTO;
 
             }
+
+            Console.WriteLine($" OUTSIDE ");
+            return null;
 
 
 

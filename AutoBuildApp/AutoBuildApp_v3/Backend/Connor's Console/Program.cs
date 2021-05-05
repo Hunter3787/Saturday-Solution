@@ -17,7 +17,7 @@ namespace Connor_s_Console
         static void Main(string[] args)
         {
 
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("HERE Hello World!" + DateTime.Now);
             //var UserManagementService = new UserManagementService(MostPopularBuildsDAO);
             UserIdentity userId = new UserIdentity();
             userId.Name = "this is my name";
