@@ -5,7 +5,7 @@ using AutoBuildApp.Managers;
 using AutoBuildApp.DomainModels.Enumerations;
 using AutoBuildApp.DomainModels;
 using AutoBuildApp.Services;
-using AutoBuildApp.Models.Entities;
+using AutoBuildApp.DataAccess.Entities;
 
 /// <summary>
 /// References used from file: Solution Items/References.txt 

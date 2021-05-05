@@ -1,6 +1,6 @@
 ﻿using System;
-using AutoBuildApp.Models;
-using AutoBuildApp.Models.Entities;
+using AutoBuildApp.DataAccess;
+using AutoBuildApp.DataAccess.Entities;
 using AutoBuildApp.Models.Users;
 using AutoBuildApp.Services;
 using AutoBuildApp.Services.Auth_Services;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AutoBuildApp.Models.Entities
+namespace AutoBuildApp.DataAccess.Entities
 {
     /// <summary>
     /// This class represents the like entity DTO that transfers data from the service to the DAO.

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AutoBuildApp.Models
+namespace AutoBuildApp.DataAccess
 {
     public static class SqlExceptionHandler
     {

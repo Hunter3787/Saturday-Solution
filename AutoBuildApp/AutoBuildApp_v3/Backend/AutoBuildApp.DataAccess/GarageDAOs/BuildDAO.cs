@@ -6,7 +6,7 @@ using System.Collections.Generic;
 * operations with regard to Builds, such as "add", "remove", "delete".
 * @Author Nick Marshall-Eminger
 */
-namespace AutoBuildApp.Models
+namespace AutoBuildApp.DataAccess
 {
     public class BuildDAO
     {
@@ -19,10 +19,14 @@ namespace AutoBuildApp.Models
 
         public IBuild GetBuildByID(int id)
         {
+
+
+
+
             return null;
         }
 
-        public List<IBuild> GetListOfBuilds(int id)
+        public List<IBuild> GetListOfBuilds(string user)
         {
             List<IBuild> outputList = new List<IBuild>();
 
@@ -39,7 +43,7 @@ namespace AutoBuildApp.Models
             return false;
         }
 
-        public bool ModifyBuild(IBuild incoming)
+        public bool ModifyBuild(IBuild incoming, int buildID)
         {
             return false;
         }

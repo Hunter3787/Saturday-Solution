@@ -3,7 +3,7 @@ using AutoBuildApp.Security.Models;
 using System.Collections.Generic;
 
 
-namespace AutoBuildApp.Models.Entities
+namespace AutoBuildApp.DataAccess.Entities
 {
     /// <summary>
     /// the AuthDTO is responsible for sending the data to the authentication service 

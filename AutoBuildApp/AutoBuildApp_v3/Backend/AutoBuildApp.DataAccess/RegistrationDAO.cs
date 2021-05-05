@@ -9,7 +9,7 @@ using AutoBuildApp.Security.FactoryModels;
 using AutoBuildApp.Security.Interfaces;
 using Microsoft.Data.SqlClient;
 
-namespace AutoBuildApp.Models
+namespace AutoBuildApp.DataAccess
 {
     public class RegistrationDAO
     {

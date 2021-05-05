@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoBuildApp.Api.HelperFunctions;
-using AutoBuildApp.Models.Entities;
+using AutoBuildApp.DataAccess.Entities;
 using AutoBuildApp.Managers;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;

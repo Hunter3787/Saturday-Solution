@@ -1,5 +1,4 @@
 ﻿using AutoBuildApp.Api.HelperFunctions;
-using AutoBuildApp.DataAccess;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
 using AutoBuildApp.Security.Interfaces;
@@ -10,7 +9,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading;
 
-namespace AutoBuildApp.Models.Test
+namespace AutoBuildApp.DataAccess.Test
 {
     [TestClass]
     public class AnalyticsDaoTest

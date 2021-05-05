@@ -2,7 +2,7 @@
 /// References used from file: Solution Items/References.txt 
 /// [1]
 /// </summary>
-namespace AutoBuildApp.Models.Entities
+namespace AutoBuildApp.DataAccess.Entities
 {
     /// <summary>
     /// enumeration class that sets values for every star rating.

@@ -2,7 +2,7 @@
  * Global values for the Data Access Layer.
  * @Author Nick Marshall-Eminger
  */
-namespace AutoBuildApp.Models
+namespace AutoBuildApp.DataAccess
 {
     public static class TimeoutLengths
     {

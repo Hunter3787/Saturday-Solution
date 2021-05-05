@@ -1,5 +1,5 @@
-﻿using AutoBuildApp.Models;
-using AutoBuildApp.Models.Entities;
+﻿using AutoBuildApp.DataAccess;
+using AutoBuildApp.DataAccess.Entities;
 using AutoBuildApp.DomainModels;
 using AutoBuildApp.Models.Enumerations;
 using Microsoft.AspNetCore.Http;
