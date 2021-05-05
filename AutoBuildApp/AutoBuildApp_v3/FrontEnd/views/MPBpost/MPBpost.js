@@ -58,8 +58,8 @@ async function addLike() {
 
     const like = {
         postId: sessionStorage.getItem('buildId').toString(),
-        userId: dateTime.toUTCString() + ' ' + dateTime.getMilliseconds()
-        //userId: "Tommy"
+        //userId: dateTime.toUTCString() + ' ' + dateTime.getMilliseconds()
+        userId: "SERGE"
     };
 
     let customRequest = Object.assign(fetchRequest, {method: 'POST', body: JSON.stringify(like)});

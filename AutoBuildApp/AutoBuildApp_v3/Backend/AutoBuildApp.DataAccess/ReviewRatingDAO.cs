@@ -43,18 +43,17 @@ namespace AutoBuildApp.DataAccess
                 // Uses the var command and will only use the command within this block.
                 using (var command = new SqlCommand())
                 {
+                    string SP_InsertReview = "InsertReview";
                     command.Transaction = conn.BeginTransaction(); // begins the transaction to the database.
                     command.Connection = conn; // sets the connection of the command equal to the connection that has already been starte in the outer using block.
                     command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds; // automatically times out the connection after 60 seconds.
-                    command.CommandType = CommandType.Text; // sets the command type to command text, allowing use of string 'parametrized' queries.
+                    command.CommandType = CommandType.StoredProcedure; // sets the command type to command text, allowing use of string 'parametrized' queries.
 
                     // Stored the query that will be used for insertion. This is an insertion statement.
-                    command.CommandText =
-                        "INSERT INTO reviews(buildId, username, message, star, filepath, datetime)" +
-                        "SELECT @buildId, @username, @message, @starRating, @filePath, @dateTime";
+                    command.CommandText = SP_InsertReview;
 
                     var parameters = new SqlParameter[6]; // initialize 5 parameters to be read through incrementally.
-                    parameters[0] = new SqlParameter("@buildId", reviewRatingEntity.BuildId); // string build post Id.
+                    parameters[0] = new SqlParameter("@postId", reviewRatingEntity.BuildId); // string build post Id.
                     parameters[1] = new SqlParameter("@username", reviewRatingEntity.Username); // string username
                     parameters[2] = new SqlParameter("@message", reviewRatingEntity.Message); // string message.
                     parameters[3] = new SqlParameter("@starRating", reviewRatingEntity.StarRatingValue); // integer star rating value.
@@ -259,10 +258,10 @@ namespace AutoBuildApp.DataAccess
 
                     // Stored the query that will be used for retrieval of all reviews.
                     command.CommandText =
-                        "SELECT * from reviews WHERE buildId = @buildId ORDER BY dateTime DESC;";
+                        "SELECT * from ReviewsView WHERE postId = @postId ORDER BY dateTime DESC;";
 
                     var parameters = new SqlParameter[1]; // parameter that will be sent through the query to identify a review.
-                    parameters[0] = new SqlParameter("@buildId", buildId); // string ID
+                    parameters[0] = new SqlParameter("@postId", buildId); // string ID
 
                     // This will add the range of parameters to the parameters that will be used in the query.
                     command.Parameters.AddRange(parameters);
@@ -275,11 +274,11 @@ namespace AutoBuildApp.DataAccess
                         {
                             var reviewRatingEntity = new ReviewRatingEntity(); // create a new object for each while loop.
                             reviewRatingEntity.EntityId = reader["entityId"].ToString(); // store the DB Id as a string in entityId.
-                            reviewRatingEntity.BuildId = reader["buildId"].ToString(); // gets the build id from the DB.
+                            reviewRatingEntity.BuildId = reader["postId"].ToString(); // gets the build id from the DB.
                             reviewRatingEntity.Username = (string)reader["username"]; // store the DB username as a string in Username.
                             reviewRatingEntity.Message = (string)reader["message"]; // store the DB message as a string in Message.
                             reviewRatingEntity.StarRatingValue = (int)reader["star"]; // store the star value int as an int in StarRatingValue.
-                            reviewRatingEntity.ReviewImagePath = (string)reader["filepath"];
+                            reviewRatingEntity.ReviewImagePath = (string)reader["ReviewImagePath"];
                             reviewRatingEntity.DateTime = (string)reader["datetime"];
 
                             reviewRatingEntityList.Add(reviewRatingEntity); // adds the entity object, with retrieved data to the list.
@@ -475,15 +474,15 @@ namespace AutoBuildApp.DataAccess
 
                     // Stored the query that will be used to edit a review WHERE the ids match and replacing values via the SET command.
                     command.CommandText =
-                        "UPDATE reviews " +
-                        "SET star=@v0, message=@v1, filepath=@v2 " +
-                        "WHERE entityId = @v3";
+                        "UPDATE ReviewsView " +
+                        "SET star=@star, message=@message, ReviewImagePath=@ReviewImagePath " +
+                        "WHERE entityId = @entityId";
 
                     var parameters = new SqlParameter[4]; // initialize four parameters to be sent through.
-                    parameters[0] = new SqlParameter("@v0", reviewRatingEntity.StarRatingValue); // send the star value to be replaced.
-                    parameters[1] = new SqlParameter("@v1", reviewRatingEntity.Message); // send the message that will be used to replace.
-                    parameters[2] = new SqlParameter("@v2", reviewRatingEntity.ReviewImagePath);
-                    parameters[3] = new SqlParameter("@v3", reviewRatingEntity.EntityId);
+                    parameters[0] = new SqlParameter("@star", reviewRatingEntity.StarRatingValue); // send the star value to be replaced.
+                    parameters[1] = new SqlParameter("@message", reviewRatingEntity.Message); // send the message that will be used to replace.
+                    parameters[2] = new SqlParameter("@ReviewImagePath", reviewRatingEntity.ReviewImagePath);
+                    parameters[3] = new SqlParameter("@entityId", reviewRatingEntity.EntityId);
 
                     // This will add the range of parameters to the parameters that will be used in the query.
                     command.Parameters.AddRange(parameters);

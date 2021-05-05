@@ -119,7 +119,7 @@ namespace AutoBuildApp.Managers
 
             buildPost.LikeIncrementor = 0; // A new post should have a start of 0 likes. This ensures that.
 
-            buildPost.DateTime = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF"); // sets the current date time to this variable.
+            buildPost.DateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // sets the current date time to this variable.
 
             // async call to save an image to a filepath.
             buildPost.BuildImagePath = await _mostPopularBuildsService.UploadImage(buildPost.Username, buildPost.Image);
