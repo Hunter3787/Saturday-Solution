@@ -9,6 +9,9 @@ namespace AutoBuildApp.Models.Enumerations
         Success,
         DatabaseTimeout,
         DuplicateValue,
-        DefaultError
+        DefaultError,
+        ArguementNull,
+        FailedParse,
+        ProductCreationFailed,
     }
 }
