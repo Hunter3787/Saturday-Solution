@@ -5,8 +5,8 @@ using System.Text;
 
 namespace AutoBuildApp.Models.DataTransferObjects
 {
-    public class CollectionCommonResponse<T> : CommonResponse
+    public class CommonResponseWithObject<T> : CommonResponse where T : new()
     {
-        public T GenericCollection { get; set; }
+        public T GenericObject { get; set; } = new T();
     }
 }

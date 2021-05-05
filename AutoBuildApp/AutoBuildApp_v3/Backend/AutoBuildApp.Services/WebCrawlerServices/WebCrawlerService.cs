@@ -31,8 +31,9 @@ namespace AutoBuildApp.Services.WebCrawlerServices
         private const int NUMBER_OF_PAGES_TO_CRAWL = 1;
         private LaunchOptions options;
 
-        private ConcurrentBag<string> vendors = new ConcurrentBag<string>();
-        private ConcurrentBag<string> modelNumbers = new ConcurrentBag<string>();
+        private ConcurrentDictionary<string, byte> vendors;
+        private ConcurrentDictionary<string, byte> modelNumbers;
+        private ConcurrentDictionary<string, ConcurrentDictionary<string, byte>> vendorsProducts = new ConcurrentDictionary<string, ConcurrentDictionary<string, byte>>();
         private NavigationOptions navigationOptions = new NavigationOptions
         {
             WaitUntil = new[]
@@ -54,6 +55,9 @@ namespace AutoBuildApp.Services.WebCrawlerServices
         public WebCrawlerService(string connectionString)
         {
             this.webCrawlerDAO = new WebCrawlerDAO(connectionString);
+            vendors = webCrawlerDAO.GetAllVendors();
+            modelNumbers = webCrawlerDAO.GetAllModelNumbers();
+            vendorsProducts = webCrawlerDAO.GetAllVendorsProducts();
             //allProxies = AsyncContext.Run(() => getAllProxiesAsync());
             //currentProxy = allProxies[0];
             currentProxy = new Proxy("208.80.28.208", 8080);
@@ -62,7 +66,8 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             {
                 Headless = true,
                 IgnoreHTTPSErrors = true,
-                ExecutablePath = @"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", // added per danny
+                //ExecutablePath = @"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", // added per danny
+                ExecutablePath = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
                 Args = new[] {
                         //$"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}", // ganna take a while = dannu
                         //"--proxy-server=23.251.138.105:8080",
@@ -229,10 +234,9 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         Console.WriteLine("GOOD PROXY " + ": " + currentProxy.IPAddress + " - " + currentProxy.Port);
 
                         Console.WriteLine(url);
+
                         var specsKeys = await page.EvaluateExpressionAsync(specsKeysQuerySelector);
-                        Console.Write("specsKeys\t");
                         var specsVals = await page.EvaluateExpressionAsync(specsValuesQuerySelector);
-                        Console.Write("specsValues\t");
 
                         if (specsKeys.Count() == 0)
                         {
@@ -242,30 +246,22 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                             browser = await Puppeteer.LaunchAsync(options);
                             continue;
                         }
-                        var imageUrl = await page.EvaluateExpressionAsync(imageUrlQuerySelector);
-                        Console.Write("imageUrl\t");
-                        var title = await page.EvaluateExpressionAsync(titleQuerySelector);
-                        Console.Write("title\t");
-
-                        var price = await page.EvaluateExpressionAsync(priceQuerySelector);
-                        Console.Write("price\t");
-                        string priceString = (price == null) || String.IsNullOrEmpty(price.ToString()) ? null : price.ToString();
-
 
                         Dictionary<string, string> specsDictionary = new Dictionary<string, string>();
                         int keyCount = specsKeys.Count();
                         int modelNumberIndex = 0;
                         int brandIndex = 0;
+                        int seriesIndex = 0;
                         for (int i = 0; i < keyCount; i++)
                         {
                             string key = specsKeys.ElementAt(i).ToString();
                             string value = specsVals.ElementAt(i).ToString();
                             // assign series first in case there is no model number.
                             //  if it does have a model number, it will just get overridden.
-                            //if (key.ToLower().Contains("series"))
-                            //{
-                            //    modelNumberIndex = i;
-                            //}
+                            if (key.ToLower().Contains("series"))
+                            {
+                                seriesIndex = i;
+                            }
                             if (key.ToLower().Contains("model"))
                             {
                                 modelNumberIndex = i;
@@ -279,6 +275,28 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                                 specsDictionary.Add(key, value);
                             }
                         }
+
+                        // If a product's specs didn't contain 'model', we use the index of 'series'
+                        if (modelNumberIndex == 0)
+                        {
+                            modelNumberIndex = seriesIndex;
+                        }
+                        string modelNumber = specsVals.ElementAt(modelNumberIndex).ToString();
+
+                        if (modelNumbers.ContainsKey(modelNumber))
+                        {
+                            Console.WriteLine("BADDDDD");
+                            return;
+                        }
+
+                        var imageUrl = await page.EvaluateExpressionAsync(imageUrlQuerySelector);
+                        Console.Write("imageUrl\t");
+                        var title = await page.EvaluateExpressionAsync(titleQuerySelector);
+                        Console.Write("title\t");
+
+                        var price = await page.EvaluateExpressionAsync(priceQuerySelector);
+                        Console.Write("price\t");
+                        string priceString = (price == null) || String.IsNullOrEmpty(price.ToString()) ? null : price.ToString();
 
                         // click ratings
                         //new egg
@@ -346,10 +364,6 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         var individualRatings = await page.EvaluateExpressionAsync("Array.from(document.querySelectorAll('.comments-title .rating')).map(a=>a.classList.value)");
                         Console.Write("individualRatings\t");
 
-
-
-
-
                         List<Review> reviews = null;
                         int reviewCount = reviewerNames.Count();
                         if(reviewCount > 0)
@@ -361,7 +375,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                             reviews.Add(new Review(reviewerNames.ElementAt(i).ToString(), getRatingFromString(individualRatings.ElementAt(i).ToString()), reviewContent.ElementAt(i).ToString(), reviewerDates.ElementAt(i).ToString()));
                         }
                         bool availability = price != null;
-                        string modelNumber = specsVals.ElementAt(modelNumberIndex).ToString();
+
                         string brand = specsVals.ElementAt(brandIndex).ToString();
                         companyName = companyName.ToLower();
                         Models.WebCrawler.Product product = new Models.WebCrawler.Product(imageUrl.ToString(), availability, companyName, url, modelNumber, title.ToString(), productType,
@@ -378,22 +392,72 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         //}
 
 
-                        bool validProduct = webCrawlerDAO.PostProductToDatabase(product);
-                        if (validProduct)
+                        // check the model number cache to see if the model number already exists
+                        if (!modelNumbers.ContainsKey(product.ModelNumber))
                         {
-                            webCrawlerDAO.PostSpecsOfProductsToDatabase(product);
+                            // if the model number doesn't exist yet, try to add it to the database
+                            if (webCrawlerDAO.PostProductToDatabase(product))
+                            {
+                                // if it successfully adds to the database, update the cache and post the specs
+                                modelNumbers.TryAdd(product.ModelNumber, 0);
+                                webCrawlerDAO.PostSpecsOfProductsToDatabase(product);
+                            }
+                            else
+                            {
+                                Console.WriteLine("1) couldn't add product to database");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("2) already contain model number");
+                        }
+
+                        // check the vendor cache to see if the vendor already exists
+                        if(!vendors.ContainsKey(companyName)) {
+
+                            // if the vendor doesn't exist yet, add it to the database
+                            if (webCrawlerDAO.AddVendor(companyName))
+                            {
+                                // it it successfully adds to the database, update the cache
+                                vendors.TryAdd(companyName, 0);
+                            }
+                            else
+                            {
+                                Console.WriteLine("3) Couldn't add vendor to database");
+                            }
+                        }
+
+                        // check the vendorProducts cache to see if the company exists in the cache 
+                        if(!vendorsProducts.ContainsKey(companyName))
+                        {
+                            // if it doesn't exist yet, add the company and an initialized concurrent dictionary
+                            vendorsProducts.TryAdd(companyName, new ConcurrentDictionary<string, byte>());
+                        }
+
+                        // check the vendorProducts cache to see if the vendor has the model number
+                        if (!vendorsProducts[companyName].ContainsKey(product.ModelNumber))
+                        {
+                            // if the vendor doesn't have the model number, we try to add it to the database
+                            if(webCrawlerDAO.PostToVendorProductsTable(product))
+                            {
+                                // if it successfully adds to the database, update the cache
+                                vendorsProducts[companyName].TryAdd(product.ModelNumber, 0);
+                            }
+                            // if the vendor doesn't have the model number, we post the reviews for this product to the database
                             if (reviewCount > 0)
                             {
                                 webCrawlerDAO.PostToVendorProductReviewsTable(product);
                             }
+                            else
+                            {
+                                Console.WriteLine("4) No reviews on this one");
+                            }
                         }
+                        else
+                        {
+                            Console.WriteLine($"5) {companyName} already contains model number");
 
-                        if(!vendors.Contains(companyName)) {
-                            webCrawlerDAO.AddVendor(companyName);
-                            vendors.Add(companyName);
                         }
-                        webCrawlerDAO.PostToVendorProductsTable(product);
-
                     }
                     validIP = true;
                 }
