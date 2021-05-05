@@ -238,7 +238,7 @@ async function addItem() {
     }
   })
   // Refresh the items
-  .then(await getItemsByFilter());
+  .then(getItemsByFilter());
 }
 
 // Submits the edit item to the back end
@@ -272,7 +272,7 @@ async function submitEditItem(modelNumber, newName, photo, newImageUrl,
     }
  })
   // Refresh the items
- .then(await getItemsByFilter());
+ .then(getItemsByFilter());
   
 }
 
@@ -325,7 +325,7 @@ async function submitDeleteItem(modelNumber, newDivRow) {
 // var refreshData = setInterval(looping, 3000);
 
 // Gets the items by a specified list of filters
-async function getItemsByFilter() {
+ function getItemsByFilter() {
   var filtersQueryParameter = "?filtersString=";
   var priceQueryParameter = "&order=";
   var checkboxes = document.querySelectorAll('input[type=checkbox]');
@@ -347,10 +347,12 @@ async function getItemsByFilter() {
     }
   })
 
-  await fetch(uri + filtersQueryParameter + priceQueryParameter, fetchRequest)
+  fetch(uri + filtersQueryParameter + priceQueryParameter, fetchRequest)
   .then(response => response.json())
   .then(getAllModelNumbers())
   .then(async data => await displayItemsFilter(data));
+
+  console.log('hey');
 }
 
 // Display all items with the set of filters

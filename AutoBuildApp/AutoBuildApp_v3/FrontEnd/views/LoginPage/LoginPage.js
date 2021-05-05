@@ -8,12 +8,11 @@ const fetchRequest = {
 headers: {
   'Accept': 'application/json',
   'Content-Type': 'application/json',
-  //'Access-Control-Allow-Origin' : '*',
   // 'Authorization': 'Bearer ' + ' '
 } };
 
-
-function getItem() {
+let JWT ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiLCJzdWIiOiJBdXRvYnVpbGQgVXNlciIsImF1ZCI6IlVTIiwiaWF0IjoxNjIwMDMyMTM4LCJleHAiOjE2MjA2MzY5MzgsIm5iZiI6MTYyMDYzNjkzOCwiVXNlcm5hbWUiOiJraW5nUGVuaTM5MyIsIlVzZXJDTGFpbXMiOlt7IlBlcm1pc3Npb24iOiJBTEwiLCJzY29wZU9mUGVybWlzc2lvbnMiOiJBTEwifV19.-en1y6qb2I-LfMbXPLCEQaiU3VAF2xaSDmbGS0Dba3g'
+function  getItem(){
 
   const fetchRequest = {
     method: 'GET',
@@ -21,11 +20,10 @@ function getItem() {
   headers: {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
-    //'Access-Control-Allow-Origin' : '*',
-    // 'Authorization': 'Bearer ' + ' '
+     'Authorization': 'Bearer ' + JWT
   } };
   let customRequest = Object.assign( fetchRequest,{ method: 'GET' });
-  fetch(url, customRequest) // fetches the default URI
+   fetch(url, customRequest) // fetches the default URI
       .then(response => response.json()) // Will receive a response from the default response.json.
       .then(response => displayResponse(response)) // will call the display items function.
       .then(response=> alert(response))
@@ -49,13 +47,13 @@ Reg.addEventListener("submit", () =>  checkCredentials()); // lambda function fo
 let customRequest = Object.assign( 
   fetchRequest,{ method: 'POST' , body : JSON.stringify(UserCred) });
 
-     fetch(url, customRequest)
+   fetch(url, customRequest)
     .then(response => response.json())
     .then(response => displayResponse(response))
+    .then(response =>  getItem())
     .catch(error => console.error('Unable to Authenticate.', error));
 
   
-    getItem();
 }
 
 // add notes

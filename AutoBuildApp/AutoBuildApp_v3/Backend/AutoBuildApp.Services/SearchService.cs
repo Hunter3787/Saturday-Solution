@@ -1,4 +1,4 @@
-﻿using AutoBuildApp.Models.DTO;
+﻿using AutoBuildApp.DataAccess.DataTransferObjects;
 using System.Collections.Generic;
 using AutoBuildApp.Managers;
 

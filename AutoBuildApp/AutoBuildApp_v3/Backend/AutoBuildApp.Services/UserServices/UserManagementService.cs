@@ -1,6 +1,6 @@
 ﻿using AutoBuildApp.DataAccess;
 using AutoBuildApp.Models.Users;
-using AutoBuildApp.Models.DTO;
+using AutoBuildApp.Models.DataTransferObjects;
 using System;
 using AutoBuildApp.DomainModels;
 using System.Collections.Generic;

@@ -3,7 +3,8 @@ namespace AutoBuildApp.Api.Controllers
 {
     public static class ControllerGlobals
     {
-        public const string CONNECTION_CONFIG_NAME = "My Name";
-        public const string CONNECTION_ADMIN_CREDENTIALS = "DBAdmin";
+        public const string LOCALHOST_CONNECTION = "MyConnection";
+        public const string ADMIN_CREDENTIALS_CONNECTION = "DBAdmin";
+        public const string DOCKER_CONNECTION = "DockerConnection";
     }
 }

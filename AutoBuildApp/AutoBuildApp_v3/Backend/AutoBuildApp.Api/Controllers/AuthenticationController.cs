@@ -46,8 +46,7 @@ namespace AutoBuildApp.Api.Controllers
         #region variables for logging
 
         // Creates the local instance for the logger
-        private LoggingProducerService _logger 
-            = LoggingProducerService.GetInstance;
+        // private LoggingProducerService _logger = LoggingProducerService.GetInstance;
 
 
         #endregion
@@ -101,7 +100,7 @@ namespace AutoBuildApp.Api.Controllers
             ///     true if a cookie must not be accessible by client-side script; otherwise, false.
             ///     
 
-            _logger.LogInformation("Authentication attempt n");
+            //_logger.LogInformation("Authentication attempt n");
             //HttpContext.Response.Cookies.Append("access_token", JWTToken, new CookieOptions { HttpOnly = true });
             return Ok( JWTToken);
         }
