@@ -5,26 +5,26 @@ using System.Text;
 
 namespace AutoBuildApp.DomainModels
 {
-    public class UadDTO
+    public class AnalyticsDataDTO
     {
         public bool SuccessFlag { get; set; }
-        public string result { get; set; }
+        public string Result { get; set; }
 
-        public IList<Charts> analyticChartsRequisted { get; set; }
+        public Charts analyticChartsRequisted { get; set; }
 
 
-        public UadDTO()
+        public AnalyticsDataDTO()
         {
             SuccessFlag = false;
-            result = " ";
-            analyticChartsRequisted = new List<Charts>();
+            Result = "";
+            analyticChartsRequisted = new Charts();
         }
 
 
         public override string ToString()
         {
             string ret = "";
-            foreach (var elem in analyticChartsRequisted)
+            foreach (var elem in analyticChartsRequisted.ChartDatas)
             {
                 ret += $" elem. \n: {elem.ToString()} ";
 

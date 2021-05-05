@@ -31,7 +31,7 @@ namespace AutoBuildApp.Api.Controllers
         {
             
             _allowedRoles = new List<string>()
-            { RoleEnumType.BASIC_ROLE,RoleEnumType.SYSTEM_ADMIN };
+            { RoleEnumType.BasicRole, RoleEnumType.SystemAdmin};
 
 
         }
@@ -40,6 +40,13 @@ namespace AutoBuildApp.Api.Controllers
         {
 
             ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            foreach (var clm in _threadPrinciple.Claims)
+            {
+                Console.WriteLine(
+                    $" claim type: { clm.Type } " +
+                    $"claim value: {clm.Value} \n");
+            }
+
             Console.WriteLine("we are here A");
             if (!_threadPrinciple.Identity.IsAuthenticated)
             {

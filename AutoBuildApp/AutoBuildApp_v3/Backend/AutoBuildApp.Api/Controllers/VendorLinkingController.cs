@@ -36,7 +36,7 @@ namespace AutoBuildApp.Api.Controllers
 
         public VendorLinkingController()
         {
-            _vendorClaims = _claimsFactory.GetClaims(RoleEnumType.VENDOR_ROLE);
+            _vendorClaims = _claimsFactory.GetClaims(RoleEnumType.VendorRole);
         }
         // Initializes the DAO that will be used for review ratings.
 

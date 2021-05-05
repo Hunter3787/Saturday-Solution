@@ -34,16 +34,16 @@ namespace AutoBuildApp.Security.FactoryModels
 
         public override IClaims GetClaims(string type)
         {
-            type = type.ToUpper();
+            //type = type.ToUpper();
             switch (type)
             {
-                case "BASIC_ROLE": return new Basic();
-                case "SYSTEM_ADMIN": return new SysAdmin();
-                case "DELEGATE_ADMIN": return new DelAdmin();
-                case "VENDOR_ROLE": return new Vendor();
-                case "UNREGISTERED_ROLE": return new Unregistered(); // set to the default 
+                case "BasicRole": return new Basic();
+                case "SystemAdmin": return new SysAdmin();
+                case "DelegateAdmin": return new DelAdmin();
+                case "VendorRole": return new Vendor();
+                case "UnregisteredRole": return new Unregistered(); // set to the default 
                 //case "DEVELOPER": throw new NotImplementedException();
-                case "LOCKED": return new Locked();
+                case "Locked": return new Locked();
                 default: return new Unregistered();
             }
         }

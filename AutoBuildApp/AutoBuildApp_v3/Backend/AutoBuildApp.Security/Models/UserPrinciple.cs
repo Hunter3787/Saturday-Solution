@@ -58,7 +58,7 @@ namespace AutoBuildApp.Security.Models
         ///  NOT BEING UTILIZED BUT PART 
         ///  OF THE INTERFACE
         /// </summary>
-        /// <param name="role"></param>
+        /// <param _name="role"></param>
         /// <returns></returns>
         public bool IsInRole(string role)
         {
@@ -71,7 +71,7 @@ namespace AutoBuildApp.Security.Models
             string ret = "";
             foreach (Claims claims in this.Permissions)
             {
-                ret += $" {claims.Permission}, {claims.scopeOfPermissions }\n";
+                ret += $" {claims.Permission}, {claims.ScopeOfPermissions }\n";
 
             }
             return ret;
@@ -83,7 +83,7 @@ namespace AutoBuildApp.Security.Models
             string ret = "";
             foreach (Claims claims in this.Permissions)
             {
-                ret += $" {claims.Permission}, {claims.scopeOfPermissions } \n";
+                ret += $" {claims.Permission}, {claims.ScopeOfPermissions } \n";
 
             }
             return ret;

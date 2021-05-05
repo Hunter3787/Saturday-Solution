@@ -12,7 +12,8 @@ namespace AutoBuildApp.Security.Models
     /// /https://andrewlock.net/introduction-to-authentication-with-asp-net-core/
     /// 
     //Identity Object An Identity object is basically a user account
-    public class UserIdentity : IIdentity // IIdentity exposes three simple properties:                          // AuthenticationType, IsAuthenticated, and Name.
+    public class UserIdentity : IIdentity // IIdentity exposes three simple properties:                          
+        // AuthenticationType, IsAuthenticated, and Name.
     {
 
         public UserIdentity()
@@ -22,18 +23,18 @@ namespace AutoBuildApp.Security.Models
             this.Name = "AutoBuild User";
         }
 
-        private string authenticationType = "AutoBuild JWT";
+        private string _authenticationType = "AutoBuild JWT";
 
         /// <summary>
         /// Authentication type in ASP.NET is more
         /// like cookies and bearer or google...
         /// </summary>
         public string AuthenticationType {
-            get { return this.authenticationType; }
-            set { this.authenticationType = value; } 
+            get { return this._authenticationType; }
+            set { this._authenticationType = value; } 
         }
 
-        private bool isAuthenticated = false;
+        private bool _isAuthenticated = false;
         /// <summary>
         /// the property IsAuthenticated indicates whether 
         /// an identity is authenticated or not.
@@ -50,14 +51,14 @@ namespace AutoBuildApp.Security.Models
         ///  
         /// </summary>
         public bool IsAuthenticated {
-            get { return this.isAuthenticated; }
-            set { isAuthenticated = value; } }
+            get { return this._isAuthenticated; }
+            set { _isAuthenticated = value; } }
 
         // the i identity has issues with read only so OVERRIDE IT
-        private string name = "AutoBuild User";
+        private string _name = "AutoBuild User";
         public string Name {
-            get { return this.name; }
-            set { name = value; } }
+            get { return this._name; }
+            set { _name = value; } }
 
      
 

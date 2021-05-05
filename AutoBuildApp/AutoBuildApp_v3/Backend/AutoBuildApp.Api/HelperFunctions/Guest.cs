@@ -24,7 +24,7 @@ namespace AutoBuildApp.Api.HelperFunctions
 
 
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
-            IClaims unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
+            IClaims unregistered = claimsFactory.GetClaims(RoleEnumType.UnregisteredRole);
             /// NOTE: passed in the claims only to the claimsIdentity and not userIdentity 
             /// as "AutoBuild User" since that will trigger the read only value of is authenticated to 
             /// be True, when in fact the user is not

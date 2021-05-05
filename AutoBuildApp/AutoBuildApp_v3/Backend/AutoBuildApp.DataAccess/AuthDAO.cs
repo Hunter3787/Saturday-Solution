@@ -186,7 +186,7 @@ namespace AutoBuildApp.DataAccess
                                 return _CRAuth; //return  
                             }
 
-                            //READ AND STORE ALL THE ORDINALS YOU NEED
+                            //READ AND STORE All THE ORDINALS YOU NEED
                             int username = reader.GetOrdinal("username");
                             int permissions = reader.GetOrdinal("permission");
                             int scope = reader.GetOrdinal("scopeOfPermission");
@@ -202,7 +202,7 @@ namespace AutoBuildApp.DataAccess
                                 /// better to use ordinal names -> no matter where the column just specifiy thr column 
                                 _CRAuth.AuthUserDTO.UserName = (string)reader[username];
                                 _userClaims.Permission = (string)reader[permissions];
-                                _userClaims.scopeOfPermissions = (string)reader[scope];
+                                _userClaims.ScopeOfPermissions = (string)reader[scope];
                                 _CRAuth.AuthUserDTO.Claims.Add(_userClaims);
                             }
                             // auto reader close

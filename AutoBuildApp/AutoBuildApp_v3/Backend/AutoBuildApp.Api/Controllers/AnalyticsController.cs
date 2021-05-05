@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Threading;
+using System.Collections.Generic;
+using System;
 
 namespace AutoBuildApp.Api.Controllers
 {
@@ -27,21 +29,20 @@ namespace AutoBuildApp.Api.Controllers
     {
         ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
-        private ClaimsFactory _claimsFactory = new ConcreteClaimsFactory();
-        IClaims _admin;
-
         // Creates the local instance for the logger
-       // private LoggingProducerService _logger = LoggingProducerService.GetInstance;
+        // private LoggingProducerService _logger = LoggingProducerService.GetInstance;
 
+        // instantiate the consumer. 
 
-        private AnalyticsManager _uadManager;
-
+        private AnalyticsManager _analyticsManager;
+        private List<string> _allowedRoles; //specify roles
         public AnalyticsController()
         {
-            /// the user analysis dashboard need admin Priveldges so check:
-            /// Step one specify the claim set required
-            /// 
-            _admin = _claimsFactory.GetClaims(RoleEnumType.SYSTEM_ADMIN);
+            #region retrieving the roles for Authorization check:
+            _allowedRoles = new List<string>()
+            { RoleEnumType.SystemAdmin };
+
+            #endregion
 
 
             #region getting the connection string and passing to the loginmanager
@@ -55,7 +56,7 @@ namespace AutoBuildApp.Api.Controllers
             #endregion
 
 
-            _uadManager = new AnalyticsManager(connection);
+            _analyticsManager = new AnalyticsManager(connection);
 
         }
 
@@ -77,22 +78,19 @@ namespace AutoBuildApp.Api.Controllers
 
             if (!_threadPrinciple.Identity.IsAuthenticated)
             {
-                // Add action logic here
                 return new StatusCodeResult(StatusCodes.Status401Unauthorized);
             }
-            if (!AuthorizationService.CheckPermissions(_admin.Claims()))
-             {
-
-
-                    // Add action logic here
-                    return new StatusCodeResult(StatusCodes.Status403Forbidden);
-              }
+            if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
+            {
+                // Add action logic here
+                return new StatusCodeResult(StatusCodes.Status403Forbidden);
+            }
             return Ok("Good to Continue");
-            
+
         }
 
         [HttpGet]
-        public IActionResult RetrieveGraphs()
+        public IActionResult RetrieveGraphs(int GraphType)
         {
 
             /// this will be put into the middleware.
@@ -104,32 +102,37 @@ namespace AutoBuildApp.Api.Controllers
             //    return new StatusCodeResult(StatusCodes.Status401Unauthorized);
             //}
 
-            if (!AuthorizationService.CheckPermissions(_admin.Claims()))
+            if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
-
-               // _logger.LogWarning("Unauthorized Access Attempted");
+                // _logger.LogWarning("Unauthorized Access Attempted");
                 return new StatusCodeResult(StatusCodes.Status403Forbidden);
             }
-            _uadManager.GetChartData(0);
-            
-            if(true)
-            {
-                if (0 == (int)AuthorizationResultType.NotAuthorized){
 
-                   // _logger.LogWarning("Unauthorized Access Attempted");
+            AnalyticsDataDTO dataDTO  = _analyticsManager.GetChartData(GraphType);
+
+            if (!dataDTO.SuccessFlag)
+            {
+
+                Console.WriteLine($" in the line 114");
+
+                if (dataDTO.Result.Equals(AuthorizationResultType.NotAuthorized.ToString()))
+                {
+                    // _logger.LogWarning("Unauthorized Access Attempted");
                     return new StatusCodeResult(StatusCodes.Status403Forbidden);
                 }
                 else
                 {
-                   // _logger.LogWarning(result.result);
+                    // _logger.LogWarning(result.result);
+                    var result = dataDTO.Result;
+                    return Ok(result);
                     return new StatusCodeResult(StatusCodes.Status400BadRequest);
                 }
             }
             // lesson: postman doesnt work with list. move on 
 
-            return Ok();
+            return Ok("all good here!" + dataDTO.analyticChartsRequisted);
 
-            
+
         }
 
     }

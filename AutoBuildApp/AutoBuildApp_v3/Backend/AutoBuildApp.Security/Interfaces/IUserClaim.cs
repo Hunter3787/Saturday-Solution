@@ -10,6 +10,6 @@ namespace AutoBuildApp.Security.Models
     public interface IUserClaim
     {
        string Permission { get; set; }
-       string scopeOfPermissions { get; set; }
+       string ScopeOfPermissions { get; set; }
     }
 }

@@ -31,7 +31,7 @@ namespace AutoBuildApp.Managers
             var _CRAuth = _authenticationService.AuthenticateUser(userCredentials);
             if (_CRAuth.isAuthenticated)
             {
-                //COMMON RESPONSE ALL THE WAYYY - WHAT I HAVE IS :  THATS BAD -
+                //COMMON RESPONSE All THE WAYYY - WHAT I HAVE IS :  THATS BAD -
                 return _CRAuth.JWTString;
                 // VONG WOULD ALWAYS OVERRIDE IT -> DONT LEAVE IT TO CHANCE !!!! FIX ITTTTT
             }
