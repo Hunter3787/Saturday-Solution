@@ -88,7 +88,7 @@ namespace AutoBuildApp.DataAccess
         }
 
 
-        public string UpdatePasswordDB(string email, string password)
+        public string UpdatePasswordDB(string password, string activeEmail)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -109,8 +109,8 @@ namespace AutoBuildApp.DataAccess
                     command.CommandText = SP_UpdatePassword;
                     //Add any required parameters to the Command.Parameters collection.
                     var param = new SqlParameter[2];
-                    param[0] = new SqlParameter("@USEREMAIL", email);
-                    param[0].Value = email;
+                    param[0] = new SqlParameter("@USEREMAIL", activeEmail);
+                    param[0].Value = activeEmail;
                     param[1] = new SqlParameter("@PASSHASH", password);
                     param[1].Value = password;
                     // add the commands the parameters for the stored procedure

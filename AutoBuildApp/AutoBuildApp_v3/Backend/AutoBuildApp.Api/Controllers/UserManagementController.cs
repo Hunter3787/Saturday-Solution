@@ -22,14 +22,17 @@ namespace AutoBuildApp.Api.Controllers
         private readonly UserManagementDAO _userManagementDAO = new UserManagementDAO(ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
 
         [HttpPut("password")]
-        public IActionResult UpdatePassword(string password, string email)
+        public IActionResult UpdatePassword(IFormCollection formCollection)
         {
+            var password = formCollection["password"];
+            var passwordCheck = formCollection["passwordCheck"];
+            var activeEmail = formCollection["activeEmail"];
             //password = "123passwordD";
             //string userEmail = "ZeinabFarhat@gmail.com";
             UserManagementService userManagementService = new UserManagementService(_userManagementDAO);
             UserManagementManager userManagementManager = new UserManagementManager(userManagementService, ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
             
-            return Ok(userManagementManager.UpdatePassword(password, email));
+            return Ok(userManagementManager.UpdatePassword(password, passwordCheck, activeEmail));
         }
 
         [HttpPut("email")]

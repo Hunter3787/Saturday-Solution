@@ -30,16 +30,16 @@ namespace AutoBuildApp.Managers
         }
 
 
-        public string UpdatePassword(string password, string userEmail)
+        public string UpdatePassword(string password, string passwordCheck, string activeEmail)
         {
             // get the current principle that is on the thread:
             ClaimsPrincipal _threadPrinciple
                 = (ClaimsPrincipal)Thread.CurrentPrincipal;
             //userEmail = _threadPrinciple.FindFirst(ClaimTypes.Email).Value;
-            if (_inputValidityManager.IsPasswordValid(password))
+            if (_inputValidityManager.IsPasswordValid(password) && _inputValidityManager.passwordCheck(password, passwordCheck))
             {
-                password = BC.HashPassword(password, BC.GenerateSalt());
-                return _userManagementService._userManagementDAO.UpdatePasswordDB(userEmail, password);
+                //password = BC.HashPassword(password, BC.GenerateSalt());
+                return _userManagementService._userManagementDAO.UpdatePasswordDB(activeEmail, password);
             }
             else
             {

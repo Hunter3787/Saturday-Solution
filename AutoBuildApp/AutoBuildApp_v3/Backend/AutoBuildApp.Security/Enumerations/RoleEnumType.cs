@@ -4,7 +4,7 @@
     {
 
         public const string SYSTEM_ADMIN = "SYSTEM_ADMIN";
-        public const string DELEGATE_ADMIN = "DELEGATE_ADMIN ";
+        public const string DELEGATE_ADMIN = "DELEGATE_ADMIN";
         public const string BASIC_ROLE = "BASIC_ROLE";
         public const string VENDOR_ROLE = "VENDOR_ROLE";
         public const string UNREGISTERED_ROLE = "UNREGISTERED_ROLE";
