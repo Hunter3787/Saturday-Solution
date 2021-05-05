@@ -37,5 +37,7 @@ namespace AutoBuildApp.DomainModels
         // The role of the user
         public string UserRole { get; set; }
 
+        public bool LockState { get; set; }
+
     }
 }

@@ -143,7 +143,7 @@ namespace AutoBuildApp.Managers
             }
         }
 
-        public string ChangeLockState(string username, string lockState)
+        public string ChangeLockState(string username, bool lockState)
         {
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
             IClaims locked = claimsFactory.GetClaims(RoleEnumType.LOCKED);
@@ -151,18 +151,18 @@ namespace AutoBuildApp.Managers
 
 
             //username = "SERGE";
-            if (_userManagementDAO.RoleCheckDB(username) == RoleEnumType.SYSTEM_ADMIN)
+            if (_userManagementDAO.RoleCheckDB(username) == RoleEnumType.SYSTEM_ADMIN && lockState == true)
             {
                 return "Error: you can't lock a system admin";
             }
             else
             {
-                if (lockState == RoleEnumType.LOCKED)
+                if (lockState == true)
                 {
                     _userManagementDAO.ChangePermissionsDB(username, null, locked.Claims());
                     return _userManagementDAO.Lock(username);
                 }
-                else if (lockState == RoleEnumType.BASIC_ROLE)
+                else if (lockState == false)
                 {
                     _userManagementDAO.ChangePermissionsDB(username, null, basic.Claims());
                     return _userManagementDAO.Unlock(username);

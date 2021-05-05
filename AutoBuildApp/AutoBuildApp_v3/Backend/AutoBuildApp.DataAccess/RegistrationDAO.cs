@@ -107,14 +107,6 @@ namespace AutoBuildApp.DataAccess
                             pair.Rows.Add(row);
                         }
 
-                        //foreach (DataRow r in pair.Rows)
-                        //{
-                        //    foreach (DataColumn c in pair.Columns)
-                        //        Console.Write("\t{0}", r[c]);
-
-                        //    Console.WriteLine("\t\t\t" + r.RowState);
-                        //}
-
                         var param = new SqlParameter[7];
                         param[0] = adapter.InsertCommand.Parameters.AddWithValue("@PERMISSIONS", pair);
                         param[1] = adapter.InsertCommand.Parameters.AddWithValue("@USERNAME", user.UserName);

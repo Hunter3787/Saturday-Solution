@@ -1,24 +1,31 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Registered Users</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="RegisteredUsersList.css">
-    </head>
-    <body>
 
-        <div class="formheader">
-            <h1 class="formtitle">Registered Users</h1>
-        </div>
+<head>
+    <meta charset="UTF-8">
+    <title>Vendor Inventory Management</title>
+    <link rel="stylesheet" href="RegisteredUsersList.css" />
 
-        <div class="userList">
-            <div class="main" id="main"></div>
-        </div>
-        
-        <script src="RegisteredUsersList.js" asp-append-version="true"></script>
-        <script type="text/javascript">getItems();</script>
-    </body>
+</head>
+
+<body onload="getUsers()">
+
+    <select class="PermissionsDropdown">
+        <option value="BASIC_ROLE">BASIC_ROLE</option>
+        <option value="SYSTEM_ADMIN">SYSTEM_ADMIN</option>
+        <option value="DELEGATE_ADMIN">DELEGATE_ADMIN</option>
+        <option value="VENDOR_ROLE">VENDOR_ROLE</option>
+        <option value="UNREGISTERED_ROLE">UNREGISTERED_ROLE</option>
+    </select>
+
+
+    <h1>Registered Users</h1>
+    <div id="listOfDivs">
+    </div>
+    <!-- <body> -->
+    <div id="button"><a href="http://127.0.0.1:5501/views/UMUser(Admin)/UMUser(Admin).html">Back to profile page</a></div>
+    <script src="RegisteredUsersList.js" asp-append-version="true"></script>
+
+</body>
+
 </html>

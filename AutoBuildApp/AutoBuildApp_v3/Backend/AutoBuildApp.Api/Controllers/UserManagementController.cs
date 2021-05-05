@@ -8,6 +8,7 @@ using AutoBuildApp.Managers;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Services.UserServices;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AutoBuildApp.Api.Controllers
@@ -21,21 +22,21 @@ namespace AutoBuildApp.Api.Controllers
         private readonly UserManagementDAO _userManagementDAO = new UserManagementDAO(ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
 
         [HttpPut("password")]
-        public IActionResult UpdatePassword(string password)
+        public IActionResult UpdatePassword(string password, string email)
         {
-            password = "123passwordD";
-            string userEmail = "ZeinabFarhat@gmail.com";
+            //password = "123passwordD";
+            //string userEmail = "ZeinabFarhat@gmail.com";
             UserManagementService userManagementService = new UserManagementService(_userManagementDAO);
             UserManagementManager userManagementManager = new UserManagementManager(userManagementService, ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
             
-            return Ok(userManagementManager.UpdatePassword(password, userEmail));
+            return Ok(userManagementManager.UpdatePassword(password, email));
         }
 
         [HttpPut("email")]
-        public IActionResult UpdateEmail(string inputEmail)
+        public IActionResult UpdateEmail(string inputEmail, string email)
         {
-            inputEmail = "bobross@gmail.com";
-            string email = "ZeinabFarhat@gmail.com";
+            //inputEmail = "bobross@gmail.com";
+            //string email = "ZeinabFarhat@gmail.com";
             UserManagementService userManagementService = new UserManagementService(_userManagementDAO);
             UserManagementManager userManagementManager = new UserManagementManager(userManagementService, ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
             
@@ -43,10 +44,10 @@ namespace AutoBuildApp.Api.Controllers
         }
 
         [HttpPut("username")]
-        public IActionResult UpdateUsername(string username)
+        public IActionResult UpdateUsername(string username, string email)
         {
-            username = "Charley";
-            string email = "ZeinabFarhat@gmail.com";
+            //username = "Charley";
+            //string email = "ZeinabFarhat@gmail.com";
             UserManagementService userManagementService = new UserManagementService(_userManagementDAO);
             UserManagementManager userManagementManager = new UserManagementManager(userManagementService, ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
             
@@ -65,23 +66,27 @@ namespace AutoBuildApp.Api.Controllers
         }
        
         [HttpPut("permission")]
-        public IActionResult UpdatePermission(string username, string role)
+        public IActionResult UpdatePermission(IFormCollection formCollection)
         {
-            Console.WriteLine("Update permissions here");
-            username = "SERGE";
+            var username = formCollection["username"];
+            var permission = (formCollection["permission"]);
+            //Console.WriteLine("Update permissions here");
+            //username = "SERGE";
             //role = RoleEnumType.SYSTEM_ADMIN;
             UserManagementService userManagementService = new UserManagementService(_userManagementDAO);
             UserManagementManager userManagementManager = new UserManagementManager(userManagementService, ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
             
-            return Ok(userManagementManager.ChangePermissions(username, role));
+            return Ok(userManagementManager.ChangePermissions(username, permission));
         }
 
         [HttpPut("lock")]
-        public IActionResult UpdateLockState(string username, string lockstate)
+        public IActionResult UpdateLockState(IFormCollection formCollection)
         {
-            Console.WriteLine("Change lock state here");
-            username = "SERGE";
-            lockstate = RoleEnumType.LOCKED;
+            var username = formCollection["username"];
+            var lockstate = Convert.ToBoolean(formCollection["lockstate"]);
+            //Console.WriteLine("Change lock state here");
+            //username = "SERGE";
+            //lockstate = false;
             UserManagementService userManagementService = new UserManagementService(_userManagementDAO);
             UserManagementManager userManagementManager = new UserManagementManager(userManagementService, ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
             
@@ -89,13 +94,14 @@ namespace AutoBuildApp.Api.Controllers
         }
 
         [HttpDelete("user")]
-        public IActionResult DeleteUser(string email)
+        public IActionResult DeleteUser(IFormCollection formCollection)
         {
-            email = "spiderman@gmail.com";
+            var username = formCollection["username"];
+            //username = "kingPeni393";
             UserManagementService userManagementService = new UserManagementService(_userManagementDAO);
             UserManagementManager userManagementManager = new UserManagementManager(userManagementService, ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
 
-            return Ok(userManagementManager.DeleteUser(email));
+            return Ok(userManagementManager.DeleteUser(username));
         }
     }
 }

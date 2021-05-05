@@ -37,5 +37,7 @@ namespace AutoBuildApp.DataAccess.Entities
 
         // The role of the user
         public string UserRole { [DAO("modifiedby", typeof(string), false)] get; set; }
+
+        public bool LockState { [DAO("LockState", typeof(bool), false)] get; set; }
     }
 }
