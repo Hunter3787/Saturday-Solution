@@ -32,7 +32,7 @@ namespace AutoBuildApp.Api.HelperFunctions
         public DemoMiddleware(RequestDelegate next)
         {
             _next = next;
-            unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
+            unregistered = claimsFactory.GetClaims(RoleEnumType.UnregisteredRole);
         }
 
         public async Task InvokeAsync(HttpContext httpContext)

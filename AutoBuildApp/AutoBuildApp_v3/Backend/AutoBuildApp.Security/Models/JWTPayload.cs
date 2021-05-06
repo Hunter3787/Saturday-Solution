@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoBuildApp.Security.Enumerations;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,52 +11,52 @@ namespace AutoBuildApp.Security.Models
     /// </summary>
     public class JWTPayload : IEquatable<JWTPayload>
     {
-        private DateTimeOffset dtoMin = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
+        private DateTimeOffset _dtoMin = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
         public JWTPayload()
         {
             this.iss = "Autobuild";
             this.sub = "Autobuild User";
             this.aud = "US";
-            this.exp = ToUnixTimestamp(dtoMin);
-            this.nbf = ToUnixTimestamp(dtoMin);
-            this.iat = ToUnixTimestamp(dtoMin);
-            this.Username = " ";
+            this.exp = ToUnixTimestamp(_dtoMin);
+            this.nbf = ToUnixTimestamp(_dtoMin);
+            this.iat = ToUnixTimestamp(_dtoMin);
+            this.Username = string.Empty;
             this.UserCLaims = new List<Claims>
-            {new Claims("Read Only","AutoBuild") };
+            {new Claims(PermissionEnumType.ReadOnly,ScopeEnumType.AutoBuild) };
         }
 
         
         //*Autubuild.com
-        public JWTPayload(string subject, string issuer, string audience,
-            string username, object expiration, object nbf, object DOBofJWTToken)
+        public JWTPayload(string Subject, string Issuer, string Audience,
+            string Username, object Expiration, object NotBeforeTime, object DOBofJWTToken)
         {
             try
             {
 
 
-                this.sub = subject; // in our context "Autobuild User"
-                this.iss = issuer; // in our context "Autobuild"
-                this.aud = audience; // in our context "US"
-                this.Username = username;
-                ///Console.WriteLine($"the type: {nbf.GetType()}");
-                ///Console.WriteLine($"the reference for datetime: {Object.ReferenceEquals(nbf.GetType(), typeof(DateTimeOffset))}");
-                ///Console.WriteLine($"the reference for long: {Object.ReferenceEquals(nbf.GetType(), typeof(System.Int64))}");
+                this.sub = Subject; // in our context "Autobuild User"
+                this.iss = Issuer; // in our context "Autobuild"
+                this.aud = Audience; // in our context "US"
+                this.Username = Username;
+                ///Console.WriteLine($"the type: {NotBeforeTime.GetType()}");
+                ///Console.WriteLine($"the reference for datetime: {Object.ReferenceEquals(NotBeforeTime.GetType(), typeof(DateTimeOffset))}");
+                ///Console.WriteLine($"the reference for long: {Object.ReferenceEquals(NotBeforeTime.GetType(), typeof(System.Int64))}");
 
-                if (Object.ReferenceEquals(nbf.GetType(), typeof(System.DateTimeOffset)) &&
+                if (Object.ReferenceEquals(NotBeforeTime.GetType(), typeof(System.DateTimeOffset)) &&
                     Object.ReferenceEquals(DOBofJWTToken.GetType(), typeof(System.DateTimeOffset)) &&
-                    Object.ReferenceEquals(expiration.GetType(), typeof(System.DateTimeOffset)))
+                    Object.ReferenceEquals(Expiration.GetType(), typeof(System.DateTimeOffset)))
                 {
                     this.iat = ToUnixTimestamp(DOBofJWTToken);
-                    this.nbf = ToUnixTimestamp(nbf);
-                    this.exp = ToUnixTimestamp(expiration);
+                    this.nbf = ToUnixTimestamp(NotBeforeTime);
+                    this.exp = ToUnixTimestamp(Expiration);
                 }
-                else if (Object.ReferenceEquals(nbf.GetType(), typeof(System.Int64)) &&
+                else if (Object.ReferenceEquals(NotBeforeTime.GetType(), typeof(System.Int64)) &&
                         Object.ReferenceEquals(DOBofJWTToken.GetType(), typeof(System.Int64)) &&
-                        Object.ReferenceEquals(expiration.GetType(), typeof(System.Int64)))
+                        Object.ReferenceEquals(Expiration.GetType(), typeof(System.Int64)))
                 {
                     this.iat = (long)DOBofJWTToken;
-                    this.nbf = (long)nbf;
-                    this.exp = (long)expiration;
+                    this.nbf = (long)NotBeforeTime;
+                    this.exp = (long)Expiration;
 
                 }
             }
@@ -71,11 +72,11 @@ namespace AutoBuildApp.Security.Models
         /// transates the date time offset into the unix time in seconds 
         /// https://docs.microsoft.com/en-us/dotnet/api/system.datetimeoffset.tounixtimeseconds?view=net-5.0
         /// </summary>
-        /// <param name="datePassed"></param>
+        /// <param _name="datePassed"></param>
         /// <returns></returns>
-        public long ToUnixTimestamp(object datePassed)
+        public long ToUnixTimestamp(object DatePassed)
         {
-            DateTimeOffset datePass = (DateTimeOffset)datePassed;
+            DateTimeOffset datePass = (DateTimeOffset)DatePassed;
             //Console.WriteLine($"date passed: time: {datePassed}");
             var epoch = new DateTimeOffset(1970, 1, 1, 0, 0, 0,TimeSpan.Zero);
            ///Console.WriteLine("{0} --> Unix Seconds: {1}", epoch, epoch.ToUnixTimeSeconds());
@@ -86,18 +87,18 @@ namespace AutoBuildApp.Security.Models
 
         #region The JWT Reserved claims
         /// <summary>
-        /// iss (issuer): Issuer of the JWT
+        /// iss (Issuer): Issuer of the JWT
         /// in our case it is Senior project AutoBuild Application
         /// </summary>
         public string iss { get; set; }
 
         /// <summary>
-        /// sub (subject): Subject of the JWT (the user)
+        /// sub (Subject): Subject of the JWT (the user)
         /// </summary>
         public string sub { get; set; }
 
         /// <summary>
-        /// aud (audience): Recipient for which the JWT is intended
+        /// aud (Audience): Recipient for which the JWT is intended
         /// users within the US
         /// </summary>
         public string aud { get; set; }
@@ -110,17 +111,17 @@ namespace AutoBuildApp.Security.Models
         public long iat { get;  set; }
 
         /// <summary>
-        ///  (expiration time): Time after which the JWT expires
+        ///  (Expiration time): Time after which the JWT expires
         /// </summary>
         public long exp { get; set; }
 
         /// <summary>
-        /// "nbf" (Not Before) Claim
-        /// The "nbf" (not before) claim identifies the time before 
+        /// "NotBeforeTime" (Not Before) Claim
+        /// The "NotBeforeTime" (not before) claim identifies the time before 
         /// which the JWT MUST NOT be accepted for processing.The
         /// processing of the "nb claim requires that the current 
         /// date/time MUST be after or equal to
-        /// the not-before date/time listed in the "nbf" claim.
+        /// the not-before date/time listed in the "NotBeforeTime" claim.
         /// </summary>
         public long nbf { get; set; }
 
@@ -150,12 +151,12 @@ namespace AutoBuildApp.Security.Models
 
         #endregion
 
-        public string generateClaims()
+        public string GenerateClaims()
         {
             string ret = " ";
             foreach (Claims claim in UserCLaims)
             {
-                ret += $"{ claim.Permission}, {claim.scopeOfPermissions}\n";
+                ret += $"{ claim.Permission}, {claim.ScopeOfPermissions}\n";
             }
             return ret;
         }
@@ -168,9 +169,9 @@ namespace AutoBuildApp.Security.Models
                 $" aud {aud}\n" +
                 $" iat {iat}\n" +
                 $"exp {exp} \n" +
-                $"nbf {nbf}\n" +
+                $"NotBeforeTime {nbf}\n" +
                 $"Username {Username}\n" +
-                $"UserCLaims {generateClaims()}\n";
+                $"UserCLaims {GenerateClaims()}\n";
         }
      
 

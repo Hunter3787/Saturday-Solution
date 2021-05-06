@@ -99,33 +99,33 @@ namespace AutoBuildApp.Managers
         {
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
 
-            IClaims basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
-            IClaims systemAdmin = claimsFactory.GetClaims(RoleEnumType.SYSTEM_ADMIN);
-            IClaims delegateAdmin = claimsFactory.GetClaims(RoleEnumType.DELEGATE_ADMIN);
-            IClaims vendor = claimsFactory.GetClaims(RoleEnumType.VENDOR_ROLE);
-            IClaims unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
+            IClaims basic = claimsFactory.GetClaims(RoleEnumType.BasicRole);
+            IClaims systemAdmin = claimsFactory.GetClaims(RoleEnumType.SystemAdmin);
+            IClaims delegateAdmin = claimsFactory.GetClaims(RoleEnumType.DelegateAdmin);
+            IClaims vendor = claimsFactory.GetClaims(RoleEnumType.VendorRole);
+            IClaims unregistered = claimsFactory.GetClaims(RoleEnumType.UnregisteredRole);
 
             //username = "KoolTrini";
 
-            if (_userManagementDAO.RoleCheckDB(username) == RoleEnumType.SYSTEM_ADMIN)
+            if (_userManagementDAO.RoleCheckDB(username) == RoleEnumType.SystemAdmin)
             {
                 return "Error: you can't modify the permissions of a system admin";
             }
             else
             {
-                if (role == RoleEnumType.BASIC_ROLE)
+                if (role == RoleEnumType.BasicRole)
                 {
                     return _userManagementDAO.ChangePermissionsDB(username, role, basic.Claims());
                 }
-                else if (role == RoleEnumType.SYSTEM_ADMIN)
+                else if (role == RoleEnumType.SystemAdmin)
                 {
                     return _userManagementDAO.ChangePermissionsDB(username, role, systemAdmin.Claims());
                 }
-                else if (role == RoleEnumType.DELEGATE_ADMIN)
+                else if (role == RoleEnumType.DelegateAdmin)
                 {
                     return _userManagementDAO.ChangePermissionsDB(username, role, delegateAdmin.Claims());
                 }
-                else if (role == RoleEnumType.VENDOR_ROLE)
+                else if (role == RoleEnumType.VendorRole)
                 {
                     return _userManagementDAO.ChangePermissionsDB(username, role, vendor.Claims());
                 }
@@ -133,7 +133,7 @@ namespace AutoBuildApp.Managers
                 //{
                 //    return _userManagementDAO.ChangePermissionsDB(username, developer.Claims());
                 //}
-                else if (role == RoleEnumType.UNREGISTERED_ROLE)
+                else if (role == RoleEnumType.UnregisteredRole)
                 {
                     return _userManagementDAO.ChangePermissionsDB(username, role, unregistered.Claims());
                 }
@@ -144,12 +144,12 @@ namespace AutoBuildApp.Managers
         public string ChangeLockState(string username, bool lockState)
         {
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
-            IClaims locked = claimsFactory.GetClaims(RoleEnumType.LOCKED);
-            IClaims basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
+            IClaims locked = claimsFactory.GetClaims(RoleEnumType.Locked);
+            IClaims basic = claimsFactory.GetClaims(RoleEnumType.BasicRole);
 
 
             //username = "SERGE";
-            if (_userManagementDAO.RoleCheckDB(username) == RoleEnumType.SYSTEM_ADMIN && lockState == true)
+            if (_userManagementDAO.RoleCheckDB(username) == RoleEnumType.SystemAdmin)
             {
                 return "Error: you can't lock a system admin";
             }
@@ -174,7 +174,7 @@ namespace AutoBuildApp.Managers
 
         public string DeleteUser(string username)
         {
-            if (_userManagementDAO.RoleCheckDB(username) == RoleEnumType.SYSTEM_ADMIN)
+            if (_userManagementDAO.RoleCheckDB(username) == RoleEnumType.SystemAdmin)
             {
                 return "Error: you can't delete a system admin";
             } else

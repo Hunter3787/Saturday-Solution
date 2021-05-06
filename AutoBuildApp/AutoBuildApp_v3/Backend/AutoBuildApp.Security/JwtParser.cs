@@ -28,14 +28,12 @@ namespace AutoBuildApp.Security
         public string JWT { get; set; }
         public JwtParser()
         {
-            this.JWT = " ";
+            this.JWT = string.Empty;
         }
         public JwtParser(string JWTToken)
         {
             this.JWT = JWTToken;
             this._jwtValidator = new JwtValidator(JWTToken);
-
-            //Console.WriteLine("Token pased: " + JWTToken);
         }
 
         #region EXTRACT JWT TOKEN INTO CLAIMS PRINCIPAL
@@ -63,28 +61,13 @@ namespace AutoBuildApp.Security
             };
             foreach (Claims claims in payload.UserCLaims)
             { // converting the claims in type System.Security.Claims
-                _securityClaims.Add(new Claim(claims.Permission, claims.scopeOfPermissions));
+                _securityClaims.Add(new Claim(claims.Permission, claims.ScopeOfPermissions));
             }
 
-            /*
-            ClaimsIdentity claimsIdentity = 
-                new ClaimsIdentity(
-                    userIdentity,
-                    _securityClaims,
-            userIdentity.AuthenticationType, userIdentity.Name, " ");
-            _principalGenerated.AddIdentity(claimsIdentity);
-
-            */
-
-            //_securityClaims.Add(new Claim("USERNAME", userIdentity.Name));
+           
             ClaimsIdentity claimsIdentity = new ClaimsIdentity
-            (userIdentity, _securityClaims, userIdentity.AuthenticationType, userIdentity.Name, " ");
-
-            //claimsIdentity.RemoveClaim(claimsIdentity.FindFirst(userIdentity.Name));
-            //_principalGenerated.FindFirst("USERNAME").Value
-
+            (userIdentity, _securityClaims, userIdentity.AuthenticationType, userIdentity.Name, string.Empty);
             _principalGenerated = new ClaimsPrincipal(claimsIdentity);
-
 
             Thread.CurrentPrincipal = _principalGenerated; //setting to the thread.
             return _principalGenerated;

@@ -2,15 +2,15 @@
 {
     public static class PermissionEnumType
     {
-        public const string NONE = "NONE";
-        public const string ALL = "ALL";
-        public const string READ_ONLY = "READ_ONLY";
-        public const string WRITE = "WRITE";
-        public const string EDIT = "EDIT";
-        public const string CREATE = "CREATE";
-        public const string UPDATE = "UPDATE";
-        public const string DELETE = "DELETE";
-        public const string SAVE = "SAVE";
-        public const string BLOCK = "BLOCK";
+        public const string None = "None";
+        public const string All = "All";
+        public const string ReadOnly = "ReadOnly";
+        public const string Write = "Write";
+        public const string Edit = "Edit";
+        public const string Create = "Create";
+        public const string Update = "Update";
+        public const string Delete = "Delete";
+        public const string Save = "Save";
+        public const string Block = "Block";
     }
 }

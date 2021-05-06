@@ -14,26 +14,26 @@ namespace AutoBuildApp.Security.Models
         public Claims()
         {
             this.Permission = "";
-            this.scopeOfPermissions = "";
+            this.ScopeOfPermissions = "";
 
         }
         
-        public Claims(string claims, string scope)
+        public Claims(string Claims, string Scope)
         {
-            this.Permission = claims;
-            this.scopeOfPermissions = scope;
+            this.Permission = Claims;
+            this.ScopeOfPermissions = Scope;
         }
         public string Permission { get; set; }
-        public string scopeOfPermissions { get; set; }
-        public bool Equals(Claims other)
+        public string ScopeOfPermissions { get; set; }
+        public bool Equals(Claims Other)
         {
-            if (other is null)
+            if (Other is null)
             {
                 return false;
             }
             return 
-                this.Permission == other.Permission 
-                && this.scopeOfPermissions == other.scopeOfPermissions;
+                this.Permission == Other.Permission 
+                && this.ScopeOfPermissions == Other.ScopeOfPermissions;
         }
 
     }

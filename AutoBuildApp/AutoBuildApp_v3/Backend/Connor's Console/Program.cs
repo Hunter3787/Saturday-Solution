@@ -17,7 +17,7 @@ namespace Connor_s_Console
         static void Main(string[] args)
         {
 
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("HERE Hello World!" + DateTime.Now);
             //var UserManagementService = new UserManagementService(MostPopularBuildsDAO);
             UserIdentity userId = new UserIdentity();
             userId.Name = "this is my name";
@@ -86,8 +86,8 @@ namespace Connor_s_Console
             Console.WriteLine("----------------------");
             //Console.WriteLine(registrationManager.RegisterUser(
             //"Superman", "Connor", "Kobel", "Superman@gmail.com", "Password123", "Password123"));
-            //Console.WriteLine(userManagementManager.ChangePermissions(RoleEnumType.SYSTEM_ADMIN));
-            //Console.WriteLine(userManagementManager.ChangeLockState("Zeina", RoleEnumType.BASIC_ROLE));
+            //Console.WriteLine(userManagementManager.ChangePermissions(RoleEnumType.SystemAdmin));
+            //Console.WriteLine(userManagementManager.ChangeLockState("Zeina", RoleEnumType.BasicRole));
 
             //UserCredentials userLoginInfo = new UserCredentials();
             //userLoginInfo.Username = "Superman";
@@ -100,17 +100,17 @@ namespace Connor_s_Console
             //Console.WriteLine(_CRAuth.FailureString);
             //Console.WriteLine(_CRAuth.AuthUserDTO.UserEmail);
 
-            Console.WriteLine(userManagementManager.ChangePermissions("SERGE", RoleEnumType.BASIC_ROLE));
+            Console.WriteLine(userManagementManager.ChangePermissions("SERGE", RoleEnumType.BasicRole));
             Console.WriteLine(userManagementManager.RoleCheck("SERGE"));
-            Console.WriteLine(userManagementManager.ChangePermissions("SERGE", RoleEnumType.DELEGATE_ADMIN));
+            Console.WriteLine(userManagementManager.ChangePermissions("SERGE", RoleEnumType.DelegateAdmin));
             Console.WriteLine(userManagementManager.RoleCheck("SERGE"));
             Console.WriteLine(userManagementManager.ChangeLockState("SERGE", true));
             Console.WriteLine(userManagementManager.RoleCheck("SERGE"));
-            Console.WriteLine(userManagementManager.ChangePermissions("SERGE", RoleEnumType.SYSTEM_ADMIN));
+            Console.WriteLine(userManagementManager.ChangePermissions("SERGE", RoleEnumType.SystemAdmin));
             Console.WriteLine(userManagementManager.RoleCheck("SERGE"));
-            Console.WriteLine(userManagementManager.ChangePermissions("SERGE", RoleEnumType.UNREGISTERED_ROLE));
+            Console.WriteLine(userManagementManager.ChangePermissions("SERGE", RoleEnumType.UnregisteredRole));
             Console.WriteLine(userManagementManager.RoleCheck("SERGE"));
-            Console.WriteLine(userManagementManager.ChangePermissions("SERGE", RoleEnumType.VENDOR_ROLE));
+            Console.WriteLine(userManagementManager.ChangePermissions("SERGE", RoleEnumType.VendorRole));
             Console.WriteLine(userManagementManager.RoleCheck("SERGE"));
 
             Console.WriteLine(userManagementManager.DeleteUser("SERGE"));

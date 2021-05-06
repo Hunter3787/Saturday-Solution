@@ -6,6 +6,7 @@ using AutoBuildApp.Models;
 using AutoBuildApp.Security;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
+using System;
 using System.Collections.Generic;
 
 
@@ -17,16 +18,14 @@ namespace AutoBuildApp.Managers.FeatureManagers
         // principle after they are authenticated 
 
         private AnalyticsDAO _uadDAO;
-        private UadDTO _uadDTO;
-        private  List<string> _allowedRoles; //specify rles
+        private List<string> _allowedRoles; //specify rles
         
 
-        public AnalyticsManager(string _cnnctString)
+        public AnalyticsManager(string ConnectiontString)
         {
-            _uadDAO = new AnalyticsDAO(_cnnctString);
-            _uadDTO = new UadDTO(); // MAY REMOVE 
+            _uadDAO = new AnalyticsDAO(ConnectiontString);
             _allowedRoles = new List<string>()
-            { RoleEnumType.SYSTEM_ADMIN };
+            { RoleEnumType.SystemAdmin };
         }
 
         //public IList<Charts> GetCharts(ResponseUAD responseUAD, DBViews specifiedChart = DBViews.none)
@@ -123,35 +122,53 @@ namespace AutoBuildApp.Managers.FeatureManagers
         //}
 
         // TURN INTO ASYNC 
-        public void GetChartData(int graphType)
+        public AnalyticsDataDTO GetChartData(int GraphType)
         {
-            DBViews specifiedChart = (DBViews)graphType;
-
+            AnalyticsDataDTO dataDTO = new AnalyticsDataDTO();
             ResponseUAD responseUAD = new ResponseUAD();
+
+            string notAuthorized = AuthorizationResultType.NotAuthorized.ToString();
+
             //Initial Authorization Check
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
-                var result = AuthorizationResultType.NotAuthorized.ToString();
-                return;
+                Console.WriteLine($" IF STATEMENT 1");
+                Console.WriteLine($" {dataDTO.ToString()}");
+
+              dataDTO.Result = notAuthorized;
+                dataDTO.SuccessFlag = false;
+                return dataDTO;
 
             }
-            responseUAD = _uadDAO.GetGraphData((DBViews)graphType);
-            //from dao
-            if (!responseUAD.IsAuthorized)
+            responseUAD = _uadDAO.GetGraphData((DBViews)GraphType);
+            if (responseUAD.ResponseString.Equals(notAuthorized))
             {
-                var result = AuthorizationResultType.NotAuthorized.ToString();
-                return;
 
+                dataDTO.SuccessFlag = false;
+                dataDTO.Result = responseUAD.ResponseString;
+
+                Console.WriteLine($" IF STATEMENT 2");
+                Console.WriteLine($" {dataDTO.ToString()}");
+
+                return dataDTO;
             }
-
-            if (responseUAD.ResponseBool == false || responseUAD.GetChartDatas == null)
+            if (!responseUAD.ResponseBool|| responseUAD.GetChartDatas == null)
             {
-                return ;
+
+                Console.WriteLine($" IF STATEMENT 3");
+                dataDTO.SuccessFlag = responseUAD.ResponseBool;
+                dataDTO.Result = responseUAD.ResponseString;
+
+                Console.WriteLine($" {dataDTO.ToString()}");
+                return dataDTO;
             }
-            if (responseUAD.GetChartDatas != null)
+            else if(responseUAD.ResponseBool)
             {
 
-                Charts analyticsChart = new Charts();
+                Console.WriteLine($" ELSE IF STATEMENT 4");
+
+
+               Charts analyticsChart = new Charts();
                 #region GRAPHS
                 analyticsChart =
                      new Charts(
@@ -163,9 +180,20 @@ namespace AutoBuildApp.Managers.FeatureManagers
                         chartType: ChartType.Bar);
                 #endregion
 
-                return;
+
+                Console.WriteLine($" THE DATA BROUGHT BACK: {analyticsChart.ToString()}");
+                dataDTO.analyticChartsRequisted = analyticsChart;
+
+                Console.WriteLine($"\nTHE DATA BROUGHT BACK PART 2: " +
+                    $"{dataDTO.ToString()}");
+
+
+                return dataDTO;
 
             }
+
+            Console.WriteLine($" OUTSIDE ");
+            return null;
 
 
 

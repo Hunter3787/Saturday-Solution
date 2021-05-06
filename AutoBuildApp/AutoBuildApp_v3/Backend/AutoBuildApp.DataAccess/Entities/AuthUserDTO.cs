@@ -31,7 +31,7 @@ namespace AutoBuildApp.DataAccess.Entities
             {
                 retVal += $" " +
                     $"userPermissions: {claims.Permission } " +
-                    $"scope { claims.scopeOfPermissions}";
+                    $"scope { claims.ScopeOfPermissions}";
             }
 
 
