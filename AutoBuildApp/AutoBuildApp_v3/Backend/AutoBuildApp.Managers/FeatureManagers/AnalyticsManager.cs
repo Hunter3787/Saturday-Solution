@@ -125,38 +125,41 @@ namespace AutoBuildApp.Managers.FeatureManagers
         public AnalyticsDataDTO GetChartData(int GraphType)
         {
             AnalyticsDataDTO dataDTO = new AnalyticsDataDTO();
-
             ResponseUAD responseUAD = new ResponseUAD();
+
+            string notAuthorized = AuthorizationResultType.NotAuthorized.ToString();
+
             //Initial Authorization Check
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
                 Console.WriteLine($" IF STATEMENT 1");
-  
-                  var result = AuthorizationResultType.NotAuthorized.ToString();
+                Console.WriteLine($" {dataDTO.ToString()}");
+
+              dataDTO.Result = notAuthorized;
                 dataDTO.SuccessFlag = false;
-                dataDTO.Result = result;
                 return dataDTO;
 
             }
             responseUAD = _uadDAO.GetGraphData((DBViews)GraphType);
-            Console.WriteLine($" THE RESPONSE ANALYTICS: {responseUAD.ToString()}");
-            //from dao
-            if (!responseUAD.IsAuthorized)
+            if (responseUAD.ResponseString.Equals(notAuthorized))
             {
 
-                Console.WriteLine($" IF STATEMENT 2");
-                var result = AuthorizationResultType.NotAuthorized.ToString();
                 dataDTO.SuccessFlag = false;
-                dataDTO.Result = result;
+                dataDTO.Result = responseUAD.ResponseString;
+
+                Console.WriteLine($" IF STATEMENT 2");
+                Console.WriteLine($" {dataDTO.ToString()}");
+
                 return dataDTO;
             }
-
             if (!responseUAD.ResponseBool|| responseUAD.GetChartDatas == null)
             {
 
                 Console.WriteLine($" IF STATEMENT 3");
                 dataDTO.SuccessFlag = responseUAD.ResponseBool;
                 dataDTO.Result = responseUAD.ResponseString;
+
+                Console.WriteLine($" {dataDTO.ToString()}");
                 return dataDTO;
             }
             else if(responseUAD.ResponseBool)

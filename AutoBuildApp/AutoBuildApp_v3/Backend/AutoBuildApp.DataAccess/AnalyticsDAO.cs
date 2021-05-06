@@ -327,16 +327,15 @@ namespace AutoBuildApp.DataAccess
 
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
-                _responseUAD.IsAuthorized = false;
+                _responseUAD.ResponseString = AuthorizationResultType.NotAuthorized.ToString();
                 //_logger.LogInformation( AuthorizationResultType.NOT_AUTHORIZED.ToString());
                 return _responseUAD;
             }
-            _responseUAD.IsAuthorized = true;
             using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
                 conn.Open();
                 // naming convention View_ name of VIEW
-                string View_AccountsByAccountType = $"SELECT* FROM {graphViewType.ToString()};";
+                string View_AccountsByAccountType = $"SELECT * FROM {graphViewType.ToString()};";
                 using (SqlCommand command = new SqlCommand(View_AccountsByAccountType, conn))
                 {
                     try
@@ -360,6 +359,8 @@ namespace AutoBuildApp.DataAccess
                             {
                                 _responseUAD.ResponseString = "No Data At The Moment";
                                 _responseUAD.ResponseBool = false;
+
+                                return _responseUAD;
                                 reader.Close();
                             }
                             else

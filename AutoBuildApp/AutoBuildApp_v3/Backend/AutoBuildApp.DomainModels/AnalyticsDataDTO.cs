@@ -23,14 +23,8 @@ namespace AutoBuildApp.DomainModels
 
         public override string ToString()
         {
-            string ret = "";
-            foreach (var elem in analyticChartsRequisted.ChartDatas)
-            {
-                ret += $" elem. \n: {elem.ToString()} ";
-
-            }
-
-            return ret;
+            
+            return analyticChartsRequisted.ToString();
         }
     }
 }

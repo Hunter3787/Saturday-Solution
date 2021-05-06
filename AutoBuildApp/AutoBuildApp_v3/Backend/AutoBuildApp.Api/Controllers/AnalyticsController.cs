@@ -63,8 +63,10 @@ namespace AutoBuildApp.Api.Controllers
         /*
          * There are two cases to consider:
          * A request coming through from:
-         * 1) user is logged in but do not have permissions -> 
+         * 1) user is logged in BUT do not have permissions -> 
          * status code:  403 (don’t have permissions to do what they requested)
+         * 
+         * 
          * 
          * 2) user is NOT logged in and are not authorized -> 
          * status code: 401. here comes in the REDIRECT URL.
@@ -92,16 +94,7 @@ namespace AutoBuildApp.Api.Controllers
         [HttpGet]
         public IActionResult RetrieveGraphs(int GraphType)
         {
-
-            /// this will be put into the middleware.
-            //Console.WriteLine("we are here22");
-            //if (!_threadPrinciple.Identity.IsAuthenticated)
-            //{
-            //    Console.WriteLine("we are here");
-            //    // Add action logic here
-            //    return new StatusCodeResult(StatusCodes.Status401Unauthorized);
-            //}
-
+            return Ok("good job");
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
                 // _logger.LogWarning("Unauthorized Access Attempted");
@@ -110,27 +103,20 @@ namespace AutoBuildApp.Api.Controllers
 
             AnalyticsDataDTO dataDTO  = _analyticsManager.GetChartData(GraphType);
 
+            if (dataDTO.Result.Equals(AuthorizationResultType.NotAuthorized.ToString()))
+            {
+                // _logger.LogWarning("Unauthorized Access Attempted");
+                return new StatusCodeResult(StatusCodes.Status403Forbidden);
+            }
             if (!dataDTO.SuccessFlag)
             {
-
-                Console.WriteLine($" in the line 114");
-
-                if (dataDTO.Result.Equals(AuthorizationResultType.NotAuthorized.ToString()))
-                {
-                    // _logger.LogWarning("Unauthorized Access Attempted");
-                    return new StatusCodeResult(StatusCodes.Status403Forbidden);
-                }
-                else
-                {
+                
                     // _logger.LogWarning(result.result);
                     var result = dataDTO.Result;
                     return Ok(result);
-                    return new StatusCodeResult(StatusCodes.Status400BadRequest);
-                }
+                    //return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
-            // lesson: postman doesnt work with list. move on 
-
-            return Ok("all good here!" + dataDTO.analyticChartsRequisted);
+            return Ok(dataDTO.analyticChartsRequisted);
 
 
         }
