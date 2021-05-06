@@ -10,6 +10,10 @@ namespace AutoBuildApp.Models.Enumerations
         DatabaseTimeout,
         DuplicateValue,
         DefaultError,
+        ArguementNull,
+        UndeclaredVariable,
+        FailedParse,
+        ProductCreationFailed,
         Unauthorized
     }
 }

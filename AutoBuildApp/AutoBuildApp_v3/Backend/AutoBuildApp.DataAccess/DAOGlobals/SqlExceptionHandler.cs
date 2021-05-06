@@ -17,6 +17,8 @@ namespace AutoBuildApp.DataAccess
                 case 2627:
                     return AutoBuildSystemCodes.DuplicateValue;
 
+                case 137:
+                    return AutoBuildSystemCodes.UndeclaredVariable;
                 default:
                     return AutoBuildSystemCodes.DefaultError;
             }

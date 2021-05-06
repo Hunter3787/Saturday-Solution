@@ -6,12 +6,103 @@ using AutoBuildApp.Models;
 using Microsoft.Data.SqlClient;
 using AutoBuildApp.Models.Products;
 using AutoBuildApp.Models.Enumerations;
+using AutoBuildApp.Models.DataTransferObjects;
 
 namespace AutoBuildApp.DataAccess
 {
     public class ShelfDAO
     {
+        #region Sql Strings
         private readonly string _connectionString;
+        private readonly string _insertShelf =
+           "INSERT INTO Shelves (userID, nameOfShelf) " +
+           "VALUES( " +
+           "(SELECT UA.userID " +
+           "FROM UserAccounts UA " +
+           "INNER JOIN MappingHash MH ON UA.userID = MH.userID " +
+           "INNER JOIN UserCredentials UC ON MH.userHashID = UC.userHashID " +
+           "WHERE username = @USERNAME) , @SHELFNAME);";
+        private readonly string _deleteShelf =
+            "DELETE FROM Shelves " +
+            "WHERE nameOfShelf = @SHELFNAME " +
+            "AND userID = (SELECT UA.userID " +
+            "FROM UserAccounts UA " +
+            "INNER JOIN MappingHash MH ON UA.userID = MH.userID " +
+            "INNER JOIN UserCredentials UC ON MH.userHashID = UC.userHashID " +
+            "WHERE username = @USERNAME);";
+        private readonly string _addComponentQuery =
+            "INSERT INTO Save_Product_Shelf (shelfID, productID, quantity, itemIndex) " +
+            "VALUES(" +
+            "(SELECT shelfID " +
+            "FROM Shelves " +
+            "WHERE nameOfShelf = @SHELFNAME), " +
+            "(SELECT productID " +
+            "FROM Products " +
+            "WHERE modelNumber = @MODELNUMBER), " +
+            "@QUANTITY, " +
+            "(SELECT COUNT(itemIndex) " +
+            "FROM Save_Product_Shelf " +
+            "WHERE shelfID = " +
+            "(SELECT shelfID " +
+            "FROM Shelves " +
+            "WHERE nameOfShelf = @SHELFNAME)));";
+        private readonly string _removeProduct =
+            "DELETE FROM Save_Product_Shelf " +
+            "WHERE itemIndex = @ITEMINDEX " +
+            "AND shelfId = " +
+            "(SELECT shelfID " +
+            "FROM Shelves " +
+            "WHERE nameOfShelf = @SHELFNAME " +
+            "AND userID = " +
+            "(SELECT UA.userID " +
+            "FROM UserAccounts UA " +
+            "INNER JOIN MappingHash MH ON UA.userID = MH.userID " +
+            "INNER JOIN UserCredentials UC ON MH.userHashID = UC.userHashID " +
+            "WHERE username = @USERNAME));";
+        private readonly string _updateShelfName =
+            "UPDATE Shelves " +
+            "SET nameOfShelf = @NEWSHELFNAME " +
+            "WHERE shelfID = (SELECT shelfID " +
+            "FROM Shelves " +
+            "WHERE userID = " +
+            "(SELECT UA.userID " +
+            "FROM UserAccounts UA " +
+            "INNER JOIN MappingHash MH ON UA.userID = MH.userID " +
+            "INNER JOIN UserCredentials UC ON MH.userHashID = UC.userHashID " +
+            "WHERE username = @USERNAME) " +
+            "AND nameOfShelf = @OLDSHELFNAME);";
+        private readonly string _updateShelfOrder = "";
+        private readonly string _getAllShelvesByUserQuery =
+            "SELECT S.nameOfShelf, SPS.quantity, SPS.itemIndex , P.productType, P.modelNumber, P.manufacturerName " +
+            "FROM Shelves S " +
+            "LEFT JOIN Save_Product_Shelf SPS ON S.shelfID = SPS.shelfID " +
+            "LEFT JOIN Products P ON P.productId = SPS.productID " +
+            "WHERE userID = " +
+            "(SELECT UA.userID  " +
+            "FROM UserAccounts UA " +
+            "INNER JOIN MappingHash MH ON UA.userID = MH.userID " +
+            "INNER JOIN UserCredentials UC ON MH.userHashID = UC.userHashID " +
+            "WHERE username = @USERNAME) " +
+            "ORDER BY nameOfShelf, itemIndex;";
+        private readonly string _getShelfByNameAndUser =
+            "SELECT S.nameOfShelf, SPS.quantity, SPS.itemIndex , P.productType, P.modelNumber, P.manufacturerName " +
+            "FROM Shelves S " +
+            "LEFT JOIN Save_Product_Shelf SPS ON S.shelfID = SPS.shelfID " +
+            "LEFT JOIN Products P ON P.productId = SPS.productID " +
+            "WHERE userID = " +
+            "(SELECT UA.userID " +
+            "FROM UserAccounts UA " +
+            "INNER JOIN MappingHash MH ON UA.userID = MH.userID " +
+            "INNER JOIN UserCredentials UC ON MH.userHashID = UC.userHashID " +
+            "WHERE username = @USERNAME) " +
+            "AND nameOfShelf = @SHELFNAME " +
+            "ORDER BY itemIndex;";
+        //private readonly string _getProductByModel =
+        //    "SELECT productType, manufacturerName, modelNumber, productSpecs, productSpecsValue " +
+        //    "FROM Products P " +
+        //    "INNER JOIN Products_Specs PS ON p.productID = ps.productID " +
+        //    "WHERE p.modelNumber = '100-100000071BOX';";
+        #endregion
 
         public ShelfDAO(string connectionString)
         {
@@ -39,12 +130,11 @@ namespace AutoBuildApp.DataAccess
 
                 using (SqlCommand command = new SqlCommand())
                 {
-                    string insertRequest = "INSERT INTO ";
                     command.Transaction = connection.BeginTransaction();
                     command.Connection = connection;
                     command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
                     command.CommandType = CommandType.Text;
-                    command.CommandText = insertRequest;
+                    command.CommandText = _insertShelf;
 
                     var rowsAdded = command.ExecuteNonQuery();
                     if(rowsAdded == 1)
@@ -58,7 +148,7 @@ namespace AutoBuildApp.DataAccess
             return success;
         }
 
-        public bool DeleteShelf(string shelfID)
+        public bool DeleteShelf(string shelfName, string shelfID)
         {
             try
             {
@@ -77,12 +167,11 @@ namespace AutoBuildApp.DataAccess
 
                 using (SqlCommand command = new SqlCommand())
                 {
-                    string insertRequest = "INSERT INTO ";
                     command.Transaction = connection.BeginTransaction();
                     command.Connection = connection;
                     command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
                     command.CommandType = CommandType.Text;
-                    command.CommandText = insertRequest;
+                    command.CommandText = _deleteShelf;
 
 
 
@@ -98,7 +187,7 @@ namespace AutoBuildApp.DataAccess
             return success;
         }
 
-        public bool AddComponent(IComponent item)
+        public bool AddComponent(string modelNumber, string shelfName, string username)
         {
 
 
@@ -111,12 +200,11 @@ namespace AutoBuildApp.DataAccess
 
                 using (SqlCommand command = new SqlCommand())
                 {
-                    string insertRequest = "INSERT INTO ";
                     command.Transaction = connection.BeginTransaction();
                     command.Connection = connection;
                     command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
                     command.CommandType = CommandType.Text;
-                    command.CommandText = insertRequest;
+                    command.CommandText = _addComponentQuery;
 
 
 
@@ -132,7 +220,7 @@ namespace AutoBuildApp.DataAccess
             return success;
         }
 
-        public bool RemoveComponent(int id)
+        public bool RemoveComponent(int index, string shelfName, string username)
         {
             bool success = false;
 
@@ -142,12 +230,11 @@ namespace AutoBuildApp.DataAccess
 
                 using (SqlCommand command = new SqlCommand())
                 {
-                    string insertRequest = "INSERT INTO ";
                     command.Transaction = connection.BeginTransaction();
                     command.Connection = connection;
                     command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
                     command.CommandType = CommandType.Text;
-                    command.CommandText = insertRequest;
+                    command.CommandText = _removeProduct;
 
 
 
@@ -163,69 +250,136 @@ namespace AutoBuildApp.DataAccess
             return success;
         }
 
-        public bool UpdateShelf(string oldName, string newName, string user)
+        public SystemCodeWithObject<bool> UpdateShelfName(string oldShelfName, string newShelfName, string username)
         {
-            bool success = false;
-
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            SystemCodeWithObject<bool> output = new SystemCodeWithObject<bool>()
             {
-                connection.Open();
-
-                using (SqlCommand command = new SqlCommand())
-                {
-                    string insertRequest = "INSERT INTO ";
-                    command.Transaction = connection.BeginTransaction();
-                    command.Connection = connection;
-                    command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
-                    command.CommandType = CommandType.Text;
-                    command.CommandText = insertRequest;
-
-
-
-                    var rowsAdded = command.ExecuteNonQuery();
-                    if (rowsAdded == 1)
-                    {
-                        command.Transaction.Commit();
-                        success = true;
-                    }
-                }
-            }
-
-            return success;
-        }
-
-        public List<Shelf> GetAllShelvesByUser(string user)
-        {
-            List<Shelf> shelves = new List<Shelf>();
+                GenericObject = false
+            };
 
             try
             {
-                IsNotNullOrEmpty(user);
+                IsNotNullOrEmpty(oldShelfName);
+                IsNotNullOrEmpty(newShelfName);
+                IsNotNullOrEmpty(username);
             }
             catch (ArgumentNullException)
             {
-
+                output.Code = AutoBuildSystemCodes.ArguementNull;
+                return output;
             }
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
-                using (var command = new SqlCommand())
+                using (SqlCommand command = new SqlCommand())
+                {
+                    command.Transaction = connection.BeginTransaction();
+                    command.Connection = connection;
+                    command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = _updateShelfName;
+                    command.Parameters.AddWithValue("@NEWSHELFNAME", newShelfName);
+                    command.Parameters.AddWithValue("@OLDSHELFNAME", oldShelfName);
+                    command.Parameters.AddWithValue("@USERNAME", username);
+
+
+                    var rowsAdded = command.ExecuteNonQuery();
+                    if (rowsAdded == 1)
+                    {
+                        command.Transaction.Commit();
+                        output.GenericObject = true;
+                    }
+                }
+            }
+
+            return output;
+        }
+
+        public SystemCodeWithObject<bool> UpdateShelfOrder(
+            List<int> indexOrder,
+            string shelfName,
+            string username)
+        {
+            SystemCodeWithObject<bool> output = new SystemCodeWithObject<bool>();
+            output.GenericObject = false;
+
+            try
+            {
+                IsNotNull(indexOrder);
+                IsNotNullOrEmpty(username);
+                IsNotNullOrEmpty(shelfName);
+            }
+            catch (ArgumentNullException)
+            {
+                output.Code = AutoBuildSystemCodes.ArguementNull;
+                return output;
+            }
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand())
+                {
+                    command.Transaction = connection.BeginTransaction();
+                    command.Connection = connection;
+                    command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = _updateShelfOrder;
+
+
+
+
+                    var rowsAdded = command.ExecuteNonQuery();
+                    if (rowsAdded == 1)
+                    {
+                        command.Transaction.Commit();
+                        output.GenericObject = true;
+                    }
+                }
+            }
+
+            return output;
+        }
+
+        /// <summary>
+        /// Get all Shelves from the Database using the collections with code
+        /// class.
+        /// </summary>
+        /// <param name="username">User name</param>
+        /// <returns></returns>
+        public SystemCodeWithObject<List<Shelf>> GetAllShelvesByUser(string username)
+        {
+            SystemCodeWithObject<List<Shelf>> output = new SystemCodeWithObject<List<Shelf>>();
+            output.GenericObject = new List<Shelf>();
+            var shelves = output.GenericObject;
+
+            try
+            {
+                IsNotNullOrEmpty(username);
+            }
+            catch (ArgumentNullException)
+            {
+                output.Code = AutoBuildSystemCodes.ArguementNull;
+                return output;
+            }
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand())
                 {
                     try
                     {
-                        string GetAllShelvesByUserQuery = "SELECT S.nameOfShelf, SPS.quantity, SPS.itemIndex , P.productType, P.modelNumber, P.manufacturerName " +
-                            "FROM Shelves S " +
-                            "LEFT JOIN Save_Product_Shelf SPS ON S.shelfID = SPS.shelfID " +
-                            "LEFT JOIN Products P ON P.productId = SPS.productID WHERE userID = 2";
                         command.Transaction = connection.BeginTransaction();
                         command.Connection = connection;
                         command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
                         command.CommandType = CommandType.Text;
-                        command.CommandText = GetAllShelvesByUserQuery;
-                        
-                        // Add parameter for userID from username.
+                        command.CommandText = _getAllShelvesByUserQuery;
+                        command.Parameters.Add(new SqlParameter("@USERNAME", username));
 
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
@@ -240,90 +394,218 @@ namespace AutoBuildApp.DataAccess
                                 while (hasMore
                                     && (string)reader[ShelfTableCollumns.SHELF_NAME] == currentShelf
                                     && (reader[SaveProductTableCollumns.SAVED_PRODUCT_INDEX] != DBNull.Value
-                                    || reader[SaveProductTableCollumns.SAVED_PRODUCT_QUANTITY] != DBNull.Value)
+                                    || reader[SaveProductTableCollumns.SAVED_PRODUCT_QUANTITY] != DBNull.Value
+                                    || reader[ProductTableColumns.PRODUCT_COLUMN_TYPE] != DBNull.Value)
                                     )
                                 {
-                                    Component component = new Component()
-                                    {
-                                        ModelNumber = (string) reader[ProductTableColumns.PRODUCT_COLUMN_MODEL],
-                                       // ProductType = (ProductType) Enum.Parse(typeof(ProductType),(string)reader[ProductTableColumns.PRODUCT_COLUMN_TYPE]),
-                                        ManufacturerName = (string) reader[ProductTableColumns.PRODUCT_COLUMN_MANUFACTURER],
-                                        Quantity = (int) reader[SaveProductTableCollumns.SAVED_PRODUCT_QUANTITY]
-                                    };
-
-                                    int itemIndex = (int) reader[SaveProductTableCollumns.SAVED_PRODUCT_INDEX];
-                                    shelf.ComponentList.Insert(itemIndex , component);
+                                    Component component = new Component();
+                                    PopulateComponent(component, reader);
+                                    shelf.ComponentList.Add(component);
 
                                     hasMore = reader.Read();
                                 }
-
                                 shelves.Add(shelf);
                             }
                         }
-
                     }
-                    catch (SqlException)
+                    catch (ArgumentException)
                     {
-                        
+                        output.Code = AutoBuildSystemCodes.FailedParse;
+                        return output;
+                    }
+                    catch (SqlException ex)
+                    {
+                        output.Code = SqlExceptionHandler.GetCode(ex.Number);
+                        return output;
                     }
                 }
             }
 
-            return shelves;
+            output.Code = AutoBuildSystemCodes.Success;
+            return output;
         }
 
-        public Shelf GetSingleShelfByName(int id)
+        /// <summary>
+        /// Get single shelf
+        /// </summary>
+        /// <param name="shelfName"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public SystemCodeWithObject<Shelf> GetShelfByName(string shelfName, string username)
         {
-            Shelf shelf = new Shelf();
+            SystemCodeWithObject<Shelf> output = new SystemCodeWithObject<Shelf>();
+            output.GenericObject = new Shelf();
+            var shelf = output.GenericObject;
+            shelf.ShelfName = shelfName;
+
+            try
+            {
+                IsNotNullOrEmpty(shelfName);
+                IsNotNullOrEmpty(username);
+            }
+            catch (ArgumentNullException)
+            {
+                output.Code = AutoBuildSystemCodes.ArguementNull;
+                return output;
+            }
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand())
+                {
+                    try
+                    {
+                        command.Transaction = connection.BeginTransaction();
+                        command.Connection = connection;
+                        command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
+                        command.CommandType = CommandType.Text;
+                        command.CommandText = _getShelfByNameAndUser;
+                        command.Parameters.Add(new SqlParameter("@USERNAME", username));
+                        command.Parameters.Add(new SqlParameter("@SHELFNAME", shelfName));
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read() && reader[ProductTableColumns.PRODUCT_COLUMN_TYPE] != DBNull.Value)
+                            {
+                                Component component = new Component();
+                                PopulateComponent(component, reader);
+                                shelf.ComponentList.Add(component);
+                            }
+                        }
+                    }
+                    catch (ArgumentException)
+                    {
+                        output.Code = AutoBuildSystemCodes.FailedParse;
+                        return output;
+                    }
+                    catch (SqlException ex)
+                    {
+                        output.Code = SqlExceptionHandler.GetCode(ex.Number);
+                        return output;
+                    }
+                }
+            }
+
+            output.Code = AutoBuildSystemCodes.Success;
+            return output;
+        }
+
+        // Out of scope
+        //public SystemCodeWithObject<Component> GetComponentByModel(string model)
+        //{
+        //    SystemCodeWithObject<Component> output = new SystemCodeWithObject<Component>();
+        //    ProductFactory productFactory = new ProductFactory();
+        //    var component = output.GenericObject;
             
+        //    try
+        //    {
+        //        IsNotNullOrEmpty(model);
+        //    }
+        //    catch (ArgumentNullException)
+        //    {
+        //        output.Code = AutoBuildSystemCodes.ArguementNull;
+        //    }
 
+        //    using (SqlConnection connection = new SqlConnection(_connectionString))
+        //    {
+        //        connection.Open();
 
+        //        using (SqlCommand command = new SqlCommand())
+        //        {
+        //            try
+        //            {
+        //                command.Transaction = connection.BeginTransaction();
+        //                command.Connection = connection;
+        //                command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
+        //                command.CommandType = CommandType.Text;
+        //                //command.CommandText = _getProductByModel;
 
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
+        //                using (SqlDataReader reader = command.ExecuteReader())
+        //                {
+        //                    var productType = (ProductType)Enum.Parse(typeof(ProductType), (string)reader[ProductTableColumns.PRODUCT_COLUMN_TYPE]);
+        //                    component = productFactory.CreateComponent(productType);
+        //                    component.ProductType = productType;
 
-                using (SqlCommand command = new SqlCommand())
-                {
-                    string insertRequest = "INSERT INTO ";
-                    command.Transaction = connection.BeginTransaction();
-                    command.Connection = connection;
-                    command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
-                    command.CommandType = CommandType.Text;
-                    command.CommandText = insertRequest;
+        //                    PopulateComponent(component, reader);
 
-                }
-            }
+        //                    // TODO: Need to get product specs.
+                         
+        //                }
+        //            }
+        //            catch (System.ComponentModel.InvalidEnumArgumentException)
+        //            {
+        //                output.Code = AutoBuildSystemCodes.ProductCreationFailed;
+        //                return output;
+        //            }
+        //            catch (ArgumentException)
+        //            {
+        //                output.Code = AutoBuildSystemCodes.FailedParse;
+        //                return output;
+        //            }
+        //            catch (SqlException ex)
+        //            {
+        //                output.Code = SqlExceptionHandler.GetCode(ex.Number);
+        //                return output;
+        //            }
+        //        }
+        //    }
 
+        //    output.Code = AutoBuildSystemCodes.Success;
+        //    return output;
+        //}
 
-
-            return shelf;
-        }
-
-        public IComponent GetComponentByID(int id)
+        #region Private Methods
+        /// <summary>
+        /// Populates component using SqlDataReader.
+        /// </summary>
+        /// <param name="toPopulate"></param>
+        /// <param name="reader"></param>
+        private void PopulateComponent(Component toPopulate, SqlDataReader reader)
         {
-
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                using (SqlCommand command = new SqlCommand())
-                {
-                    string insertRequest = "INSERT INTO ";
-                    command.Transaction = connection.BeginTransaction();
-                    command.Connection = connection;
-                    command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
-                    command.CommandType = CommandType.Text;
-                    command.CommandText = insertRequest;
-
-
-                }
-            }
-
-            return null;
+            toPopulate.ProductType = (ProductType)Enum.Parse(typeof(ProductType), (string)reader[ProductTableColumns.PRODUCT_COLUMN_TYPE]);
+            toPopulate.ModelNumber = (string)reader[ProductTableColumns.PRODUCT_COLUMN_MODEL];
+            toPopulate.ManufacturerName = (string)reader[ProductTableColumns.PRODUCT_COLUMN_MANUFACTURER];
+            toPopulate.Quantity = (int)reader[SaveProductTableCollumns.SAVED_PRODUCT_QUANTITY];
         }
 
-        #region Private Guard Methods
+        // Out of scope
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="type"></param>
+        ///// <param name="reader"></param>
+        //private void ComponentSwitch(Component component, SqlDataReader reader)
+        //{
+        //    // TODO
+        //    switch (component.ProductType)
+        //    {
+        //        case ProductType.CPU: 
+        //            break;
+        //        case ProductType.Case:
+        //            break;
+        //        case ProductType.HDD:
+        //            break;
+        //        case ProductType.SSD:
+        //            break;
+        //        case ProductType.RAM:
+        //            break;
+        //        case ProductType.PSU:
+        //            break;
+        //        case ProductType.GPU:
+        //            break;
+        //        case ProductType.Fan:
+        //            break;
+        //        case ProductType.Cooler:
+        //            break;
+        //        default:
+        //            break;
+        //    }
+
+        //}
+
+        #region Guard Methods
         /// <summary>
         /// Throws exception if string is null or empty.
         /// </summary>
@@ -347,6 +629,7 @@ namespace AutoBuildApp.DataAccess
                 throw new ArgumentNullException(nameof(toCheck));
             }
         }
+        #endregion
         #endregion
     }
 }

@@ -19,6 +19,10 @@ namespace AutoBuildApp.Api.Controllers
     [EnableCors("CorsPolicy")]
     public class UserGarageController : ControllerBase
     {
+        private LoggingProducerService _logger = LoggingProducerService.GetInstance;
+        private UserGarageManager _manager;
+        private readonly string _connString = ConnectionManager.connectionManager.GetConnectionStringByName(ControllerGlobals.DOCKER_CONNECTION);
+
         [HttpGet("getBuilds")]
         public IActionResult GetBuilds()
         {
@@ -62,10 +66,25 @@ namespace AutoBuildApp.Api.Controllers
         }
 
         [HttpGet("getShelf")]
-        public IActionResult GetShelf()
+        public IActionResult GetShelf(string shelfName, string username)
         {
-            // TODO
-            return Ok();
+            _manager = new UserGarageManager(_connString);
+            try
+            {
+                var output =_manager.GetShelfByName(shelfName, username);
+
+                if (!output.ResponseBool)
+                {
+                    return Ok(output);
+                }
+
+                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            }
+            catch (ArgumentNullException)
+            {
+                _logger.LogWarning("GetShelf: Bad Request");
+                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            }
         }
 
         [HttpPost("addItem")]
@@ -92,6 +111,14 @@ namespace AutoBuildApp.Api.Controllers
         [HttpDelete("deleteShelf")]
         public IActionResult DeleteShelf()
         {
+            // TODO
+            return Ok();
+        }
+
+        [HttpPut]
+        public IActionResult OrderShelf()
+        {
+
             // TODO
             return Ok();
         }

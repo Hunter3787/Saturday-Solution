@@ -20,6 +20,7 @@ namespace AutoBuildApp.Models
         public const string DATABASE_TIMEOUT = "The database timed out.";
         public const string DUPLICATE_VALUE = "A duplicate value was entered.";
         public const string UNAUTHORIZED_ACCESS = "Unauthorized access.";
+        public const string INVALID_INPUT = "Invalid input.";
         public const string DEFAULT_RESPONSE = "An error has occurred.";
     }
 }

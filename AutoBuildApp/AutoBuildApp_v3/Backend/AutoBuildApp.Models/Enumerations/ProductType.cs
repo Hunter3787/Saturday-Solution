@@ -7,6 +7,7 @@ namespace AutoBuildApp.Models.Enumerations
 {
     public enum ProductType
     {
+        None,
         GPU,
         CPU,
         RAM,
@@ -20,6 +21,7 @@ namespace AutoBuildApp.Models.Enumerations
         Case,
         Cable,
         Battery,
-        HDD
+        HDD,
+        SSD
     }
 }

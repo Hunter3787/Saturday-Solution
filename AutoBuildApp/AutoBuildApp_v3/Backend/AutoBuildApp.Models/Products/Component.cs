@@ -37,7 +37,8 @@ namespace AutoBuildApp.Models.Products
         }
 
         /// <summary>
-        /// 
+        /// String method to locate the index of the passed string.
+        /// Will call index variation to remove the element upon location.
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
@@ -72,6 +73,37 @@ namespace AutoBuildApp.Models.Products
         public double GetTotalcost()
         {
             return Price * Quantity;
+        }
+        #endregion
+
+        #region Overridden methods
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+
+            if (!(obj is Component))
+            {
+                return false;
+            }
+
+            if (ProductType == ((Component)obj).ProductType
+                && ModelNumber == ((Component)obj).ModelNumber
+                && ProductName == ((Component)obj).ProductName
+                && ManufacturerName == ((Component)obj).ManufacturerName
+                && Price == ((Component)obj).Price)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
         #endregion
     }
