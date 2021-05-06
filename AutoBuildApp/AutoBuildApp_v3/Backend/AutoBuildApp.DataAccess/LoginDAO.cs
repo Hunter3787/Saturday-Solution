@@ -105,6 +105,7 @@ namespace AutoBuildApp.DataAccess
                             int permissions = reader.GetOrdinal("permission");
                             int scope = reader.GetOrdinal("scopeOfPermission");
                             int locked = reader.GetOrdinal("locked");
+                            int emailConfirmed = reader.GetOrdinal("emailConfirmed");
 
 
 
@@ -113,6 +114,13 @@ namespace AutoBuildApp.DataAccess
                                 if ((bool)reader[locked])
                                 {
                                     _CRAuth.ResponseString = "Account is locked";
+                                    _CRAuth.ResponseBool = false;
+                                    reader.Close();
+                                    return _CRAuth;
+                                }
+                                else if ((bool)reader[emailConfirmed])
+                                {
+                                    _CRAuth.ResponseString = "Email not verified";
                                     _CRAuth.ResponseBool = false;
                                     reader.Close();
                                     return _CRAuth;

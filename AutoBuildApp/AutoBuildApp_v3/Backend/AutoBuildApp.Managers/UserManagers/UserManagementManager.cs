@@ -30,16 +30,20 @@ namespace AutoBuildApp.Managers
         }
 
 
-        public string UpdatePassword(string password, string userEmail)
+        public string UpdatePassword(string password, string passwordCheck, string activeEmail)
         {
-            // get the current principle that is on the thread:
-            ClaimsPrincipal _threadPrinciple
-                = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            //userEmail = _threadPrinciple.FindFirst(ClaimTypes.Email).Value;
             if (_inputValidityManager.IsPasswordValid(password))
             {
-                password = BC.HashPassword(password, BC.GenerateSalt());
-                return _userManagementService._userManagementDAO.UpdatePasswordDB(userEmail, password);
+                if (_inputValidityManager.passwordCheck(password, passwordCheck))
+                {
+                    passwordCheck = BC.HashPassword(passwordCheck, BC.GenerateSalt());
+                    password = BC.HashPassword(password, BC.GenerateSalt());
+                    return _userManagementService._userManagementDAO.UpdatePasswordDB(password, activeEmail);
+                }
+                else
+                {
+                    return "Passwords do not match";
+                }
             }
             else
             {
@@ -47,15 +51,12 @@ namespace AutoBuildApp.Managers
             }
         }
 
-        public string UpdateEmail(string userInputEmail, string activeEmail)
+        public string UpdateEmail(string InputEmail, string activeEmail)
         {
-            ClaimsPrincipal _threadPrinciple
-                = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            //activeEmail = _threadPrinciple.FindFirst(ClaimTypes.Email).Value;
-            if (_inputValidityManager.ValidEmail(userInputEmail))
+            if (_inputValidityManager.ValidEmail(InputEmail))
             {
-                if (!_userManagementDAO.DoesEmailExist(userInputEmail)) {
-                    return _userManagementService._userManagementDAO.UpdateEmailDB(activeEmail, userInputEmail);
+                if (!_userManagementDAO.DoesEmailExist(InputEmail)) {
+                    return _userManagementService._userManagementDAO.UpdateEmailDB(InputEmail, activeEmail);
                 }
                 else
                 {
@@ -68,16 +69,13 @@ namespace AutoBuildApp.Managers
             }
         }
 
-        public string UpdateUsername(string userInputUsername, string activeEmail)
+        public string UpdateUsername(string username, string activeEmail)
         {
-            ClaimsPrincipal _threadPrinciple
-                = (ClaimsPrincipal)Thread.CurrentPrincipal;
-             //activeEmail = _threadPrinciple.FindFirst(ClaimTypes.Email).Value;
-            if (_inputValidityManager.ValidUserName(userInputUsername))
+            if (_inputValidityManager.ValidUserName(username))
             {
-                if (!_userManagementDAO.DoesUsernameExist(userInputUsername))
+                if (!_userManagementDAO.DoesUsernameExist(username))
                 {
-                    return _userManagementService._userManagementDAO.UpdateUserNameDB(activeEmail, userInputUsername);
+                    return _userManagementService._userManagementDAO.UpdateUserNameDB(username, activeEmail);
                 } 
                 else
                 {
@@ -143,7 +141,7 @@ namespace AutoBuildApp.Managers
             }
         }
 
-        public string ChangeLockState(string username, string lockState)
+        public string ChangeLockState(string username, bool lockState)
         {
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
             IClaims locked = claimsFactory.GetClaims(RoleEnumType.Locked);
@@ -157,12 +155,12 @@ namespace AutoBuildApp.Managers
             }
             else
             {
-                if (lockState == RoleEnumType.Locked)
+                if (lockState == true)
                 {
                     _userManagementDAO.ChangePermissionsDB(username, null, locked.Claims());
                     return _userManagementDAO.Lock(username);
                 }
-                else if (lockState == RoleEnumType.BasicRole)
+                else if (lockState == false)
                 {
                     _userManagementDAO.ChangePermissionsDB(username, null, basic.Claims());
                     return _userManagementDAO.Unlock(username);

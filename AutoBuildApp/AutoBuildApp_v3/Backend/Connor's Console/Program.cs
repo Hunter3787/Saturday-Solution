@@ -104,7 +104,7 @@ namespace Connor_s_Console
             Console.WriteLine(userManagementManager.RoleCheck("SERGE"));
             Console.WriteLine(userManagementManager.ChangePermissions("SERGE", RoleEnumType.DelegateAdmin));
             Console.WriteLine(userManagementManager.RoleCheck("SERGE"));
-            Console.WriteLine(userManagementManager.ChangeLockState("SERGE", RoleEnumType.Locked));
+            Console.WriteLine(userManagementManager.ChangeLockState("SERGE", true));
             Console.WriteLine(userManagementManager.RoleCheck("SERGE"));
             Console.WriteLine(userManagementManager.ChangePermissions("SERGE", RoleEnumType.SystemAdmin));
             Console.WriteLine(userManagementManager.RoleCheck("SERGE"));
