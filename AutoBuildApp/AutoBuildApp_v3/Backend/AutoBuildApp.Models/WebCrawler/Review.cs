@@ -11,6 +11,11 @@ namespace AutoBuildApp.Models.WebCrawler
         public string Content { get; set; }
         public string Date { get; set; }
 
+        public Review()
+        {
+
+        }
+
         public Review(string reviewerName, string starRating, string content, string date)
         {
             ReviewerName = reviewerName;

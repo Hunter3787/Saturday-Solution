@@ -20,6 +20,10 @@ namespace AutoBuildApp.Models.WebCrawler
         public Dictionary<string, string> Specs { get; set; }
         public List<Review> Reviews { get; set; }
 
+        public Product()
+        {
+
+        }
 
         public Product(string imageUrl, bool availability, string company, string url, string modelNumber, string name, 
             string productType, string manufacturerName, string totalRating, string totalNumberOfReviews,
