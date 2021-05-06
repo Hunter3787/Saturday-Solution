@@ -20,33 +20,48 @@ namespace AutoBuildApp.DataAccess.Test
         private Shelf _emptyShelf;
         private Shelf _shelfWithTwoCPU;
         private List<Shelf> _shelfList;
+        private Component _intelCPU700K;
+        private Component _intelCPU700KA;
+        private Component _amdCPU3W0F;
+        private Component _amdCPU1BOX;
 
 
         public ShelfDAOTests()
-        {
-        }
-
-        [TestInitialize]
-        public void TestInit()
         {
             _conString = ConnectionManager.
             connectionManager.
             GetConnectionStringByName(ControllerGlobals.DOCKER_CONNECTION);
 
-            _testComponent = new Component()
+            _amdCPU3W0F = new Component()
             {
-                Quantity = 2,
+                Quantity = 1,
                 ProductType = ProductType.CPU,
                 ModelNumber = "100-100000063WOF",
                 ManufacturerName = "AMD"
             };
 
-            _dupeTestComponent = new Component()
+            _amdCPU1BOX = new Component()
             {
-                Quantity = 2,
+                Quantity = 1,
                 ProductType = ProductType.CPU,
-                ModelNumber = "100-100000063WOF",
+                ModelNumber = "100-100000071BOX",
                 ManufacturerName = "AMD"
+            };
+
+            _intelCPU700K = new Component()
+            {
+                Quantity = 1,
+                ProductType = ProductType.CPU,
+                ModelNumber = "BX8070110700K",
+                ManufacturerName = "Intel"
+            };
+
+            _intelCPU700KA = new Component()
+            {
+                Quantity = 1,
+                ProductType = ProductType.CPU,
+                ModelNumber = "BX8070110700KA",
+                ManufacturerName = "Intel"
             };
 
             _emptyShelf = new Shelf()
@@ -81,7 +96,12 @@ namespace AutoBuildApp.DataAccess.Test
                 _emptyShelf,
                 _shelfWithTwoCPU
             };
+        }
 
+        [TestInitialize]
+        public void TestInit()
+        {
+            
         }
 
         [TestMethod]
@@ -249,17 +269,24 @@ namespace AutoBuildApp.DataAccess.Test
                     {
                         new Component()
                         {
-                            Quantity = 2,
+                            Quantity = 1,
+                            ProductType = ProductType.CPU,
+                            ModelNumber = "BX8070110700K",
+                            ManufacturerName = "Intel"
+                        },
+                        new Component()
+                        {
+                            Quantity = 1,
                             ProductType = ProductType.CPU,
                             ModelNumber = "100-100000063WOF",
                             ManufacturerName = "AMD"
                         },
                         new Component()
                         {
-                            Quantity = 2,
+                            Quantity = 1,
                             ProductType = ProductType.CPU,
-                            ModelNumber = "100-100000063WOF",
-                            ManufacturerName = "AMD"
+                            ModelNumber = "BX8070110700KA",
+                            ManufacturerName = "Intel"
                         },
                         new Component()
                         {
@@ -286,15 +313,25 @@ namespace AutoBuildApp.DataAccess.Test
         }
 
         [TestMethod]
-        public void ShelfDAO_GetShelfByName_ReturnTwoObjects()
+        public void ShelfDAO_GetShelfByName_ReturnFourObjects()
         {
 
             // Arrange
             var expected = new SystemCodeWithCollection<Shelf>();
             ShelfDAO shelfDAO = new ShelfDAO(_conString);
-            var username = "Zeinab";
+            var username = "Zeina";
             var shelfName = "TacoBell";
-            expected.GenericCollection = _shelfWithTwoCPU;
+            expected.GenericCollection = new Shelf()
+            {
+                ShelfName = shelfName,
+                ComponentList = new List<Component>()
+                {
+                    _intelCPU700K,
+                    _amdCPU3W0F,
+                    _intelCPU700KA,
+                    _amdCPU1BOX
+                }
+            };
             expected.Code = AutoBuildSystemCodes.Success;
             var expectedShelf = expected.GenericCollection;
 
@@ -308,26 +345,49 @@ namespace AutoBuildApp.DataAccess.Test
         }
 
         [TestMethod]
-        public void ShelfDAO_GetComponentByID_ReturnSingleComponent()
+        public void ShelfDAO_GetShelfByName_ReturnEmptyShelf()
         {
-
             // Arrange
             var expected = new SystemCodeWithCollection<Shelf>();
-            ShelfDAO shelfDAO = new ShelfDAO(_conString);
-            var username = "Zeinab";
-            var shelfName = "TacoBell";
-            expected.GenericCollection = _shelfWithTwoCPU;
+            ShelfDAO dao = new ShelfDAO(_conString);
+            expected.GenericCollection = new Shelf()
+            {
+                ShelfName = "McDonalds"
+            };
             expected.Code = AutoBuildSystemCodes.Success;
-            var expectedShelf = expected.GenericCollection;
+            var username = "Zeina";
+            string shelfName = "McDonalds";
 
-            // Act
-            var actual = shelfDAO.GetShelfByName(shelfName, username);
-            var actualShelf = actual.GenericCollection;
+            //Act
+            var actual = dao.GetShelfByName(shelfName, username);
 
             // Assert
+            Assert.AreEqual(expected.GenericCollection, actual.GenericCollection);
             Assert.AreEqual(expected.Code, actual.Code);
-            Assert.AreEqual(expectedShelf, actualShelf);
         }
+
+        // Out of scope
+        //[TestMethod]
+        //public void ShelfDAO_GetComponentByID_ReturnSingleComponent()
+        //{
+
+        //    // Arrange
+        //    var expected = new SystemCodeWithCollection<Shelf>();
+        //    ShelfDAO shelfDAO = new ShelfDAO(_conString);
+        //    var username = "Zeinab";
+        //    var shelfName = "TacoBell";
+        //    expected.GenericCollection = _shelfWithTwoCPU;
+        //    expected.Code = AutoBuildSystemCodes.Success;
+        //    var expectedShelf = expected.GenericCollection;
+
+        //    // Act
+        //    var actual = shelfDAO.GetShelfByName(shelfName, username);
+        //    var actualShelf = actual.GenericCollection;
+
+        //    // Assert
+        //    Assert.AreEqual(expected.Code, actual.Code);
+        //    Assert.AreEqual(expectedShelf, actualShelf);
+        //}
 
         [TestMethod]
         public void ShelfDAO_InsertShelf_ReturnTrueAndSuccessMessage()

@@ -11,6 +11,7 @@ namespace AutoBuildApp.Models.Enumerations
         DuplicateValue,
         DefaultError,
         ArguementNull,
+        UndeclaredVariable,
         FailedParse,
         ProductCreationFailed,
     }

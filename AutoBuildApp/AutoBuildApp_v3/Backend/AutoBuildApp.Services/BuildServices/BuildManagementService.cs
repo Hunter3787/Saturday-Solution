@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using AutoBuildApp.DataAccess;
 using AutoBuildApp.Models;
+using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.Models.Interfaces;
 /**
 * Build Management Service is a service that calls a 
@@ -13,65 +14,65 @@ namespace AutoBuildApp.Services
     public class BuildManagementService
     {
         private BuildDAO _dao;
-        private IMessageResponse _response;
+        private CommonResponse _response;
 
         public BuildManagementService(BuildDAO buildDAO)
         {
             _dao = buildDAO;
         }
 
-        public IMessageResponse AddBuild(IBuild build, string buildName, string user)
+        public CommonResponse AddBuild(IBuild build, string buildName, string user)
         {
-            _response = new StringBoolResponse();
+            _response = new CommonResponse();
 
             try
             {
                 _dao.InsertBuild(build, buildName, user);
 
 
-                _response.SuccessBool = true;
-                _response.MessageString = ResponseStringGlobals.SUCCESSFUL_ADDITION;
+                _response.ResponseBool = true;
+                _response.ResponseString = ResponseStringGlobals.SUCCESSFUL_ADDITION;
             }
             catch (TimeoutException)
             {
-                _response.SuccessBool = false;
-                _response.MessageString = ResponseStringGlobals.DATABASE_TIMEOUT;
+                _response.ResponseBool = false;
+                _response.ResponseString = ResponseStringGlobals.DATABASE_TIMEOUT;
             }
 
             return _response;
         }
 
-        public IMessageResponse CopyBuild()
+        public CommonResponse CopyBuild()
         {
-            _response = new StringBoolResponse();
+            _response = new CommonResponse();
 
             try
             {
-                _response.SuccessBool = true;
-                _response.MessageString = ResponseStringGlobals.SUCCESSFUL_ADDITION;
+                _response.ResponseBool = true;
+                _response.ResponseString = ResponseStringGlobals.SUCCESSFUL_ADDITION;
             }
             catch (TimeoutException)
             {
-                _response.SuccessBool = false;
-                _response.MessageString = ResponseStringGlobals.DATABASE_TIMEOUT;
+                _response.ResponseBool = false;
+                _response.ResponseString = ResponseStringGlobals.DATABASE_TIMEOUT;
             }
 
             return _response;
         }
 
-        public IMessageResponse DeleteBuild()
+        public CommonResponse DeleteBuild()
         {
-            _response = new StringBoolResponse();
+            _response = new CommonResponse();
 
             try
             {
-                _response.SuccessBool = true;
-                _response.MessageString = ResponseStringGlobals.SUCCESSFUL_DELETION;
+                _response.ResponseBool = true;
+                _response.ResponseString = ResponseStringGlobals.SUCCESSFUL_DELETION;
             }
             catch (TimeoutException)
             {
-                _response.SuccessBool = false;
-                _response.MessageString = ResponseStringGlobals.DATABASE_TIMEOUT;
+                _response.ResponseBool = false;
+                _response.ResponseString = ResponseStringGlobals.DATABASE_TIMEOUT;
             }
 
             return _response;
@@ -88,16 +89,16 @@ namespace AutoBuildApp.Services
             return null;
         }
 
-        public IMessageResponse PublishBuild()
+        public CommonResponse PublishBuild()
         {
-            _response = new StringBoolResponse();
+            _response = new CommonResponse();
 
             return _response;
         }
 
-        public IMessageResponse ModifyBuild()
+        public CommonResponse ModifyBuild()
         {
-            _response = new StringBoolResponse();
+            _response = new CommonResponse();
 
             return _response;
         }

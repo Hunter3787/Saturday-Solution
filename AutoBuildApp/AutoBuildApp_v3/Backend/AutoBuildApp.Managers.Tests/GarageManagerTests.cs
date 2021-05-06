@@ -4,6 +4,7 @@ using AutoBuildApp.Managers;
 using AutoBuildApp.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AutoBuildApp.Models;
+using AutoBuildApp.Models.DataTransferObjects;
 
 namespace AutoBuildApp.Manger.Tests
 {
@@ -143,10 +144,10 @@ namespace AutoBuildApp.Manger.Tests
         public void UserGarageManager_CreateShelf_True()
         {
             // Arrange
-            IMessageResponse expected = new StringBoolResponse();
-            IMessageResponse actual = new StringBoolResponse();
-            expected.SuccessBool = true;
-            expected.MessageString = ResponseStringGlobals.SUCCESSFUL_CREATION;
+            CommonResponse expected = new CommonResponse();
+            CommonResponse actual = new CommonResponse();
+            expected.ResponseBool = true;
+            expected.ResponseString = ResponseStringGlobals.SUCCESSFUL_CREATION;
             string user = "Nick";
             string shelfName = "Tacobell";
 
@@ -154,8 +155,8 @@ namespace AutoBuildApp.Manger.Tests
             actual = _testManager.CreateShelf(shelfName, user);
 
             // Assert
-            Assert.AreEqual(expected.SuccessBool,actual.SuccessBool);
-            Assert.AreEqual(expected.MessageString, actual.MessageString);
+            Assert.AreEqual(expected.ResponseBool,actual.ResponseBool);
+            Assert.AreEqual(expected.ResponseString, actual.ResponseString);
         }
 
         /// <summary>

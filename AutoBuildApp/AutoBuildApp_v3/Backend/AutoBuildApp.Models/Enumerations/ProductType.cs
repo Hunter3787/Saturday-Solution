@@ -7,6 +7,7 @@ namespace AutoBuildApp.Models.Enumerations
 {
     public enum ProductType
     {
+        None,
         GPU,
         CPU,
         RAM,
