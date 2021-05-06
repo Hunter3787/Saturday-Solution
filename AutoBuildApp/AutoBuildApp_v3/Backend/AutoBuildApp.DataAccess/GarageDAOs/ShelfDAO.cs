@@ -250,11 +250,11 @@ namespace AutoBuildApp.DataAccess
             return success;
         }
 
-        public SystemCodeWithCollection<bool> UpdateShelfName(string oldShelfName, string newShelfName, string username)
+        public SystemCodeWithObject<bool> UpdateShelfName(string oldShelfName, string newShelfName, string username)
         {
-            SystemCodeWithCollection<bool> output = new SystemCodeWithCollection<bool>()
+            SystemCodeWithObject<bool> output = new SystemCodeWithObject<bool>()
             {
-                GenericCollection = false
+                GenericObject = false
             };
 
             try
@@ -289,7 +289,7 @@ namespace AutoBuildApp.DataAccess
                     if (rowsAdded == 1)
                     {
                         command.Transaction.Commit();
-                        output.GenericCollection = true;
+                        output.GenericObject = true;
                     }
                 }
             }
@@ -297,13 +297,13 @@ namespace AutoBuildApp.DataAccess
             return output;
         }
 
-        public SystemCodeWithCollection<bool> UpdateShelfOrder(
+        public SystemCodeWithObject<bool> UpdateShelfOrder(
             List<int> indexOrder,
             string shelfName,
             string username)
         {
-            SystemCodeWithCollection<bool> output = new SystemCodeWithCollection<bool>();
-            output.GenericCollection = false;
+            SystemCodeWithObject<bool> output = new SystemCodeWithObject<bool>();
+            output.GenericObject = false;
 
             try
             {
@@ -336,7 +336,7 @@ namespace AutoBuildApp.DataAccess
                     if (rowsAdded == 1)
                     {
                         command.Transaction.Commit();
-                        output.GenericCollection = true;
+                        output.GenericObject = true;
                     }
                 }
             }
@@ -350,11 +350,11 @@ namespace AutoBuildApp.DataAccess
         /// </summary>
         /// <param name="username">User name</param>
         /// <returns></returns>
-        public SystemCodeWithCollection<List<Shelf>> GetAllShelvesByUser(string username)
+        public SystemCodeWithObject<List<Shelf>> GetAllShelvesByUser(string username)
         {
-            SystemCodeWithCollection<List<Shelf>> output = new SystemCodeWithCollection<List<Shelf>>();
-            output.GenericCollection = new List<Shelf>();
-            var shelves = output.GenericCollection;
+            SystemCodeWithObject<List<Shelf>> output = new SystemCodeWithObject<List<Shelf>>();
+            output.GenericObject = new List<Shelf>();
+            var shelves = output.GenericObject;
 
             try
             {
@@ -431,11 +431,11 @@ namespace AutoBuildApp.DataAccess
         /// <param name="shelfName"></param>
         /// <param name="username"></param>
         /// <returns></returns>
-        public SystemCodeWithCollection<Shelf> GetShelfByName(string shelfName, string username)
+        public SystemCodeWithObject<Shelf> GetShelfByName(string shelfName, string username)
         {
-            SystemCodeWithCollection<Shelf> output = new SystemCodeWithCollection<Shelf>();
-            output.GenericCollection = new Shelf();
-            var shelf = output.GenericCollection;
+            SystemCodeWithObject<Shelf> output = new SystemCodeWithObject<Shelf>();
+            output.GenericObject = new Shelf();
+            var shelf = output.GenericObject;
             shelf.ShelfName = shelfName;
 
             try
@@ -493,11 +493,11 @@ namespace AutoBuildApp.DataAccess
         }
 
         // Out of scope
-        //public SystemCodeWithCollection<Component> GetComponentByModel(string model)
+        //public SystemCodeWithObject<Component> GetComponentByModel(string model)
         //{
-        //    SystemCodeWithCollection<Component> output = new SystemCodeWithCollection<Component>();
+        //    SystemCodeWithObject<Component> output = new SystemCodeWithObject<Component>();
         //    ProductFactory productFactory = new ProductFactory();
-        //    var component = output.GenericCollection;
+        //    var component = output.GenericObject;
             
         //    try
         //    {

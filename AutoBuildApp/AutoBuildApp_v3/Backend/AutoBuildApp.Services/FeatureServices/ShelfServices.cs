@@ -105,9 +105,9 @@ namespace AutoBuildApp.Services
             return output;
         }
 
-        public CollectionCommonResponse<Shelf> GetShelfByName(string shelfName, string user)
+        public CommonResponseWithObject<Shelf> GetShelfByName(string shelfName, string user)
         {
-            CollectionCommonResponse<Shelf> outputList = new CollectionCommonResponse<Shelf>();
+            CommonResponseWithObject<Shelf> outputList = new CommonResponseWithObject<Shelf>();
 
             return outputList;
         }

@@ -252,7 +252,7 @@ namespace AutoBuildApp.DataAccess.Test
         public void ShelfDAO_GetAllShelvesByUser_ReturnTwoShelves()
         {
             // Arrange
-            var expected = new SystemCodeWithCollection<List<Shelf>>();
+            var expected = new SystemCodeWithObject<List<Shelf>>();
             ShelfDAO shelfDAO = new ShelfDAO(_conString);
             var username = "Zeina";
 
@@ -299,13 +299,13 @@ namespace AutoBuildApp.DataAccess.Test
                 }
             };
             expected.Code = AutoBuildSystemCodes.Success;
-            expected.GenericCollection = shelves;
-            var expectedList = expected.GenericCollection;
+            expected.GenericObject = shelves;
+            var expectedList = expected.GenericObject;
 
 
             // Act
             var actual = shelfDAO.GetAllShelvesByUser(username);
-            var actualList = actual.GenericCollection;
+            var actualList = actual.GenericObject;
 
             // Assert
             Assert.AreEqual(expected.Code, actual.Code);
@@ -317,11 +317,11 @@ namespace AutoBuildApp.DataAccess.Test
         {
 
             // Arrange
-            var expected = new SystemCodeWithCollection<Shelf>();
+            var expected = new SystemCodeWithObject<Shelf>();
             ShelfDAO shelfDAO = new ShelfDAO(_conString);
             var username = "Zeina";
             var shelfName = "TacoBell";
-            expected.GenericCollection = new Shelf()
+            expected.GenericObject = new Shelf()
             {
                 ShelfName = shelfName,
                 ComponentList = new List<Component>()
@@ -333,11 +333,11 @@ namespace AutoBuildApp.DataAccess.Test
                 }
             };
             expected.Code = AutoBuildSystemCodes.Success;
-            var expectedShelf = expected.GenericCollection;
+            var expectedShelf = expected.GenericObject;
 
             // Act
             var actual = shelfDAO.GetShelfByName(shelfName, username);
-            var actualShelf = actual.GenericCollection;
+            var actualShelf = actual.GenericObject;
 
             // Assert
             Assert.AreEqual(expected.Code, actual.Code);
@@ -348,9 +348,9 @@ namespace AutoBuildApp.DataAccess.Test
         public void ShelfDAO_GetShelfByName_ReturnEmptyShelf()
         {
             // Arrange
-            var expected = new SystemCodeWithCollection<Shelf>();
+            var expected = new SystemCodeWithObject<Shelf>();
             ShelfDAO dao = new ShelfDAO(_conString);
-            expected.GenericCollection = new Shelf()
+            expected.GenericObject = new Shelf()
             {
                 ShelfName = "McDonalds"
             };
@@ -362,7 +362,7 @@ namespace AutoBuildApp.DataAccess.Test
             var actual = dao.GetShelfByName(shelfName, username);
 
             // Assert
-            Assert.AreEqual(expected.GenericCollection, actual.GenericCollection);
+            Assert.AreEqual(expected.GenericObject, actual.GenericObject);
             Assert.AreEqual(expected.Code, actual.Code);
         }
 
@@ -372,17 +372,17 @@ namespace AutoBuildApp.DataAccess.Test
         //{
 
         //    // Arrange
-        //    var expected = new SystemCodeWithCollection<Shelf>();
+        //    var expected = new SystemCodeWithObject<Shelf>();
         //    ShelfDAO shelfDAO = new ShelfDAO(_conString);
         //    var username = "Zeinab";
         //    var shelfName = "TacoBell";
-        //    expected.GenericCollection = _shelfWithTwoCPU;
+        //    expected.GenericObject = _shelfWithTwoCPU;
         //    expected.Code = AutoBuildSystemCodes.Success;
-        //    var expectedShelf = expected.GenericCollection;
+        //    var expectedShelf = expected.GenericObject;
 
         //    // Act
         //    var actual = shelfDAO.GetShelfByName(shelfName, username);
-        //    var actualShelf = actual.GenericCollection;
+        //    var actualShelf = actual.GenericObject;
 
         //    // Assert
         //    Assert.AreEqual(expected.Code, actual.Code);

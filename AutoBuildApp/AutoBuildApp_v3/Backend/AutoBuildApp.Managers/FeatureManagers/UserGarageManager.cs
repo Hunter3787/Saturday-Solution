@@ -180,9 +180,9 @@ namespace AutoBuildApp.Managers
             return response;
         }
 
-        public CollectionCommonResponse<Shelf> GetShelfByName(string shelfName, string username)
+        public CommonResponseWithObject<Shelf> GetShelfByName(string shelfName, string username)
         {
-            CollectionCommonResponse<Shelf> output = new CollectionCommonResponse<Shelf>();
+            CommonResponseWithObject<Shelf> output = new CommonResponseWithObject<Shelf>();
 
             try
             {
@@ -191,7 +191,7 @@ namespace AutoBuildApp.Managers
             }
             catch (ArgumentNullException)
             {
-                output.GenericCollection = new Shelf();
+                output.GenericObject = new Shelf();
                 output.ResponseString = ResponseStringGlobals.INVALID_INPUT;
                 output.ResponseBool = false;
                 return output;
@@ -199,7 +199,7 @@ namespace AutoBuildApp.Managers
             }
             catch (UnauthorizedAccessException)
             {
-                output.GenericCollection = new Shelf();
+                output.GenericObject = new Shelf();
                 output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
                 output.ResponseBool = false;
                 return output;
