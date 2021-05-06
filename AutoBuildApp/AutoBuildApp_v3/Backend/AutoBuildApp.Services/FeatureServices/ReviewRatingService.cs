@@ -7,6 +7,9 @@ using AutoBuildApp.DomainModels;
 using AutoBuildApp.DomainModels.Enumerations;
 using AutoBuildApp.DataAccess;
 using AutoBuildApp.DataAccess.Entities;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using AutoBuildApp.Logging;
 
 /// <summary>
 /// References used from file: Solution Items/References.txt 
@@ -38,39 +41,52 @@ namespace AutoBuildApp.Services
         /// </summary>
         /// <param name="reviewRating">Takes in a ReviewRating object to be converted.</param>
         /// <returns>returns a success-state bool</returns>
-        public bool CreateReviewRating(ReviewRating reviewRating)
+        public async Task<bool> CreateReviewRating(ReviewRating reviewRating)
         {
             _logger.LogInformation($"Review Rating Service CreateReviewRating was called for User:{reviewRating.Username}");
 
             // this converts a ReviewRating object into a ReviewRatingEntity object.
             var reviewRatingEntity = new ReviewRatingEntity()
             {
+                BuildId = reviewRating.BuildId,
                 Username = reviewRating.Username,
                 StarRatingValue = (int)reviewRating.StarRating, // casts the enum into a boolean for easier storage and query in DB.
                 Message = reviewRating.Message,
                 DateTime = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF"), // takes the current time and appends it to the object.
-                FilePath = reviewRating.FilePath
+                ReviewImagePath = await UploadImage(reviewRating.Username, reviewRating.Image)
             };
-
-            // starts a new memory stream that will be used as long as the using block is active.
-            using (var ms = new MemoryStream())
-            {
-                // checks is the image object is null, if it is then it will be stored as a null value,
-                // if it is not null then the image will be stored.
-                if (reviewRating.Picture == null)
-                {
-                    reviewRatingEntity.ImageBuffer = null;
-                }
-                else
-                {
-                    reviewRating.Picture.Save(ms, reviewRating.Picture.RawFormat);
-                    reviewRatingEntity.ImageBuffer = ms.ToArray();
-                }
-            }
 
             // returns the bool of the success of the DAO method.
             return _reviewRatingDAO.CreateReviewRatingRecord(reviewRatingEntity);
         }
+
+        private async Task<string> UploadImage(string username, List<IFormFile> files)
+        {
+            string storeIn = " ";
+
+            if (files == null)
+                return storeIn;
+
+            foreach (var item in files)
+            {
+                if (item.Length > 0)
+                {
+                    var currentDirectory = Directory.GetCurrentDirectory().ToString();
+
+                    storeIn = $"/assets/images/Reviews/{username}_{ DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}.jpg";
+
+                    var path = Path.GetFullPath(Path.Combine(currentDirectory, $@"..\..\FrontEnd{storeIn}"));
+
+                    using (var stream = new FileStream(path, FileMode.CreateNew, FileAccess.ReadWrite))
+                    {
+                        await item.CopyToAsync(stream);
+                    }
+                }
+            }
+            return storeIn;
+        }
+
+
 
         /// <summary>
         /// This method will get a single review from 
@@ -93,31 +109,38 @@ namespace AutoBuildApp.Services
                 StarRating = (StarType)reviewEntity.StarRatingValue,
                 Message = reviewEntity.Message,
                 DateTime = reviewEntity.DateTime,
-                FilePath = reviewEntity.FilePath
+                ImagePath = reviewEntity.ReviewImagePath
             };
-
-            // This will verify that the byte array is not null, if null, it will return null.
-            if (reviewEntity.ImageBuffer != null)
-            {
-                // This will start a new memory stream for the duration of the using block
-                using (var streamBitmap = new MemoryStream(reviewEntity.ImageBuffer))
-                {
-                    // this will start the conversion of the byte to an image to be saved locally.
-                    using (Image img = Image.FromStream(streamBitmap))
-                    {
-                        // this will dynamically store the image based on usename and entity id for ease of access.
-                        img.Save($"C:\\Users\\Serge\\Desktop\\images\\{reviewEntity.Username}_{reviewEntity.EntityId}.jpg");
-                        reviewRatings.Picture = img;
-                    }
-                }
-            }
-            else
-            {
-                reviewRatings.Picture = null;
-            }
 
             // returns the object
             return reviewRatings;
+        }
+
+        public List<ReviewRating> GetAllReviewsRatingsByBuildId(string buildId)
+        {
+            var reviewEntities = _reviewRatingDAO.GetAllReviewsRatingsByBuildId(buildId);
+
+            var reviewRatingList = new List<ReviewRating>(); // initilaize a new list that will be used to append values to.
+
+            foreach (ReviewRatingEntity reviewRatingEntity in reviewEntities)
+            {
+                // add entity object values into model object values.
+                var reviewRatings = new ReviewRating()
+                {
+                    EntityId = reviewRatingEntity.EntityId,
+                    BuildId = reviewRatingEntity.BuildId,
+                    Username = reviewRatingEntity.Username,
+                    StarRating = (StarType)reviewRatingEntity.StarRatingValue,
+                    Message = reviewRatingEntity.Message,
+                    DateTime = reviewRatingEntity.DateTime,
+                    ImagePath = reviewRatingEntity.ReviewImagePath
+                };
+
+       
+
+                reviewRatingList.Add(reviewRatings); // appends the review rating object to the list.
+            }
+            return reviewRatingList; // returns the list.
         }
 
         /// <summary>
@@ -142,43 +165,10 @@ namespace AutoBuildApp.Services
                     StarRating = (StarType)reviewRatingEntity.StarRatingValue,
                     Message = reviewRatingEntity.Message,
                     DateTime = reviewRatingEntity.DateTime,
-                    ImagePath = reviewRatingEntity.FilePath
+                    ImagePath = reviewRatingEntity.ReviewImagePath
                 };
 
-                // This will verify that the byte array is not null, if null, it will return null.
-                if (reviewRatingEntity.ImageBuffer != null)
-                {
-                    // This will start a new memory stream for the duration of the using block
-                    using (var streamBitmap = new MemoryStream(reviewRatingEntity.ImageBuffer))
-                    {
-                        // Will catch the argument null exception, and handle it by retuyrning null
-                        try
-                        {
-                            // this will start the conversion of the byte to an image to be saved locally.
-                            using (Image img = Image.FromStream(streamBitmap))
-                            {
-                                // this will dynamically store the image based on usename and entity id for ease of access.
-                                string path = Directory.GetCurrentDirectory();
-                                string newPath = Path.GetFullPath(Path.Combine(path, $"wwwroot/images/{reviewRatingEntity.Username}_{reviewRatingEntity.EntityId}.jpg"));
-
-                                img.Save(newPath);
-                                reviewRatings.FilePath = $"images/{ reviewRatingEntity.Username}_{ reviewRatingEntity.EntityId}.jpg"; // file path that is accessible by the UI.
-                                //reviewRatings.FilePath = $"C:/Users/Serge/Code/GitHub/Saturday-Solution/Async Logging/backend/APB.App.Apis/wwwroot/images/{reviewRatingEntity.Username}_{reviewRatingEntity.EntityId}.jpg";
-                            }
-                        }
-                        catch(ArgumentException ex)
-                        {
-                            _logger.LogInformation($"Service GetAllReviews was called with {ex}");
-
-                            reviewRatings.Picture = null;
-                            reviewRatings.FilePath = null;
-                        }
-                    }
-                }
-                else
-                {
-                    reviewRatings.Picture = null;
-                }
+            
                 reviewRatingList.Add(reviewRatings); // appends the review rating object to the list.
             }
             return reviewRatingList; // returns the list.
@@ -208,7 +198,7 @@ namespace AutoBuildApp.Services
         /// </summary>
         /// <param name="reviewRating">takes in a review rating object</param>
         /// <returns>returns a success-state bool</returns>
-        public bool EditReviewRating(ReviewRating reviewRating)
+        public async Task<bool> EditReviewRating(ReviewRating reviewRating)
         {
             _logger.LogInformation($"Review Rating Service EditReviewRating was called for ID:{reviewRating.EntityId}");
 
@@ -218,24 +208,8 @@ namespace AutoBuildApp.Services
                 EntityId = reviewRating.EntityId,
                 StarRatingValue = (int)reviewRating.StarRating,
                 Message = reviewRating.Message,
-                FilePath = reviewRating.FilePath
+                ReviewImagePath = await UploadImage(reviewRating.Username, reviewRating.Image)
             };
-
-            // starts a new memory stream that will be used as long as the using block is active.
-            using (var ms = new MemoryStream())
-            {
-                // checks is the image object is null, if it is then it will be stored as a null value,
-                // if it is not null then the image will be stored.
-                if (reviewRating.Picture == null)
-                {
-                    reviewRatingEntity.ImageBuffer = null;
-                }
-                else
-                {
-                    reviewRating.Picture.Save(ms, reviewRating.Picture.RawFormat);
-                    reviewRatingEntity.ImageBuffer = ms.ToArray();
-                }
-            }
 
             // returns the bool of the success of the DAO method.
             return _reviewRatingDAO.EditReviewRatingRecord(reviewRatingEntity);

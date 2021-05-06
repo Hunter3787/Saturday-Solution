@@ -44,15 +44,14 @@ namespace AutoBuildApp.DataAccess
                 // Uses the var command and will only use the command within this block.
                 using (var command = new SqlCommand())
                 {
+                    string SP_CreateMostPopularBuild = "CreateMostPopularBuild";
                     command.Transaction = conn.BeginTransaction(); // begins the transaction to the database.
                     command.Connection = conn; // sets the connection of the command equal to the connection that has already been started in the outer using block.
                     command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds; // automatically times out the connection after 60 seconds.
-                    command.CommandType = CommandType.Text; // sets the command type to command text, allowing use of string 'parametrized' queries.
+                    command.CommandType = CommandType.StoredProcedure; // sets the command type to command text, allowing use of string 'parametrized' queries.
 
                     // Stored the query that will be used for insertion. This is an insertion statement.
-                    command.CommandText =
-                        "INSERT INTO mostpopularbuilds(Username,Title,Description,LikeIncrementor,BuildTypeValue,BuildImagePath,DateTime)" +
-                        "SELECT @Username, @Title, @Description, @LikeIncrementor, @BuildTypeValue, @BuildImagePath, @DateTime";
+                    command.CommandText = SP_CreateMostPopularBuild;
 
                     var parameters = new SqlParameter[7]; // initialize 5 parameters to be read through incrementally.
                     parameters[0] = new SqlParameter("@Username", buildPostEntity.Username);
@@ -61,8 +60,7 @@ namespace AutoBuildApp.DataAccess
                     parameters[3] = new SqlParameter("@LikeIncrementor", buildPostEntity.LikeIncrementor);
                     parameters[4] = new SqlParameter("@BuildTypeValue", buildPostEntity.BuildTypeValue);
                     parameters[5] = new SqlParameter("@BuildImagePath", buildPostEntity.BuildImagePath);
-                    parameters[6] = new SqlParameter("@DateTime", buildPostEntity.DateTime);
-
+                    parameters[6] = new SqlParameter("@DateTime", Convert.ToDateTime(buildPostEntity.DateTime)); 
 
                     // This will add the range of parameters to the parameters that will be used in the query.
                     command.Parameters.AddRange(parameters);
@@ -185,7 +183,7 @@ namespace AutoBuildApp.DataAccess
 
                     // Stored the query that will be used for retrieval of all build posts.
                     command.CommandText =
-                        $"SELECT * from mostpopularbuilds WHERE EntityId = @buildId;";
+                        $"SELECT * from MostPopularBuildsView WHERE postId = @buildId;";
 
                     var parameters = new SqlParameter[1]; // parameter that will be sent through the query to identify a review.
                     parameters[0] = new SqlParameter("@buildId", buildId); // string ID
@@ -199,7 +197,7 @@ namespace AutoBuildApp.DataAccess
                         // while the reader is reading, it will sweep the database until it finds the id item and return it as values.
                         while (reader.Read())
                         {
-                            buildPostEntity.EntityId = reader["EntityId"].ToString();
+                            buildPostEntity.EntityId = reader["postiD"].ToString();
                             buildPostEntity.Username = (string)reader["Username"];
                             buildPostEntity.Title = (string)reader["Title"];
                             buildPostEntity.Description = (string)reader["Description"];
@@ -271,7 +269,7 @@ namespace AutoBuildApp.DataAccess
 
                     // Stored the query that will be used for retrieval of all build posts.
                     command.CommandText =
-                        $"SELECT * from mostpopularbuilds {whereClause} {orderBy};";
+                        $"SELECT * from MostPopularBuildsView {whereClause} {orderBy};";
 
                     // this will start the sql data reader that will be utilized to read through the database. for only the duration of the using block.
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -280,7 +278,7 @@ namespace AutoBuildApp.DataAccess
                         while (reader.Read())
                         {
                             var buildPostEntity = new BuildPostEntity(); // create a new object for each while loop.
-                            buildPostEntity.EntityId = reader["EntityId"].ToString();
+                            buildPostEntity.EntityId = reader["postId"].ToString();
                             buildPostEntity.Username = (string)reader["Username"];
                             buildPostEntity.Title = (string)reader["Title"];
                             buildPostEntity.Description = (string)reader["Description"];
@@ -321,20 +319,18 @@ namespace AutoBuildApp.DataAccess
                 // Uses the var command and will only use the command within this block.
                 using (var command = new SqlCommand())
                 {
+                    string SP_InsertLikes = "InsertLikes";
                     command.Transaction = conn.BeginTransaction(); // begins the transaction to the database.
                     command.Connection = conn; // sets the connection of the command equal to the connection that has already been starte in the outer using block.
                     command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds; // automatically times out the connection after 60 seconds.
-                    command.CommandType = CommandType.Text; // sets the command type to command text, allowing use of string 'parametrized' queries.
+                    command.CommandType = CommandType.StoredProcedure; // sets the command type to command text, allowing use of string 'parametrized' queries.
 
                     // Stored the query that will be used for insertion. This is an insertion statement.
-                    command.CommandText =
-                        "INSERT INTO likes(postId, userId) VALUES (@PostId, @UserId); " +
-                        "update mostpopularbuilds set LikeIncrementor = (select count(*) from likes where postId = @PostId) " +
-                        "where EntityId = @PostId";
+                    command.CommandText = SP_InsertLikes;
 
                     var parameters = new SqlParameter[2]; // initialize 5 parameters to be read through incrementally.
                     parameters[0] = new SqlParameter("@PostId", likeEntity.PostId);
-                    parameters[1] = new SqlParameter("@UserId", likeEntity.UserId);
+                    parameters[1] = new SqlParameter("@Username", likeEntity.UserId);
 
                     // This will add the range of parameters to the parameters that will be used in the query.
                     command.Parameters.AddRange(parameters);
@@ -350,8 +346,9 @@ namespace AutoBuildApp.DataAccess
                             return true;
                         }
                     }
-                    catch (SqlException e) when (e.Number == 2627)
+                    catch (SqlException e)// when (e.ErrorCode == 2627)
                     {
+                        Console.WriteLine(e.Number + " " + e.ErrorCode);
                         return false;
                     }
                     return false;

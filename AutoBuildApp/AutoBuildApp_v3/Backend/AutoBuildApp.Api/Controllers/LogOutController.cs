@@ -27,9 +27,9 @@ namespace AutoBuildApp.Api.Controllers
             /// SET IN THE JWT MIDDLEWARE
             ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
-            Console.WriteLine($"\nTHIS GUY REQUESTED TO BE LOGGED OUT:\n {_threadPrinciple.Identity.Name}");
+            //Console.WriteLine($"\nTHIS GUY REQUESTED TO BE LOGGED OUT:\n {_threadPrinciple.Identity.Name}");
             string returnValue = "";
-            Console.WriteLine("\nTHE CURRENT PERMISSIONS ON THREAD: \n");
+            //Console.WriteLine("\nTHE CURRENT PERMISSIONS ON THREAD: \n");
             foreach (var clm in _threadPrinciple.Claims)
             {
                 returnValue += $" claim type: { clm.Type } claim value: {clm.Value} \n";

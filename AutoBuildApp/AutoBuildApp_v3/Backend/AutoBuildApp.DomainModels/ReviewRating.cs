@@ -1,5 +1,7 @@
 ﻿using AutoBuildApp.DomainModels.Enumerations;
+using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 
@@ -17,11 +19,16 @@ namespace AutoBuildApp.DomainModels
     /// </summary>
     public class ReviewRating : IEquatable<ReviewRating>
     {
+        // This list stores a list of form file objects.
+        public List<IFormFile> Image { get; set; }
+
         private string _filePath;
 
         private Image _image;
 
         public string EntityId { get; set; }
+
+        public string BuildId { get; set; }
 
         public string Username { get; set; }
 
@@ -29,37 +36,7 @@ namespace AutoBuildApp.DomainModels
 
         public string Message { get; set; }
 
-        // getter and setter for the filepath variable
-        public string FilePath 
-        { 
-            get { return _filePath; } 
-            set { _filePath = value; }
-        }
-
         public string ImagePath { get; set; }
-
-        /// <summary>
-        /// This method is the customized getter and setter for the image picture variable.
-        /// </summary>
-        public Image Picture 
-        {
-            get 
-            {
-                // Checks if the filepath exists, if it's invalid then it will return null
-                // if it is valid then it will store it as the Image.
-                if (File.Exists(_filePath))
-                {
-                    _image = Image.FromFile(_filePath);
-                    return _image;
-                }
-
-                return null;
-            }
-            set 
-            {
-                _image = value;
-            } 
-        }
 
         public string DateTime { get; set; }
 

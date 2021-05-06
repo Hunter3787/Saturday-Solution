@@ -1,4 +1,5 @@
 ﻿using AutoBuildApp.Api.HelperFunctions;
+using AutoBuildApp.Logging;
 using AutoBuildApp.Managers;
 using AutoBuildApp.Managers.FeatureManagers;
 using AutoBuildApp.Models.DataTransferObjects;

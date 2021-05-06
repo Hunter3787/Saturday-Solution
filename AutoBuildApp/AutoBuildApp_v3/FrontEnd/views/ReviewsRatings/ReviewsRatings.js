@@ -3,19 +3,19 @@
 /// [2-6]
 /// </summary>
 
-const uri = 'https://localhost:5001/reviewrating';
+const reviewsUri = 'https://localhost:5001/reviewrating';
 let reviews = [];
 
 // This function will load the page by calling the functions below.
-function getItems() {
+function getReviews() {
     fetch('https://localhost:5001/reviewrating') // fetches the default URI
         .then(response => response.json()) // Will revieve a response from the default response.json.
-        .then(data => _displayItems(data)) // will call the display items function.
+        .then(data => displayReviews(data)) // will call the display items function.
         .catch(error => console.error('Unable to get items.', error)); // will catch an error and print the appropriate error message in console.
 }
 
 // This function will add an item to the DB.
-function addItem() {
+function addReview() {
     var starValue; // this variable will be used to store the value of the selected stars.
     const addUserNameTextbox = document.getElementById('add-username'); // will get the value from the html element and store it.
     var ele = document.getElementsByName('rate'); // will get the value from the html element and store it in ele.
@@ -52,14 +52,14 @@ function addItem() {
   })
     .then(response => response.json())
     .then(() => {
-      getItems(); // will call get items to get items once the add item is made.
+      getReviews(); // will call get items to get items once the add item is made.
     })
     .catch(error => console.error('Unable to add item.', error)); // logs error if it is caught.
 }
 
 // this function will call the delete fetch method.
-function deleteItem(id) {
-    fetch(`${uri}/${id}`, {
+function deleteReview(id) {
+    fetch(`${reviewsUri}/${id}`, {
         method: 'DELETE',
         mode: 'cors',
   })
@@ -79,7 +79,7 @@ function displayEditForm(id) {
 }
 
 // This method will update items in the DB.
-function updateItem() {
+function updateReview() {
     const itemId = document.getElementById('edit-id').value; // This will get the id of the item that has just been updated.
 
     // creates a json item of values that have been updated.
@@ -114,73 +114,112 @@ function closeInput() {
 }
 
 // This function will displat all the items in the fetch GET method.
-function _displayItems(data) {
+function displayReviews(data) {
 
-    const tBody = document.getElementById('reviews'); // This will get the id of the form from the HTML.
-    tBody.innerHTML = ''; // appends a null value to the inner HTML, as is not required.
+    const allReviews = document.getElementById('all-reviews'); // This will get the id of the form from the HTML.
+    allReviews.innerHTML = ''; // appends a null value to the inner HTML, as is not required.
 
     // This function will create a table, and append values for each column and iterate to the next row of items.
     data.forEach(item => {
-        var stars = ""; // instantiated the stars to null
 
-        // Created the initial table.
-        var table = document.createElement("tr"); 
 
-        // These four lines will create a new row and append the item username to the text and then to the first column and then the table.
-        var col1 = document.createElement("td"); 
-        var text1 = document.createTextNode(item["username"]); 
-        col1.appendChild(text1);
-        table.appendChild(col1);
 
-        // These next block of lines will create a new row and append the star value to the text and then to the second column and then the table.
-        var col2 = document.createElement("td"); 
-        for (var i = 0; i < item["starRating"]; i++) // this for loop will iterate through the number and append star chars as necessary.
-        {
-            stars += String.fromCharCode(9733);
-        }
-        var stars = document.createTextNode(stars); 
-        col2.appendChild(stars);
-        table.appendChild(col2);
+      // This is the html code that will be created by the following code.
+      // <div class="all-reviews" id="all-reviews">
+      //   <div class="reviews-containter" id="reviews-container">
+      //       <div class="reviews-username" id="reviews-username">Username</div>
+      //       <div class="reviews-date" id="reviews-date">01-21-2020</div>
+      //       <div class="reviews-message" id="reviews-message"><p>Lorem ipsum dolor</p></div>
+      //       <div class="reviews-rating" id="reviews-rating">5 5 5 5 5</div>
+      //       <div class="reviews-photo" id="reviews-photo"><img class="reviews-image" src="/assets/images/Reviews/yay.jpg" alt=""></div>
+      //       <div class="reviews-edit" id="reviews-edit"><button type="button" class="edit-btn">edit</button></div>
+      //       <div class="reviews-delete" id="reviews-delete"><button type="button" class="delete-btn">delete</button></div>
+      //   </div>
+      // </div>
 
-        // These four lines will create a new row and append the item message to the text and then to the third column and then the table.
-        var col3 = document.createElement("td"); 
-        var text2 = document.createTextNode(item["message"]); 
-        col3.appendChild(text2);
-        table.appendChild(col3);
+      // instantiated the stars to null
+      var stars = ""; 
 
-        // These four lines will create a new row and append the item dateTime to the text and then to the fourth column and then the table.
-        var col4 = document.createElement("td"); 
-        var text3 = document.createTextNode(item["dateTime"]); 
-        col4.appendChild(text3);
-        table.appendChild(col4);
+      // Creates the container div that holds all divs inside of it.
+      var reviewsContainer = document.createElement('div');
+      reviewsContainer.classList.add('reviews-containter');
+      reviewsContainer.id = "reviews-container";
 
-        // These four lines will create a new row and append the item filepath to the text and then to the fifth column and then the table.
-        var col5 = document.createElement("td"); 
-        var filePath = document.createElement("img");
-        filePath.src = item["filePath"];
-        col5.appendChild(filePath);
-        table.appendChild(col5);
+      // Creates the div element containing the text for the username.
+      var reviewsUsername = document.createElement('div');
+      reviewsUsername.classList.add('reviews-username');
+      reviewsUsername.id = "reviews-username";
+      reviewsUsername.innerHTML = item["username"];
+      reviewsContainer.appendChild(reviewsUsername);
 
-        // These four lines will create a new row and append the delete button with the function to the text and then to the sixth column and then the table.
-        var col6 = document.createElement("td");
-        var deleteButton = document.createElement("button");
-        deleteButton.innerText = 'Delete';
-        deleteButton.setAttribute('onclick', `deleteItem(${item.entityId})`);
-        col6.appendChild(deleteButton);
-        table.appendChild(col6);
+      // Creates the div element containing the text for the DateTime.
+      var reviewsDate = document.createElement('div');
+      reviewsDate.classList.add('reviews-date');
+      reviewsDate.id = "reviews-date";
+      reviewsDate.innerHTML = item["dateTime"];
+      reviewsContainer.appendChild(reviewsDate);
 
-        // These four lines will create a new row and append the edit button with the function to the text and then to the sixth column and then the table.
-        var col7 = document.createElement("td");
-        var editButton = document.createElement("button");
-        editButton.innerText = 'Edit';
-        editButton.setAttribute('onclick', `displayEditForm(${item.entityId})`);
-        col7.appendChild(editButton);
-        table.appendChild(col7);
+      // Creates the div element that contains a paragraph which contains the message string from the DB.
+      var reviewsMessage = document.createElement('div');
+      reviewsMessage.classList.add('reviews-message');
+      reviewsMessage.id = "reviews-message";
+      var reviewMessageParagraph = document.createElement('p');
+      reviewMessageParagraph.innerHTML = item["message"];
+      reviewsMessage.appendChild(reviewMessageParagraph);
+      reviewsContainer.appendChild(reviewsMessage);
 
-        // This will get the ID of the table that will be filled.
-        var element = document.getElementById("reviews-saved"); 
-        element.appendChild(table);
+      // this for loop will iterate through the number and append star chars as necessary.
+      for (var i = 0; i < item["starRating"]; i++) 
+      {
+          stars += String.fromCharCode(9733);
+      }
+
+      // Creates the div element with the appropriate star value calculated in the above for loop.
+      var reviewsRating = document.createElement('div');
+      reviewsRating.classList.add('reviews-rating');
+      reviewsRating.id = "reviews-rating";
+      reviewsRating.innerHTML = stars;
+      reviewsContainer.appendChild(reviewsRating);
+
+      // Creates the div element that contains the image element which takes in the build path of the image.
+      var reviewsPhoto = document.createElement('div');
+      reviewsPhoto.classList.add('reviews-photo');
+      reviewsPhoto.id = "reviews-photo";
+      var img = document.createElement('img');
+      img.classList.add("reviews-image");
+      img.src = "/assets/images/Reviews/yay.jpg"; // item["imagePath"]
+      reviewsPhoto.appendChild(img);
+      reviewsContainer.appendChild(reviewsPhoto);
+
+      // Creates a div element that contains an edit button which allows the use of the edit form functionality.
+      var reviewsEdit = document.createElement('div');
+      reviewsEdit.classList.add('reviews-edit');
+      reviewsEdit.id = "reviews-edit";
+      var editButton = document.createElement('button');
+      editButton.classList.add("edit-btn");
+      editButton.type = "button";
+      editButton.innerHTML = "edit";
+      editButton.setAttribute('onclick', `displayEditForm(${item.entityId})`);
+      reviewsEdit.appendChild(editButton);
+      reviewsContainer.appendChild(reviewsEdit);
+
+      // Creates a div element that contains a delete button which allows the use of the delete form functionality.
+      var reviewsDelete = document.createElement('div');
+      reviewsDelete.classList.add('reviews-delete');
+      reviewsDelete.id = "reviews-delete";
+      var deleteButton = document.createElement('button');
+      deleteButton.classList.add("delete-btn");
+      deleteButton.type = "button";
+      deleteButton.innerHTML = "delete";
+      deleteButton.setAttribute('onclick', `deleteItem(${item.entityId})`);
+      reviewsDelete.appendChild(deleteButton);
+      reviewsContainer.appendChild(reviewsDelete);
+
+      // appends the container inside of the main all reviews div element.
+      allReviews.appendChild(reviewsContainer)
+
     });
 
-  reviews = data; // will store the data as an array in this variable.
+    // will store the data as an array in this variable.
+    reviews = data; 
 }

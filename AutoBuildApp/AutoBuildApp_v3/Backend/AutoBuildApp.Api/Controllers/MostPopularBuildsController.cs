@@ -1,5 +1,6 @@
 ﻿using AutoBuildApp.DataAccess;
 using AutoBuildApp.DomainModels;
+using AutoBuildApp.Logging;
 using AutoBuildApp.Managers;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Services;

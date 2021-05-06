@@ -6,6 +6,10 @@ using AutoBuildApp.Managers;
 using AutoBuildApp.Services;
 using AutoBuildApp.DataAccess;
 using AutoBuildApp.DomainModels;
+using System.Collections.Generic;
+using AutoBuildApp.DomainModels.Enumerations;
+using System.Threading.Tasks;
+using AutoBuildApp.Logging;
 
 /// <summary>
 /// References used from file: Solution Items/References.txt 
@@ -47,7 +51,7 @@ namespace AutoBuildApp.Api.Controllers
         /// <param name="reviewRating">takes in a JSON Review Rating object</param>
         /// <returns>returns a fail status code or an OK status code response.</returns>
         [HttpPost]
-        public IActionResult CreateReviewRating(ReviewRating reviewRating)
+        public async Task<IActionResult> CreateReviewRating(IFormCollection data, List<IFormFile> image)
         {
             _logger.LogInformation("CreateReviewRating was fetched.");
 
@@ -57,8 +61,18 @@ namespace AutoBuildApp.Api.Controllers
             // This will start a manager and pass in the service.
             ReviewRatingManager reviewRatingManager = new ReviewRatingManager(reviewRatingService);
 
+            var reviewRating = new ReviewRating()
+            {
+                BuildId = data["buildId"],
+                Username = data["username"],
+                StarRating = (StarType)int.Parse(data["starRating"]),
+                Message = data["message"],
+                Image = image
+            };
+
+
             // This will store the bool result of the review creation to see if it is a success or fail.
-            var createResult = reviewRatingManager.CreateReviewRating(reviewRating);
+            var createResult = await reviewRatingManager.CreateReviewRating(reviewRating);
 
             // if true, it will return OK, else it will return status code error of 500
             if (createResult)
@@ -90,6 +104,32 @@ namespace AutoBuildApp.Api.Controllers
             try
             {
                 var reviewRatings = reviewRatingManager.GetAllReviewsRatings(); // calls the manager to get all reviews.
+
+                _logger.LogInformation("GettAllReviewRatings was sucessfully fetched.");
+                return Ok(reviewRatings); // sends the review list through the OK to be read from the front end fetch request.
+            }
+            catch
+            {
+                _logger.LogWarning("GettAllReviewRatings was not sucessfully fetched.");
+                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet("build")]
+        public IActionResult GetAllReviewRatingsByBuildId(string buildId)
+        {
+            _logger.LogInformation("GettAllReviewRatingsById was fetched.");
+
+            // This will start a service when a post fetch is called. and pass in the DAO that will be used.
+            ReviewRatingService reviewRatingService = new ReviewRatingService(_reviewRatingDAO);
+
+            // This will start a manager and pass in the service.
+            ReviewRatingManager reviewRatingManager = new ReviewRatingManager(reviewRatingService);
+
+            // This will try to get all reviews, and if not, it will catch it and return the error code.
+            try
+            {
+                var reviewRatings = reviewRatingManager.GetAllReviewsRatingsByBuildId(buildId); // calls the manager to get all reviews.
 
                 _logger.LogInformation("GettAllReviewRatings was sucessfully fetched.");
                 return Ok(reviewRatings); // sends the review list through the OK to be read from the front end fetch request.
@@ -137,7 +177,7 @@ namespace AutoBuildApp.Api.Controllers
         /// <param name="reviewRating">passes in a ReviewRating object that will be edited.</param>
         /// <returns>will return OK status code or error code of 500</returns>
         [HttpPut]
-        public IActionResult EditReviewRating(ReviewRating reviewRating)
+        public async Task<IActionResult> EditReviewRating(IFormCollection data, List<IFormFile> image)
         {
             _logger.LogInformation("EditReviewRating was fetched.");
 
@@ -147,8 +187,16 @@ namespace AutoBuildApp.Api.Controllers
             // This will start a manager and pass in the service.
             ReviewRatingManager reviewRatingManager = new ReviewRatingManager(reviewRatingService);
 
+            var reviewRating = new ReviewRating()
+            {
+                EntityId = data["entityId"],
+                StarRating = (StarType)int.Parse(data["starRating"]),
+                Message = data["message"],
+                Image = image
+            };
+
             // This will store the bool result of the review edit to see if it is a success or fail.
-            var createResult = reviewRatingManager.EditReviewRating(reviewRating);
+            var createResult = await reviewRatingManager.EditReviewRating(reviewRating);
 
             // if true, it will return OK, else it will return status code error of 500
             if (createResult)

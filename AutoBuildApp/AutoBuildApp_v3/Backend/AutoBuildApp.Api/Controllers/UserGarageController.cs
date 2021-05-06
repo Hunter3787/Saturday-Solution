@@ -6,6 +6,7 @@ using AutoBuildApp.DomainModels;
 using AutoBuildApp.Api.HelperFunctions;
 using System;
 using AutoBuildApp.Services;
+using AutoBuildApp.Logging;
 
 /**
 * User Garage controller that accepts incoming requests 

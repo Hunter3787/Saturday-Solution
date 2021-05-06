@@ -1,4 +1,5 @@
 ﻿using AutoBuildApp.DataAccess;
+using AutoBuildApp.Logging;
 using AutoBuildApp.Models;
 using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.Models.Enumerations;

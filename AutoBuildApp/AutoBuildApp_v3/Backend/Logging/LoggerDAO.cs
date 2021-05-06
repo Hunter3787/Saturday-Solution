@@ -8,7 +8,7 @@ using System.Data;
 /// N/A: Zeinab's code reformatted for specificity.
 /// </summary>
 
-namespace APB.App.DataAccess
+namespace AutoBuildApp.Logging
 {
     public class LoggerDAO
     {
@@ -35,7 +35,6 @@ namespace APB.App.DataAccess
                     // Will try to insert into the logs table.
                     try
                     {
-                        Console.WriteLine("in the loger DAO");
                         // Specifies the SQL command and parameters that will be used to send data to the database.
                         string sql = "INSERT INTO logs(message, loglevel, dateTime) VALUES(@MESSAGE,@LOGLEVEL,@DATETIME);"; 
 

@@ -50,6 +50,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Connor's Console", "Connor'
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cross Cutting Concerns", "Cross Cutting Concerns", "{EB9C2905-4E18-4C51-AB39-9108845D0D5A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logging", "Logging\Logging.csproj", "{B2B45FD3-6CBC-4ACA-86EC-2C2552A81622}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -112,6 +114,10 @@ Global
 		{CD47C394-039A-400E-93E5-3C7A2F4DDF84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD47C394-039A-400E-93E5-3C7A2F4DDF84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD47C394-039A-400E-93E5-3C7A2F4DDF84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2B45FD3-6CBC-4ACA-86EC-2C2552A81622}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2B45FD3-6CBC-4ACA-86EC-2C2552A81622}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2B45FD3-6CBC-4ACA-86EC-2C2552A81622}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2B45FD3-6CBC-4ACA-86EC-2C2552A81622}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -133,6 +139,7 @@ Global
 		{69ADE978-407B-419B-8FC1-F9B6D8C02CCF} = {19FCD82A-8ED3-4914-8FFF-A7380616D06C}
 		{600C0164-58FB-43C2-8D4F-FAF5F0D5A7A8} = {98226589-714B-4BAA-8B69-B54BD0FE5CA1}
 		{CD47C394-039A-400E-93E5-3C7A2F4DDF84} = {98226589-714B-4BAA-8B69-B54BD0FE5CA1}
+		{B2B45FD3-6CBC-4ACA-86EC-2C2552A81622} = {EB9C2905-4E18-4C51-AB39-9108845D0D5A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B8B2E261-6A44-42F8-9F54-8F8E133DFC4D}
