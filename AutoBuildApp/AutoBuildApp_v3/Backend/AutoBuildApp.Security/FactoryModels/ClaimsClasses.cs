@@ -18,13 +18,13 @@ namespace AutoBuildApp.Security.FactoryModels
 
             IEnumerable<Claim> basicUserClaims = new List<Claim>()
             {
-                  new Claim( PermissionEnumType.READ_ONLY  , ScopeEnumType.AUTOBUILD),
-                  new Claim( PermissionEnumType.DELETE     , ScopeEnumType.SELF),
-                  new Claim( PermissionEnumType.UPDATE     , ScopeEnumType.SELF),
-                  new Claim( PermissionEnumType.EDIT       , ScopeEnumType.SELF),
-                  new Claim( PermissionEnumType.CREATE     , ScopeEnumType.REVIEWS),
-                  new Claim( PermissionEnumType.DELETE     , ScopeEnumType.SELF_REVIEWS),
-                  new Claim( PermissionEnumType.UPDATE     , ScopeEnumType.SELF_REVIEWS),
+                  new Claim( PermissionEnumType.ReadOnly  , ScopeEnumType.AutoBuild),
+                  new Claim( PermissionEnumType.Delete     , ScopeEnumType.Self),
+                  new Claim( PermissionEnumType.Update     , ScopeEnumType.Self),
+                  new Claim( PermissionEnumType.Edit       , ScopeEnumType.Self),
+                  new Claim( PermissionEnumType.Create     , ScopeEnumType.Reviews),
+                  new Claim( PermissionEnumType.Delete     , ScopeEnumType.SelfReviews),
+                  new Claim( PermissionEnumType.Update     , ScopeEnumType.SelfReviews),
             };
 
 
@@ -49,7 +49,7 @@ namespace AutoBuildApp.Security.FactoryModels
         {
             IEnumerable<Claim> adminUserClaims = new List<Claim>()
             {
-                new Claim(PermissionEnumType.ALL , ScopeEnumType.ALL),
+                new Claim(PermissionEnumType.All , ScopeEnumType.All),
             };
 
             return adminUserClaims;
@@ -70,7 +70,7 @@ namespace AutoBuildApp.Security.FactoryModels
         {
             IEnumerable<Claim> adminUserClaims = new List<Claim>()
             {
-                new Claim(PermissionEnumType.ALL , ScopeEnumType.ALL),
+                new Claim(PermissionEnumType.All , ScopeEnumType.All),
             };
 
             return adminUserClaims;
@@ -96,16 +96,16 @@ namespace AutoBuildApp.Security.FactoryModels
         {
             IEnumerable<Claim> vendorUserClaims = new List<Claim>()
             {
-                new Claim( PermissionEnumType.READ_ONLY  , ScopeEnumType.AUTOBUILD ),
-                new Claim( PermissionEnumType.DELETE     , ScopeEnumType.SELF),
-                new Claim( PermissionEnumType.UPDATE     , ScopeEnumType.SELF),
-                new Claim( PermissionEnumType.EDIT       , ScopeEnumType.SELF),
-                new Claim( PermissionEnumType.CREATE     , ScopeEnumType.REVIEWS),
-                new Claim( PermissionEnumType.DELETE     , ScopeEnumType.SELF_REVIEWS),
-                new Claim( PermissionEnumType.UPDATE     , ScopeEnumType.SELF_REVIEWS),
-                new Claim( PermissionEnumType.CREATE     , ScopeEnumType.PRODUCTS),
-                new Claim( PermissionEnumType.UPDATE     , ScopeEnumType.VENDOR_PRODUCTS),
-                new Claim( PermissionEnumType.DELETE     , ScopeEnumType.VENDOR_PRODUCTS),
+                new Claim( PermissionEnumType.ReadOnly  , ScopeEnumType.AutoBuild ),
+                new Claim( PermissionEnumType.Delete     , ScopeEnumType.Self),
+                new Claim( PermissionEnumType.Update     , ScopeEnumType.Self),
+                new Claim( PermissionEnumType.Edit       , ScopeEnumType.Self),
+                new Claim( PermissionEnumType.Create     , ScopeEnumType.Reviews),
+                new Claim( PermissionEnumType.Delete     , ScopeEnumType.SelfReviews),
+                new Claim( PermissionEnumType.Update     , ScopeEnumType.SelfReviews),
+                new Claim( PermissionEnumType.Create     , ScopeEnumType.Products),
+                new Claim( PermissionEnumType.Update     , ScopeEnumType.VendorProducts),
+                new Claim( PermissionEnumType.Delete     , ScopeEnumType.VendorProducts),
             };
 
             return vendorUserClaims;
@@ -132,8 +132,8 @@ namespace AutoBuildApp.Security.FactoryModels
         {
             IEnumerable<Claim> UnregisteredUserClaims = new List<Claim>()
             {
-                new Claim( PermissionEnumType.READ_ONLY,ScopeEnumType.AUTOBUILD),
-                new Claim( PermissionEnumType.CREATE,ScopeEnumType.REGISTRATION)
+                new Claim( PermissionEnumType.ReadOnly,ScopeEnumType.AutoBuild),
+                new Claim( PermissionEnumType.Create,ScopeEnumType.Registration)
             };
 
             return UnregisteredUserClaims;
@@ -155,9 +155,9 @@ namespace AutoBuildApp.Security.FactoryModels
         {
             IEnumerable<Claim> LockedUserClaims = new List<Claim>()
             {
-                new Claim( PermissionEnumType.READ_ONLY,ScopeEnumType.AUTOBUILD),
-                new Claim( PermissionEnumType.BLOCK,ScopeEnumType.REGISTRATION),
-                new Claim( PermissionEnumType.BLOCK,ScopeEnumType.LOGIN)
+                new Claim( PermissionEnumType.ReadOnly,ScopeEnumType.AutoBuild),
+                new Claim( PermissionEnumType.Block,ScopeEnumType.Registration),
+                new Claim( PermissionEnumType.Block,ScopeEnumType.Login)
             };
 
             return LockedUserClaims;

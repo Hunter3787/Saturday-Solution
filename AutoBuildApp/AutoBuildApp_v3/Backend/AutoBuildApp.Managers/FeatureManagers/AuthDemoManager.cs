@@ -22,8 +22,8 @@ namespace AutoBuildApp.Managers.FeatureManagers
         IClaims basic;
         public AuthDemoManager()
         {
-            unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
-            basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
+            unregistered = claimsFactory.GetClaims(RoleEnumType.UnregisteredRole);
+            basic = claimsFactory.GetClaims(RoleEnumType.BasicRole);
 
         }
 

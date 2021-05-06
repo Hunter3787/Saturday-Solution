@@ -29,11 +29,11 @@ namespace AutoBuildApp.DataAccess.Test
         private static IEnumerable<object[]> getPermissionsData()
         {
 
-            IClaims basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
-            IClaims basicAdmin = claimsFactory.GetClaims(RoleEnumType.DELEGATE_ADMIN);
-            IClaims seniorAdmin = claimsFactory.GetClaims(RoleEnumType.SYSTEM_ADMIN);
-            IClaims vendor = claimsFactory.GetClaims(RoleEnumType.VENDOR_ROLE);
-            IClaims unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
+            IClaims basic = claimsFactory.GetClaims(RoleEnumType.BasicRole);
+            IClaims basicAdmin = claimsFactory.GetClaims(RoleEnumType.DelegateAdmin);
+            IClaims seniorAdmin = claimsFactory.GetClaims(RoleEnumType.SystemAdmin);
+            IClaims vendor = claimsFactory.GetClaims(RoleEnumType.VendorRole);
+            IClaims unregistered = claimsFactory.GetClaims(RoleEnumType.UnregisteredRole);
 
 
 
@@ -56,9 +56,9 @@ namespace AutoBuildApp.DataAccess.Test
         public void UpdateUserPermisions_RowsAffected()
         {
 
-            IClaims basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
-            IClaims admin = claimsFactory.GetClaims(RoleEnumType.SYSTEM_ADMIN);
-            IClaims vendor = claimsFactory.GetClaims(RoleEnumType.VENDOR_ROLE);
+            IClaims basic = claimsFactory.GetClaims(RoleEnumType.BasicRole);
+            IClaims admin = claimsFactory.GetClaims(RoleEnumType.SystemAdmin);
+            IClaims vendor = claimsFactory.GetClaims(RoleEnumType.VendorRole);
 
             Console.WriteLine(connection);
             string username = "KoolTrini";

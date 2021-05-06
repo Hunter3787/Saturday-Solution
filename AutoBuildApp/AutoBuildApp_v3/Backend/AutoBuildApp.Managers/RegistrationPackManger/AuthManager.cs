@@ -23,7 +23,7 @@ namespace AutoBuildApp.Managers.Registration_PackManger
 
         public AuthManager(string _cnnctString)
         {
-            Console.WriteLine($"connection string passed: { _cnnctString} ");
+            //Console.WriteLine($"connection string passed: { _cnnctString} ");
              //_authDAO = new AuthDAO(_cnnctString);
             //authenticationService = new AuthenticationService(_authDAO);
 
@@ -38,7 +38,7 @@ namespace AutoBuildApp.Managers.Registration_PackManger
             var _CRAuth = _authenticationService.AuthenticateUser(userCredentials);
             if (_CRAuth.isAuthenticated)
             {
-                //COMMON RESPONSE ALL THE WAYYY - WHAT I HAVE IS :  THATS BAD -
+                //COMMON RESPONSE All THE WAYYY - WHAT I HAVE IS :  THATS BAD -
                 return _CRAuth.JWTString;
                 // VONG WOULD ALWAYS OVERRIDE IT -> DONT LEAVE IT TO CHANCE !!!! FIX ITTTTT
             }

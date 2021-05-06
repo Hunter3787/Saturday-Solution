@@ -3,6 +3,7 @@ const uri ='https://localhost:5001/vendorlinking';
 var tokenDanny = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiLCJzdWIiOiJBdXRvYnVpbGQgVXNlciIsImF1ZCI6IlVTIiwiaWF0IjoxNjE4NDUzMzM2LCJleHAiOjE2Mjk2NzcyMzYsIm5iZiI6MTYyOTY3NzIzNiwiVXNlcm5hbWUiOiJkYW5ueSIsIlVzZXJDTGFpbXMiOlt7IlBlcm1pc3Npb24iOiJDUkVBVEUiLCJzY29wZU9mUGVybWlzc2lvbnMiOiJSRVZJRVdTIn0seyJQZXJtaXNzaW9uIjoiREVMRVRFIiwic2NvcGVPZlBlcm1pc3Npb25zIjoiU0VMRiJ9LHsiUGVybWlzc2lvbiI6IkRFTEVURSIsInNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNFTEZfUkVWSUVXUyJ9LHsiUGVybWlzc2lvbiI6IkVESVQiLCJzY29wZU9mUGVybWlzc2lvbnMiOiJTRUxGIn0seyJQZXJtaXNzaW9uIjoiUkVBRF9PTkxZIiwic2NvcGVPZlBlcm1pc3Npb25zIjoiQVVUT0JVSUxEIn0seyJQZXJtaXNzaW9uIjoiVVBEQVRFIiwic2NvcGVPZlBlcm1pc3Npb25zIjoiU0VMRiJ9LHsiUGVybWlzc2lvbiI6IlVQREFURSIsInNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNFTEZfUkVWSUVXUyJ9LHsiUGVybWlzc2lvbiI6IkNSRUFURSIsInNjb3BlT2ZQZXJtaXNzaW9ucyI6IlBST0RVQ1RTIn0seyJQZXJtaXNzaW9uIjoiVVBEQVRFIiwic2NvcGVPZlBlcm1pc3Npb25zIjoiVkVORE9SX1BST0RVQ1RTIn0seyJQZXJtaXNzaW9uIjoiREVMRVRFIiwic2NvcGVPZlBlcm1pc3Npb25zIjoiVkVORE9SX1BST0RVQ1RTIn1dfQ.242uVukArptSKQY6mQpxH_MRdhRO0uEhDdUA4U6qJc4';
 var tokenNewEgg = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiLCJzdWIiOiJBdXRvYnVpbGQgVXNlciIsImF1ZCI6IlVTIiwiaWF0IjoxNjE4NDUzMzM2LCJleHAiOjE2Mjk2NzcyMzYsIm5iZiI6MTYyOTY3NzIzNiwiVXNlcm5hbWUiOiJuZXcgZWdnIiwiVXNlckNMYWltcyI6W3siUGVybWlzc2lvbiI6IkNSRUFURSIsInNjb3BlT2ZQZXJtaXNzaW9ucyI6IlJFVklFV1MifSx7IlBlcm1pc3Npb24iOiJERUxFVEUiLCJzY29wZU9mUGVybWlzc2lvbnMiOiJTRUxGIn0seyJQZXJtaXNzaW9uIjoiREVMRVRFIiwic2NvcGVPZlBlcm1pc3Npb25zIjoiU0VMRl9SRVZJRVdTIn0seyJQZXJtaXNzaW9uIjoiRURJVCIsInNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNFTEYifSx7IlBlcm1pc3Npb24iOiJSRUFEX09OTFkiLCJzY29wZU9mUGVybWlzc2lvbnMiOiJBVVRPQlVJTEQifSx7IlBlcm1pc3Npb24iOiJVUERBVEUiLCJzY29wZU9mUGVybWlzc2lvbnMiOiJTRUxGIn0seyJQZXJtaXNzaW9uIjoiVVBEQVRFIiwic2NvcGVPZlBlcm1pc3Npb25zIjoiU0VMRl9SRVZJRVdTIn0seyJQZXJtaXNzaW9uIjoiQ1JFQVRFIiwic2NvcGVPZlBlcm1pc3Npb25zIjoiUFJPRFVDVFMifSx7IlBlcm1pc3Npb24iOiJVUERBVEUiLCJzY29wZU9mUGVybWlzc2lvbnMiOiJWRU5ET1JfUFJPRFVDVFMifSx7IlBlcm1pc3Npb24iOiJERUxFVEUiLCJzY29wZU9mUGVybWlzc2lvbnMiOiJWRU5ET1JfUFJPRFVDVFMifV19.idn4GGfnwpOgt8tmaUTvtGHLJIF8KoHSz4dWCI07bns';
 
+var currentToken = tokenNewEgg;
 let listOfDivs = document.getElementById('listOfDivs');
 
 const fetchRequest = {
@@ -11,7 +12,7 @@ const fetchRequest = {
   headers: {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
-    'Authorization': 'bearer ' + tokenDanny
+    'Authorization': 'bearer ' + currentToken
   }
 };
 
@@ -224,12 +225,13 @@ async function addItem() {
     mode: 'cors',
     headers: {
       'Accept': 'application/json',
-      'Authorization': 'bearer ' + tokenNewEgg
+      'Authorization': 'bearer ' + currentToken
     },
     body: formData
   })
   // Display the output message to the screen
   .then(response => {
+    console.log(response);
     if(response.ok) {
       alert('correct');
     }
@@ -298,12 +300,12 @@ async function submitDeleteItem(modelNumber, newDivRow) {
   .then(response => {
     if(response.ok) {
       alert('successful deletion');
+      newDivRow.style ="display:none"
     }
     else {
       alert('could not delete');
     }
   })
-  .then(newDivRow.style ="display:none")
 }
 
 

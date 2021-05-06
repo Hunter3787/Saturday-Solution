@@ -80,7 +80,7 @@ namespace AutoBuildApp.DataAccess
                         {
                             return -1; // nothing happened
                         }
-                        //READ AND STORE ALL THE ORDINALS YOU NEED
+                        //READ AND STORE All THE ORDINALS YOU NEED
                         int sessionsID = _reader.GetOrdinal("ID");
                         while (_reader.Read())
                         {

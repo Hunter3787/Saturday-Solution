@@ -5,9 +5,9 @@ using System.Text;
 
 namespace AutoBuildApp.Models.Enumerations
 {
-    public class SystemCodeWithCollection<T>
+    public class SystemCodeWithObject<T>
     {
         public AutoBuildSystemCodes Code { get; set; }
-        public T GenericCollection { get; set; }
+        public T GenericObject { get; set; }
     }
 }

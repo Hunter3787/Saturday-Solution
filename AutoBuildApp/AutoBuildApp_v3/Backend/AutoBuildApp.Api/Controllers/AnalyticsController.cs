@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Threading;
+using System.Collections.Generic;
+using System;
 
 namespace AutoBuildApp.Api.Controllers
 {
@@ -27,21 +29,20 @@ namespace AutoBuildApp.Api.Controllers
     {
         ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
-        private ClaimsFactory _claimsFactory = new ConcreteClaimsFactory();
-        IClaims _admin;
-
         // Creates the local instance for the logger
-       // private LoggingProducerService _logger = LoggingProducerService.GetInstance;
+        // private LoggingProducerService _logger = LoggingProducerService.GetInstance;
 
+        // instantiate the consumer. 
 
-        private AnalyticsManager _uadManager;
-
+        private AnalyticsManager _analyticsManager;
+        private List<string> _allowedRoles; //specify roles
         public AnalyticsController()
         {
-            /// the user analysis dashboard need admin Priveldges so check:
-            /// Step one specify the claim set required
-            /// 
-            _admin = _claimsFactory.GetClaims(RoleEnumType.SYSTEM_ADMIN);
+            #region retrieving the roles for Authorization check:
+            _allowedRoles = new List<string>()
+            { RoleEnumType.SystemAdmin };
+
+            #endregion
 
 
             #region getting the connection string and passing to the loginmanager
@@ -55,15 +56,17 @@ namespace AutoBuildApp.Api.Controllers
             #endregion
 
 
-            _uadManager = new AnalyticsManager(connection);
+            _analyticsManager = new AnalyticsManager(connection);
 
         }
 
         /*
          * There are two cases to consider:
          * A request coming through from:
-         * 1) user is logged in but do not have permissions -> 
+         * 1) user is logged in BUT do not have permissions -> 
          * status code:  403 (don’t have permissions to do what they requested)
+         * 
+         * 
          * 
          * 2) user is NOT logged in and are not authorized -> 
          * status code: 401. here comes in the REDIRECT URL.
@@ -77,59 +80,45 @@ namespace AutoBuildApp.Api.Controllers
 
             if (!_threadPrinciple.Identity.IsAuthenticated)
             {
-                // Add action logic here
                 return new StatusCodeResult(StatusCodes.Status401Unauthorized);
             }
-            if (!AuthorizationService.CheckPermissions(_admin.Claims()))
-             {
-
-
-                    // Add action logic here
-                    return new StatusCodeResult(StatusCodes.Status403Forbidden);
-              }
+            if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
+            {
+                // Add action logic here
+                return new StatusCodeResult(StatusCodes.Status403Forbidden);
+            }
             return Ok("Good to Continue");
-            
+
         }
 
         [HttpGet]
-        public IActionResult RetrieveGraphs()
+        public IActionResult RetrieveGraphs(int GraphType)
         {
-
-            /// this will be put into the middleware.
-            //Console.WriteLine("we are here22");
-            //if (!_threadPrinciple.Identity.IsAuthenticated)
-            //{
-            //    Console.WriteLine("we are here");
-            //    // Add action logic here
-            //    return new StatusCodeResult(StatusCodes.Status401Unauthorized);
-            //}
-
-            if (!AuthorizationService.CheckPermissions(_admin.Claims()))
+            return Ok("good job");
+            if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
-
-               // _logger.LogWarning("Unauthorized Access Attempted");
+                // _logger.LogWarning("Unauthorized Access Attempted");
                 return new StatusCodeResult(StatusCodes.Status403Forbidden);
             }
-            _uadManager.GetChartData(0);
-            
-            if(true)
+
+            AnalyticsDataDTO dataDTO  = _analyticsManager.GetChartData(GraphType);
+
+            if (dataDTO.Result.Equals(AuthorizationResultType.NotAuthorized.ToString()))
             {
-                if (0 == (int)AuthorizationResultType.NotAuthorized){
-
-                   // _logger.LogWarning("Unauthorized Access Attempted");
-                    return new StatusCodeResult(StatusCodes.Status403Forbidden);
-                }
-                else
-                {
-                   // _logger.LogWarning(result.result);
-                    return new StatusCodeResult(StatusCodes.Status400BadRequest);
-                }
+                // _logger.LogWarning("Unauthorized Access Attempted");
+                return new StatusCodeResult(StatusCodes.Status403Forbidden);
             }
-            // lesson: postman doesnt work with list. move on 
+            if (!dataDTO.SuccessFlag)
+            {
+                
+                    // _logger.LogWarning(result.result);
+                    var result = dataDTO.Result;
+                    return Ok(result);
+                    //return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            }
+            return Ok(dataDTO.analyticChartsRequisted);
 
-            return Ok();
 
-            
         }
 
     }

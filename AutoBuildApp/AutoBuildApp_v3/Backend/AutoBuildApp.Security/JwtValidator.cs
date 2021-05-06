@@ -41,7 +41,6 @@ namespace AutoBuildApp.Security
         {
             string[] parseJWT = JWT.Split('.');
             string payloadJSON = Base64UrlEncoder.Decode(parseJWT[1]);
-            /// Console.WriteLine($"\n\nJson payload: {payloadJSON}");
             JWTPayload payload = JsonSerializer.Deserialize<JWTPayload>(payloadJSON);
             return payload;
         }

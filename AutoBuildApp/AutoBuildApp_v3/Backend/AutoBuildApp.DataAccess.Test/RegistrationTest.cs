@@ -28,7 +28,7 @@ namespace AutoBuildApp.DataAccess.Test
         private static IEnumerable<object[]> getPermissionsData()
         {
 
-            IClaims basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
+            IClaims basic = claimsFactory.GetClaims(RoleEnumType.BasicRole);
 
 
 

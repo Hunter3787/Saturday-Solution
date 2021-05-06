@@ -47,7 +47,7 @@ namespace AutoBuildApp.DataAccess
                 // set the claims needed for this method call
                 ConnectionString = connection;
 
-                _allowedRoles = new List<string>(){ RoleEnumType.SYSTEM_ADMIN };
+                _allowedRoles = new List<string>(){ RoleEnumType.SystemAdmin };
             }
             catch (ArgumentNullException)
             {
@@ -105,7 +105,7 @@ namespace AutoBuildApp.DataAccess
                             _responseUAD.SuccessBool = true;
                         }
 
-                        //READ AND STORE ALL THE ORDINALS YOU NEED
+                        //READ AND STORE All THE ORDINALS YOU NEED
                         int X_VALUE= _reader.GetOrdinal("X_Value");
                         int Y_Value = _reader.GetOrdinal("Y_Value");
                         int Legend = _reader.GetOrdinal("Legend");
@@ -194,7 +194,7 @@ namespace AutoBuildApp.DataAccess
                             }
                         else
                             { 
-                            //READ AND STORE ALL THE ORDINALS YOU NEED
+                            //READ AND STORE All THE ORDINALS YOU NEED
                             int X_Value_ord = _reader.GetOrdinal(X_VALUE); // no magic 
                             int Y_Value_ord = _reader.GetOrdinal(Y_VALUE);
                             int Legend_ord = _reader.GetOrdinal(LEGEND);
@@ -327,16 +327,15 @@ namespace AutoBuildApp.DataAccess
 
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
-                _responseUAD.IsAuthorized = false;
+                _responseUAD.ResponseString = AuthorizationResultType.NotAuthorized.ToString();
                 //_logger.LogInformation( AuthorizationResultType.NOT_AUTHORIZED.ToString());
                 return _responseUAD;
             }
-            _responseUAD.IsAuthorized = true;
             using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
                 conn.Open();
                 // naming convention View_ name of VIEW
-                string View_AccountsByAccountType = $"SELECT* FROM {graphViewType.ToString()};";
+                string View_AccountsByAccountType = $"SELECT * FROM {graphViewType.ToString()};";
                 using (SqlCommand command = new SqlCommand(View_AccountsByAccountType, conn))
                 {
                     try
@@ -360,11 +359,13 @@ namespace AutoBuildApp.DataAccess
                             {
                                 _responseUAD.ResponseString = "No Data At The Moment";
                                 _responseUAD.ResponseBool = false;
+
+                                return _responseUAD;
                                 reader.Close();
                             }
                             else
                             {
-                                //READ AND STORE ALL THE ORDINALS YOU NEED
+                                //READ AND STORE All THE ORDINALS YOU NEED
                                 int X_Value_ord = reader.GetOrdinal(X_VALUE); // no magic 
                                 int Y_Value_ord = reader.GetOrdinal(Y_VALUE);
                                 int Legend_ord = reader.GetOrdinal(LEGEND);

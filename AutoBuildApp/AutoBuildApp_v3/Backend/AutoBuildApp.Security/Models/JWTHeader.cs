@@ -6,7 +6,7 @@ namespace AutoBuildApp.Security.Models
 {
     public class JWTHeader : IEquatable<JWTHeader>
     {
-        private static readonly JWTHeader headerDefault = new JWTHeader();
+        private static readonly JWTHeader _headerDefault = new JWTHeader();
         public JWTHeader()
         {
             this.typ = "JWT";
@@ -57,15 +57,15 @@ namespace AutoBuildApp.Security.Models
             return $"Alg: {alg} Token: {typ}";
         }
         #region IEquatable interface implementation
-        public bool Equals(JWTHeader other)
+        public bool Equals(JWTHeader Other)
         {
-            if (other is null)
+            if (Other is null)
             {
                 return false;
             }
 
 
-            return this.typ == other.typ && this.alg == other.alg;
+            return this.typ == Other.typ && this.alg == Other.alg;
         }
 
         #endregion

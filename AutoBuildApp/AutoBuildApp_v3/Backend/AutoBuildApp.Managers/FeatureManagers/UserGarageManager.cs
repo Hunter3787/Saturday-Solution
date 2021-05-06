@@ -34,8 +34,8 @@ namespace AutoBuildApp.Managers
         { 
             //ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
             _approvedRoles = new List<string>()
-            { RoleEnumType.BASIC_ROLE,RoleEnumType.DELEGATE_ADMIN,
-            RoleEnumType.VENDOR_ROLE, RoleEnumType.SYSTEM_ADMIN};
+            { RoleEnumType.BasicRole,RoleEnumType.DelegateAdmin,
+            RoleEnumType.VendorRole, RoleEnumType.SystemAdmin};
 
             _buildDAO = new BuildDAO(connectionString);
             _shelfDAO = new ShelfDAO(connectionString);

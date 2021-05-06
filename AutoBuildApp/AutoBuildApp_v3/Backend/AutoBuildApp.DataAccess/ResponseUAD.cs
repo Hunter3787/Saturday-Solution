@@ -2,7 +2,6 @@
 using AutoBuildApp.DataAccess.Entities;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace AutoBuildApp.DataAccess
 {
@@ -14,7 +13,6 @@ namespace AutoBuildApp.DataAccess
         public string LegendTitle { get; set; }
 
         public bool ConnectionState { get; set; }
-        public bool IsAuthorized { get; set; }
 
         public ResponseUAD()
         {
@@ -34,8 +32,7 @@ namespace AutoBuildApp.DataAccess
             return 
                 $"\nResponse String {ResponseString }\n" +
                 $"Success Bool {ResponseBool}\n" +
-                $"Connection bool {ConnectionState}\n" +
-                $"IsAuthorized {IsAuthorized}\n";
+                $"Connection bool {ConnectionState}\n";
 
         }
 

@@ -15,18 +15,21 @@ namespace AutoBuildApp.Security
         /// method to check permissions needed per authorization service.
         /// </summary>
         /// <returns></returns>
-        public static bool IsAuthorized(List<string> _allowedRoles)
+        public static bool IsAuthorized(List<string> AllowedRoles)
         {
-            foreach (string role in _allowedRoles)
+            foreach (string role in AllowedRoles)
             {
-                IClaims _claims = _claimsFactory.GetClaims(role);
+                Console.WriteLine($" ROLE: {role}");
+                IClaims claims = _claimsFactory.GetClaims(role);
                 // FIRST LINE OF DEFENCE 
 
-                if (AuthorizationService.CheckPermissions(_claims.Claims()))
+                if (AuthorizationService.CheckPermissions(claims.Claims()))
                 {
+                    Console.WriteLine($"RETURNING TRUE");
                     return true;
                 }
             }
+            Console.WriteLine($"RETURNING FALSE");
             return false;
         }
 
