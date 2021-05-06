@@ -138,7 +138,7 @@ namespace AutoBuildApp.DataAccess
                             return "User already exists";
                         }
                         transaction.Rollback();
-                        return "failed to create user2";
+                        return ex.Message;
                     }
                 }
             }

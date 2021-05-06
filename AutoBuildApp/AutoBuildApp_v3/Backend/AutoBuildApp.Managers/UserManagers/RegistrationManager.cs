@@ -38,8 +38,11 @@ namespace AutoBuildApp.Managers
             {
                 return "Invalid Input!";
             }
-            user.passHash = BC.HashPassword(user.passHash, BC.GenerateSalt());
-            return _RegistrationDAO.RegisterAccount(user);
+            else
+            {
+                user.passHash = BC.HashPassword(user.passHash, BC.GenerateSalt());
+                return _RegistrationDAO.RegisterAccount(user);
+            }
         }
     }
 }
