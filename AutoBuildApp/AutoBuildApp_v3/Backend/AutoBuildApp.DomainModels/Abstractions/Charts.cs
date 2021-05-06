@@ -66,9 +66,9 @@ namespace AutoBuildApp.DomainModels.Abstractions
 
             string ret = " ";
 
-            foreach( var elem in ChartDatas)
+            foreach( var chartData in ChartDatas)
             {
-                ret += $"{elem.ToString()}\n";
+                ret += $"{chartData.ToString()}\n";
             }
 
             return
@@ -76,8 +76,9 @@ namespace AutoBuildApp.DomainModels.Abstractions
                $"YAxisTitle : {this.YAxisTitle }\n" +
                $"XAxisTitle : { this.XAxisTitle}\n" +
                $"XScale : { this.XScale}\n" +
-               $"YScale : {this.YScale}\n." +
-               $"Points : {ret}\n";
+               $"YScale : {this.YScale}\n" +
+               $"Points :\n" +
+               $"{ret}\n";
         }
 
     }

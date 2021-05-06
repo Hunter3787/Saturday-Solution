@@ -127,6 +127,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             AnalyticsDataDTO dataDTO = new AnalyticsDataDTO();
             ResponseUAD responseUAD = new ResponseUAD();
 
+            string notAuthorized = AuthorizationResultType.NotAuthorized.ToString();
 
             //Initial Authorization Check
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
@@ -134,26 +135,23 @@ namespace AutoBuildApp.Managers.FeatureManagers
                 Console.WriteLine($" IF STATEMENT 1");
                 Console.WriteLine($" {dataDTO.ToString()}");
 
-              dataDTO.Result = AuthorizationResultType.NotAuthorized.ToString();
+              dataDTO.Result = notAuthorized;
                 dataDTO.SuccessFlag = false;
                 return dataDTO;
 
             }
             responseUAD = _uadDAO.GetGraphData((DBViews)GraphType);
-            if (   !responseUAD.IsAuthorized
-                || !responseUAD.ResponseBool
-                || responseUAD.GetChartDatas == null)
+            if (responseUAD.ResponseString.Equals(notAuthorized))
             {
 
-                var result = AuthorizationResultType.NotAuthorized.ToString();
                 dataDTO.SuccessFlag = false;
-                dataDTO.Result = result;
+                dataDTO.Result = responseUAD.ResponseString;
 
                 Console.WriteLine($" IF STATEMENT 2");
                 Console.WriteLine($" {dataDTO.ToString()}");
+
                 return dataDTO;
             }
-
             if (!responseUAD.ResponseBool|| responseUAD.GetChartDatas == null)
             {
 

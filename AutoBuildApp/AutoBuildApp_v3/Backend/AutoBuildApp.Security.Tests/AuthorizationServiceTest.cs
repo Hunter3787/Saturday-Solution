@@ -57,7 +57,7 @@ namespace AutoBuildApp.Security.Tests
 
             claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
             Thread.CurrentPrincipal = claimsPrincipal;
-            AuthorizationService.Print();
+            //AuthorizationService.Print();
            bool AuthActual =  AuthorizationService.CheckPermissions(permissionsRequired);
            bool AuthExpected = true;
 

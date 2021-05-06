@@ -107,7 +107,7 @@ namespace AutoBuildApp.Models.DataTransferObjects
         {
 
             return
-                $"\nXLabel :{XLabel}\n" +
+                $"\nXLabel : {XLabel}\n" +
                 $"YValue : {YValue}\n" +
                 $"Legend : {Legend }\n";
         }

@@ -48,7 +48,7 @@ namespace AutoBuildApp.Api.HelperFunctions
         public async Task InvokeAsync(HttpContext httpContext)
         {
 
-            Console.WriteLine($"\n\t " + $"IN THE JWT MIDDLE WARE \n");
+           //Console.WriteLine($"\n\t " + $"IN THE JWT MIDDLE WARE \n");
 
             //STEP 1: EXTRACT THE TOKEN (IF EXISTS ANY)
             #region EXTRACT THE TOKEN (IF EXISTS ANY)
@@ -58,10 +58,7 @@ namespace AutoBuildApp.Api.HelperFunctions
                 .Split(" ")
                 .Last();
 
-            if (token != null)
-            {
-                Console.WriteLine($"Token to be validated : {token } \n");
-            }
+            //if (token != null){Console.WriteLine($"Token to be validated : {token } \n");}
 
             var authHeader = httpContext.Request.Headers["Authorization"];//[0];
 
@@ -71,7 +68,7 @@ namespace AutoBuildApp.Api.HelperFunctions
                 var scheme = headerValue.Scheme;
 
                 var parameter = headerValue.Parameter;
-                Console.WriteLine($"\n\t " + $"IN THE TRY PARSE \n" + $" scheme : { scheme}\n" + $" parameter :{ parameter }\n");
+                //Console.WriteLine($"\n\t " + $"IN THE TRY PARSE \n" + $" scheme : { scheme}\n" + $" parameter :{ parameter }\n");
 
                 // scheme will be "Bearer"
                 // parmameter will be the token itself.
@@ -93,13 +90,14 @@ namespace AutoBuildApp.Api.HelperFunctions
                 .ToString();
 
             string ReturnUrl = Convert.ToString(httpContext.Request.QueryString.ToUriComponent());
-
+            /*
             Console.WriteLine($"\n\t IN THE JWT_MIDDLEWARE \n" +
                 $"INCOMING URL REFERAL TEST:   {Url}\n" +
                 $"2: {Url_Two}\n" +
                 $"3: {referer}\n" +
                 $"4 query string: { ReturnUrl }\n");
-            #endregion
+            
+           
 
             if (Url_Two.Contains("authentication"))
             {
@@ -110,6 +108,9 @@ namespace AutoBuildApp.Api.HelperFunctions
 
                 Console.WriteLine($"YOU ARE REQUESTING THE AUTHDEMO URL\n");
             }
+            */
+
+            #endregion
 
             /*
              * 2) user is NOT logged in and are not authorized -> 
@@ -132,26 +133,16 @@ namespace AutoBuildApp.Api.HelperFunctions
                 }
             }
             else if (token == null || token == " ") // else set the default principle:
-            {
+            { DefaultClaimsPrinciple();}
 
-                DefaultClaimsPrinciple();
-
-                //if (Thread.CurrentPrincipal != null) // this check may be removed...
-                //{
-                //    Thread.CurrentPrincipal = (ClaimsPrincipal)Thread.CurrentPrincipal;
-                //}
-
-               
-            }
-
-            Console.WriteLine($"\n\t " +$"END OF THE JWT MIDDLE WARE \n");
+            //Console.WriteLine($"\n\t " +$"END OF THE JWT MIDDLE WARE \n");
             await _next(httpContext);
         }
 
         public bool ValidateTheToken(HttpContext httpContext, string token)
         {
 
-            Console.WriteLine($"VALIDATING THE TOKEN METHOD.");
+            //Console.WriteLine($"VALIDATING THE TOKEN METHOD.");
             ///https://dev.to/tjindapitak/better-way-of-storing-per-request-data-across-middlewares-in-asp-net-core-1m9k
             if (!_validateAuthorizationHeader.IsValidJWT()) // JWT IS NOT VALID, END CALL
             {
@@ -165,8 +156,7 @@ namespace AutoBuildApp.Api.HelperFunctions
                 JwtParser jwtParser = new JwtParser(token);
 
                 var userPrinciple = jwtParser.ParseForClaimsPrinciple();
-                _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal; // get the principle on the thread
-                Console.WriteLine($"\nIN THE JWT MIDDLEWARE CHEWCKING THE PRINCIPLE NAME: {_threadPrinciple.Identity.Name}\n");
+                _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal; 
                 Thread.CurrentPrincipal = _threadPrinciple; // SETTING THE PARSED TOKEN, TO THE THREAD.
 
                 #endregion

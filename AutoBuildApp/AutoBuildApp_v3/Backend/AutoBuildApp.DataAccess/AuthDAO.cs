@@ -18,7 +18,6 @@ namespace AutoBuildApp.DataAccess
             {
                 // set the claims needed for this method call
                 ConnectionString = connection;
-                Console.WriteLine($"in auth DAO connection string  { ConnectionString}");
             }
             catch (ArgumentNullException)
             {

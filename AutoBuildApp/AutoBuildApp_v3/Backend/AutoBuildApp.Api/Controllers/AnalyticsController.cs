@@ -94,6 +94,7 @@ namespace AutoBuildApp.Api.Controllers
         [HttpGet]
         public IActionResult RetrieveGraphs(int GraphType)
         {
+            return Ok("good job");
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
                 // _logger.LogWarning("Unauthorized Access Attempted");

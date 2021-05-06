@@ -23,7 +23,7 @@ namespace AutoBuildApp.Managers.Registration_PackManger
 
         public AuthManager(string _cnnctString)
         {
-            Console.WriteLine($"connection string passed: { _cnnctString} ");
+            //Console.WriteLine($"connection string passed: { _cnnctString} ");
              //_authDAO = new AuthDAO(_cnnctString);
             //authenticationService = new AuthenticationService(_authDAO);
 
