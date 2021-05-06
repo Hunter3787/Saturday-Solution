@@ -9,6 +9,7 @@ using AutoBuildApp.DomainModels;
 using System.Collections.Generic;
 using AutoBuildApp.DomainModels.Enumerations;
 using System.Threading.Tasks;
+using AutoBuildApp.Logging;
 
 /// <summary>
 /// References used from file: Solution Items/References.txt 

@@ -1,4 +1,3 @@
-using APB.App.DataAccess;
 using NUnit.Framework;
 using System;
 using AutoBuildApp.Managers;
@@ -6,6 +5,7 @@ using AutoBuildApp.DomainModels.Enumerations;
 using AutoBuildApp.DomainModels;
 using AutoBuildApp.Services;
 using AutoBuildApp.DataAccess.Entities;
+using AutoBuildApp.Logging;
 
 /// <summary>
 /// References used from file: Solution Items/References.txt 

@@ -1,4 +1,5 @@
 ﻿using AutoBuildApp.DomainModels;
+using AutoBuildApp.Logging;
 using AutoBuildApp.Services;
 using System;
 using System.Collections.Generic;

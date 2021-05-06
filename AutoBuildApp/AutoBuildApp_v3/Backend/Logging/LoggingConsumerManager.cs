@@ -2,16 +2,16 @@
 using Apache.NMS;
 using Apache.NMS.ActiveMQ;
 using Newtonsoft.Json;
-using APB.App.DataAccess;
 using AutoBuildApp.DomainModels;
 using AutoBuildApp.DataAccess.Entities;
+using AutoBuildApp.Logging;
 
 /// <summary>
 /// References used from file: Solution Items/References.txt 
 /// [1,10,12,13]
 /// </summary>
 
-namespace AutoBuildApp.Managers
+namespace AutoBuildApp.Logging
 {
     /// <summary>
     /// This class acts as the consumer for the logging Objects, will be consumed from the

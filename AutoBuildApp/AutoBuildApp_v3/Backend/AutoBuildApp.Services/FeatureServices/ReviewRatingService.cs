@@ -9,6 +9,7 @@ using AutoBuildApp.DataAccess;
 using AutoBuildApp.DataAccess.Entities;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using AutoBuildApp.Logging;
 
 /// <summary>
 /// References used from file: Solution Items/References.txt 
@@ -75,8 +76,6 @@ namespace AutoBuildApp.Services
                     storeIn = $"/assets/images/Reviews/{username}_{ DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}.jpg";
 
                     var path = Path.GetFullPath(Path.Combine(currentDirectory, $@"..\..\FrontEnd{storeIn}"));
-
-                    Console.WriteLine(storeIn);
 
                     using (var stream = new FileStream(path, FileMode.CreateNew, FileAccess.ReadWrite))
                     {

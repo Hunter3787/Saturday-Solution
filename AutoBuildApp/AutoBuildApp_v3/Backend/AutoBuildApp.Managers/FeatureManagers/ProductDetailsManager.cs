@@ -1,4 +1,5 @@
-﻿using AutoBuildApp.Models.DataTransferObjects;
+﻿using AutoBuildApp.Logging;
+using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.Models.WebCrawler;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Services;

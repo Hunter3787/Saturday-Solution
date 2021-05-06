@@ -13,7 +13,7 @@ using AutoBuildApp.DomainModels.Enumerations;
 /// [1,7-13]
 /// </summary>
 
-namespace AutoBuildApp.Services
+namespace AutoBuildApp.Logging
 {
     /// <summary>
     /// This class will be used to send logs to a Queue, this is the producer end that will
@@ -134,7 +134,6 @@ namespace AutoBuildApp.Services
             if (!_isDisposed)
             {
 
-                Console.WriteLine("we are in SendLog");
                 string json = JsonConvert.SerializeObject(log, Formatting.Indented); // Serialize the log object into a JSON to be able to insterted clearly into the Queue.
                 ITextMessage textMessage = _session.CreateTextMessage(json); // This will get the message of the JSON log to be sent to the Queue.
                 _producer.Send(textMessage); // This finally sends the serialized object to the Queue.

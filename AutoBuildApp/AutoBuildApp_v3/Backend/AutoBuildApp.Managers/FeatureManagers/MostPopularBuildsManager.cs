@@ -1,5 +1,6 @@
 ﻿using AutoBuildApp.DomainModels;
 using AutoBuildApp.DomainModels.Exceptions;
+using AutoBuildApp.Logging;
 using AutoBuildApp.Services;
 using AutoBuildApp.Services.FeatureServices;
 using Microsoft.AspNetCore.Http;

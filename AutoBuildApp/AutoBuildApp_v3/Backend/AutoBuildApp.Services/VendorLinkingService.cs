@@ -15,6 +15,7 @@ using AutoBuildApp.Services.FeatureServices;
 using System.Linq;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security;
+using AutoBuildApp.Logging;
 
 namespace AutoBuildApp.Services
 {

@@ -8,6 +8,7 @@
     <ProjectReference Include="..\AutoBuildApp.DomainModels\AutoBuildApp.DomainModels.csproj" />
     <ProjectReference Include="..\AutoBuildApp.Models\AutoBuildApp.Models.csproj" />
     <ProjectReference Include="..\AutoBuildApp.DataAccess\AutoBuildApp.DataAccess.csproj" />
+    <ProjectReference Include="..\Logging\Logging.csproj" />
     
   </ItemGroup>
   <ItemGroup>

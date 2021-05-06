@@ -52,13 +52,13 @@ namespace AutoBuildApp.Security
             ///handle the null values
             if (PermissionsRequired is null) {
 
-                Console.WriteLine($"in THE AUTHORIZATION SERVICE RETURNING FALSE");
+                //Console.WriteLine($"in THE AUTHORIZATION SERVICE RETURNING FALSE");
                 return false; }
 
             /// how about ordering the claims first:
             /// http://csharphelper.com/blog/2018/04/determine-whether-two-lists-contain-the-same-sequences-of-objects-in-different-orders-in-c/
 
-            Console.WriteLine($"\nthe identitiy _name is Authorizatioin service: " + $"{threadPrinciple.Identity.Name}\n");
+            //Console.WriteLine($"\nthe identitiy _name is Authorizatioin service: " + $"{threadPrinciple.Identity.Name}\n");
 
             var x =
                 from Claim item in threadPrinciple.Claims
@@ -72,32 +72,12 @@ namespace AutoBuildApp.Security
                     orderby item.Type
                     select item;
 
-            Console.WriteLine($"\n" +
-                            $"In the authorizatioin service");
-            Console.WriteLine($"The claims in the thread in AuthorizationService:");
-            Console.WriteLine($"x");
-            foreach (Claim c in x)
-            {
-                Console.WriteLine($" " +
-                    $"claim type: { c.Type } claim value: {c.Value} ");
-
-            }
-            Console.WriteLine($"\n" +
-                  $"Permissions passed in AuthorizationService:");
-            Console.WriteLine($" " +
-                   $"y:");
-            foreach (Claim c in y)
-            {
-                Console.WriteLine($" " +
-                    $"claim type: { c.Type } claim value: {c.Value} ");
-
-            }
 
             ///http://csharphelper.com/blog/2018/04/determine-whether-two-lists-contain-the-same-sequences-of-objects-in-different-orders-in-c/
             ///
             bool outcome = Enumerable.SequenceEqual(x, y, new MyCustomComparer());
 
-            Console.WriteLine($"in THE AUTHORIZATION SERVICE RETURNING OUTCOME {outcome}");
+            //Console.WriteLine($"in THE AUTHORIZATION SERVICE RETURNING OUTCOME {outcome}");
             return outcome;
         }
         // nick: not a terrible idea :  make two different checks singular and 

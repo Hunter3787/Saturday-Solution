@@ -1,4 +1,5 @@
 ﻿
+using AutoBuildApp.Logging;
 using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.Models.VendorLinking;
 using AutoBuildApp.Models.WebCrawler;

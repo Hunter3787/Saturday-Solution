@@ -1,6 +1,7 @@
 ﻿using AutoBuildApp.DataAccess;
 using AutoBuildApp.DataAccess.Entities;
 using AutoBuildApp.DomainModels;
+using AutoBuildApp.Logging;
 using AutoBuildApp.Models.Enumerations;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -168,8 +169,6 @@ namespace AutoBuildApp.Services.FeatureServices
                     storeIn = $"/assets/images/MPB/{username}_{ DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}.jpg";
 
                     var path = Path.GetFullPath(Path.Combine(currentDirectory, $@"..\..\FrontEnd{storeIn}"));
-
-                    Console.WriteLine(storeIn);
 
                     using (var stream = new FileStream(path, FileMode.CreateNew, FileAccess.ReadWrite))
                     {
