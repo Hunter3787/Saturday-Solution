@@ -27,7 +27,7 @@ namespace AutoBuildApp.Api.Controllers
         private readonly string _connectionString =
             ConnectionManager
             .connectionManager
-            .GetConnectionStringByName(ControllerGlobals.CONNECTION_CONFIG_NAME);
+            .GetConnectionStringByName(ControllerGlobals.LOCALHOST_CONNECTION);
 
         private RecommendationManager manager;
 
@@ -56,12 +56,12 @@ namespace AutoBuildApp.Api.Controllers
                         return Ok(builds);
 
             }
-            catch(UnauthorizedAccessException ex)
+            catch(UnauthorizedAccessException )
             {
                 //_logger.LogWarning(ex.Message);
                 return new StatusCodeResult(StatusCodes.Status401Unauthorized);
             }
-            catch(ArgumentOutOfRangeException ex)
+            catch(ArgumentOutOfRangeException )
             {
                 //_logger.LogWarning(ex.Message);
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);

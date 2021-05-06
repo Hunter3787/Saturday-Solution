@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading;
@@ -23,12 +24,14 @@ namespace AutoBuildApp.Api.Controllers
     public class AuthDemoController : ControllerBase
     {
 
-        private ClaimsFactory _claimsFactory = new ConcreteClaimsFactory();
-        IClaims _admin;
+
+        private List<string> _allowedRoles; //specify rles
+
         public AuthDemoController()
         {
-
-            _admin = _claimsFactory.GetClaims(RoleEnumType.SYSTEM_ADMIN);
+            
+            _allowedRoles = new List<string>()
+            { RoleEnumType.BasicRole, RoleEnumType.SystemAdmin};
 
 
         }
@@ -37,6 +40,13 @@ namespace AutoBuildApp.Api.Controllers
         {
 
             ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            foreach (var clm in _threadPrinciple.Claims)
+            {
+                Console.WriteLine(
+                    $" claim type: { clm.Type } " +
+                    $"claim value: {clm.Value} \n");
+            }
+
             Console.WriteLine("we are here A");
             if (!_threadPrinciple.Identity.IsAuthenticated)
             {
@@ -44,9 +54,9 @@ namespace AutoBuildApp.Api.Controllers
                 // Add action logic here
                 return new StatusCodeResult(StatusCodes.Status401Unauthorized);
             }
-            if (!AuthorizationService.checkPermissions(_admin.Claims()))
+            if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
-                Console.WriteLine("we are here C");
+
                 // Add action logic here
                 return new StatusCodeResult(StatusCodes.Status403Forbidden);
             }

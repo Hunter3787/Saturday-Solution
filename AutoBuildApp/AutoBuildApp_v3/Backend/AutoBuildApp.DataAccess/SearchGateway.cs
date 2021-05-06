@@ -7,7 +7,7 @@ using System.Text;
 
 
 // Could be nixed.
-namespace AutoBuildApp.Models.DTO
+namespace AutoBuildApp.DataAccess.DataTransferObjects
 {
     public class SearchGateway
     {
@@ -19,7 +19,7 @@ namespace AutoBuildApp.Models.DTO
         }
 
         public ISet<IResult> Search(string searchString, string resultType) {
-            bool Flag = false;
+            //bool Flag = false;
             using (SqlConnection connection = new SqlConnection(this._connection))
             {
                 connection.Open();

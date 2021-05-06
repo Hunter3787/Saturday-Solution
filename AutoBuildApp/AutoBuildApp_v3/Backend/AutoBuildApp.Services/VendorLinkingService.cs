@@ -1,5 +1,7 @@
-﻿using AutoBuildApp.DataAccess;
-using AutoBuildApp.DataAccess.Abstractions;
+﻿using AutoBuildApp.Models;
+using AutoBuildApp.Models.DataTransferObjects;
+using AutoBuildApp.DataAccess;
+using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.VendorLinking;
 using AutoBuildApp.Models.WebCrawler;
 using Microsoft.AspNetCore.Http;
@@ -9,51 +11,184 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using AutoBuildApp.Services.FeatureServices;
+using System.Linq;
+using AutoBuildApp.Security.Enumerations;
+using AutoBuildApp.Security;
 
 namespace AutoBuildApp.Services
 {
     public class VendorLinkingService
     {
-        private readonly LoggingProducerService _logger = LoggingProducerService.GetInstance;
+        private List<string> _allowedRoles;
         private VendorLinkingDAO _vendorLinkingDAO;
-
+        private readonly LoggingProducerService _logger = LoggingProducerService.GetInstance;
+        private CommonResponseService commonResponseService = new CommonResponseService();
         public VendorLinkingService(string connectionString)
         {
             _vendorLinkingDAO = new VendorLinkingDAO(connectionString);
+            _allowedRoles = new List<string>()
+            {
+                RoleEnumType.SystemAdmin,
+                RoleEnumType.VendorRole
+            };
         }
 
-        public void PopulateVendorsProducts(ConcurrentDictionary<string, HashSet<string>> VendorsProducts)
+        public CommonResponseWithObject<ConcurrentDictionary<string, ConcurrentDictionary<string, byte>>> PopulateVendorsProducts()
         {
-            //return _vendorLinkingDAO.PopulateVendorsProducts(VendorsProducts);
-            _vendorLinkingDAO.PopulateVendorsProducts(VendorsProducts);
+            // Initialize a common response object
+            CommonResponseWithObject<ConcurrentDictionary<string, ConcurrentDictionary<string, byte>>> commonResponse = new CommonResponseWithObject<ConcurrentDictionary<string, ConcurrentDictionary<string, byte>>>();
+
+            // Authorization check
+            if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
+            {
+                _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
+                commonResponse.ResponseBool = false;
+                commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
+
+                return commonResponse;
+            }
+
+            // Call the DAO method and return the system code along with the collection
+            SystemCodeWithObject<ConcurrentDictionary<string, ConcurrentDictionary<string, byte>>> daoResponse = _vendorLinkingDAO.PopulateVendorsProducts();
+
+            // Initialize a Common Response object that has a collection field
+
+            // Pass in the response code and the common response object and set the bool and the string fields
+            commonResponseService.SetCommonResponse(daoResponse.Code, commonResponse);
+
+            // Save the collection to the common response object
+            commonResponse.GenericObject = daoResponse.GenericObject;
+
+            return commonResponse;
         }
 
         public CommonResponse AddProductToVendorListOfProducts(AddProductDTO product)
         {
-            return _vendorLinkingDAO.AddProductToVendorListOfProducts(product);
+            // Initialize a common response object
+            CommonResponse commonResponse = new CommonResponse(); 
+            
+            // Authorization check
+            if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
+            {
+                _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
+                commonResponse.ResponseBool = false;
+                commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
+
+                return commonResponse;
+            }
+
+            // Call the DAO method and return the system code
+            AutoBuildSystemCodes daoResponseCode = _vendorLinkingDAO.AddProductToVendorListOfProducts(product);
+
+            // Pass in the response code and the common response object and set the bool and the string fields
+            //      The third parameter is for a custom success message
+            commonResponseService.SetCommonResponse(daoResponseCode, commonResponse, ResponseStringGlobals.SUCCESSFUL_ADDITION);
+
+            return commonResponse;
         }
-        public bool EditProductInVendorListOfProducts(AddProductDTO product)
+        public CommonResponse EditProductInVendorListOfProducts(AddProductDTO product)
         {
-            return _vendorLinkingDAO.EditProductInVendorListOfProducts(product);
+            // Initialize a common response object
+            CommonResponse commonResponse = new CommonResponse();
+
+            //Authorization check
+            if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
+            {
+                _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
+                commonResponse.ResponseBool = false;
+                commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
+
+                return commonResponse;
+            }
+
+            // Call the DAO method and return the system code
+            AutoBuildSystemCodes daoResponseCode = _vendorLinkingDAO.EditProductInVendorListOfProducts(product);
+
+            // Pass in the response code and the common response object and set the bool and the string fields
+            //      The third parameter is for a custom success message for when the response code is success
+            commonResponseService.SetCommonResponse(daoResponseCode, commonResponse, ResponseStringGlobals.SUCCESSFUL_MODIFICATION);
+
+            return commonResponse;
         }
 
-        public bool DeleteProductFromVendorList(string modelNumber)
+        public CommonResponse DeleteProductFromVendorList(string modelNumber)
         {
-            return _vendorLinkingDAO.DeleteProductFromVendorList(modelNumber);
-        }
-        public List<AddProductDTO> GetAllProductsByVendor(GetProductByFilterDTO filters)
-        {
-            return _vendorLinkingDAO.GetProductsByFilter(filters, 1);
-            //return _vendorLinkingDAO.GetAllProductsByVendor(" ");
-        }
-        public List<string> GetAllModelNumbers()
-        {
-            return _vendorLinkingDAO.GetAllModelNumbers();
+
+            // Initialize a common response object
+            CommonResponse commonResponse = new CommonResponse();
+
+            //Authorization check
+            if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
+            {
+                _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
+                commonResponse.ResponseBool = false;
+                commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
+
+                return commonResponse;
+            }
+
+            // Call the DAO method and return the system code
+            AutoBuildSystemCodes daoResponseCode = _vendorLinkingDAO.DeleteProductFromVendorList(modelNumber);
+
+            // Pass in the response code and the common response object and set the bool and the string fields
+            //      The third parameter is for a custom success message for when the response code is success
+            commonResponseService.SetCommonResponse(daoResponseCode, commonResponse, ResponseStringGlobals.SUCCESSFUL_DELETION);
+
+            return commonResponse;
         }
 
-        public List<AddProductDTO> GetAllProductsByVendor(string companyName)
+        public CommonResponseWithObject<List<AddProductDTO>> GetAllProductsByVendor(GetProductByFilterDTO filters)
         {
-            return _vendorLinkingDAO.GetAllProductsByVendor(companyName);
+            // Initialize a common response object that has a collection field
+            CommonResponseWithObject<List<AddProductDTO>> commonResponse = new CommonResponseWithObject<List<AddProductDTO>>();
+
+            //Authorization check
+            if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
+            {
+                _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
+                commonResponse.ResponseBool = false;
+                commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
+
+                return commonResponse;
+            }
+
+            // Call the DAO method and return the system code along with the collection
+            SystemCodeWithObject<List<AddProductDTO>> daoResponse = _vendorLinkingDAO.GetVendorProductsByFilter(filters);
+
+            // Pass in the response code and the common response object and set the bool and the string fields
+            commonResponseService.SetCommonResponse(daoResponse.Code, commonResponse);
+
+            // Save the collection to the common response object
+            commonResponse.GenericObject = daoResponse.GenericObject;
+
+            return commonResponse;
+        }
+        public CommonResponseWithObject<List<string>> GetAllModelNumbers()
+        {
+            // Initialize a Common Response object that has a collection field
+            CommonResponseWithObject<List<string>> commonResponse = new CommonResponseWithObject<List<string>>();
+
+            //Authorization check
+            if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
+            {
+                _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
+                commonResponse.ResponseBool = false;
+                commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
+
+                return commonResponse;
+            }
+            
+            // Call the DAO method and return the system code along with the collection
+            SystemCodeWithObject<List<string>> daoResponse = _vendorLinkingDAO.GetAllModelNumbers();
+
+            // Pass in the response code and the common response object and set the bool and the string fields
+            commonResponseService.SetCommonResponse(daoResponse.Code, commonResponse);
+
+            // Save the collection to the common response object
+            commonResponse.GenericObject = daoResponse.GenericObject;
+
+            return commonResponse;
         }
 
         public async Task<string> UploadImage(string username, IFormFile file)
@@ -77,7 +212,6 @@ namespace AutoBuildApp.Services
                 }
             }
 
-            _logger.LogInformation("Successfully uploaded image to specified location.");
             return storeIn;
         }
     }

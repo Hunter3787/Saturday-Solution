@@ -38,7 +38,7 @@ namespace AutoBuildApp.Managers
         {
             //Generate claims
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
-            _unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
+            _unregistered = claimsFactory.GetClaims(RoleEnumType.UnregisteredRole);
 
             _connectionString = connectionString;
             _dao = new ProductDAO(_connectionString);
@@ -69,7 +69,7 @@ namespace AutoBuildApp.Managers
             int hddCount)
         {
             #region Guards
-            if (!AuthorizationService.checkPermissions(_unregistered.Claims()))
+            if (!AuthorizationService.CheckPermissions(_unregistered.Claims()))
             {
                 throw new UnauthorizedAccessException("Unauthorized user");
             }

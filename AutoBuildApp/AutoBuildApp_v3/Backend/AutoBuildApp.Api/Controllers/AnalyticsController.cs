@@ -1,17 +1,21 @@
 ﻿using AutoBuildApp.Api.HelperFunctions;
+using AutoBuildApp.Models.DataTransferObjects;
+using AutoBuildApp.DomainModels;
+using AutoBuildApp.DomainModels.Abstractions;
+using AutoBuildApp.DomainModels.Enumerations;
+using AutoBuildApp.Managers.FeatureManagers;
 using AutoBuildApp.Security;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
 using AutoBuildApp.Security.Interfaces;
+using AutoBuildApp.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using System;
 
 namespace AutoBuildApp.Api.Controllers
 {
@@ -25,14 +29,20 @@ namespace AutoBuildApp.Api.Controllers
     {
         ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
-        private ClaimsFactory _claimsFactory = new ConcreteClaimsFactory();
-        IClaims _admin;
+        // Creates the local instance for the logger
+        // private LoggingProducerService _logger = LoggingProducerService.GetInstance;
+
+        // instantiate the consumer. 
+
+        private AnalyticsManager _analyticsManager;
+        private List<string> _allowedRoles; //specify roles
         public AnalyticsController()
         {
-            /// the user analysis dashboard need admin Priveldges so check:
-            /// Step one specify the claim set required
-            /// 
-            _admin = _claimsFactory.GetClaims(RoleEnumType.SYSTEM_ADMIN);
+            #region retrieving the roles for Authorization check:
+            _allowedRoles = new List<string>()
+            { RoleEnumType.SystemAdmin };
+
+            #endregion
 
 
             #region getting the connection string and passing to the loginmanager
@@ -46,15 +56,17 @@ namespace AutoBuildApp.Api.Controllers
             #endregion
 
 
-
+            _analyticsManager = new AnalyticsManager(connection);
 
         }
 
         /*
          * There are two cases to consider:
          * A request coming through from:
-         * 1) user is logged in but do not have permissions -> 
+         * 1) user is logged in BUT do not have permissions -> 
          * status code:  403 (don’t have permissions to do what they requested)
+         * 
+         * 
          * 
          * 2) user is NOT logged in and are not authorized -> 
          * status code: 401. here comes in the REDIRECT URL.
@@ -66,60 +78,48 @@ namespace AutoBuildApp.Api.Controllers
         public IActionResult Index()
         {
 
-            Console.WriteLine("we are here22");
             if (!_threadPrinciple.Identity.IsAuthenticated)
             {
-
-                // Add action logic here
                 return new StatusCodeResult(StatusCodes.Status401Unauthorized);
             }
-            if (!AuthorizationService.checkPermissions(_admin.Claims()))
-             {
-
-                    // Add action logic here
-                    return new StatusCodeResult(StatusCodes.Status403Forbidden);
-              }
+            if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
+            {
+                // Add action logic here
+                return new StatusCodeResult(StatusCodes.Status403Forbidden);
+            }
             return Ok("Good to Continue");
-            
-        }
 
+        }
 
         [HttpGet]
-        public IActionResult RetrieveGraphs()
+        public IActionResult RetrieveGraphs(int GraphType)
         {
-
-            Console.WriteLine("we are here22");
-            if (!_threadPrinciple.Identity.IsAuthenticated)
+            return Ok("good job");
+            if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
-                Console.WriteLine("we are here");
-                // Add action logic here
-                return new StatusCodeResult(StatusCodes.Status401Unauthorized);
+                // _logger.LogWarning("Unauthorized Access Attempted");
+                return new StatusCodeResult(StatusCodes.Status403Forbidden);
             }
-            if (!AuthorizationService.checkPermissions(_admin.Claims()))
+
+            AnalyticsDataDTO dataDTO  = _analyticsManager.GetChartData(GraphType);
+
+            if (dataDTO.Result.Equals(AuthorizationResultType.NotAuthorized.ToString()))
             {
-
-                return Ok("good2");
-                // Add action logic here
-                //return new StatusCodeResult(StatusCodes.Status403Forbidden);
+                // _logger.LogWarning("Unauthorized Access Attempted");
+                return new StatusCodeResult(StatusCodes.Status403Forbidden);
             }
-            /// 
+            if (!dataDTO.SuccessFlag)
+            {
+                
+                    // _logger.LogWarning(result.result);
+                    var result = dataDTO.Result;
+                    return Ok(result);
+                    //return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            }
+            return Ok(dataDTO.analyticChartsRequisted);
 
-
-
-            return Ok("here");
 
         }
 
-
-
-
-
-
-
-
-
-
-
-
-        }
+    }
 }

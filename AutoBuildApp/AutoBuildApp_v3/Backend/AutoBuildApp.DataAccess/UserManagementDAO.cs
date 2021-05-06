@@ -88,7 +88,7 @@ namespace AutoBuildApp.DataAccess
         }
 
 
-        public string UpdatePasswordDB(string email, string password)
+        public string UpdatePasswordDB(string password, string activeEmail)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -109,8 +109,8 @@ namespace AutoBuildApp.DataAccess
                     command.CommandText = SP_UpdatePassword;
                     //Add any required parameters to the Command.Parameters collection.
                     var param = new SqlParameter[2];
-                    param[0] = new SqlParameter("@USEREMAIL", email);
-                    param[0].Value = email;
+                    param[0] = new SqlParameter("@USEREMAIL", activeEmail);
+                    param[0].Value = activeEmail;
                     param[1] = new SqlParameter("@PASSHASH", password);
                     param[1].Value = password;
                     // add the commands the parameters for the stored procedure
@@ -130,7 +130,7 @@ namespace AutoBuildApp.DataAccess
             return "Password WAS NOT successfully updated";
         }
 
-        public string UpdateEmailDB(string email, string updatedEmail)
+        public string UpdateEmailDB(string inputEmail, string activeEmail)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -151,10 +151,10 @@ namespace AutoBuildApp.DataAccess
                     command.CommandText = SP_UpdateEmail;
                     //Add any required parameters to the Command.Parameters collection.
                     var param = new SqlParameter[2];
-                    param[0] = new SqlParameter("@USEREMAIL", email);
-                    param[0].Value = email;
-                    param[1] = new SqlParameter("@EMAIL", updatedEmail);
-                    param[1].Value = updatedEmail;
+                    param[0] = new SqlParameter("@ACTIVEEMAIL", activeEmail);
+                    param[0].Value = activeEmail;
+                    param[1] = new SqlParameter("@INPUTEMAIL", inputEmail);
+                    param[1].Value = inputEmail;
                     // add the commands the parameters for the stored procedure
                     command.Parameters.AddRange(param);
                     #endregion
@@ -173,15 +173,15 @@ namespace AutoBuildApp.DataAccess
         }
 
 
-        public string UpdateUserNameDB(string email, string updatedUserName)
+        public string UpdateUserNameDB(string username, string activeEmail)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 Console.WriteLine($"\tRetrieveUserPermissions METHOD \n");
                 conn.Open();
                 // naming convention SP name of procudrure
-                string SP_UpdateUserName = "UpdateUserName";
-                using (SqlCommand command = new SqlCommand(SP_UpdateUserName, conn))
+                string SP_UpdateUsername = "UpdateUsername";
+                using (SqlCommand command = new SqlCommand(SP_UpdateUsername, conn))
                 {
                     command.Transaction = conn.BeginTransaction();
                     #region SQL related
@@ -191,13 +191,13 @@ namespace AutoBuildApp.DataAccess
                     // 1) Create a Command, and set its CommandType property to StoredProcedure.
                     command.CommandType = CommandType.StoredProcedure;
                     // 2) Set the CommandText to the name of the stored procedure.
-                    command.CommandText = SP_UpdateUserName;
+                    command.CommandText = SP_UpdateUsername;
                     //Add any required parameters to the Command.Parameters collection.
                     var param = new SqlParameter[2];
-                    param[0] = new SqlParameter("@USEREMAIL", email);
-                    param[0].Value = email;
-                    param[1] = new SqlParameter("@USERNAME", updatedUserName);
-                    param[1].Value = updatedUserName;
+                    param[0] = new SqlParameter("@USEREMAIL", activeEmail);
+                    param[0].Value = activeEmail;
+                    param[1] = new SqlParameter("@USERNAME", username);
+                    param[1].Value = username;
                     // add the commands the parameters for the stored procedure
                     command.Parameters.AddRange(param);
                     #endregion
@@ -247,6 +247,7 @@ namespace AutoBuildApp.DataAccess
                             userEntity.CreatedAt = reader["createdat"].ToString();
                             userEntity.ModifiedAt = reader["modifiedat"].ToString();
                             userEntity.UserRole = (string)reader["userRole"];
+                            userEntity.LockState = (bool)reader["locked"];
                             userEntityList.Add(userEntity);
                         }
                     }
@@ -298,14 +299,6 @@ namespace AutoBuildApp.DataAccess
                             row["scopeOfPermission"] = claim.Value.ToString();
                             pair.Rows.Add(row);
                         }
-
-                        //foreach (DataRow r in pair.Rows)
-                        //{
-                        //    foreach (DataColumn c in pair.Columns)
-                        //        Console.Write("\t{0}", r[c]);
-
-                        //    Console.WriteLine("\t\t\t" + r.RowState);
-                        //}
 
                         var param = new SqlParameter[3];
                         param[0] = adapter.InsertCommand.Parameters.AddWithValue("@PERMISSIONS", pair);
@@ -425,31 +418,67 @@ namespace AutoBuildApp.DataAccess
 
         public string DeleteUserDB(string username)
         {
-            using (var conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(_connectionString))
             {
+                Console.WriteLine($"\tRetrieveUserPermissions METHOD \n");
                 conn.Open();
-                using (var command = new SqlCommand())
+                // naming convention SP_ name of procudrure
+                string SP_DeleteAccount = "DeleteAccount";
+                using (SqlCommand command = new SqlCommand(SP_DeleteAccount, conn))
                 {
-                    command.Transaction = conn.BeginTransaction();
-                    command.Connection = conn;
-                    command.CommandTimeout = TimeSpan.FromSeconds(60).Seconds;
-                    command.CommandType = CommandType.Text;
-
-                    command.CommandText = "DELETE UserCredentials FROM UserCredentials " +
-                        "WHERE username = @username";
-                    var parameters = new SqlParameter[1];
-                    parameters[0] = new SqlParameter("@username", username);
-
-                    command.Parameters.AddRange(parameters);
-                    var rowsDeleted = command.ExecuteNonQuery();
-
-                    if (rowsDeleted == 1)
+                    try
                     {
+                        command.Transaction = conn.BeginTransaction();
+                        #region SQL related
+
+                        // https://learning.oreilly.com/library/view/adonet-in-a/0596003617/ch04s05.html
+                        command.CommandTimeout = TimeSpan.FromSeconds(TimeoutLengths.TIMEOUT_LONG).Seconds;
+                        // 1) Create a Command, and set its CommandType property to StoredProcedure.
+                        command.CommandType = CommandType.StoredProcedure;
+                        // 2) Set the CommandText to the name of the stored procedure.
+                        command.CommandText = SP_DeleteAccount;
+                        /// command.Parameters.AddWithValue   -> fix itttttttt!!!!!
+                        //Add any required parameters to the Command.Parameters collection.
+                        // command.Parameters.AddWithValue("@username", userCredentials.Username);
+                        var param = new SqlParameter[2];
+                        param[0] = new SqlParameter("@USERNAME", username);
+                        param[0].Value = username;
+                        param[1] = new SqlParameter("@DATEDELETE", DateTimeOffset.Now);
+                        param[1].Value = DateTimeOffset.Now;
+                        // add the commands the parameters for the stored procedure
+                        command.Parameters.AddRange(param);
+                        #endregion
+
+                        var executeCommand = command.ExecuteNonQuery();
                         command.Transaction.Commit();
-                        return "User deleted";
+                        Console.WriteLine($" reader rows: {executeCommand}");
+                        if (executeCommand != 0)
+                        {
+                            return "account has been successfully deleted";
+                        }
+                        else
+                        {
+                            return "failed to delete";
+                        }
+                        
                     }
-                    return "User NOT deleted";
+                    catch (SqlException e)
+                    {
+                        command.Transaction.Rollback();
+                        if (!conn.State.Equals(ConnectionState.Open))
+                        {
+                            return "Cannot process request";
+                        }
+                        Console.WriteLine("SqlException.GetType: {0}", e.GetType());
+                        Console.WriteLine("SqlException.Source: {0}", e.Source);
+                        Console.WriteLine("SqlException.ErrorCode: {0}", e.ErrorCode);
+                        Console.WriteLine("SqlException.Message: {0}", e.Message);
+                    }
+                    
+
+                    return "Account was deleted";
                 }
+
             }
         }
 

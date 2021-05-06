@@ -1,24 +1,41 @@
-//const uri1 = 'https://localhost:44363/api/TodoItems';
-const uri ='https://localhost:5001/login';
-let todos = [];
-var JWT_Token = ' ';
 
-  //https://gomakethings.com/using-oauth-with-fetch-in-vanilla-js/
-  // https://www.digitalocean.com/community/tutorials/how-to-use-the-javascript-fetch-api-to-get-data
+// remove all console stuff -sir
+const url ='https://localhost:5001/authentication';
 
+const fetchRequest = {
+  method: 'GET',
+  mode:'cors',
+headers: {
+  'Accept': 'application/json',
+  'Content-Type': 'application/json',
+  // 'Authorization': 'Bearer ' + ' '
+} };
 
-function getItems() {
-  fetch(uri)
-    .then(response => response.json())
-    .then(data => _displayItems(data))
-    .catch(error => console.error('Unable to get items.', error));
+let JWT ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiLCJzdWIiOiJBdXRvYnVpbGQgVXNlciIsImF1ZCI6IlVTIiwiaWF0IjoxNjIwMDMyMTM4LCJleHAiOjE2MjA2MzY5MzgsIm5iZiI6MTYyMDYzNjkzOCwiVXNlcm5hbWUiOiJraW5nUGVuaTM5MyIsIlVzZXJDTGFpbXMiOlt7IlBlcm1pc3Npb24iOiJBTEwiLCJzY29wZU9mUGVybWlzc2lvbnMiOiJBTEwifV19.-en1y6qb2I-LfMbXPLCEQaiU3VAF2xaSDmbGS0Dba3g'
+function  getItem(){
+
+  const fetchRequest = {
+    method: 'GET',
+    mode:'cors',
+  headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+     'Authorization': 'Bearer ' + JWT
+  } };
+  let customRequest = Object.assign( fetchRequest,{ method: 'GET' });
+   fetch(url, customRequest) // fetches the default URI
+      .then(response => response.json()) // Will receive a response from the default response.json.
+      .then(response => displayResponse(response)) // will call the display items function.
+      .then(response=> alert(response))
+      .then(console.log("reloaded"))
+      .catch(error => console.error('Unable to get items.', error)); // will catch an error and print the appropriate error message in console.
+ 
 }
 
-document.getElementById("LoginSubmit")
-    .addEventListener("click", checkCredentials)
+let Reg = document.getElementById('loginForm');
+Reg.addEventListener("submit", () =>  checkCredentials()); // lambda function for redirecting on click.
 
-function checkCredentials() {
-  console.log('Verifying credentials');
+ function checkCredentials() {
   const addNameTextbox = document.getElementById('add-username');
   const addHashTextbox = document.getElementById('add-passHash');
   // this represent the usercredentials object
@@ -26,37 +43,27 @@ function checkCredentials() {
     Username : addNameTextbox.value.trim(),
     Password : addHashTextbox.value.trim()
   };
-  fetch(`https://localhost:5001/login`, {
-    method: 'POST',
-    mode: 'cors',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + JWT_Token
-    },
-    body: JSON.stringify(UserCred)
-  })
-    .then(response => response.json())
-    .then(response => displayToken(response))
-    .then(() => {  getItems();  })
-    .catch(error => console.error('Unable to Authenticate.', error));
-    
-  closeInput();
 
-  return false;
-}
-function closeInput() {
-  document.getElementById('editForm').style.display = 'none';
+let customRequest = Object.assign( 
+  fetchRequest,{ method: 'POST' , body : JSON.stringify(UserCred) });
+
+   fetch(url, customRequest)
+    .then(response => response.json())
+    .then(response => displayResponse(response))
+    .then(response =>  getItem())
+    .catch(error => console.error('Unable to Authenticate.', error));
+
+  
 }
 
 // add notes
-function displayToken(id)
+function displayResponse(id)
 {
-  var getBody = document.getElementById("JWT-TOKEN");
+  console.log("we are here")
+  var getBody = document.getElementById("Response");
   console.log(id);
   var text =  document.createTextNode(JSON.stringify(id));
-  JWT_Token = id;
-  alert(JWT_Token);
+  alert(id);
   getBody.appendChild(text);
 
 }

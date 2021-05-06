@@ -10,6 +10,7 @@ using Microsoft.Net.Http.Headers;
 using System;
 using System.Security.Claims;
 using System.Security.Principal;
+using AutoBuildApp.Services;
 
 namespace AutoBuildApp.Api
 {
@@ -47,8 +48,7 @@ namespace AutoBuildApp.Api
                     {
                         builder.AllowAnyOrigin()
                                .AllowAnyMethod()
-                               .AllowAnyHeader();
-                    });
+                               .AllowAnyHeader(); });
                 }
                 else
                 {
@@ -64,7 +64,8 @@ namespace AutoBuildApp.Api
                 }
             });
             services.AddTransient<ClaimsPrincipal>();
-            services.AddControllers();
+            //services.AddSingleton<LoggingProducerService>();
+             services.AddControllers();
         }
 
 

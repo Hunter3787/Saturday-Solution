@@ -1,16 +1,17 @@
 ﻿using AutoBuildApp.Models.Interfaces;
-using AutoBuildApp.DataAccess;
+using AutoBuildApp.Models;
 using System.Collections.Generic;
 using AutoBuildApp.Security.FactoryModels;
 using AutoBuildApp.Security.Interfaces;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Services;
-using AutoBuildApp.DataAccess.Abstractions;
-using AutoBuildApp.Models;
+using AutoBuildApp.Models.DataTransferObjects;
+using AutoBuildApp.DataAccess;
 using AutoBuildApp.Managers.Guards;
 using System.Threading;
 using System.Security.Claims;
 using AutoBuildApp.Security;
+using System;
 
 /**
 * User Garage Manager class that directs 
@@ -23,58 +24,61 @@ namespace AutoBuildApp.Managers
     {
         private BuildDAO _buildDAO;
         private ShelfDAO _shelfDAO;
-        private readonly IClaims _basic, _vendor, _developer, _admin;
+
+        private List<string> _approvedRoles;
         private ShelfService _shelfService;
         private BuildManagementService _buildService;
         private readonly string _currentUser;
 
         public UserGarageManager(string connectionString)
-        {
-            ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
-            _basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
-            _vendor = claimsFactory.GetClaims(RoleEnumType.VENDOR_ROLE);
-            _admin = claimsFactory.GetClaims(RoleEnumType.DELEGATE_ADMIN);
+        { 
+            //ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
+            _approvedRoles = new List<string>()
+            { RoleEnumType.BasicRole,RoleEnumType.DelegateAdmin,
+            RoleEnumType.VendorRole, RoleEnumType.SystemAdmin};
 
             _buildDAO = new BuildDAO(connectionString);
             _shelfDAO = new ShelfDAO(connectionString);
             _shelfService = new ShelfService(_shelfDAO);
             _buildService = new BuildManagementService(_buildDAO);
             _currentUser = Thread.CurrentPrincipal.Identity.Name;
+
+
         }
 
-        public IMessageResponse AddBuild(IBuild build, string buildname)
+        public CommonResponse AddBuild(IBuild build, string buildname)
         {
             // temp
-            if (!IsAuthorized())
+            if (!AuthorizationCheck.IsAuthorized(_approvedRoles)) // added per Zee
             {
-                return new StringBoolResponse()
+                return new CommonResponse()
                 {
-                    MessageString = ResponseStringGlobals.UNAUTHORIZED_ACCESS,
-                    SuccessBool = false
+                    ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS,
+                    ResponseBool = false
                 };
             }
             NullGuard.IsNotNull(build);
             NullGuard.IsNotNullOrEmpty(buildname);
 
-            IMessageResponse response = _buildService.AddBuild(build, buildname, _currentUser);
+            CommonResponse response = _buildService.AddBuild(build, buildname, _currentUser);
 
             return response;
         }
 
-        public IMessageResponse CopyBuildToGarage(string buildID)
+        public CommonResponse CopyBuildToGarage(string buildID)
         {
             NullGuard.IsNotNullOrEmpty(buildID);
 
-            IMessageResponse response = _buildService.CopyBuild();
+            CommonResponse response = _buildService.CopyBuild();
 
             return response;
         }
 
-        public IMessageResponse DeleteBuild(string buildID)
+        public CommonResponse DeleteBuild(string buildID)
         {
             NullGuard.IsNotNullOrEmpty(buildID);
 
-            IMessageResponse response = _buildService.DeleteBuild();
+            CommonResponse response = _buildService.DeleteBuild();
 
             return response;
         }
@@ -96,101 +100,124 @@ namespace AutoBuildApp.Managers
             return outputList;
         }
 
-        public IMessageResponse PublishBuild(string buildID)
+        public CommonResponse PublishBuild(string buildID)
         {
             NullGuard.IsNotNullOrEmpty(buildID);
 
-            IMessageResponse response = _buildService.PublishBuild();
+            CommonResponse response = _buildService.PublishBuild();
 
             return response;
         }
 
-        public IMessageResponse ModifyBuild(IBuild build, string oldName, string newName)
+        public CommonResponse ModifyBuild(IBuild build, string oldName, string newName)
         {
             NullGuard.IsNotNull(build);
 
-            IMessageResponse response = _buildService.ModifyBuild();
+            CommonResponse response = _buildService.ModifyBuild();
 
             return response;
         }
 
         // Starting point
-        public IMessageResponse CreateShelf(string shelfName, string user)
+        public CommonResponse CreateShelf(string shelfName, string user)
         {
             NullGuard.IsNotNullOrEmpty(shelfName);
             NullGuard.IsNotNullOrEmpty(user);
 
             // TODO:Add input validation.
-            IMessageResponse response = _shelfService.CreateShelf(shelfName, user);
+            CommonResponse response = _shelfService.CreateShelf(shelfName, user);
 
             return response;
         }
 
-        public IMessageResponse RenameShelf(string from, string to, string user)
+        public CommonResponse RenameShelf(string from, string to, string user)
         {
             // TODO:Add input validation.
-            IMessageResponse response = _shelfService.ChangeShelfName(from, to, user);
+            CommonResponse response = _shelfService.ChangeShelfName(from, to, user);
 
             return response;
         }
 
-        public IMessageResponse DeleteShelf(string shelfName, string user)
+        public CommonResponse DeleteShelf(string shelfName, string user)
         {
             // Add Business rules
 
             // If(user == current)
-            IMessageResponse response = _shelfService.DeleteShelf(shelfName);
+            CommonResponse response = _shelfService.DeleteShelf(shelfName);
 
             return response;
         }
 
-        public IMessageResponse AddToShelf(IComponent item, string shelfName, string user)
+        public CommonResponse AddToShelf(IComponent item, string shelfName, string user)
         {
             // Add Business rules
-            IMessageResponse response = _shelfService.AddToShelf(item, shelfName, user);
+            CommonResponse response = _shelfService.AddToShelf(item, shelfName, user);
 
             return response;
         }
 
-        public IMessageResponse RemoveFromShelf(int itemIndex, string shelfName)
+        public CommonResponse RemoveFromShelf(int itemIndex, string shelfName)
         {
             // Add Business rules
-            IMessageResponse response = _shelfService.RemoveFromShelf(itemIndex, shelfName);
+            CommonResponse response = _shelfService.RemoveFromShelf(itemIndex, shelfName);
 
             return response;
         }
 
-        public IMessageResponse ModifyCount(int count, string itemID, string shelfName)
+        public CommonResponse ModifyCount(int count, string itemID, string shelfName)
         {
             // Add Business rules
-            IMessageResponse response = _shelfService.ChangeQuantity(count, itemID, shelfName);
+            CommonResponse response = _shelfService.ChangeQuantity(count, itemID, shelfName);
 
             return response;
         }
 
-        public IMessageResponse MoveItemOnShelf(int indexStart, int indexEnd, string user)
+        public CommonResponse MoveItemOnShelf(int indexStart, int indexEnd, string user)
         {
             // Add business rules
-            IMessageResponse response = _shelfService.ModifyShelf(indexStart, indexEnd, user);
+            CommonResponse response = _shelfService.ModifyShelf(indexStart, indexEnd, user);
 
             return response;
         }
 
-        public List<IComponent> GetShelf(string shelfName)
+        public CommonResponseWithObject<Shelf> GetShelfByName(string shelfName, string username)
         {
-            // Add Business rules
-            List<IComponent> outputList = _shelfService.GetShelf(shelfName);
+            CommonResponseWithObject<Shelf> output = new CommonResponseWithObject<Shelf>();
 
-            return outputList;
-        }
+            try
+            {
+                IsAuthorized();
+                NullGuard.IsNotNullOrEmpty(shelfName);
+            }
+            catch (ArgumentNullException)
+            {
+                output.GenericObject = new Shelf();
+                output.ResponseString = ResponseStringGlobals.INVALID_INPUT;
+                output.ResponseBool = false;
+                return output;
 
-        public IComponent GetComponent(int index, string shelfName)
-        {
-            // Add Business rules
-            IComponent output = _shelfService.GetComponent(index, shelfName);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.GenericObject = new Shelf();
+                output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
+                output.ResponseBool = false;
+                return output;
+            }
+
+            output = _shelfService.GetShelfByName(shelfName, username);
 
             return output;
         }
+
+        // Out of Scope
+        //public IComponent GetComponent(int index, string shelfName)
+        //{
+        //    // Add Business rules
+        //    IComponent output = _shelfService.GetComponent(index, shelfName);
+
+        //    return output;
+        //}
 
         /// <summary>
         /// Private method to compare the current uesr to the
@@ -198,24 +225,20 @@ namespace AutoBuildApp.Managers
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        private bool IsCurrentUser(string user)
+        private void IsCurrentUser(string user)
         {
-            var valid = false;
-
-            if (_currentUser == user)
+            if (_currentUser != user)
             {
-                valid = true;
+                throw new UnauthorizedAccessException();
             }
-
-            return valid;
         }
 
-        private bool IsAuthorized()
+        private void IsAuthorized()
         {
-            return AuthorizationService.checkPermissions(_basic.Claims())
-                || AuthorizationService.checkPermissions(_vendor.Claims())
-                || AuthorizationService.checkPermissions(_developer.Claims())
-                || AuthorizationService.checkPermissions(_admin.Claims());
+            if (!AuthorizationCheck.IsAuthorized(_approvedRoles))
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
     }
 }

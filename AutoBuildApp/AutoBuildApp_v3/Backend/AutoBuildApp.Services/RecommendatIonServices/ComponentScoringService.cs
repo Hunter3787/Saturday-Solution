@@ -374,7 +374,6 @@ namespace AutoBuildApp.Services.RecommendationServices
             var price = input.Price;
             var capacity = ParseInt(input.Capacity);
             var cache = ParseInt(input.Cache);
-            var driveType = input.DriveType;
 
             double scoreTotal = 0;
 
@@ -398,9 +397,6 @@ namespace AutoBuildApp.Services.RecommendationServices
                 default:
                     break;
             }
-
-            if (driveType != HardDriveType.NVMe)
-                scoreTotal += RecWeightGlobals.BONUS_VALUE;
 
             return (int)Math.Round(scoreTotal, MidpointRounding.AwayFromZero);
         }

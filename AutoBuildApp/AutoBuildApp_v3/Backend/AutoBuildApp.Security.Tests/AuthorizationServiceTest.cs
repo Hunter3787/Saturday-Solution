@@ -28,13 +28,13 @@ namespace AutoBuildApp.Security.Tests
 
         private static IEnumerable<Claim> claims = new List<Claim>() {
 
-                  new Claim( PermissionEnumType.READ_ONLY  , ScopeEnumType.AUTOBUILD),
-                  new Claim( PermissionEnumType.DELETE     , ScopeEnumType.SELF),
-                  new Claim( PermissionEnumType.UPDATE     , ScopeEnumType.SELF),
-                  new Claim( PermissionEnumType.EDIT       , ScopeEnumType.SELF),
-                  new Claim( PermissionEnumType.CREATE     , ScopeEnumType.REVIEWS),
-                  new Claim( PermissionEnumType.DELETE     , ScopeEnumType.SELF_REVIEWS),
-                  new Claim( PermissionEnumType.UPDATE     , ScopeEnumType.SELF_REVIEWS),
+                  new Claim( PermissionEnumType.ReadOnly  , ScopeEnumType.AutoBuild),
+                  new Claim( PermissionEnumType.Delete     , ScopeEnumType.Self),
+                  new Claim( PermissionEnumType.Update     , ScopeEnumType.Self),
+                  new Claim( PermissionEnumType.Edit       , ScopeEnumType.Self),
+                  new Claim( PermissionEnumType.Create     , ScopeEnumType.Reviews),
+                  new Claim( PermissionEnumType.Delete     , ScopeEnumType.SelfReviews),
+                  new Claim( PermissionEnumType.Update     , ScopeEnumType.SelfReviews),
 
 
             };
@@ -57,8 +57,8 @@ namespace AutoBuildApp.Security.Tests
 
             claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
             Thread.CurrentPrincipal = claimsPrincipal;
-            AuthorizationService.print();
-           bool AuthActual =  AuthorizationService.checkPermissions(permissionsRequired);
+            //AuthorizationService.Print();
+           bool AuthActual =  AuthorizationService.CheckPermissions(permissionsRequired);
            bool AuthExpected = true;
 
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
@@ -67,9 +67,9 @@ namespace AutoBuildApp.Security.Tests
             AuthDAO _authDAO = new AuthDAO("Data Source=localhost;Initial Catalog=DB;Integrated Security=True");
             //AuthenticationService authenticationService = new AuthenticationService(_authDAO);
             //_CRAuth = authenticationService.AuthenticateUser(credential1);
-            IClaims basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
+            IClaims basic = claimsFactory.GetClaims(RoleEnumType.BasicRole);
 
-            AuthActual = AuthorizationService.checkPermissions(basic.Claims());
+            AuthActual = AuthorizationService.CheckPermissions(basic.Claims());
 
 
             Assert.AreEqual(AuthExpected, AuthActual);
@@ -91,7 +91,7 @@ namespace AutoBuildApp.Security.Tests
         public void CheckNullPermissions_ReturnsBool()
         {
 
-            bool AuthActual = AuthorizationService.checkPermissions(null);
+            bool AuthActual = AuthorizationService.CheckPermissions(null);
             bool AuthExpected = false;
 
             Assert.AreEqual(AuthExpected, AuthActual);

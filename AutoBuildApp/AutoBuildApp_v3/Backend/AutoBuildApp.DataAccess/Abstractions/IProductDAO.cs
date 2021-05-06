@@ -6,7 +6,7 @@ using AutoBuildApp.Models.Enumerations;
 * IDataAccessObject Interface for AutoBuild App.
 * @Author Nick Marshall-Eminger
 */
-namespace AutoBuildApp.DataAccess.Abstractions
+namespace AutoBuildApp.Models.DataTransferObjects
 {
     public interface IProductDAO
     {

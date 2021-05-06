@@ -1,4 +1,4 @@
-﻿using AutoBuildApp.DataAccess.Abstractions;
+﻿using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.DataAccess.Entities;
@@ -61,7 +61,7 @@ namespace AutoBuildApp.DataAccess
                 {
                     command.Transaction = connection.BeginTransaction();
                     command.Connection = connection;
-                    command.CommandTimeout = DAOGlobals.TIMEOUT_SHORT;
+                    command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
                     command.CommandType = CommandType.Text;
                     command.CommandText = _allProductQuery;
 
@@ -127,7 +127,7 @@ namespace AutoBuildApp.DataAccess
                 {
                     command.Transaction = conn.BeginTransaction();
                     command.Connection = conn;
-                    command.CommandTimeout = DAOGlobals.TIMEOUT_SHORT;
+                    command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
                     command.CommandType = CommandType.Text;
 
 
@@ -155,7 +155,7 @@ namespace AutoBuildApp.DataAccess
                 {
                     command.Transaction = conn.BeginTransaction();
                     command.Connection = conn;
-                    command.CommandTimeout = DAOGlobals.TIMEOUT_SHORT;
+                    command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
                     command.CommandType = CommandType.Text;
 
 

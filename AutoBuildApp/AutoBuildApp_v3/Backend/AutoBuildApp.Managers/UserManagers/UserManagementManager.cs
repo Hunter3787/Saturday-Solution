@@ -1,6 +1,6 @@
 ﻿using AutoBuildApp.DataAccess;
 using AutoBuildApp.Models.Users;
-using AutoBuildApp.Models.DTO;
+using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.Services;
 using System;
 using AutoBuildApp.Managers.UserManagers;
@@ -30,16 +30,20 @@ namespace AutoBuildApp.Managers
         }
 
 
-        public string UpdatePassword(string password, string userEmail)
+        public string UpdatePassword(string password, string passwordCheck, string activeEmail)
         {
-            // get the current principle that is on the thread:
-            ClaimsPrincipal _threadPrinciple
-                = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            //userEmail = _threadPrinciple.FindFirst(ClaimTypes.Email).Value;
             if (_inputValidityManager.IsPasswordValid(password))
             {
-                password = BC.HashPassword(password, BC.GenerateSalt());
-                return _userManagementService._userManagementDAO.UpdatePasswordDB(userEmail, password);
+                if (_inputValidityManager.passwordCheck(password, passwordCheck))
+                {
+                    passwordCheck = BC.HashPassword(passwordCheck, BC.GenerateSalt());
+                    password = BC.HashPassword(password, BC.GenerateSalt());
+                    return _userManagementService._userManagementDAO.UpdatePasswordDB(password, activeEmail);
+                }
+                else
+                {
+                    return "Passwords do not match";
+                }
             }
             else
             {
@@ -47,15 +51,12 @@ namespace AutoBuildApp.Managers
             }
         }
 
-        public string UpdateEmail(string userInputEmail, string activeEmail)
+        public string UpdateEmail(string InputEmail, string activeEmail)
         {
-            ClaimsPrincipal _threadPrinciple
-                = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            //activeEmail = _threadPrinciple.FindFirst(ClaimTypes.Email).Value;
-            if (_inputValidityManager.ValidEmail(userInputEmail))
+            if (_inputValidityManager.ValidEmail(InputEmail))
             {
-                if (!_userManagementDAO.DoesEmailExist(userInputEmail)) {
-                    return _userManagementService._userManagementDAO.UpdateEmailDB(activeEmail, userInputEmail);
+                if (!_userManagementDAO.DoesEmailExist(InputEmail)) {
+                    return _userManagementService._userManagementDAO.UpdateEmailDB(InputEmail, activeEmail);
                 }
                 else
                 {
@@ -68,16 +69,13 @@ namespace AutoBuildApp.Managers
             }
         }
 
-        public string UpdateUsername(string userInputUsername, string activeEmail)
+        public string UpdateUsername(string username, string activeEmail)
         {
-            ClaimsPrincipal _threadPrinciple
-                = (ClaimsPrincipal)Thread.CurrentPrincipal;
-             //activeEmail = _threadPrinciple.FindFirst(ClaimTypes.Email).Value;
-            if (_inputValidityManager.ValidUserName(userInputUsername))
+            if (_inputValidityManager.ValidUserName(username))
             {
-                if (!_userManagementDAO.DoesUsernameExist(userInputUsername))
+                if (!_userManagementDAO.DoesUsernameExist(username))
                 {
-                    return _userManagementService._userManagementDAO.UpdateUserNameDB(activeEmail, userInputUsername);
+                    return _userManagementService._userManagementDAO.UpdateUserNameDB(username, activeEmail);
                 } 
                 else
                 {
@@ -101,33 +99,33 @@ namespace AutoBuildApp.Managers
         {
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
 
-            IClaims basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
-            IClaims systemAdmin = claimsFactory.GetClaims(RoleEnumType.SYSTEM_ADMIN);
-            IClaims delegateAdmin = claimsFactory.GetClaims(RoleEnumType.DELEGATE_ADMIN);
-            IClaims vendor = claimsFactory.GetClaims(RoleEnumType.VENDOR_ROLE);
-            IClaims unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
+            IClaims basic = claimsFactory.GetClaims(RoleEnumType.BasicRole);
+            IClaims systemAdmin = claimsFactory.GetClaims(RoleEnumType.SystemAdmin);
+            IClaims delegateAdmin = claimsFactory.GetClaims(RoleEnumType.DelegateAdmin);
+            IClaims vendor = claimsFactory.GetClaims(RoleEnumType.VendorRole);
+            IClaims unregistered = claimsFactory.GetClaims(RoleEnumType.UnregisteredRole);
 
             //username = "KoolTrini";
 
-            if (_userManagementDAO.RoleCheckDB(username) == RoleEnumType.SYSTEM_ADMIN)
+            if (_userManagementDAO.RoleCheckDB(username) == RoleEnumType.SystemAdmin)
             {
                 return "Error: you can't modify the permissions of a system admin";
             }
             else
             {
-                if (role == RoleEnumType.BASIC_ROLE)
+                if (role == RoleEnumType.BasicRole)
                 {
                     return _userManagementDAO.ChangePermissionsDB(username, role, basic.Claims());
                 }
-                else if (role == RoleEnumType.SYSTEM_ADMIN)
+                else if (role == RoleEnumType.SystemAdmin)
                 {
                     return _userManagementDAO.ChangePermissionsDB(username, role, systemAdmin.Claims());
                 }
-                else if (role == RoleEnumType.DELEGATE_ADMIN)
+                else if (role == RoleEnumType.DelegateAdmin)
                 {
                     return _userManagementDAO.ChangePermissionsDB(username, role, delegateAdmin.Claims());
                 }
-                else if (role == RoleEnumType.VENDOR_ROLE)
+                else if (role == RoleEnumType.VendorRole)
                 {
                     return _userManagementDAO.ChangePermissionsDB(username, role, vendor.Claims());
                 }
@@ -135,7 +133,7 @@ namespace AutoBuildApp.Managers
                 //{
                 //    return _userManagementDAO.ChangePermissionsDB(username, developer.Claims());
                 //}
-                else if (role == RoleEnumType.UNREGISTERED_ROLE)
+                else if (role == RoleEnumType.UnregisteredRole)
                 {
                     return _userManagementDAO.ChangePermissionsDB(username, role, unregistered.Claims());
                 }
@@ -143,26 +141,26 @@ namespace AutoBuildApp.Managers
             }
         }
 
-        public string ChangeLockState(string username, string lockState)
+        public string ChangeLockState(string username, bool lockState)
         {
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
-            IClaims locked = claimsFactory.GetClaims(RoleEnumType.LOCKED);
-            IClaims basic = claimsFactory.GetClaims(RoleEnumType.BASIC_ROLE);
+            IClaims locked = claimsFactory.GetClaims(RoleEnumType.Locked);
+            IClaims basic = claimsFactory.GetClaims(RoleEnumType.BasicRole);
 
 
             //username = "SERGE";
-            if (_userManagementDAO.RoleCheckDB(username) == RoleEnumType.SYSTEM_ADMIN)
+            if (_userManagementDAO.RoleCheckDB(username) == RoleEnumType.SystemAdmin)
             {
                 return "Error: you can't lock a system admin";
             }
             else
             {
-                if (lockState == RoleEnumType.LOCKED)
+                if (lockState == true)
                 {
                     _userManagementDAO.ChangePermissionsDB(username, null, locked.Claims());
                     return _userManagementDAO.Lock(username);
                 }
-                else if (lockState == RoleEnumType.BASIC_ROLE)
+                else if (lockState == false)
                 {
                     _userManagementDAO.ChangePermissionsDB(username, null, basic.Claims());
                     return _userManagementDAO.Unlock(username);
@@ -176,7 +174,7 @@ namespace AutoBuildApp.Managers
 
         public string DeleteUser(string username)
         {
-            if (_userManagementDAO.RoleCheckDB(username) == RoleEnumType.SYSTEM_ADMIN)
+            if (_userManagementDAO.RoleCheckDB(username) == RoleEnumType.SystemAdmin)
             {
                 return "Error: you can't delete a system admin";
             } else

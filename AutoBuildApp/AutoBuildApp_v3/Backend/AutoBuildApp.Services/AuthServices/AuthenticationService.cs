@@ -23,22 +23,13 @@ namespace AutoBuildApp.Services.Auth_Services
     public class AuthenticationService
     {
 
-        #region JWT objects
-        //the authentication service needs to use the JWT
-        // classes  in the security folder.
-        private JWT _jwt;
-        private JWTPayload _payload;
-        private JWTHeader _header;
-        #endregion
-
 
         #region System.Security.Claims
 
 
         ClaimsPrincipal claimsPrincipal;
 
-        // instantiation of security claims of 
-        // type System.Security.Claims;
+        // instantiation of security claims of type System.Security.Claims;
         private IList<Claim> _securityClaims = new List<Claim>();
 
 
@@ -82,69 +73,66 @@ namespace AutoBuildApp.Services.Auth_Services
         /// <summary>
         /// AutheniticateUser takes the users credentials and send it 
         /// to the backend for verification
-        /// 
         /// </summary>
         /// <param name="credentials"></param>
         public CommonReponseAuth AuthenticateUser(UserCredentials credentials) // RETURN CMRESPONSE
         {
-            claimsPrincipal = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            /// retrieves the result from the query as an object
-            /// then we cast it to type Common responde object -> Auth
+
             //_responseAuth = _authDAO.RetrieveUserInformation(credentials);
             _responseAuth = _loginDAO.LoginInformation(credentials);
             // an initial check for connection state:
+
+
             if (!_responseAuth.connectionState)
             {
                 _responseAuth.isAuthenticated = false;
+                return _responseAuth;
             }
-            // return immediately cuz db is off  - do this - dNNY
 
-            if (_responseAuth.IsUserExists == true)
+            if (!_responseAuth.IsUserExists)
             {
 
-                _authUserDTO = _responseAuth.AuthUserDTO;
-                _responseAuth.SuccessBool = true;
-                _responseAuth.isAuthenticated = true;
-
-                // conversion of userClaims to the built in claims 
-                foreach (Claims claims in _authUserDTO.Claims)
-                { // converting the claims in type System.Security.Claims
-                    _securityClaims.Add(new Claim(claims.Permission, claims.scopeOfPermissions));
-                }
-                /// if the quthentication is a success then we
-                /// add thos new claims to the claims principle
-                UserIdentity userIdentity = new UserIdentity();
-                userIdentity.Name = _authUserDTO.UserEmail;
-                userIdentity.IsAuthenticated = true;
-
-
-                ClaimsIdentity claimsIdentity = new ClaimsIdentity
-                    (userIdentity,
-                    _securityClaims,
-                    userIdentity.AuthenticationType,
-                     userIdentity.Name, "");
-                claimsIdentity = new ClaimsIdentity
-                  (userIdentity,
-                  _securityClaims);
-
-
-                claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-                Console.WriteLine("\tChecking in the authentication service\n");
-                foreach (var clm in claimsPrincipal.Claims)
-                {
-                    Console.WriteLine($" claim type: { clm.Type } claim value: {clm.Value} \n");
-                }
-                _responseAuth.JWTString = generateJWTToken(_authUserDTO);
-            }
-            else
-            {
                 _responseAuth.isAuthenticated = false;
-                _responseAuth.SuccessBool = false;
+                _responseAuth.ResponseBool = false;
+                return _responseAuth;
             }
 
-            Thread.CurrentPrincipal = claimsPrincipal;
-             return _responseAuth;
+
+            _authUserDTO = _responseAuth.AuthUserDTO;
+            _responseAuth.ResponseBool = true;
+            _responseAuth.isAuthenticated = true;
+
+            // conversion of userClaims to the .net built in claims 
+            foreach (Claims claims in _authUserDTO.Claims)
+            { // converting the claims in type System.Security.Claims
+                _securityClaims.Add(new Claim(claims.Permission, claims.ScopeOfPermissions));
+            }
+            /// if the quthentication is a success then we new claims to the claims principle
+            UserIdentity userIdentity = new UserIdentity()
+            {
+                Name = _authUserDTO.UserName,
+                IsAuthenticated = true,
+            };
+
+
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity
+                (userIdentity,
+                _securityClaims,
+                userIdentity.AuthenticationType,
+                 userIdentity.Name, "");
+
+            // or
+            claimsIdentity = new ClaimsIdentity
+              (userIdentity,
+              _securityClaims);
+
+            claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+
+            _responseAuth.JWTString = generateJWTToken(_authUserDTO);
+
+            Thread.CurrentPrincipal = claimsPrincipal; // set the authenticated user to the thread
+            return _responseAuth;
         }
 
         /// <summary>
@@ -154,19 +142,24 @@ namespace AutoBuildApp.Services.Auth_Services
         /// <returns></returns>
         public string generateJWTToken(AuthUserDTO AuthUserDTO)
         {
-            ///instantiating  a header value
-            _header = new JWTHeader();
-            //_key = "a random, long, sequence of characters that only the server knows";
-            string _key = "Secret";
-            /*
-            string jsonString = JsonSerializer.Serialize(_header);
-            Console.WriteLine("Header\n" + jsonString + "\n\n");
-            */
+            #region JWT objects
+            //the authentication service needs to use the JWT
+            // classes  in the security folder.
+            JWT jwt;
+            JWTPayload payload;
+            JWTHeader header;
+            #endregion
 
-            // so the first thing is taking the auth dto and passing it to form the payload necessary. 
-            _payload = new JWTPayload
+
+
+            ///instantiating  a header value
+            header = new JWTHeader();
+
+            string _key = "Secret"; //_key = "a random, long, sequence of characters that only the server knows"; 
+
+            payload = new JWTPayload
                 ("Autobuild User", "Autobuild", "US",
-                AuthUserDTO.UserEmail,
+                AuthUserDTO.UserName, // username
                 DateTimeOffset.UtcNow.AddDays(7),
                 DateTimeOffset.UtcNow.AddDays(7),
                 DateTimeOffset.UtcNow)
@@ -174,24 +167,13 @@ namespace AutoBuildApp.Services.Auth_Services
                 UserCLaims = AuthUserDTO.Claims
             };
 
-            /*
-            jsonString = JsonSerializer.Serialize(_payload);
-            Console.WriteLine("PayLoad\n" + jsonString + "\n\n");
-            */
 
-            // instantiating the jwt class
-            _jwt = new JWT(_key, _payload, _header);
+            jwt = new JWT(_key, payload, header);
 
             // call the signature JWT generater to return the signature
-            string result = _jwt.GenerateJWTSignature();
+            string result = jwt.GenerateJWTSignature();
 
-            /*
-            Console.WriteLine($"In authentication service to generateJWTToken: \n" +
-                $" {_jwt.ToString()} \n\n");
-            */
-
-            // returns back the jwt token
-            return _jwt.ToString();
+            return jwt.ToString();
         }
     }
 

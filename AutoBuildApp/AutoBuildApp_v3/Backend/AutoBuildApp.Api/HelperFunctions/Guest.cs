@@ -5,6 +5,7 @@ using AutoBuildApp.Security.Models;
 using System;
 using System.Security.Claims;
 using System.Security.Principal;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,7 +24,7 @@ namespace AutoBuildApp.Api.HelperFunctions
 
 
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
-            IClaims unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
+            IClaims unregistered = claimsFactory.GetClaims(RoleEnumType.UnregisteredRole);
             /// NOTE: passed in the claims only to the claimsIdentity and not userIdentity 
             /// as "AutoBuild User" since that will trigger the read only value of is authenticated to 
             /// be True, when in fact the user is not
@@ -36,11 +37,8 @@ namespace AutoBuildApp.Api.HelperFunctions
                 ClaimsIdentity(unregistered.Claims());
             ClaimsPrincipal _principal = new ClaimsPrincipal(identity);
              //some printing
-            Console.WriteLine($"IN THE GUEST");
-            foreach (Claim c in _principal.Claims)
-            {
-                Console.WriteLine($"Permission:  {c.Type}, Scope: {c.Value} ");
-            }
+            //Console.WriteLine($"IN THE GUEST");
+            //foreach (Claim c in _principal.Claims){Console.WriteLine($"Permission:  {c.Type}, Scope: {c.Value} ");}
             
             #endregion
 

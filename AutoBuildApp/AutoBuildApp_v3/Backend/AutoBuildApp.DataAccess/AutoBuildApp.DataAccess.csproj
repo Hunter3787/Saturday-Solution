@@ -16,7 +16,6 @@
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DAOGlobals\" />
     <Folder Include="GarageDAOs\" />
   </ItemGroup>
 </Project>

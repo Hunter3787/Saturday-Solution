@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using AutoBuildApp.DataAccess;
-using AutoBuildApp.DataAccess.Abstractions;
 using AutoBuildApp.Models;
+using AutoBuildApp.Models.DataTransferObjects;
+using AutoBuildApp.DataAccess;
 using AutoBuildApp.Models.Interfaces;
 
 /**
@@ -21,93 +21,100 @@ namespace AutoBuildApp.Services
             _dao = shelfDAO;
         }
 
-        public IMessageResponse CreateShelf(string shelfName, string user)
+        public CommonResponse CreateShelf(string shelfName, string user)
         {
-            IMessageResponse output = new StringBoolResponse();
+            CommonResponse output = new CommonResponse();
 
             try
             {
-                output.SuccessBool = _dao.InsertShelf(shelfName, user);
-                output.MessageString = ResponseStringGlobals.SUCCESSFUL_CREATION;
+                output.ResponseBool = _dao.InsertShelf(shelfName, user);
+                output.ResponseString = ResponseStringGlobals.SUCCESSFUL_CREATION;
             }
             catch (TimeoutException)
             {
-                output.SuccessBool = false;
-                output.MessageString = ResponseStringGlobals.DATABASE_TIMEOUT;
+                output.ResponseBool = false;
+                output.ResponseString = ResponseStringGlobals.DATABASE_TIMEOUT;
             }
 
             return output;
         }
 
-        public IMessageResponse DeleteShelf(string shelfID)
+        public CommonResponse DeleteShelf(string shelfID)
         {
-            IMessageResponse output = new StringBoolResponse();
+            CommonResponse output = new CommonResponse();
             try
             {
-                output.SuccessBool = _dao.DeleteShelf(shelfID);
-                output.MessageString = ResponseStringGlobals.SUCCESSFUL_DELETION;
+                //output.ResponseBool = _dao.DeleteShelf(shelfID);
+                output.ResponseString = ResponseStringGlobals.SUCCESSFUL_DELETION;
             }
             catch (TimeoutException)
             {
-                output.SuccessBool = false;
-                output.MessageString = ResponseStringGlobals.DATABASE_TIMEOUT;
+                output.ResponseBool = false;
+                output.ResponseString = ResponseStringGlobals.DATABASE_TIMEOUT;
             }
 
             return output;
         }
 
-        public IMessageResponse ChangeShelfName(string oldName, string newName, string user)
+        public CommonResponse ChangeShelfName(string oldName, string newName, string user)
         {
-            IMessageResponse output = new StringBoolResponse();
+            CommonResponse output = new CommonResponse();
             try
             {
-                output.SuccessBool = _dao.UpdateShelf(oldName, newName, user);
+                //output.ResponseBool = _dao.UpdateShelf(oldName, newName, user);
 
-                if(output.SuccessBool == false)
+                if(output.ResponseBool == false)
                 {
-                    output.MessageString = ResponseStringGlobals.FAILED_MODIFICATION;
+                    output.ResponseString = ResponseStringGlobals.FAILED_MODIFICATION;
                 }
                 else
                 { 
-                    output.MessageString = ResponseStringGlobals.SUCCESSFUL_MODIFICATION;
+                    output.ResponseString = ResponseStringGlobals.SUCCESSFUL_MODIFICATION;
                 }
             }
             catch (TimeoutException)
             {
-                output.SuccessBool = false;
-                output.MessageString = ResponseStringGlobals.DATABASE_TIMEOUT;
+                output.ResponseBool = false;
+                output.ResponseString = ResponseStringGlobals.DATABASE_TIMEOUT;
             }
 
             return output;
         }
 
-        public IMessageResponse AddToShelf(IComponent item, string shelfName, string user)
+        public CommonResponse AddToShelf(IComponent item, string shelfName, string user)
         {
-            IMessageResponse output = new StringBoolResponse();
+            CommonResponse output = new CommonResponse();
             return output;
         }
 
-        public IMessageResponse RemoveFromShelf(int index, string shelfName)
+        public CommonResponse RemoveFromShelf(int index, string shelfName)
         {
-            IMessageResponse output = new StringBoolResponse();
+            CommonResponse output = new CommonResponse();
             return output;
         }
 
-        public IMessageResponse ModifyShelf(int indexStart, int indexEnd, string user)
+        public CommonResponse ModifyShelf(int indexStart, int indexEnd, string user)
         {
-            IMessageResponse output = new StringBoolResponse();
+            CommonResponse output = new CommonResponse();
             return output;
         }
 
-        public IMessageResponse ChangeQuantity(int count, string itemID, string shelfName)
+        public CommonResponse ChangeQuantity(int count, string itemID, string shelfName)
         {
-            IMessageResponse output = new StringBoolResponse();
+            CommonResponse output = new CommonResponse();
             return output;
         }
 
-        public List<IComponent> GetShelf(string shelfName)
+        public CommonResponseWithObject<Shelf> GetShelfByName(string shelfName, string user)
         {
-            List<IComponent> outputList = new List<IComponent>();
+            CommonResponseWithObject<Shelf> outputList = new CommonResponseWithObject<Shelf>();
+
+            return outputList;
+        }
+
+        public List<Shelf> GetAllUserShelves(string userName)
+        {
+            List<Shelf> outputList = new List<Shelf>();
 
             return outputList;
         }

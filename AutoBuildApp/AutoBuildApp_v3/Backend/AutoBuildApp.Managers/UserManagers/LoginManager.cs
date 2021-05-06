@@ -31,14 +31,14 @@ namespace AutoBuildApp.Managers
             var _CRAuth = _authenticationService.AuthenticateUser(userCredentials);
             if (_CRAuth.isAuthenticated)
             {
-                //COMMON RESPONSE ALL THE WAYYY - WHAT I HAVE IS :  THATS BAD -
+                //COMMON RESPONSE All THE WAYYY - WHAT I HAVE IS :  THATS BAD -
                 return _CRAuth.JWTString;
                 // VONG WOULD ALWAYS OVERRIDE IT -> DONT LEAVE IT TO CHANCE !!!! FIX ITTTTT
             }
             else
             {
                 //return "Authentication Failed, Username or Password Incorrect";
-                return _CRAuth.FailureString;
+                return _CRAuth.ResponseString;
             }
         }
     }

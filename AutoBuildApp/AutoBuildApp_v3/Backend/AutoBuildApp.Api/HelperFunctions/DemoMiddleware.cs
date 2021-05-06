@@ -1,4 +1,5 @@
-﻿using AutoBuildApp.Security.Enumerations;
+﻿using AutoBuildApp.Security;
+using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
 using AutoBuildApp.Security.Interfaces;
 using AutoBuildApp.Security.Models;
@@ -25,13 +26,13 @@ namespace AutoBuildApp.Api.HelperFunctions
         private IIdentity userIdentity = new UserIdentity();
         private ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
 
-        private JWTValidator _validateAuthorizationHeader;
+        private JwtValidator _validateAuthorizationHeader;
         private IClaims unregistered;
 
         public DemoMiddleware(RequestDelegate next)
         {
             _next = next;
-            unregistered = claimsFactory.GetClaims(RoleEnumType.UNREGISTERED_ROLE);
+            unregistered = claimsFactory.GetClaims(RoleEnumType.UnregisteredRole);
         }
 
         public async Task InvokeAsync(HttpContext httpContext)
@@ -64,7 +65,7 @@ namespace AutoBuildApp.Api.HelperFunctions
 
                 string[] parse = accessToken.Split(' ');
                 accessToken = parse[1];
-                _validateAuthorizationHeader = new JWTValidator(accessToken);
+                _validateAuthorizationHeader = new JwtValidator(accessToken);
 
 
                 if (!string.IsNullOrEmpty(accessToken))
@@ -75,7 +76,9 @@ namespace AutoBuildApp.Api.HelperFunctions
                     }
                     else
                     {
-                        var userPrinciple = _validateAuthorizationHeader.ParseForClaimsPrinciple();
+                        JwtParser jwtParser = new JwtParser(accessToken);
+
+                        var userPrinciple = jwtParser.ParseForClaimsPrinciple();
                         Console.WriteLine($" " +
                             $"PARSING FOR THE CLAIMS PRINCIPLE \n" +
                             $" {userPrinciple}");

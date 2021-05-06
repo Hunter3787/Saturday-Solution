@@ -11,8 +11,8 @@ namespace AutoBuildApp.DomainModels.Enumerations
     /// </summary>
     public enum ChartType
     {
-        NONE,
-        LINECHART,
-        BARCHART
+        None,
+        Line,
+        Bar 
     }
 }

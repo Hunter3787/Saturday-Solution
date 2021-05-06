@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AutoBuildApp.Models.DTO
+namespace AutoBuildApp.Models.DataTransferObjects
 {
     public class UpdateUserDTO
     {

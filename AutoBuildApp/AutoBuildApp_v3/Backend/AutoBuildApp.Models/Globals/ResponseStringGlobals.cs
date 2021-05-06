@@ -3,6 +3,7 @@ namespace AutoBuildApp.Models
 {
     public static class ResponseStringGlobals
     {
+        public const string SUCCESSFUL_RESPONSE = "Successful response.";
         public const string SUCCESSFUL_CREATION = "Successfully created.";
         public const string SUCCESSFUL_DELETION = "Successfully deleted.";
         public const string SUCCESSFUL_MODIFICATION = "Successfully modified.";
@@ -17,7 +18,9 @@ namespace AutoBuildApp.Models
         public const string DATABASE_FAILURE = "Database error.";
         public const string REQUEST_FAILURE = "Request failed.";
         public const string DATABASE_TIMEOUT = "The database timed out.";
-        public const string DUPLICATE_VALUE = "Duplicate value.";
+        public const string DUPLICATE_VALUE = "A duplicate value was entered.";
         public const string UNAUTHORIZED_ACCESS = "Unauthorized access.";
+        public const string INVALID_INPUT = "Invalid input.";
+        public const string DEFAULT_RESPONSE = "An error has occurred.";
     }
 }

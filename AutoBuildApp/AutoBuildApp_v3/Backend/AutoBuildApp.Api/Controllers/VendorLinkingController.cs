@@ -1,7 +1,7 @@
 ﻿using AutoBuildApp.Api.HelperFunctions;
-using AutoBuildApp.DataAccess.Abstractions;
 using AutoBuildApp.Managers;
 using AutoBuildApp.Managers.FeatureManagers;
+using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.Models.VendorLinking;
 using AutoBuildApp.Models.WebCrawler;
 using AutoBuildApp.Security;
@@ -27,45 +27,55 @@ namespace AutoBuildApp.Api.Controllers
     [ApiController]
     public class VendorLinkingController : ControllerBase
     {
-        private ClaimsFactory _claimsFactory = new ConcreteClaimsFactory();
-        private IClaims _vendorClaims;
-
-        ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
-
-        private VendorLinkingManager _vendorLinkingManager = new VendorLinkingManager(ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
+        // This will start the logging consumer manager in the background so that logs may be sent to the DB.
+        private LoggingConsumerManager _loggingConsumerManager = new LoggingConsumerManager();
+        private LoggingProducerService _logger = LoggingProducerService.GetInstance;
+        private List<string> _allowedRoles;
+        private VendorLinkingManager _vendorLinkingManager;
 
         public VendorLinkingController()
         {
-            _vendorClaims = _claimsFactory.GetClaims(RoleEnumType.VENDOR_ROLE);
+            _allowedRoles = new List<string>()
+            { 
+                RoleEnumType.SystemAdmin,
+                RoleEnumType.VendorRole
+            };
+
+            _vendorLinkingManager = new VendorLinkingManager(ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
+         
         }
-        // Initializes the DAO that will be used for review ratings.
-
-        // This will start the logging consumer manager in the background so that logs may be sent to the DB.
-        private LoggingConsumerManager _loggingConsumerManager = new LoggingConsumerManager();
-
-        private LoggingProducerService _logger = LoggingProducerService.GetInstance;
-
-        /// <summary>
-        /// This class will show no contend if fetch Options is made.
-        /// </summary>
-        /// <returns>will return a page of no content to the view.</returns>
 
         [HttpPost]
         public async Task<IActionResult> AddProductToVendorListOfProducts(IFormCollection formData, IFormFile photo)
         {
-            // Takes the form data from javascript and converts it to an AddProductDTO.
-            AddProductDTO Product = _vendorLinkingManager.ConvertFormToProduct(formData);
-
-            // Product is null if a format exception was thrown
-            if (Product == null)
+            // Check authorization
+            if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
+                _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
+                return new StatusCodeResult(StatusCodes.Status403Forbidden);
+            }
+
+            // Takes the form data from javascript and converts it to an AddProductDTO.
+            CommonResponseWithObject<AddProductDTO> dtoCommonResponse = _vendorLinkingManager.ConvertFormToProduct(formData);
+
+            // If DTOCommonResponse is false, the request failed to convert the form to the product
+            if (!dtoCommonResponse.ResponseBool)
+            {
+                //ContentResult result = new ContentResult();
+                //result.StatusCode = StatusCodes.Status400BadRequest;
+                //result.ContentType = "text/plain";
+                //result.Content = "yooo";
+                ////return HttpStatusCodeResult(403, "hey");
+                ////return Content(new StatusCodeResult(StatusCodes.Status400BadRequest), "hey");
+                //return result;
                 _logger.LogWarning("AddProductToVendorListOfProducts failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
 
-            CommonResponse Result = await _vendorLinkingManager.AddProductToVendorListOfProducts(Product, photo);
+            CommonResponse commonResponse = await _vendorLinkingManager.AddProductToVendorListOfProducts(dtoCommonResponse.GenericObject, photo);
 
-            if (!Result.SuccessBool)
+            // If commonResponse is false, the request failed
+            if (!commonResponse.ResponseBool)
             {
                 _logger.LogWarning("AddProductToVendorListOfProducts failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
@@ -80,19 +90,27 @@ namespace AutoBuildApp.Api.Controllers
         [HttpPut]
         public async Task<IActionResult> EditProductInVendorListOfProducts(IFormCollection formData, IFormFile photo)
         {
-            // Takes the form data from the front end and converts it to an AddProductDTO.
-            AddProductDTO Product = _vendorLinkingManager.ConvertFormToProduct(formData);
+            // Check authorization
+            if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
+            {
+                _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
+                return new StatusCodeResult(StatusCodes.Status403Forbidden);
+            }
 
-            // Product is null if a format exception was thrown
-            if (Product == null)
+            // Takes the form data from the front end and converts it to an AddProductDTO.
+            CommonResponseWithObject<AddProductDTO> dtoCommonResponse = _vendorLinkingManager.ConvertFormToProduct(formData);
+
+            // If DTOCommonResponse is false, the request failed to convert the form to the product
+            if (!dtoCommonResponse.ResponseBool)
             {
                 _logger.LogWarning("EditProductInVendorListOfProducts failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
 
-            bool Result = await _vendorLinkingManager.EditProductInVendorListOfProducts(Product, photo);
+            CommonResponse commonResponse = await _vendorLinkingManager.EditProductInVendorListOfProducts(dtoCommonResponse.GenericObject, photo);
 
-            if (!Result)
+            // If commonResponse is false, the request failed
+            if (!commonResponse.ResponseBool)
             {
                 _logger.LogWarning("EditProductInVendorListOfProducts failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
@@ -106,9 +124,18 @@ namespace AutoBuildApp.Api.Controllers
         [HttpDelete]
         public IActionResult DeleteProductFromVendorList(string modelNumber)
         {
-            var Result = _vendorLinkingManager.DeleteProductFromVendorList(modelNumber);
+            // Check authorization
+            if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
+            {
+                _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
+                return new StatusCodeResult(StatusCodes.Status403Forbidden);
+            }
 
-            if(!Result)
+            // Call the manager's DeleteProductFromVendorList function
+            CommonResponse commonResponse = _vendorLinkingManager.DeleteProductFromVendorList(modelNumber);
+
+            // If commonResponse is false, the request failed
+            if (!commonResponse.ResponseBool)
             {
                 _logger.LogWarning("DeleteProductFromVendorList failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
@@ -121,58 +148,59 @@ namespace AutoBuildApp.Api.Controllers
         [HttpGet("modelNumbers")]
         public IActionResult GetAllModelNumbers()
         {
-            var ModelNumbers = _vendorLinkingManager.GetAllModelNumbers();
+            // Check authorization
+            if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
+            {
+                _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
+                return new StatusCodeResult(StatusCodes.Status403Forbidden);
+            }
 
-            // ModelNumbers is null when an SQL exception occurs.
-            if (ModelNumbers == null)
+            // Call the manager's GetAllModelNumbers function
+            CommonResponseWithObject<List<string>> commonResponse = _vendorLinkingManager.GetAllModelNumbers();
+
+            // If commonResponse is false, the request failed
+            if (!commonResponse.ResponseBool)
             {
                 _logger.LogWarning("GetAllModelNumbers failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
 
             _logger.LogInformation("GetAllModelNumbers succeeded.");
-            return Ok(ModelNumbers);
+            return Ok(commonResponse.GenericObject);
         }
 
         [HttpGet]
-        public IActionResult GetAllProductsByVendor(string FiltersString, string Order)
+        public IActionResult GetAllProductsByVendor(string filtersString, string order)
         {
-            #region Authentication stuff?
-            //if (!_threadPrinciple.Identity.IsAuthenticated)
-            //{
+            // Check authorization
+            if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
+            {
+                _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
+                return new StatusCodeResult(StatusCodes.Status403Forbidden);
+            }
 
-            //    // Add action logic here
-            //    return new StatusCodeResult(StatusCodes.Status401Unauthorized);
-            //}
-            //if (!AuthorizationService.checkPermissions(_vendorClaims.Claims()))
-            //{
+            // Takes the filters and the order from the front end and converts it into a GetProductByFilterDTO
+            CommonResponseWithObject<GetProductByFilterDTO> dtoCommonResponse = _vendorLinkingManager.ConvertToGetProductByFilterDTO(filtersString, order);
 
-            //    // Add action logic here
-            //    return new StatusCodeResult(StatusCodes.Status403Forbidden);
-            //}
-            #endregion
-
-            // Takes the filters and the order from the front end and converts it into a GetProductByFilterDTO.
-            GetProductByFilterDTO Filters = _vendorLinkingManager.ConvertToGetProductByFilterDTO(FiltersString, Order);
-
-            // Filters is null when FiltersString is null.
-            if (Filters == null)
+            // If dtoCommonResponse is false, the request failed to convert to ProductByFilterDTO
+            if (!dtoCommonResponse.ResponseBool)
             {
                 _logger.LogWarning("FiltersString was null. GetAllProductsByVendor failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
 
-            var ProductsByVendor = _vendorLinkingManager.GetAllProductsByVendor(Filters);
+            // Call the manager's GetAllProductsByVendor function
+            CommonResponseWithObject<List<AddProductDTO>> commonResponse = _vendorLinkingManager.GetAllProductsByVendor(dtoCommonResponse.GenericObject);
 
-            // ProductsByVendor is null when an SQL exception occurs.
-            if(ProductsByVendor == null)
+            // If commonResponse is false, the request failed
+            if (!commonResponse.ResponseBool)
             {
                 _logger.LogWarning("ProductsByVendor was null. GetAllProductsByVendor failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
 
             _logger.LogInformation("GetAllProductsByVendor succeeded.");
-            return Ok(ProductsByVendor);
+            return Ok(commonResponse.GenericObject);
         }
     }
 }
