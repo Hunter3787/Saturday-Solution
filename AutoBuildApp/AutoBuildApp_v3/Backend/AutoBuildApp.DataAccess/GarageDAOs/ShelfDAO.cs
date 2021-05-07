@@ -416,9 +416,6 @@ namespace AutoBuildApp.DataAccess
 
             };
 
-            // TODO: BIG UPDATE HERE FINISH
-            // TODO
-            // TODO
             try
             {
                 IsNotNull(indexOrder);
@@ -439,7 +436,13 @@ namespace AutoBuildApp.DataAccess
 
                     using (SqlCommand command = new SqlCommand())
                     {
+
+                        DataTable indicies = new DataTable();
+
                         InitializeSqlCommand(command, connection, AutoBuildSqlQueries.UPDATE_SHELF_ORDER);
+                        command.Parameters.AddWithValue("@USERNAME", username);
+                        command.Parameters.AddWithValue("@SHELFNAME", shelfName);
+
 
                         // TODO: What is the return from the query.
                         var rowsAdded = command.ExecuteNonQuery();
