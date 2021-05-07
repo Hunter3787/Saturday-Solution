@@ -322,7 +322,6 @@ namespace AutoBuildApp.DataAccess
             // Get the current principal on the thread
             ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
             string vendor = _threadPrinciple.Identity.Name;
-            vendor = "new egg";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {

@@ -135,6 +135,7 @@ namespace AutoBuildApp.DataAccess
                                     productVendorDetailsDTO = new ProductVendorDetailsDTO();
                                 }
 
+                                // Set individual product vendor values  
                                 productVendorDetailsDTO.Availability = (bool)reader["productStatus"];
                                 productVendorDetailsDTO.ListingName = (string)reader["listingName"];
                                 productVendorDetailsDTO.Url = (string)reader["vendorLinkUrl"];

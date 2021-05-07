@@ -43,7 +43,7 @@ function removeOptions(dropdown) {
 
 // Takes the data, clears the dropdown menu, and populates the options
 function saveModelNumbers(data) {
-  var dropdown = document.querySelector('.modelNumberDropDown');
+  var dropdown = document.querySelector('.model-number-dropdown');
 
   removeOptions(dropdown);
 
@@ -62,7 +62,7 @@ async function addItem() {
 
   // New image div
   var newDivImage = document.createElement('div');
-  newDivImage.classList.add('div-table-col');
+  newDivImage.classList.add('div-table-row');
   newDivImage.style="width:130px; line-height:10px";
 
   // Images for the small image and the pop out image
@@ -93,33 +93,33 @@ async function addItem() {
     }
   }))
 
-  ImageUrlLarge.classList.add('largePhoto');
-  ImageUrlLarge.classList.add('displayNone');
+  ImageUrlLarge.classList.add('large-photo');
+  ImageUrlLarge.classList.add('display-none');
 
   // Add the large image to the document
   document.body.append(ImageUrlLarge);
 
   // If the mouse hovers over or if the mouse moves out, we toggle the pop out image.
   ImageUrlSmall.addEventListener('mouseover', () => {
-    ImageUrlLarge.classList.toggle('displayNone');
+    ImageUrlLarge.classList.toggle('display-none');
   })
   ImageUrlSmall.addEventListener('mouseout', () => {
-    ImageUrlLarge.classList.toggle('displayNone');
+    ImageUrlLarge.classList.toggle('display-none');
   })
   
   // New model number div
   var newDivModelNumber = document.createElement('div');
-  newDivModelNumber.classList.add('div-table-col');
+  newDivModelNumber.classList.add('div-table-row');
   newDivModelNumber.style = "width:175px";
 
   // Creates a deep copy of the drop down,  shows it, and appends it to the model number div
-  let modelNumberDropDown = document.querySelector('.modelNumberDropDown').cloneNode(true)
+  let modelNumberDropDown = document.querySelector('.model-number-dropdown').cloneNode(true)
   modelNumberDropDown.classList.remove('displayNone');
   newDivModelNumber.appendChild(modelNumberDropDown);
 
   // New name div
   var newDivName = document.createElement('div');
-  newDivName.classList.add('div-table-col');
+  newDivName.classList.add('div-table-row');
   newDivName.style="width:500px";
 
   // Creates text area and appends to new name div
@@ -130,7 +130,7 @@ async function addItem() {
 
   // New url div
   var newDivUrl = document.createElement('div');
-  newDivUrl.classList.add('div-table-col');
+  newDivUrl.classList.add('div-table-row');
   newDivUrl.style="width:300px";
 
   // Creates text area and appends to new product url div
@@ -141,7 +141,7 @@ async function addItem() {
 
   // New availability div
   var newDivAvailability = document.createElement('div');
-  newDivAvailability.classList.add('div-table-col');
+  newDivAvailability.classList.add('div-table-row');
   newDivAvailability.classList.add('center');
   newDivAvailability.style="width:100px";
 
@@ -153,7 +153,7 @@ async function addItem() {
   
   // New price div
   var newDivPrice = document.createElement('div');
-  newDivPrice.classList.add('div-table-col');
+  newDivPrice.classList.add('div-table-row');
   newDivPrice.classList.add('center');
   newDivPrice.style="width:100px";
   
@@ -169,7 +169,7 @@ async function addItem() {
 
   // New button div
   var buttonDiv = document.createElement('div');
-  buttonDiv.classList.add('div-table-col');
+  buttonDiv.classList.add('div-table-row');
   buttonDiv.classList.add('center');
   buttonDiv.style="width:120px";
   
@@ -320,7 +320,6 @@ async function submitDeleteItem(modelNumber, newDivRow) {
   await getItemsByFilter();
 }
 
-
 // Gets the items by a specified list of filters
  async function getItemsByFilter() {
   var filtersQueryParameter = "?filtersString=";
@@ -355,13 +354,13 @@ async function submitDeleteItem(modelNumber, newDivRow) {
 // Display all items with the set of filters
  async function displayItemsFilter(data) {
 
-  let listOfDivs = document.getElementById('listOfDivs');
+  let listOfDivs = document.querySelector('.list-of-divs');
   // Reset the list of divs
   listOfDivs.innerHTML = '';
 
   // Create div that will be appended to the list of divs
   var innerListOfDivs = document.createElement('div');
-  innerListOfDivs.classList.add('innerDiv');
+  innerListOfDivs.classList.add('inner-div');
 
   // Create div that imitates a table
   var divTable = document.createElement('div');
@@ -369,53 +368,53 @@ async function submitDeleteItem(modelNumber, newDivRow) {
 
   // Create header div
   var divRow = document.createElement('div');
-  divRow.classList.add('div-table-row');
+  divRow.classList.add('div-table-row-header');
 
   // Create image header div
   var ImageHeaderDiv = document.createElement('div');
-  ImageHeaderDiv.classList.add('div-table-col');
+  ImageHeaderDiv.classList.add('div-table-row');
   ImageHeaderDiv.classList.add('center');
   ImageHeaderDiv.style="width:130px";
   ImageHeaderDiv.innerHTML="Image";
 
   // Create model number header div
   var ModelNumberHeaderDiv = document.createElement('div');
-  ModelNumberHeaderDiv.classList.add('div-table-col');
+  ModelNumberHeaderDiv.classList.add('div-table-row');
   ModelNumberHeaderDiv.classList.add('center');
   ModelNumberHeaderDiv.style="width:175px";
   ModelNumberHeaderDiv.innerHTML="Model Number";
 
   // Create name header div
   var NameHeaderDiv = document.createElement('div');
-  NameHeaderDiv.classList.add('div-table-col');
+  NameHeaderDiv.classList.add('div-table-row');
   NameHeaderDiv.classList.add('center');
   NameHeaderDiv.style="width:500px";
   NameHeaderDiv.innerHTML="Name";
 
   // Create url header div
   var UrlHeaderDiv = document.createElement('div');
-  UrlHeaderDiv.classList.add('div-table-col');
+  UrlHeaderDiv.classList.add('div-table-row');
   UrlHeaderDiv.classList.add('center');
   UrlHeaderDiv.style="width:300px";
   UrlHeaderDiv.innerHTML="Url";
 
   // Create availability header div
   var AvailabilityHeaderDiv = document.createElement('div');
-  AvailabilityHeaderDiv.classList.add('div-table-col');
+  AvailabilityHeaderDiv.classList.add('div-table-row');
   AvailabilityHeaderDiv.classList.add('center');
   AvailabilityHeaderDiv.style="width:100px";
   AvailabilityHeaderDiv.innerHTML="Availability";
 
   // Create price header div
   var PriceHeaderDiv = document.createElement('div');
-  PriceHeaderDiv.classList.add('div-table-col');
+  PriceHeaderDiv.classList.add('div-table-row');
   PriceHeaderDiv.classList.add('center');
   PriceHeaderDiv.style="width:100px";
   PriceHeaderDiv.innerHTML="Price";
 
   // Create button header div
   var ButtonHeaderDiv = document.createElement('div');
-  ButtonHeaderDiv.classList.add('div-table-col');
+  ButtonHeaderDiv.classList.add('div-table-row');
   ButtonHeaderDiv.style="width:120px";
 
   // Append all the header divs to the first row
@@ -447,7 +446,7 @@ async function submitDeleteItem(modelNumber, newDivRow) {
 
     // Create the new image div
     var newDivImage = document.createElement('div');
-    newDivImage.classList.add('div-table-col');
+    newDivImage.classList.add('div-table-row');
     newDivImage.style = "line-height: 10px; width: 130px";
 
     // Create the images and append the small image to the image div
@@ -480,14 +479,14 @@ async function submitDeleteItem(modelNumber, newDivRow) {
 
     // If the mouse hovers over or if the mouse moves out, we toggle the pop out image.
     ImageUrlSmall.addEventListener('mouseover', () => {
-      ImageUrlLarge.classList.toggle('displayNone');
+      ImageUrlLarge.classList.toggle('display-none');
     })
     ImageUrlSmall.addEventListener('mouseout', () => {
-      ImageUrlLarge.classList.toggle('displayNone');
+      ImageUrlLarge.classList.toggle('display-none');
     })
     
-    ImageUrlLarge.classList.add('largePhoto');
-    ImageUrlLarge.classList.add('displayNone');
+    ImageUrlLarge.classList.add('large-photo');
+    ImageUrlLarge.classList.add('display-none');
 
     ImageUrlLarge.src = item["imageUrl"];
     ImageUrlSmall.src = item["imageUrl"];
@@ -495,7 +494,7 @@ async function submitDeleteItem(modelNumber, newDivRow) {
 
     // New model number div
     var newDivModelNumber = document.createElement('div');
-    newDivModelNumber.classList.add('div-table-col');
+    newDivModelNumber.classList.add('div-table-row');
     newDivModelNumber.classList.add('header');
     newDivModelNumber.style="width:175px";
 
@@ -506,7 +505,7 @@ async function submitDeleteItem(modelNumber, newDivRow) {
 
     // New name div
     var newDivName = document.createElement('div');
-    newDivName.classList.add('div-table-col');
+    newDivName.classList.add('div-table-row');
     newDivName.style="width:500px";
 
     // Product name text
@@ -522,7 +521,7 @@ async function submitDeleteItem(modelNumber, newDivRow) {
 
     // New url div
     var newDivUrl = document.createElement('div');
-    newDivUrl.classList.add('div-table-col');
+    newDivUrl.classList.add('div-table-row');
     newDivUrl.style="width:300px";
 
     // Url text
@@ -539,7 +538,7 @@ async function submitDeleteItem(modelNumber, newDivRow) {
 
     // New availability div
     var newDivAvailability = document.createElement('div');
-    newDivAvailability.classList.add('div-table-col');
+    newDivAvailability.classList.add('div-table-row');
     newDivAvailability.classList.add('center');
     newDivAvailability.style="width:100px";
 
@@ -552,7 +551,7 @@ async function submitDeleteItem(modelNumber, newDivRow) {
 
     // New price div
     var newDivPrice = document.createElement('div');
-    newDivPrice.classList.add('div-table-col');
+    newDivPrice.classList.add('div-table-row');
     newDivPrice.classList.add('center');
     newDivPrice.style="width:100px";
 
@@ -577,7 +576,7 @@ async function submitDeleteItem(modelNumber, newDivRow) {
 
     // New button div
     var buttonDiv = document.createElement('div');
-    buttonDiv.classList.add('div-table-col');
+    buttonDiv.classList.add('div-table-row');
     buttonDiv.classList.add('center');
     buttonDiv.style="width:120px";
 
@@ -593,6 +592,7 @@ async function submitDeleteItem(modelNumber, newDivRow) {
     deleteButton.addEventListener('click', async () => {
       await submitDeleteItem(item["modelNumber"], newDivRow);
     })
+
     // When the edit button is clicked, remove the text 
     //    and append the editable text for name, url, and price
     editButton.addEventListener('click', async () => {
@@ -602,7 +602,6 @@ async function submitDeleteItem(modelNumber, newDivRow) {
       newDivName.appendChild(ProductNameTextArea);
       newDivUrl.appendChild(ProductUrlTextArea);
       priceDiv.appendChild(ProductPriceInput);
-
 
       var imageUrl = item["imageUrl"];
 
@@ -624,7 +623,8 @@ async function submitDeleteItem(modelNumber, newDivRow) {
       buttonDiv.append(saveButton);
       buttonDiv.append(deleteButton);
     })
-
+  
+    // Adds each individual div to the row div
     newDivRow.appendChild(newDivImage);
     newDivRow.appendChild(newDivModelNumber);
     newDivRow.appendChild(newDivName);
@@ -633,14 +633,12 @@ async function submitDeleteItem(modelNumber, newDivRow) {
     newDivRow.appendChild(newDivPrice);
     newDivRow.appendChild(buttonDiv);
 
+    // Add the individual row to the list of rows
     allDivRows.appendChild(newDivRow);
 
+    // Sets the location of the big image directly to the right of the small image
     ImageUrlLarge.style.left = newDivImage.offsetLeft + 450 + 'px';
-    ImageUrlLarge.style.top = newDivImage.offsetTop + 100 + 'px';
+    ImageUrlLarge.style.top = newDivImage.offsetTop + 50 + 'px';
 
-    deleteButton.addEventListener('click', () => {
-      ImageUrlLarge.style.left = newDivImage.x + 150 + 'px';
-      ImageUrlLarge.style.top = newDivImage.y + 63 + 'px';
-    })
   })
 }
