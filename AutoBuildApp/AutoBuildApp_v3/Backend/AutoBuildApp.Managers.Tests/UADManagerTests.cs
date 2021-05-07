@@ -56,13 +56,13 @@ namespace AutoBuildApp.Manger.Tests
 
             ResponseUAD expectedSuccessUAD = new ResponseUAD()
             {
-                ResponseBool = true,
+                IsSuccessful = true,
                 ConnectionState = true,
                 //IsAuthorized = true
             };
             ResponseUAD expectedFailedUAD = new ResponseUAD()
             {
-                ResponseBool = false,
+                IsSuccessful = false,
                // IsAuthorized = false,
             };
             return new List<object[]>()
@@ -115,7 +115,7 @@ namespace AutoBuildApp.Manger.Tests
 
             ResponseUAD expectedResponse = new ResponseUAD()
             {
-                ResponseBool =  true,
+                IsSuccessful =  true,
                 ConnectionState = true,
                // IsAuthorized = true
             };

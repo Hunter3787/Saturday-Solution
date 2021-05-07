@@ -23,7 +23,6 @@ namespace AutoBuildApp.Managers.FeatureManagers
         private readonly LoggingProducerService _logger = LoggingProducerService.GetInstance;
         private readonly ConcurrentDictionary<string, ConcurrentDictionary<string, byte>> vendorsProducts;
         private VendorLinkingService _vendorLinkingService;
-
         public VendorLinkingManager(string connectionString)
         {
             _vendorLinkingService = new VendorLinkingService(connectionString);
@@ -43,14 +42,14 @@ namespace AutoBuildApp.Managers.FeatureManagers
             CommonResponseWithObject<AddProductDTO> commonResponse = new CommonResponseWithObject<AddProductDTO>();
 
             // Check authorization
-            if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
-            {
-                _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
-                commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
-                commonResponse.ResponseBool = false;
+            //if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
+            //{
+            //    _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
+            //    commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
+            //    commonResponse.ResponseBool = false;
 
-                return commonResponse;
-            }
+            //    return commonResponse;
+            //}
             
             // This try catch catches a format exception or a null reference exception
             try
@@ -75,7 +74,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
                 product.Price = Convert.ToDouble(Price);
 
                 commonResponse.GenericObject = product;
-                commonResponse.ResponseBool = true;
+                commonResponse.IsSuccessful = true;
                 commonResponse.ResponseString = "Successfully created an AddProductDTO.";
 
                 return commonResponse;
@@ -99,7 +98,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
                     commonResponse.ResponseString = "An error occurred.";
                 }
 
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
 
                 return commonResponse;
             }
@@ -115,7 +114,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             {
                 _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
                 commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
 
                 return commonResponse;
             }
@@ -124,7 +123,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             if (filtersString == null)
             {
                 _logger.LogWarning("Filters string is null in vendor linking manager.");
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
                 commonResponse.ResponseString = "Filters string is null.";
 
                 return commonResponse;
@@ -159,7 +158,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
                 }
             }
 
-            commonResponse.ResponseBool = true;
+            commonResponse.IsSuccessful = true;
             commonResponse.ResponseString = "Successfully converted to a GetProductByFilterDTO.";
 
             return commonResponse;
@@ -175,7 +174,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             {
                 _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
                 commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
 
                 return commonResponse;
             }
@@ -191,7 +190,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             {
                 _logger.LogWarning("Image was not chosen. AddProductToVendorListOfProducts manager call failed.");
                 commonResponse.ResponseString = "Image was not chosen.";
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
 
                 return commonResponse;
             }
@@ -208,7 +207,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             {
                 _logger.LogWarning("This vendor already has this model number. AddProductToVendorListOfProducts manager call failed.");
                 commonResponse.ResponseString = "This vendor already has this model number. ";
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
 
                 return commonResponse;
             }
@@ -220,7 +219,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             CommonResponse serviceResponse = _vendorLinkingService.AddProductToVendorListOfProducts(product);
 
             // If the database call was successful, we can add that product to our dictionary cache
-            if(serviceResponse.ResponseBool)
+            if(serviceResponse.IsSuccessful)
             {
                 vendorsProducts[vendor].TryAdd(modelNumber, 0);
             }
@@ -238,11 +237,11 @@ namespace AutoBuildApp.Managers.FeatureManagers
             {
                 _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
                 commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
 
                 return commonResponse;
             }
-            
+
             // If a photo is selected to edit, update the image and the image path.
             if (photo != null)
             {
@@ -264,7 +263,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             {
                 _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
                 commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
 
                 return commonResponse;
             }
@@ -274,7 +273,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             {
                 _logger.LogWarning("User inputted a null model number. DeleteProductFromVendorList manager call failed.");
                 commonResponse.ResponseString = "Model number is null.";
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
 
                 return commonResponse;
             }
@@ -292,7 +291,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             {
                 _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
                 commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
 
                 return commonResponse;
             }
@@ -309,7 +308,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             {
                 _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
                 commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
 
                 return commonResponse;
             }

@@ -146,7 +146,7 @@ namespace AutoBuildApp.Manger.Tests
             // Arrange
             CommonResponse expected = new CommonResponse();
             CommonResponse actual = new CommonResponse();
-            expected.ResponseBool = true;
+            expected.IsSuccessful = true;
             expected.ResponseString = ResponseStringGlobals.SUCCESSFUL_CREATION;
             string user = "Nick";
             string shelfName = "Tacobell";
@@ -155,7 +155,7 @@ namespace AutoBuildApp.Manger.Tests
             actual = _testManager.CreateShelf(shelfName, user);
 
             // Assert
-            Assert.AreEqual(expected.ResponseBool,actual.ResponseBool);
+            Assert.AreEqual(expected.IsSuccessful,actual.IsSuccessful);
             Assert.AreEqual(expected.ResponseString, actual.ResponseString);
         }
 

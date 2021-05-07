@@ -4,7 +4,6 @@ var tokenDanny = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiL
 var tokenNewEgg = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiLCJzdWIiOiJBdXRvYnVpbGQgVXNlciIsImF1ZCI6IlVTIiwiaWF0IjoxNjE4NDUzMzM2LCJleHAiOjE2Mjk2NzcyMzYsIm5iZiI6MTYyOTY3NzIzNiwiVXNlcm5hbWUiOiJuZXcgZWdnIiwiVXNlckNMYWltcyI6W3siUGVybWlzc2lvbiI6IkNyZWF0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlJldmlld3MifSx7IlBlcm1pc3Npb24iOiJEZWxldGUiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJTZWxmIn0seyJQZXJtaXNzaW9uIjoiRGVsZXRlIiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZlJldmlld3MifSx7IlBlcm1pc3Npb24iOiJFZGl0IiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZiJ9LHsiUGVybWlzc2lvbiI6IlJlYWRPbmx5IiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiQXV0b0J1aWxkIn0seyJQZXJtaXNzaW9uIjoiVXBkYXRlIiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZiJ9LHsiUGVybWlzc2lvbiI6IlVwZGF0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNlbGZSZXZpZXdzIn0seyJQZXJtaXNzaW9uIjoiQ3JlYXRlIiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiUHJvZHVjdHMifSx7IlBlcm1pc3Npb24iOiJVcGRhdGUiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJWZW5kb3JQcm9kdWN0cyJ9LHsiUGVybWlzc2lvbiI6IkRlbGV0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlZlbmRvclByb2R1Y3RzIn1dfQ.MQyT1fFd2VZjFlxX0RiEhpLk4liae6xuPdpewqRDpZg';
 
 var currentToken = tokenNewEgg;
-let listOfDivs = document.getElementById('listOfDivs');
 
 const fetchRequest = {
   method: 'GET',
@@ -16,9 +15,17 @@ const fetchRequest = {
   }
 };
 
+window.onload = getItemsByFilter();
+
+// Event listeners to upload the display when a filter is changed
+var checkboxes = document.querySelectorAll('input[type=checkbox]');
+checkboxes.forEach(checkbox => checkbox.addEventListener('click', getItemsByFilter));
+var radioButtons = document.querySelectorAll('input[type=radio]');
+radioButtons.forEach(button => button.addEventListener('click', getItemsByFilter));
+
 // Gets all model numbers, then populates the dropdown menu.
-function getAllModelNumbers() {
-  fetch(uri + '/modelNumbers', fetchRequest)
+async function getAllModelNumbers() {
+  await fetch(uri + '/modelNumbers', fetchRequest)
   .then(response => response.json())
   .then(data => saveModelNumbers(data));
 }
@@ -236,11 +243,12 @@ async function addItem() {
       alert('correct');
     }
     else {
-      alert('error')
+      alert('error');
     }
   })
+
   // Refresh the items
-  .then(getItemsByFilter());
+  await getItemsByFilter();
 }
 
 // Submits the edit item to the back end
@@ -261,6 +269,7 @@ async function submitEditItem(modelNumber, newName, photo, newImageUrl,
     mode: 'cors',
     headers: {
       'Accept': 'application/json',
+      'Authorization': 'bearer ' + currentToken
     },
     body:formData
   })
@@ -273,9 +282,9 @@ async function submitEditItem(modelNumber, newName, photo, newImageUrl,
       alert('error');
     }
  })
+
   // Refresh the items
- .then(getItemsByFilter());
-  
+  await getItemsByFilter();
 }
 
 // Requests a delete operation from the back end
@@ -288,13 +297,13 @@ async function submitDeleteItem(modelNumber, newDivRow) {
   }
   // let customRequest = Object.assign(fetchRequest, {method: 'DELETE'});
 
-  // await fetch(uri + '?modelNumber=' + modelNumber, customRequest)
-  fetch(uri + '?modelNumber=' +modelNumber, {
+  await fetch(uri + '?modelNumber=' +modelNumber, {
     method: 'DELETE',
     mode: 'cors',
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': 'bearer ' + currentToken
     },
   })
   .then(response => {
@@ -306,28 +315,14 @@ async function submitDeleteItem(modelNumber, newDivRow) {
       alert('could not delete');
     }
   })
+
+  // Refresh the items
+  await getItemsByFilter();
 }
 
 
-// function getItems() {
-//   fetch(uri, fetchRequest)
-//     .then(response => response.json())
-//     .then(data => displayItemsFilter(data))
-//     .catch(error => console.error('Unable to get items.', error));
-    
-// }
-
-// function process(){
-//   getItemsByFilter();
-// }
-// function looping(){
-//   setTimeout(process, 3000);
-// }
-
-// var refreshData = setInterval(looping, 3000);
-
 // Gets the items by a specified list of filters
- function getItemsByFilter() {
+ async function getItemsByFilter() {
   var filtersQueryParameter = "?filtersString=";
   var priceQueryParameter = "&order=";
   var checkboxes = document.querySelectorAll('input[type=checkbox]');
@@ -349,9 +344,9 @@ async function submitDeleteItem(modelNumber, newDivRow) {
     }
   })
 
-  fetch(uri + filtersQueryParameter + priceQueryParameter, fetchRequest)
+  await fetch(uri + filtersQueryParameter + priceQueryParameter, fetchRequest)
   .then(response => response.json())
-  .then(getAllModelNumbers())
+  .then(await getAllModelNumbers())
   .then(async data => await displayItemsFilter(data));
 
   console.log('hey');
@@ -360,6 +355,7 @@ async function submitDeleteItem(modelNumber, newDivRow) {
 // Display all items with the set of filters
  async function displayItemsFilter(data) {
 
+  let listOfDivs = document.getElementById('listOfDivs');
   // Reset the list of divs
   listOfDivs.innerHTML = '';
 
@@ -551,9 +547,7 @@ async function submitDeleteItem(modelNumber, newDivRow) {
     var AvailabilityCheckbox = document.createElement('input');
     AvailabilityCheckbox.type = "checkbox";
     AvailabilityCheckbox.style = "  transform: scale(2);";
-    if(item["availability"] == true) {
-      AvailabilityCheckbox.checked = true;
-    }
+    AvailabilityCheckbox.checked = item["availability"];
     newDivAvailability.appendChild(AvailabilityCheckbox);    
 
     // New price div
@@ -605,7 +599,7 @@ async function submitDeleteItem(modelNumber, newDivRow) {
       newDivName.removeChild(ProductNameText);
       newDivUrl.removeChild(UrlText);
       priceDiv.removeChild(ProductPriceText);
-      newDivName.append(ProductNameTextArea);
+      newDivName.appendChild(ProductNameTextArea);
       newDivUrl.appendChild(ProductUrlTextArea);
       priceDiv.appendChild(ProductPriceInput);
 
@@ -643,11 +637,7 @@ async function submitDeleteItem(modelNumber, newDivRow) {
 
     ImageUrlLarge.style.left = newDivImage.offsetLeft + 450 + 'px';
     ImageUrlLarge.style.top = newDivImage.offsetTop + 100 + 'px';
-    var btnn = document.querySelector('.test2');
-    btnn.addEventListener('click', () => {
-      ImageUrlLarge.style.left = newDivImage.offsetLeft + 450 + 'px';
-      ImageUrlLarge.style.top = newDivImage.offsetTop + 100 + 'px';
-    })
+
     deleteButton.addEventListener('click', () => {
       ImageUrlLarge.style.left = newDivImage.x + 150 + 'px';
       ImageUrlLarge.style.top = newDivImage.y + 63 + 'px';

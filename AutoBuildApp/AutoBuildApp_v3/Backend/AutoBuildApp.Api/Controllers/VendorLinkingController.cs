@@ -60,7 +60,7 @@ namespace AutoBuildApp.Api.Controllers
             CommonResponseWithObject<AddProductDTO> dtoCommonResponse = _vendorLinkingManager.ConvertFormToProduct(formData);
 
             // If DTOCommonResponse is false, the request failed to convert the form to the product
-            if (!dtoCommonResponse.ResponseBool)
+            if (!dtoCommonResponse.IsSuccessful)
             {
                 //ContentResult result = new ContentResult();
                 //result.StatusCode = StatusCodes.Status400BadRequest;
@@ -76,7 +76,7 @@ namespace AutoBuildApp.Api.Controllers
             CommonResponse commonResponse = await _vendorLinkingManager.AddProductToVendorListOfProducts(dtoCommonResponse.GenericObject, photo);
 
             // If commonResponse is false, the request failed
-            if (!commonResponse.ResponseBool)
+            if (!commonResponse.IsSuccessful)
             {
                 _logger.LogWarning("AddProductToVendorListOfProducts failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
@@ -102,7 +102,7 @@ namespace AutoBuildApp.Api.Controllers
             CommonResponseWithObject<AddProductDTO> dtoCommonResponse = _vendorLinkingManager.ConvertFormToProduct(formData);
 
             // If DTOCommonResponse is false, the request failed to convert the form to the product
-            if (!dtoCommonResponse.ResponseBool)
+            if (!dtoCommonResponse.IsSuccessful)
             {
                 _logger.LogWarning("EditProductInVendorListOfProducts failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
@@ -111,7 +111,7 @@ namespace AutoBuildApp.Api.Controllers
             CommonResponse commonResponse = await _vendorLinkingManager.EditProductInVendorListOfProducts(dtoCommonResponse.GenericObject, photo);
 
             // If commonResponse is false, the request failed
-            if (!commonResponse.ResponseBool)
+            if (!commonResponse.IsSuccessful)
             {
                 _logger.LogWarning("EditProductInVendorListOfProducts failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
@@ -136,7 +136,7 @@ namespace AutoBuildApp.Api.Controllers
             CommonResponse commonResponse = _vendorLinkingManager.DeleteProductFromVendorList(modelNumber);
 
             // If commonResponse is false, the request failed
-            if (!commonResponse.ResponseBool)
+            if (!commonResponse.IsSuccessful)
             {
                 _logger.LogWarning("DeleteProductFromVendorList failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
@@ -160,7 +160,7 @@ namespace AutoBuildApp.Api.Controllers
             CommonResponseWithObject<List<string>> commonResponse = _vendorLinkingManager.GetAllModelNumbers();
 
             // If commonResponse is false, the request failed
-            if (!commonResponse.ResponseBool)
+            if (!commonResponse.IsSuccessful)
             {
                 _logger.LogWarning("GetAllModelNumbers failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
@@ -184,7 +184,7 @@ namespace AutoBuildApp.Api.Controllers
             CommonResponseWithObject<GetProductByFilterDTO> dtoCommonResponse = _vendorLinkingManager.ConvertToGetProductByFilterDTO(filtersString, order);
 
             // If dtoCommonResponse is false, the request failed to convert to ProductByFilterDTO
-            if (!dtoCommonResponse.ResponseBool)
+            if (!dtoCommonResponse.IsSuccessful)
             {
                 _logger.LogWarning("FiltersString was null. GetAllProductsByVendor failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
@@ -194,7 +194,7 @@ namespace AutoBuildApp.Api.Controllers
             CommonResponseWithObject<List<AddProductDTO>> commonResponse = _vendorLinkingManager.GetAllProductsByVendor(dtoCommonResponse.GenericObject);
 
             // If commonResponse is false, the request failed
-            if (!commonResponse.ResponseBool)
+            if (!commonResponse.IsSuccessful)
             {
                 _logger.LogWarning("ProductsByVendor was null. GetAllProductsByVendor failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);

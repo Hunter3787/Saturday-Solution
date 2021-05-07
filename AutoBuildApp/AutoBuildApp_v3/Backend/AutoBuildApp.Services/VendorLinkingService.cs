@@ -44,7 +44,7 @@ namespace AutoBuildApp.Services
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
                 _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
                 commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
 
                 return commonResponse;
@@ -73,7 +73,7 @@ namespace AutoBuildApp.Services
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
                 _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
                 commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
 
                 return commonResponse;
@@ -97,7 +97,7 @@ namespace AutoBuildApp.Services
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
                 _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
                 commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
 
                 return commonResponse;
@@ -123,7 +123,7 @@ namespace AutoBuildApp.Services
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
                 _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
                 commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
 
                 return commonResponse;
@@ -148,7 +148,7 @@ namespace AutoBuildApp.Services
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
                 _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
                 commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
 
                 return commonResponse;
@@ -174,7 +174,7 @@ namespace AutoBuildApp.Services
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
                 _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
                 commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
 
                 return commonResponse;

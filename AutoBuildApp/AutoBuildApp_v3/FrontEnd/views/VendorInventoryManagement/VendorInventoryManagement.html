@@ -8,9 +8,7 @@
 
 </head>
 
-<body onload="getItemsByFilter()">
-
-    <!-- <body> -->
+<body>
 
     <select class="modelNumberDropDown">
         <option>Model Number</option>
@@ -18,15 +16,6 @@
 
     <h1>My Products</h1>
 
-    <button class='test2' style='margin-left:600px' onclick=" addItem()"> click me</button>
-    <div style='margin-left:500px'>
-        <div class="col-25">
-            <label for="fname">First Namef</label>
-        </div>
-        <div class="col-75">
-            <input>
-        </div>
-    </div>
     <div id="listOfDivs">
     </div>
     <div class="sidenav">
@@ -50,8 +39,6 @@
         <input type="checkbox" class="checkbox-filter" name="build" id="hard drive-button" checked>
         <label for="hd-button">HD</label><br>
 
-
-
         <h3>Price</h3>
         <input type="radio" class="checkbox-filter" name="likes" id="price_desc" checked>
         <label for="F1">Most Expensive</label><br>
@@ -61,24 +48,9 @@
         <label for="F1">A to Z</label><br>
         <input type="radio" class="checkbox-filter" name="likes" id="name_desc">
         <label for="F1">Z to A</label><br>
-        <button class="filter-button" onclick="getItemsByFilter()">Apply filter</button>
-
-        <div class="field">
-            <input type="file" class="custom-upload" id="add-image" value='hey'>
-        </div>
-
-        <div>
-            <!-- <img src="C:\Users\Daniel\schoolProjects\Saturday-Solution\AutoBuildApp\AutoBuildApp_v3\FrontEnd\assets\BruceLee.png"
-                alt=""> -->
-        </div>
     </div>
 
-
-    <text style='margin-left:500px; background-color: lawngreen;' class='successButton'>Successful</button>
-
-        <!-- <button style='margin-left:700px; background-color: lawngreen;' onclick="gf()">Successful</button> -->
-
-        <script src="VendorInventoryManagement.js" asp-append-version="true"></script>
+    <script src="VendorInventoryManagement.js" asp-append-version="true"></script>
 
 </body>
 

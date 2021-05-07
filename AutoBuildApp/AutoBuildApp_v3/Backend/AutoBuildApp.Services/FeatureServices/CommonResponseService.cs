@@ -14,22 +14,22 @@ namespace AutoBuildApp.Services.FeatureServices
             switch (code)
             {
                 case AutoBuildSystemCodes.Success:
-                    response.ResponseBool = true;
+                    response.IsSuccessful = true;
                     response.ResponseString = ResponseStringGlobals.SUCCESSFUL_RESPONSE;
 
                     break;
                 case AutoBuildSystemCodes.DatabaseTimeout:
-                    response.ResponseBool = false;
+                    response.IsSuccessful = false;
                     response.ResponseString = ResponseStringGlobals.DATABASE_TIMEOUT;
 
                     break;
                 case AutoBuildSystemCodes.DuplicateValue:
-                    response.ResponseBool = false;
+                    response.IsSuccessful = false;
                     response.ResponseString = ResponseStringGlobals.DUPLICATE_VALUE;
 
                     break;
                 default:
-                    response.ResponseBool = false;
+                    response.IsSuccessful = false;
                     response.ResponseString = ResponseStringGlobals.DEFAULT_RESPONSE;
 
                     break;

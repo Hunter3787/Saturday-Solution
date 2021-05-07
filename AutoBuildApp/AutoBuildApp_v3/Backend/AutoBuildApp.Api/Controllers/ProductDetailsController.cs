@@ -41,7 +41,7 @@ namespace AutoBuildApp.Api.Controllers
             CommonResponseWithObject<ProductDetailsDTO> commonResponse = _productDetailsManager.GetProductByModelNumber(modelNumber);
 
             // If commonResponse is false, the request failed
-            if (!commonResponse.ResponseBool)
+            if (!commonResponse.IsSuccessful)
             {
                 _logger.LogWarning("GetProductByModelNumber failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);

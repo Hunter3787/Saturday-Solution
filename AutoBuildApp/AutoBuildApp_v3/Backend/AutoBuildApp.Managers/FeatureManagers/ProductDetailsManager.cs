@@ -36,7 +36,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             {
                 _logger.LogWarning("User inputted a null model number. GetProductByModelNumber manager call failed.");
                 commonResponse.ResponseString = "Model number is null.";
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
 
                 return commonResponse;
             }
