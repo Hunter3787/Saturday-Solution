@@ -6,7 +6,7 @@
  */
 namespace AutoBuildApp.Models.Interfaces
 {
-    public interface ICooler : IComponent
+    public interface ICooler : Component
     {
         string FanRPM { get; set; }
         string NoiseVolume { get; set; }

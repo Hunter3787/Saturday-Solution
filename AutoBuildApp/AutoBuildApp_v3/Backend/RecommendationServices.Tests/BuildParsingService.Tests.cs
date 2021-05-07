@@ -25,7 +25,7 @@ namespace AutoBuildApp.Services.Tests
         private CentralProcUnit _processor;
         private RAM _ram;
         private ICooler _cooler;
-        private List<IComponent> _periphs;
+        private List<Models.Interfaces.Component> _periphs;
         private IBuild _gamingBuild;
         private BuildFactory _build; 
 
@@ -226,7 +226,7 @@ namespace AutoBuildApp.Services.Tests
                 Fanless = false,
                 WaterCooling = false
             };
-            _periphs = new List<IComponent>()
+            _periphs = new List<Models.Interfaces.Component>()
             {
                 _hd1, _hd2,_ram
             };
@@ -246,7 +246,7 @@ namespace AutoBuildApp.Services.Tests
         public void CreateICompListService_CreateComponentList_ReturnsOnlyNonnullComponentsList()
         {
             // Arrange
-            var expected = new List<IComponent> {
+            var expected = new List<Models.Interfaces.Component> {
                 _hd1, _hd2, _mobo, _psu, _graphics, _processor,
                 _ram, _cooler
             };
@@ -264,7 +264,8 @@ namespace AutoBuildApp.Services.Tests
         public void CreateICompListService_CreateComponentList_ReturnsNullList()
         {
             // Arrange
-            var expected = new List<IComponent> {
+            var expected = new List<Models.Interfaces.Component>
+            {
 
             };
             _build = new BuildFactory();

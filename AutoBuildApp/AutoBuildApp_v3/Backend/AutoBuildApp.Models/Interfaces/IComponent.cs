@@ -10,7 +10,7 @@ namespace AutoBuildApp.Models.Interfaces
     /// <summary>
     /// Interface representation of Components/Products for the AutoBuildApp.
     /// </summary>
-    public interface IComponent
+    public interface Component
     {
         ProductType ProductType { get; set; }
         string ModelNumber { get; set; }

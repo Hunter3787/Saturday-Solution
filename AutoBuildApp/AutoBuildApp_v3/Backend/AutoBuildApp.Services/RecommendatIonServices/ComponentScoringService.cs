@@ -25,7 +25,7 @@ namespace AutoBuildApp.Services.RecommendationServices
         /// <param name="input"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public int ScoreComponent(IComponent input, BuildType type)
+        public int ScoreComponent(Models.Interfaces.Component input, BuildType type)
         {
             if (input == null)
             {

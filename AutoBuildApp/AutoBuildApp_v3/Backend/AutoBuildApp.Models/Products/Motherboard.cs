@@ -8,7 +8,7 @@ using AutoBuildApp.Models.Interfaces;
  */
 namespace AutoBuildApp.Models.Products
 {
-    public class Motherboard : Component, IComponent
+    public class Motherboard : Component, Interfaces.Component
     {
         #region "Field Declarations: get; set;"
         public string Socket { get; set; }
