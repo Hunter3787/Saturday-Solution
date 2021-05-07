@@ -8,7 +8,7 @@ using AutoBuildApp.Models.Interfaces;
  */
 namespace AutoBuildApp.Models.Products
 {
-    public class Fan : Component, IComponent, ICooler
+    public class Fan : Component, Interfaces.Component, ICooler
     {
 
         #region "Field Declarations: get; set;"

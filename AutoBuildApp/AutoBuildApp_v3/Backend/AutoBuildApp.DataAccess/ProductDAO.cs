@@ -115,7 +115,7 @@ namespace AutoBuildApp.DataAccess
         /// </summary>
         /// <param name="toFind"></param>
         /// <returns></returns>
-        public List<ProductEntity> GetEntities(List<IComponent> toFind)
+        public List<ProductEntity> GetEntities(List<Component> toFind)
         {
             List<ProductEntity> entitiesList = new List<ProductEntity>();
 
@@ -179,14 +179,14 @@ namespace AutoBuildApp.DataAccess
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public Dictionary<ProductType, List<IComponent>> GetProductsByList(
-            List<IComponent> input)
+        public Dictionary<ProductType, List<Component>> GetProductsByList(
+            List<Component> input)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                Dictionary<ProductType, List<IComponent>> output
-                    = new Dictionary<ProductType, List<IComponent>>();
+                Dictionary<ProductType, List<Component>> output
+                    = new Dictionary<ProductType, List<Component>>();
 
                 var stored = "Search_ProductBudget";
                 using ( var command = new SqlCommand())

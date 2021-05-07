@@ -3,7 +3,7 @@ namespace AutoBuildApp.Models
 {
     public static class ResponseStringGlobals
     {
-        public const string SUCCESSFUL_RESPONSE = "Successful response.";
+        public const string SUCCESSFUL_RESPONSE = "Success.";
         public const string SUCCESSFUL_CREATION = "Successfully created.";
         public const string SUCCESSFUL_DELETION = "Successfully deleted.";
         public const string SUCCESSFUL_MODIFICATION = "Successfully modified.";
@@ -21,6 +21,7 @@ namespace AutoBuildApp.Models
         public const string DUPLICATE_VALUE = "A duplicate value was entered.";
         public const string UNAUTHORIZED_ACCESS = "Unauthorized access.";
         public const string INVALID_INPUT = "Invalid input.";
-        public const string DEFAULT_RESPONSE = "An error has occurred.";
+        public const string MISSING_ARGUEMENT = "One or more values were missing from your request.";
+        public const string DEFAULT_RESPONSE = "An unknown error has occurred.";
     }
 }

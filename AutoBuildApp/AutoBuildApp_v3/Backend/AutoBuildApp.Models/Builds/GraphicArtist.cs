@@ -20,7 +20,7 @@ namespace AutoBuildApp.Models.Builds
         public CentralProcUnit Cpu { get; set; }
         public RAM Ram { get; set; }
         public ICooler CPUCooler { get; set; }
-        public List<IComponent> Peripherals { get; set; }
+        public List<Interfaces.Component> Peripherals { get; set; }
 
         /// <summary>
         /// Default constructor.
@@ -35,7 +35,7 @@ namespace AutoBuildApp.Models.Builds
             Cpu = new CentralProcUnit();
             Ram = new RAM();
             CPUCooler = new Fan();
-            Peripherals = new List<IComponent>();
+            Peripherals = new List<Interfaces.Component>();
         }
 
 
@@ -126,7 +126,7 @@ namespace AutoBuildApp.Models.Builds
         /// </summary>
         /// <param name="add"></param>
         /// <returns></returns>
-        public bool AddPeripheral(IComponent add)
+        public bool AddPeripheral(Interfaces.Component add)
         {
             if (add == null)
             {
@@ -135,7 +135,7 @@ namespace AutoBuildApp.Models.Builds
 
             if (Peripherals == null)
             {
-                Peripherals = new List<IComponent>();
+                Peripherals = new List<Interfaces.Component>();
             }
 
             if (Peripherals.Contains(add))
@@ -157,7 +157,7 @@ namespace AutoBuildApp.Models.Builds
         /// </summary>
         /// <param name="remove"></param>
         /// <returns></returns>
-        public bool RemovePeripheral(IComponent remove)
+        public bool RemovePeripheral(Interfaces.Component remove)
         {
             if (remove == null
                 || Peripherals == null
@@ -186,7 +186,7 @@ namespace AutoBuildApp.Models.Builds
         /// </summary>
         /// <param name="delete"></param>
         /// <returns></returns>
-        public bool DeletePeripheral(IComponent delete)
+        public bool DeletePeripheral(Interfaces.Component delete)
         {
             if (delete == null
                 || Peripherals == null
@@ -217,7 +217,7 @@ namespace AutoBuildApp.Models.Builds
 
             if (Peripherals != null)
             {
-                foreach (IComponent peri in Peripherals)
+                foreach (Interfaces.Component peri in Peripherals)
                 {
                     total += peri.GetTotalcost();
                 }

@@ -14,6 +14,8 @@ namespace AutoBuildApp.DataAccess
                 case -2:
                     return AutoBuildSystemCodes.DatabaseTimeout;
 
+                case 40:
+                    return AutoBuildSystemCodes.ConnectionError;
                 case 2627:
                     return AutoBuildSystemCodes.DuplicateValue;
 

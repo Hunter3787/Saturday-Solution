@@ -15,15 +15,15 @@ namespace AutoBuildApp.DataAccess.Test
     public class ShelfDAOTests
     {
         private string _conString;
-        private Component _testComponent;
-        private Component _dupeTestComponent;
+        private Models.Products.Component _testComponent;
+        private Models.Products.Component _dupeTestComponent;
         private Shelf _emptyShelf;
         private Shelf _shelfWithTwoCPU;
         private List<Shelf> _shelfList;
-        private Component _intelCPU700K;
-        private Component _intelCPU700KA;
-        private Component _amdCPU3W0F;
-        private Component _amdCPU1BOX;
+        private Models.Products.Component _intelCPU700K;
+        private Models.Products.Component _intelCPU700KA;
+        private Models.Products.Component _amdCPU3W0F;
+        private Models.Products.Component _amdCPU1BOX;
 
 
         public ShelfDAOTests()
@@ -32,7 +32,7 @@ namespace AutoBuildApp.DataAccess.Test
             connectionManager.
             GetConnectionStringByName(ControllerGlobals.DOCKER_CONNECTION);
 
-            _amdCPU3W0F = new Component()
+            _amdCPU3W0F = new Models.Products.Component()
             {
                 Quantity = 1,
                 ProductType = ProductType.CPU,
@@ -40,7 +40,7 @@ namespace AutoBuildApp.DataAccess.Test
                 ManufacturerName = "AMD"
             };
 
-            _amdCPU1BOX = new Component()
+            _amdCPU1BOX = new Models.Products.Component()
             {
                 Quantity = 1,
                 ProductType = ProductType.CPU,
@@ -48,7 +48,7 @@ namespace AutoBuildApp.DataAccess.Test
                 ManufacturerName = "AMD"
             };
 
-            _intelCPU700K = new Component()
+            _intelCPU700K = new Models.Products.Component()
             {
                 Quantity = 1,
                 ProductType = ProductType.CPU,
@@ -56,7 +56,7 @@ namespace AutoBuildApp.DataAccess.Test
                 ManufacturerName = "Intel"
             };
 
-            _intelCPU700KA = new Component()
+            _intelCPU700KA = new Models.Products.Component()
             {
                 Quantity = 1,
                 ProductType = ProductType.CPU,
@@ -72,16 +72,16 @@ namespace AutoBuildApp.DataAccess.Test
             _shelfWithTwoCPU = new Shelf()
             {
                 ShelfName = "TacoBell",
-                ComponentList = new List<Component>()
+                ComponentList = new List<Models.Products.Component>()
                     {
-                        new Component()
+                        new Models.Products.Component()
                         {
                             Quantity = 2,
                             ProductType = ProductType.CPU,
                             ModelNumber = "100-100000063WOF",
                             ManufacturerName = "AMD"
                         },
-                        new Component()
+                        new Models.Products.Component()
                         {
                             Quantity = 2,
                             ProductType = ProductType.CPU,
@@ -108,7 +108,7 @@ namespace AutoBuildApp.DataAccess.Test
         public void TestComponentEqualsOverride()
         {
             // Arrange
-            var comp1 = new Component()
+            var comp1 = new Models.Products.Component()
             {
                 Quantity = 2,
                 ProductType = ProductType.CPU,
@@ -116,7 +116,7 @@ namespace AutoBuildApp.DataAccess.Test
                 ManufacturerName = "AMD"
             };
 
-            var comp2 = new Component()
+            var comp2 = new Models.Products.Component()
             {
                 Quantity = 2,
                 ProductType = ProductType.CPU,
@@ -143,16 +143,16 @@ namespace AutoBuildApp.DataAccess.Test
                 new Shelf()
                 {
                     ShelfName = "TacoBell",
-                    ComponentList = new List<Component>()
+                    ComponentList = new List<Models.Products.Component>()
                     {
-                        new Component()
+                        new Models.Products.Component()
                         {
                             Quantity = 2,
                             ProductType = ProductType.CPU,
                             ModelNumber = "100-100000063WOF",
                             ManufacturerName = "AMD"
                         },
-                        new Component()
+                        new Models.Products.Component()
                         {
                             Quantity = 2,
                             ProductType = ProductType.CPU,
@@ -172,16 +172,16 @@ namespace AutoBuildApp.DataAccess.Test
                 new Shelf()
                 {
                     ShelfName = "TacoBell",
-                    ComponentList = new List<Component>()
+                    ComponentList = new List<Models.Products.Component>()
                     {
-                        new Component()
+                        new Models.Products.Component()
                         {
                             Quantity = 2,
                             ProductType = ProductType.CPU,
                             ModelNumber = "100-100000063WOF",
                             ManufacturerName = "AMD"
                         },
-                        new Component()
+                        new Models.Products.Component()
                         {
                             Quantity = 2,
                             ProductType = ProductType.CPU,
@@ -204,16 +204,16 @@ namespace AutoBuildApp.DataAccess.Test
             var mc1 = new Shelf()
             {
                 ShelfName = "McDonalds",
-                ComponentList = new List<Component>()
+                ComponentList = new List<Models.Products.Component>()
                     {
-                        new Component()
+                        new Models.Products.Component()
                         {
                             Quantity = 2,
                             ProductType = ProductType.CPU,
                             ModelNumber = "100-100000063WOF",
                             ManufacturerName = "AMD"
                         },
-                        new Component()
+                        new Models.Products.Component()
                         {
                             Quantity = 2,
                             ProductType = ProductType.CPU,
@@ -226,16 +226,16 @@ namespace AutoBuildApp.DataAccess.Test
             var mc2 = new Shelf()
             {
                 ShelfName = "McDonalds",
-                ComponentList = new List<Component>()
+                ComponentList = new List<Models.Products.Component>()
                     {
-                        new Component()
+                        new Models.Products.Component()
                         {
                             Quantity = 2,
                             ProductType = ProductType.CPU,
                             ModelNumber = "100-100000063WOF",
                             ManufacturerName = "AMD"
                         },
-                        new Component()
+                        new Models.Products.Component()
                         {
                             Quantity = 2,
                             ProductType = ProductType.CPU,
@@ -265,30 +265,30 @@ namespace AutoBuildApp.DataAccess.Test
                 new Shelf()
                 {
                     ShelfName = "TacoBell",
-                    ComponentList = new List<Component>()
+                    ComponentList = new List<Models.Products.Component>()
                     {
-                        new Component()
+                        new Models.Products.Component()
                         {
                             Quantity = 1,
                             ProductType = ProductType.CPU,
                             ModelNumber = "BX8070110700K",
                             ManufacturerName = "Intel"
                         },
-                        new Component()
+                        new Models.Products.Component()
                         {
                             Quantity = 1,
                             ProductType = ProductType.CPU,
                             ModelNumber = "100-100000063WOF",
                             ManufacturerName = "AMD"
                         },
-                        new Component()
+                        new Models.Products.Component()
                         {
                             Quantity = 1,
                             ProductType = ProductType.CPU,
                             ModelNumber = "BX8070110700KA",
                             ManufacturerName = "Intel"
                         },
-                        new Component()
+                        new Models.Products.Component()
                         {
                             Quantity = 1,
                             ProductType = ProductType.CPU,
@@ -324,7 +324,7 @@ namespace AutoBuildApp.DataAccess.Test
             expected.GenericObject = new Shelf()
             {
                 ShelfName = shelfName,
-                ComponentList = new List<Component>()
+                ComponentList = new List<Models.Products.Component>()
                 {
                     _intelCPU700K,
                     _amdCPU3W0F,

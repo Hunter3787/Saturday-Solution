@@ -26,7 +26,7 @@ namespace AutoBuildApp.Managers
         private ShelfDAO _shelfDAO;
 
         private List<string> _approvedRoles;
-        private ShelfService _shelfService;
+        private ShelfWithResponseService _shelfService;
         private BuildManagementService _buildService;
         private readonly string _currentUser;
 
@@ -39,7 +39,7 @@ namespace AutoBuildApp.Managers
 
             _buildDAO = new BuildDAO(connectionString);
             _shelfDAO = new ShelfDAO(connectionString);
-            _shelfService = new ShelfService(_shelfDAO);
+            _shelfService = new ShelfWithResponseService(_shelfDAO);
             _buildService = new BuildManagementService(_buildDAO);
             _currentUser = Thread.CurrentPrincipal.Identity.Name;
 
