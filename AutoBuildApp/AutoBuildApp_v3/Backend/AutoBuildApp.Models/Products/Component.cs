@@ -5,7 +5,7 @@ using AutoBuildApp.Models.Interfaces;
 
 namespace AutoBuildApp.Models.Products
 {
-    public class Component : Interfaces.Component
+    public class Component : IComponent
     {
         public ProductType ProductType { get; set; }
         public string ModelNumber { get; set; }

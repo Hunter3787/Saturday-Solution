@@ -4,6 +4,7 @@ using System.Data;
 using AutoBuildApp.Models;
 using Microsoft.Data.SqlClient;
 using AutoBuildApp.Models.Enumerations;
+using AutoBuildApp.Models.Products;
 
 
 /**
@@ -450,6 +451,7 @@ namespace AutoBuildApp.DataAccess
                         {
                             command.Transaction.Commit();
                             output.GenericObject = true;
+                            output.Code = AutoBuildSystemCodes.Success;
                         }
                         else
                         {
@@ -463,9 +465,7 @@ namespace AutoBuildApp.DataAccess
                     return output;
                 }
             }
-
-            output.Code = AutoBuildSystemCodes.Success;
-            output.GenericObject = true;
+            
             return output;
         }
 
@@ -501,7 +501,7 @@ namespace AutoBuildApp.DataAccess
                     {
 
                         InitializeSqlCommand(command, connection, AutoBuildSqlQueries.GET_ALL_SHELVES_BY_USERNAME);
-                        command.Parameters.Add(new SqlParameter("@USERNAME", username));
+                        command.Parameters.AddWithValue("@USERNAME", username);
 
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
@@ -520,7 +520,7 @@ namespace AutoBuildApp.DataAccess
                                     || reader[ProductTableColumns.PRODUCT_COLUMN_TYPE] != DBNull.Value)
                                     )
                                 {
-                                    Models.Products.Component component = new Models.Products.Component();
+                                    Component component = new Component();
                                     PopulateComponent(component, reader);
                                     shelf.ComponentList.Add(component);
 
@@ -580,14 +580,14 @@ namespace AutoBuildApp.DataAccess
                     using (SqlCommand command = new SqlCommand())
                     {
                         InitializeSqlCommand(command, connection, AutoBuildSqlQueries.GET_SHELF_BY_NAME_AND_USER);
-                        command.Parameters.Add(new SqlParameter("@USERNAME", username));
-                        command.Parameters.Add(new SqlParameter("@SHELFNAME", shelfName));
+                        command.Parameters.AddWithValue("@USERNAME", username);
+                        command.Parameters.AddWithValue("@SHELFNAME", shelfName);
 
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read() && reader[ProductTableColumns.PRODUCT_COLUMN_TYPE] != DBNull.Value)
                             {
-                                Models.Products.Component component = new Models.Products.Component();
+                                Component component = new Component();
                                 PopulateComponent(component, reader);
                                 shelf.ComponentList.Add(component);
                             }
@@ -680,7 +680,7 @@ namespace AutoBuildApp.DataAccess
         /// </summary>
         /// <param name="toPopulate"></param>
         /// <param name="reader"></param>
-        private void PopulateComponent(Models.Products.Component toPopulate, SqlDataReader reader)
+        private void PopulateComponent(Component toPopulate, SqlDataReader reader)
         {
             toPopulate.ProductType = (ProductType)Enum.Parse(typeof(ProductType), (string)reader[ProductTableColumns.PRODUCT_COLUMN_TYPE]);
             toPopulate.ModelNumber = (string)reader[ProductTableColumns.PRODUCT_COLUMN_MODEL];

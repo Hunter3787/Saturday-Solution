@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using AutoBuildApp.DataAccess;
 using AutoBuildApp.Models;
+using AutoBuildApp.Models.Builds;
 using AutoBuildApp.Models.DataTransferObjects;
-using AutoBuildApp.Models.Interfaces;
+
 /**
 * Build Management Service is a service that calls a 
 * DAO and translates the returned data into a build type.
@@ -21,7 +22,7 @@ namespace AutoBuildApp.Services
             _dao = buildDAO;
         }
 
-        public CommonResponse AddBuild(IBuild build, string buildName, string user)
+        public CommonResponse AddBuild(Build build, string buildName, string user)
         {
             _response = new CommonResponse();
 
@@ -78,12 +79,12 @@ namespace AutoBuildApp.Services
             return _response;
         }
 
-        public IBuild GetBuild()
+        public Build GetBuild()
         {
             return null;
         }
 
-        public List<IBuild> GetAllUserBuilds(string user, string sortOrder)
+        public List<Build> GetAllUserBuilds(string user, string sortOrder)
         {
 
             return null;

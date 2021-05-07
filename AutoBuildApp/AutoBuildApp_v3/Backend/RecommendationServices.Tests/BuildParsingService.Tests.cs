@@ -6,6 +6,7 @@ using AutoBuildApp.Models.Products;
 using System.Collections.Generic;
 using AutoBuildApp.Services.FactoryServices;
 using AutoBuildApp.Services.RecommendationServices;
+using AutoBuildApp.Models.Builds;
 
 /**
  * Create IComponent List Service tests.
@@ -25,7 +26,7 @@ namespace AutoBuildApp.Services.Tests
         private CentralProcUnit _processor;
         private RAM _ram;
         private ICooler _cooler;
-        private List<Models.Interfaces.Component> _periphs;
+        private List<IComponent> _periphs;
         private IBuild _gamingBuild;
         private BuildFactory _build; 
 
@@ -34,7 +35,7 @@ namespace AutoBuildApp.Services.Tests
         public void Initialize()
         {
             _build = new BuildFactory();
-            _gamingBuild = _build.CreateBuild(BuildType.Gaming);
+            _gamingBuild = (IBuild)_build.CreateBuild(BuildType.Gaming);
             _hd1 = new NVMeDrive
             {
                 DriveType = HardDriveType.NVMe,
@@ -89,7 +90,7 @@ namespace AutoBuildApp.Services.Tests
             };
             _mobo = new Motherboard
             {
-                ProductType = ProductType.MotherBoard,
+                ProductType = ProductType.Motherboard,
                 ModelNumber = "133",
                 ManufacturerName = "Giga",
                 Price = 148.03,
@@ -226,7 +227,7 @@ namespace AutoBuildApp.Services.Tests
                 Fanless = false,
                 WaterCooling = false
             };
-            _periphs = new List<Models.Interfaces.Component>()
+            _periphs = new List<IComponent>()
             {
                 _hd1, _hd2,_ram
             };
@@ -246,7 +247,7 @@ namespace AutoBuildApp.Services.Tests
         public void CreateICompListService_CreateComponentList_ReturnsOnlyNonnullComponentsList()
         {
             // Arrange
-            var expected = new List<Models.Interfaces.Component> {
+            var expected = new List<IComponent> {
                 _hd1, _hd2, _mobo, _psu, _graphics, _processor,
                 _ram, _cooler
             };
@@ -255,7 +256,7 @@ namespace AutoBuildApp.Services.Tests
             BuildParsingService parser = new BuildParsingService();
 
             // Act
-            var actual = parser.CreateComponentList(_gamingBuild);
+            var actual = parser.CreateComponentList((Build)_gamingBuild);
             // Assert
             CollectionAssert.AreEqual(actual, expected);
         }
@@ -264,7 +265,7 @@ namespace AutoBuildApp.Services.Tests
         public void CreateICompListService_CreateComponentList_ReturnsNullList()
         {
             // Arrange
-            var expected = new List<Models.Interfaces.Component>
+            var expected = new List<Models.Products.Component>
             {
 
             };

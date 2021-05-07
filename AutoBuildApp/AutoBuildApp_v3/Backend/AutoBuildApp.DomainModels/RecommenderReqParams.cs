@@ -11,14 +11,14 @@ namespace AutoBuildApp.DomainModels
     {
         public BuildType Build { get; set; }
         public double Budget { get; set; }
-        public List<Component> PeripheralsList { get; set; }
+        public List<IComponent> PeripheralsList { get; set; }
         public PSUModularity Psu { get; set; }
         public HardDriveType HddType { get; set; }
         public int HddCount { get; set; }
 
         public RecommenderReqParams()
         {
-            PeripheralsList = new List<Component>();
+            PeripheralsList = new List<IComponent>();
         }
     }
 }

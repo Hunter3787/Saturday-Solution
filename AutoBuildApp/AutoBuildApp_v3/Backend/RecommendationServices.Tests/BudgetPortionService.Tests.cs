@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Products;
 using AutoBuildApp.Models.Enumerations;
+using AutoBuildApp.Models.Builds;
 
 /**
  * Tests for the BudgetPortionService.
@@ -24,7 +25,7 @@ namespace AutoBuildApp.Services.RecommendationServices.Tests
         private CentralProcUnit _processor;
         private RAM _ram;
         private ICooler _cooler;
-        private List<Models.Interfaces.Component> _periphs;
+        private List<IComponent> _periphs;
         private IBuild _gamingBuild;
         private BuildFactory _build;
 
@@ -33,7 +34,7 @@ namespace AutoBuildApp.Services.RecommendationServices.Tests
         public void Initialize()
         {
             _build = new BuildFactory();
-            _gamingBuild = _build.CreateBuild(BuildType.Gaming);
+            _gamingBuild = (IBuild)_build.CreateBuild(BuildType.Gaming);
             _hd1 = new NVMeDrive
             {
                 DriveType = HardDriveType.NVMe,
@@ -88,7 +89,7 @@ namespace AutoBuildApp.Services.RecommendationServices.Tests
             };
             _mobo = new Motherboard
             {
-                ProductType = ProductType.MotherBoard,
+                ProductType = ProductType.Motherboard,
                 ModelNumber = "133",
                 ManufacturerName = "Giga",
                 Price = 148.03,
@@ -226,7 +227,7 @@ namespace AutoBuildApp.Services.RecommendationServices.Tests
                 Fanless = false,
                 WaterCooling = false
             };
-            _periphs = new List<Models.Interfaces.Component>()
+            _periphs = new List<IComponent>()
         {
             _hd2, _hd2
         };
@@ -248,7 +249,7 @@ namespace AutoBuildApp.Services.RecommendationServices.Tests
         public void BudgetPortionService_BudgetComponents_ReturnAListOfBudgetedIComponents()
         {
             // Arrange
-            var list = new List<Models.Interfaces.Component>
+            var list = new List<IComponent>
             {
                 _graphics, _processor
             };

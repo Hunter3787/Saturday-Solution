@@ -8,7 +8,7 @@ using AutoBuildApp.Models.Interfaces;
  */
 namespace AutoBuildApp.Models.Products
 {
-    public class WaterCooler : Component, Interfaces.Component, ICooler
+    public class WaterCooler : Component, IComponent, ICooler
     {
         #region "Field Declarations: get; set;"
         public string FanRPM { get; set; }

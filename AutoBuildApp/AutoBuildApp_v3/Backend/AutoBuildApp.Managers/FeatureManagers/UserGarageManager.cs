@@ -1,5 +1,4 @@
-﻿using AutoBuildApp.Models.Interfaces;
-using AutoBuildApp.Models;
+﻿using AutoBuildApp.Models;
 using System.Collections.Generic;
 using AutoBuildApp.Security.FactoryModels;
 using AutoBuildApp.Security.Interfaces;
@@ -12,6 +11,8 @@ using System.Threading;
 using System.Security.Claims;
 using AutoBuildApp.Security;
 using System;
+using AutoBuildApp.Models.Builds;
+using AutoBuildApp.Models.Products;
 
 /**
 * User Garage Manager class that directs 
@@ -46,7 +47,7 @@ namespace AutoBuildApp.Managers
 
         }
 
-        public CommonResponse AddBuild(IBuild build, string buildname)
+        public CommonResponse AddBuild(Build build, string buildname)
         {
             // temp
             if (!AuthorizationCheck.IsAuthorized(_approvedRoles)) // added per Zee
@@ -83,9 +84,9 @@ namespace AutoBuildApp.Managers
             return response;
         }
 
-        public List<IBuild> GetAllUserBuilds(string user, string sorting)
+        public List<Build> GetAllUserBuilds(string user, string sorting)
         {
-            List<IBuild> outputList;
+            List<Build> outputList;
             var order = sorting;
 
             // TODO:Fix guards and parameters.
@@ -109,7 +110,7 @@ namespace AutoBuildApp.Managers
             return response;
         }
 
-        public CommonResponse ModifyBuild(IBuild build, string oldName, string newName)
+        public CommonResponse ModifyBuild(Build build, string oldName, string newName)
         {
             NullGuard.IsNotNull(build);
 

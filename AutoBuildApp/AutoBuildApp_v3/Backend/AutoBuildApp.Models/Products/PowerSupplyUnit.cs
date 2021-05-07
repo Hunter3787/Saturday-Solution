@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using AutoBuildApp.Models.Enumerations;
+﻿using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Interfaces;
 
 /**
@@ -11,7 +10,7 @@ namespace AutoBuildApp.Models.Products
     /// <summary>
     /// Power Supply Unit class to represent the computers power source.
     /// </summary>
-    public class PowerSupplyUnit : Component, Interfaces.Component
+    public class PowerSupplyUnit : Component, IComponent
     {
         #region "Field Declarations: get; set;"
         public string FormFactor { get; set; }
