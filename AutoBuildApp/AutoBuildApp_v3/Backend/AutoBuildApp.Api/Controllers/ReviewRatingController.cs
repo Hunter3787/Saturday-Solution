@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using AutoBuildApp.DomainModels.Enumerations;
 using System.Threading.Tasks;
 using AutoBuildApp.Logging;
+using AutoBuildApp.Api.HelperFunctions;
 
 /// <summary>
 /// References used from file: Solution Items/References.txt 
@@ -26,8 +27,10 @@ namespace AutoBuildApp.Api.Controllers
     [ApiController]
     public class ReviewRatingController : ControllerBase
     {
+        private static readonly string _connectionString = ConnectionManager.connectionManager.GetConnectionStringByName(ControllerGlobals.LOCALHOST_CONNECTION);
+
         // Initializes the DAO that will be used for review ratings.
-        private readonly ReviewRatingDAO _reviewRatingDAO = new ReviewRatingDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+        private readonly ReviewRatingDAO _reviewRatingDAO = new ReviewRatingDAO(_connectionString);
 
         // This will start the logging consumer manager in the background so that logs may be sent to the DB.
         private LoggingConsumerManager _loggingConsumerManager = new LoggingConsumerManager();
@@ -61,18 +64,8 @@ namespace AutoBuildApp.Api.Controllers
             // This will start a manager and pass in the service.
             ReviewRatingManager reviewRatingManager = new ReviewRatingManager(reviewRatingService);
 
-            var reviewRating = new ReviewRating()
-            {
-                BuildId = data["buildId"],
-                Username = data["username"],
-                StarRating = (StarType)int.Parse(data["starRating"]),
-                Message = data["message"],
-                Image = image
-            };
-
-
             // This will store the bool result of the review creation to see if it is a success or fail.
-            var createResult = await reviewRatingManager.CreateReviewRating(reviewRating);
+            var createResult = await reviewRatingManager.CreateReviewRating(data, image);
 
             // if true, it will return OK, else it will return status code error of 500
             if (createResult)
@@ -187,16 +180,8 @@ namespace AutoBuildApp.Api.Controllers
             // This will start a manager and pass in the service.
             ReviewRatingManager reviewRatingManager = new ReviewRatingManager(reviewRatingService);
 
-            var reviewRating = new ReviewRating()
-            {
-                EntityId = data["entityId"],
-                StarRating = (StarType)int.Parse(data["starRating"]),
-                Message = data["message"],
-                Image = image
-            };
-
             // This will store the bool result of the review edit to see if it is a success or fail.
-            var createResult = await reviewRatingManager.EditReviewRating(reviewRating);
+            var createResult = await reviewRatingManager.EditReviewRating(data, image);
 
             // if true, it will return OK, else it will return status code error of 500
             if (createResult)

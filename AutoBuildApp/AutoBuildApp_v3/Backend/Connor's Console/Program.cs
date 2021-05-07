@@ -43,9 +43,7 @@ namespace Connor_s_Console
                 Message = "MSG"
             };
 
-            var createResult = await reviewRatingManager.EditReviewRating(reviewRating);
-
-            Console.WriteLine(createResult);
+            //Console.WriteLine(createResult);
         }
     }
 }

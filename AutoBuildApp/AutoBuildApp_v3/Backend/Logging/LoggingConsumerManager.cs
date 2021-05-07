@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using AutoBuildApp.DomainModels;
 using AutoBuildApp.DataAccess.Entities;
 using AutoBuildApp.Logging;
+using Logging.Globals;
 
 /// <summary>
 /// References used from file: Solution Items/References.txt 
@@ -25,8 +26,8 @@ namespace AutoBuildApp.Logging
         private readonly IMessageConsumer _consumer; // This is the interface that a client uses to consume/recieve messages from the ActiveMQ.
         private bool _isDisposed = false; // Bool to check if items have been disposed of, initialized to false because no items shall be pre-disposed.
 
-        private const string _URI = "tcp://localhost:61616?wireFormat.maxInactivityDuration=0"; // This sets a constant connection string to the Queue.
-        private const string _DESTINATION = "LoggingQueue"; // Destination or the name of the Queue that the JSON strings are stored into.
+        private const string _URI = LoggingGlobals.ACTIVEMQ_URI; // This sets a constant connection string to the Queue.
+        private const string _DESTINATION = LoggingGlobals.DESTINATION; // Destination or the name of the Queue that the JSON strings are stored into.
 
         // Desfault constructor for the LoggingManager, will establish connections to the Queue.
         public LoggingConsumerManager()
@@ -54,11 +55,14 @@ namespace AutoBuildApp.Logging
             {
                 Message = logger.Message,
                 LogLevel = (LogTypeEntity)logger.LogLevel,
+                Event = logger.Event,
+                EventValue = logger.EventValue,
+                Username = logger.Username,
                 DateTime = logger.DateTime
             };
 
             // Will initialize the LoggerDataAccess with a connection string.
-            LoggerDAO loggerDataAccess = new LoggerDAO("Server = localhost; Database = DB; Trusted_Connection = True;"); 
+            LoggerDAO loggerDataAccess = new LoggerDAO(LoggingGlobals.DB_CONNECTION); 
             loggerDataAccess.CreateLogRecord(loggerEntity); // send the log object through to be sent to the database.
         }
         // This method will simply close all connections and sessions and set the isDisposed bool to true to state that the connections have been closed.
