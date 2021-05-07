@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -46,7 +47,7 @@ namespace AutoBuildApp.DataAccess
             _connectionString = connectionString;
         }
 
-        #region DAO Publish method not using reflections
+        #region DAO Publish method using reflections
         /// <summary>
         /// Method that is used to create a MPB record in the DB.
         /// </summary>
@@ -78,17 +79,19 @@ namespace AutoBuildApp.DataAccess
                     // Stored the query that will be used for insertion. This is an insertion statement.
                     command.CommandText = SP_CreateMostPopularBuild;
 
-                    var parameters = new SqlParameter[7]; // initialize 5 parameters to be read through incrementally.
-                    parameters[0] = new SqlParameter("@Username", buildPostEntity.Username);
-                    parameters[1] = new SqlParameter("@Title", buildPostEntity.Title);
-                    parameters[2] = new SqlParameter("@Description", buildPostEntity.Description);
-                    parameters[3] = new SqlParameter("@LikeIncrementor", buildPostEntity.LikeIncrementor);
-                    parameters[4] = new SqlParameter("@BuildTypeValue", buildPostEntity.BuildTypeValue);
-                    parameters[5] = new SqlParameter("@BuildImagePath", buildPostEntity.BuildImagePath);
-                    parameters[6] = new SqlParameter("@DateTime", Convert.ToDateTime(buildPostEntity.DateTime)); 
+                    Type type = buildPostEntity.GetType();
 
-                    // This will add the range of parameters to the parameters that will be used in the query.
-                    command.Parameters.AddRange(parameters);
+                    var toExclude = new HashSet<string>();
+                    toExclude.Add("EntityId");
+                    toExclude.Add("TypeId");
+
+                    IList<PropertyInfo> properties = new List<PropertyInfo>(type.GetProperties()
+                                                                                 .Where(property => !toExclude.Contains(property.Name)));
+
+                    foreach(PropertyInfo property in properties)
+                    {
+                        command.Parameters.AddWithValue($"@{property.Name}", property.GetValue(buildPostEntity, null));
+                    }
 
                     // stores the number of rows added in the statement.
                     var rowsAdded = command.ExecuteNonQuery();
@@ -106,7 +109,7 @@ namespace AutoBuildApp.DataAccess
         }
         #endregion
 
-        #region DAO Publish method using reflections
+        #region DAO Publish method using attribute reflections
         /// <summary>
         /// Method that is used to create a MPB record in the DB.
         /// </summary>
