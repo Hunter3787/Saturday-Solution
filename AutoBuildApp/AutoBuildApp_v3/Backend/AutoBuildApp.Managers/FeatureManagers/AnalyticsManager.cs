@@ -20,7 +20,6 @@ namespace AutoBuildApp.Managers.FeatureManagers
         private AnalyticsDAO _uadDAO;
         private List<string> _allowedRoles; //specify rles
         
-
         public AnalyticsManager(string ConnectiontString)
         {
             _uadDAO = new AnalyticsDAO(ConnectiontString);
@@ -162,13 +161,15 @@ namespace AutoBuildApp.Managers.FeatureManagers
                 Console.WriteLine($" {dataDTO.ToString()}");
                 return dataDTO;
             }
-            else if(responseUAD.ResponseBool)
+            else //if(responseUAD.ResponseBool)
             {
 
                 Console.WriteLine($" ELSE IF STATEMENT 4");
 
+                dataDTO.SuccessFlag = responseUAD.ResponseBool;
+                dataDTO.Result = responseUAD.ResponseString;
 
-               Charts analyticsChart = new Charts();
+                Charts analyticsChart = new Charts();
                 #region GRAPHS
                 analyticsChart =
                      new Charts(
@@ -192,8 +193,8 @@ namespace AutoBuildApp.Managers.FeatureManagers
 
             }
 
-            Console.WriteLine($" OUTSIDE ");
-            return null;
+          
+            //return null;
 
 
 
