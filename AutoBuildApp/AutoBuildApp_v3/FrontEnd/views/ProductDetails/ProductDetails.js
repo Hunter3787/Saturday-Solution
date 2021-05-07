@@ -1,27 +1,33 @@
 const uri ='https://localhost:5001/productdetails';
+var tokenDanny = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiLCJzdWIiOiJBdXRvYnVpbGQgVXNlciIsImF1ZCI6IlVTIiwiaWF0IjoxNjE4NDUzMzM2LCJleHAiOjE2Mjk2NzcyMzYsIm5iZiI6MTYyOTY3NzIzNiwiVXNlcm5hbWUiOiJkYW5ueSIsIlVzZXJDTGFpbXMiOlt7IlBlcm1pc3Npb24iOiJDUkVBVEUiLCJzY29wZU9mUGVybWlzc2lvbnMiOiJSRVZJRVdTIn0seyJQZXJtaXNzaW9uIjoiREVMRVRFIiwic2NvcGVPZlBlcm1pc3Npb25zIjoiU0VMRiJ9LHsiUGVybWlzc2lvbiI6IkRFTEVURSIsInNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNFTEZfUkVWSUVXUyJ9LHsiUGVybWlzc2lvbiI6IkVESVQiLCJzY29wZU9mUGVybWlzc2lvbnMiOiJTRUxGIn0seyJQZXJtaXNzaW9uIjoiUkVBRF9PTkxZIiwic2NvcGVPZlBlcm1pc3Npb25zIjoiQVVUT0JVSUxEIn0seyJQZXJtaXNzaW9uIjoiVVBEQVRFIiwic2NvcGVPZlBlcm1pc3Npb25zIjoiU0VMRiJ9LHsiUGVybWlzc2lvbiI6IlVQREFURSIsInNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNFTEZfUkVWSUVXUyJ9LHsiUGVybWlzc2lvbiI6IkNSRUFURSIsInNjb3BlT2ZQZXJtaXNzaW9ucyI6IlBST0RVQ1RTIn0seyJQZXJtaXNzaW9uIjoiVVBEQVRFIiwic2NvcGVPZlBlcm1pc3Npb25zIjoiVkVORE9SX1BST0RVQ1RTIn0seyJQZXJtaXNzaW9uIjoiREVMRVRFIiwic2NvcGVPZlBlcm1pc3Npb25zIjoiVkVORE9SX1BST0RVQ1RTIn1dfQ.242uVukArptSKQY6mQpxH_MRdhRO0uEhDdUA4U6qJc4';
+var tokenNewEgg = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiLCJzdWIiOiJBdXRvYnVpbGQgVXNlciIsImF1ZCI6IlVTIiwiaWF0IjoxNjE4NDUzMzM2LCJleHAiOjE2Mjk2NzcyMzYsIm5iZiI6MTYyOTY3NzIzNiwiVXNlcm5hbWUiOiJuZXcgZWdnIiwiVXNlckNMYWltcyI6W3siUGVybWlzc2lvbiI6IkNyZWF0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlJldmlld3MifSx7IlBlcm1pc3Npb24iOiJEZWxldGUiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJTZWxmIn0seyJQZXJtaXNzaW9uIjoiRGVsZXRlIiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZlJldmlld3MifSx7IlBlcm1pc3Npb24iOiJFZGl0IiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZiJ9LHsiUGVybWlzc2lvbiI6IlJlYWRPbmx5IiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiQXV0b0J1aWxkIn0seyJQZXJtaXNzaW9uIjoiVXBkYXRlIiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZiJ9LHsiUGVybWlzc2lvbiI6IlVwZGF0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNlbGZSZXZpZXdzIn0seyJQZXJtaXNzaW9uIjoiQ3JlYXRlIiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiUHJvZHVjdHMifSx7IlBlcm1pc3Npb24iOiJVcGRhdGUiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJWZW5kb3JQcm9kdWN0cyJ9LHsiUGVybWlzc2lvbiI6IkRlbGV0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlZlbmRvclByb2R1Y3RzIn1dfQ.MQyT1fFd2VZjFlxX0RiEhpLk4liae6xuPdpewqRDpZg';
+
+var currentToken = tokenNewEgg;
 
 const fetchRequest = {
     method: 'GET',
     mode: 'cors',
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': 'bearer ' + currentToken
     }
   };
 
-  window.onload = getProductDetails('100-100000071BOX')
+  window.onload = getProductDetails('100-100000022BOX')
 
   async function getProductDetails(modelNumber) {
       await fetch(uri + '/' + modelNumber)
-      .then(response => response.json())
+      .then(response => {
+          if(!response.ok) {
+              alert("That model number doesn't exist")
+          }
+          return response.json()
+      })
       .then(data => displayProductDetails(data));
   }
 
   function displayProductDetails(data) {
-    console.log(data);
-    for (var key in specs) {
-        console.log(key + " - " + specs[key])
-    }
 
     // Get the product title div and set it
     var productTitle = document.querySelector('.product-title');
@@ -73,6 +79,9 @@ const fetchRequest = {
     // Get the vendorInformation attribute in the json object
     var vendorInformation = data["vendorInformation"];
 
+    // Boolean that tracks whether a product is available
+    var productIsAvailable = false;
+
     // Loop through each key-value pair in the vendor information attribute
     //      to get each vendor's information regarding the product
     for(var vendor in vendorInformation) {
@@ -119,15 +128,9 @@ const fetchRequest = {
         vendorAvailabilityText.innerText = currentVendor["availability"];
         vendorAvailabilityDiv.appendChild(vendorAvailabilityText);
 
-        if(currentVendor["availability"] == false) {
-            var notifyMeButton = document.createElement('button');
-            notifyMeButton.innerText = "Notify me!";
-
-            notifyMeButton.addEventListener('click', async () => {
-                await submitAddEmailToNotificationList();
-            })
-            vendorAvailabilityDiv.appendChild(document.createElement('br'))
-            vendorAvailabilityDiv.appendChild(notifyMeButton);
+        // If the product is available for a vendor, set productIsAvailable to true
+        if(currentVendor["availability"] == true) {
+            productIsAvailable = true;
         }
 
         vendorRowDiv.appendChild(vendorAvailabilityDiv);
@@ -148,16 +151,39 @@ const fetchRequest = {
         vendorInformationTable.append(vendorRowDiv);
     }
 
+    // If no vendor has the product in stock, display the notify me button and listen for a click which sends
+    //      the request to the back end to add their email to en email list
+    if(productIsAvailable == false) {
+        var notifyMeButton = document.querySelector('.notify-me-button');
+
+        // Show the button
+        notifyMeButton.style ="display:table";
+    
+        notifyMeButton.addEventListener('click', async () => {
+            await submitAddEmailToNotificationList(data["modelNumber"]);
+        })
+    }
+
+
   }
 
-  async function submitAddEmailToNotificationList() {
-      await fetch(uri + '/emailSubmit', fetchRequest)
-      .then(response => {
-          if(response.ok) {
-              alert('successfully added email to email list');
-          }
-          else {
-              alert('error');
-          }
-      })
+  async function submitAddEmailToNotificationList(modelNumber) {
+
+    await fetch(uri + '/emailSubmit/' + modelNumber, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'bearer ' + currentToken
+        }
+    })
+    .then(response => {
+        if(response.ok) {
+            alert('successfully added email to email list');
+        }
+        else {
+            alert('error');
+        }
+    })
   }

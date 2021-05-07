@@ -6,15 +6,23 @@ using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Text;
+using System.Security.Claims;
+using System.Threading;
 
 namespace AutoBuildApp.DataAccess
 {
+    /// <summary>
+    /// This class is responsible for communicating with the database
+    /// </summary>
     public class ProductDetailsDAO
     {
         private List<string> _allowedRoles;
         private string _connectionString;
 
+        /// <summary>
+        /// Establishes the connection with the connection string that is passed through and sets the allowed roles
+        /// </summary>
+        /// <param name="connectionString">sql database string to be able to connect to database.</param>
         public ProductDetailsDAO(string connectionString)
         {
             _connectionString = connectionString;
@@ -25,6 +33,11 @@ namespace AutoBuildApp.DataAccess
             };
         }
 
+        /// <summary>
+        /// This method will get the product by a specific model number
+        /// </summary>
+        /// <param name="modelNumber">takes in the model number of the product retrieved</param>
+        /// <returns>returns a system code with a ProductDetailDTO.</returns>
         public SystemCodeWithObject<ProductDetailsDTO> GetProductByModelNumber(string modelNumber)
         {
             // Initialize the system code response object with a Product as the generic object
@@ -65,6 +78,14 @@ namespace AutoBuildApp.DataAccess
 
                         using (SqlDataReader reader = adapter.InsertCommand.ExecuteReader())
                         {
+                            // If the reader returns 0 rows, then the model number doesn't exist in our database
+                            if(!reader.HasRows)
+                            {
+                                response.Code = AutoBuildSystemCodes.NullValue;
+                                response.GenericObject = null;
+
+                                return response;
+                            }
                             // Get basic product information
                             while (reader.Read())
                             {
@@ -88,8 +109,13 @@ namespace AutoBuildApp.DataAccess
 
                             while(reader.Read())
                             {
+                                var vendorName = (string)reader["vendorName"];
+
                                 // Add an entry into dictionary with vendor name and an initialized productVendorDetailsDTO
-                                vendorInformation.Add((string)reader["vendorName"], new ProductVendorDetailsDTO());
+                                vendorInformation.Add(vendorName, new ProductVendorDetailsDTO());
+
+                                // Initialize list of reviews
+                                vendorInformation[vendorName].Reviews = new List<Review>();
                             }
 
                             // Now get the product reviews per vendor
@@ -97,14 +123,8 @@ namespace AutoBuildApp.DataAccess
 
                             while (reader.Read())
                             {
-                                string currentVendor = (string)reader["vendorName"];
+                                string vendorName = (string)reader["vendorName"];
 
-                                // Set currentVendorsReviews equal to the list of reviews for the vendor
-                                if (vendorInformation[currentVendor].Reviews == null)
-                                {
-                                    // Initialize list of reviews if there currently doesn't exist a list of reviews
-                                    vendorInformation[currentVendor].Reviews = new List<Review>();
-                                }
 
                                 // Instantiate review and populate it
                                 Review review = new Review();
@@ -113,7 +133,8 @@ namespace AutoBuildApp.DataAccess
                                 review.Content = (string)reader["reviewContent"];
                                 review.Date = (string)reader["reviewDate"];
 
-                                vendorInformation[currentVendor].Reviews.Add(review);
+                                // Add the review to the vendor's list of reviews
+                                vendorInformation[vendorName].Reviews.Add(review);
 
                                 // Add to total rating
                                 totalRating += Int32.Parse(review.StarRating);
@@ -127,13 +148,8 @@ namespace AutoBuildApp.DataAccess
 
                             while (reader.Read())
                             {
-                                string currentVendor = (string)reader["vendorName"];
-                                ProductVendorDetailsDTO productVendorDetailsDTO = vendorInformation[currentVendor];
-
-                                if(productVendorDetailsDTO == null)
-                                {
-                                    productVendorDetailsDTO = new ProductVendorDetailsDTO();
-                                }
+                                string vendorName = (string)reader["vendorName"];
+                                ProductVendorDetailsDTO productVendorDetailsDTO = vendorInformation[vendorName];
 
                                 // Set individual product vendor values  
                                 productVendorDetailsDTO.Availability = (bool)reader["productStatus"];
@@ -142,8 +158,11 @@ namespace AutoBuildApp.DataAccess
                                 productVendorDetailsDTO.Price = Decimal.ToDouble(reader["productPrice"] == DBNull.Value ? 0 : (decimal)reader["productPrice"]);
                             }
 
-                            // Sets the average rating
-                            product.AverageRating = (Convert.ToDouble(totalRating) / product.TotalReviews);
+                            // Sets the average rating if the product has at least 1 review
+                            if (product.TotalReviews > 0)
+                            {
+                                product.AverageRating = (Convert.ToDouble(totalRating) / product.TotalReviews);
+                            }
                         }
 
                         transaction.Commit();
@@ -162,6 +181,52 @@ namespace AutoBuildApp.DataAccess
                 }
             }
             return response;
+        }
+
+        /// <summary>
+        /// This method will add an email to the email list for a particular product
+        /// </summary>
+        /// <param name="modelNumber">takes in the model number of the product to be put on the email list with an email</param>
+        /// <returns>returns a system code </returns>
+        public AutoBuildSystemCodes AddEmailToEmailListForProduct(string modelNumber)
+        {
+            // Get the current principal on the thread
+            ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            string username = _threadPrinciple.Identity.Name;
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        SqlDataAdapter adapter = new SqlDataAdapter();
+
+                        string sql = "insert into emaillist (email, productID) values" +
+                            "((select email from useraccounts where userid = (select userid from mappinghash where userhashid = (select userhashid from usercredentials where username = @username))), " +
+                            "(select productid from products where modelnumber = @modelnumber));";
+                            //"(select username from usercredentials where username = @USERNAME)), (select productID from products where modelNumber = @MODELNUMBER))";
+
+                        adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
+                        adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = username;
+                        adapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = modelNumber;
+
+
+                        adapter.InsertCommand.ExecuteNonQuery();
+                        transaction.Commit();
+
+                        return AutoBuildSystemCodes.Success;
+                    }
+                    catch (SqlException ex)
+                    {
+                        transaction.Rollback();
+
+                        // Passes the exception number to a handler which returns an AutoBuildSystemCode
+                        return SqlExceptionHandler.GetCode(ex.Number);
+                    }
+                }
+            }
         }
     }
 }

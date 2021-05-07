@@ -3,28 +3,34 @@ using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.DataAccess;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.VendorLinking;
-using AutoBuildApp.Models.WebCrawler;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using AutoBuildApp.Services.FeatureServices;
-using System.Linq;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security;
 using AutoBuildApp.Logging;
 
 namespace AutoBuildApp.Services
 {
+    /// <summary>
+    /// This class will handle the data transferrance from the manager
+    /// to the DAO entity object.
+    /// </summary>
     public class VendorLinkingService
     {
         private List<string> _allowedRoles;
         private VendorLinkingDAO _vendorLinkingDAO;
         private readonly LoggingProducerService _logger = LoggingProducerService.GetInstance;
         private CommonResponseService commonResponseService = new CommonResponseService();
+
+        /// <summary>
+        /// This default constructor to initalize the service. Initializes and sets the allowed roles and creates a VendorLinkingDAO object
+        /// </summary>
+        /// <param name="connectionString">sql database string to be able to connect to database.</param>
         public VendorLinkingService(string connectionString)
         {
             _vendorLinkingDAO = new VendorLinkingDAO(connectionString);
@@ -35,6 +41,10 @@ namespace AutoBuildApp.Services
             };
         }
 
+        /// <summary>
+        /// This method will be used to populate the vendors products (cache)
+        /// </summary>
+        /// <returns>returns a common response object with a concurrent dictionary of string and concurrent dictionoary of string and byte.</returns>
         public CommonResponseWithObject<ConcurrentDictionary<string, ConcurrentDictionary<string, byte>>> PopulateVendorsProducts()
         {
             // Initialize a common response object
@@ -64,6 +74,11 @@ namespace AutoBuildApp.Services
             return commonResponse;
         }
 
+        /// <summary>
+        /// This method will be used to check authorization, handle the DAO's response, and then pass the parameter to the DAO
+        /// </summary>
+        /// <param name="product">passes in an AddProductDTO which will be passed to the DAO</param>
+        /// <returns>returns a common response object</returns>
         public CommonResponse AddProductToVendorListOfProducts(AddProductDTO product)
         {
             // Initialize a common response object
@@ -88,6 +103,12 @@ namespace AutoBuildApp.Services
 
             return commonResponse;
         }
+
+        /// <summary>
+        /// This method will be used to check authorization, handle the DAO's response, and then pass the parameter to the DAO
+        /// </summary>
+        /// <param name="product">passes in an AddProductDTO which will be passed to the DAO</param>
+        /// <returns>returns a common response object</returns>
         public CommonResponse EditProductInVendorListOfProducts(AddProductDTO product)
         {
             // Initialize a common response object
@@ -113,6 +134,11 @@ namespace AutoBuildApp.Services
             return commonResponse;
         }
 
+        /// <summary>
+        /// This method will be used to check authorization, handle the DAO's response, and then pass the parameter to the DAO
+        /// </summary>
+        /// <param name="modelNumber">passes in string model number which will be deleted</param>
+        /// <returns>returns a common response object</returns>
         public CommonResponse DeleteProductFromVendorList(string modelNumber)
         {
 
@@ -139,6 +165,11 @@ namespace AutoBuildApp.Services
             return commonResponse;
         }
 
+        /// <summary>
+        /// This method will be used to check authorization, handle the DAO's response and to pass a GetProductByFilterDTO to the DAO
+        /// </summary>
+        /// <param name="filters">passes in a GetProductByFilterDTO which will be passed to the DAO</param>
+        /// <returns>returns a common response object</returns>
         public CommonResponseWithObject<List<AddProductDTO>> GetAllProductsByVendor(GetProductByFilterDTO filters)
         {
             // Initialize a common response object that has a collection field
@@ -165,6 +196,12 @@ namespace AutoBuildApp.Services
 
             return commonResponse;
         }
+
+        /// <summary>
+        /// This method will be used to check authorization, and to handle the DAO's response 
+        /// </summary>
+        /// <param name="filters">passes in a GetProductByFilterDTO which will be passed to the DAO</param>
+        /// <returns>returns a common response object</returns>
         public CommonResponseWithObject<List<string>> GetAllModelNumbers()
         {
             // Initialize a Common Response object that has a collection field
@@ -192,6 +229,12 @@ namespace AutoBuildApp.Services
             return commonResponse;
         }
 
+        /// <summary>
+        /// This method will be used to upload an image
+        /// </summary>
+        /// <param name="username">passes in a username which is used to determine which user to save the information to</param>
+        /// <param name="file">passes in a formfile which is the file to be saved</param>
+        /// <returns>returns a string for the file path</returns>
         public async Task<string> UploadImage(string username, IFormFile file)
         {
             string storeIn = "";

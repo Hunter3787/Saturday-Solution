@@ -1,26 +1,29 @@
-﻿using AutoBuildApp.Models.DataTransferObjects;
-using AutoBuildApp.Models.VendorLinking;
-using AutoBuildApp.Models.WebCrawler;
+﻿using AutoBuildApp.Models.VendorLinking;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Security.Claims;
-using System.Text;
 using System.Threading;
-using AutoBuildApp.Models;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security;
 
 namespace AutoBuildApp.DataAccess
 {
+    /// <summary>
+    /// This class is responsible for communicating with the database
+    /// </summary>
     public class VendorLinkingDAO
     {
         private List<string> _allowedRoles;
         private string _connectionString;
 
+        /// <summary>
+        /// Establishes the connection with the connection string that is passed through and sets the allowed roles
+        /// </summary>
+        /// <param name="connectionString">sql database string to be able to connect to database.</param>
         public VendorLinkingDAO(string connectionString)
         {
             _connectionString = connectionString;
@@ -31,6 +34,10 @@ namespace AutoBuildApp.DataAccess
             };
         }
 
+        /// <summary>
+        /// This method retrieves data from the DB by getting all vendors products and saving it in a cache
+        /// </summary>
+        /// <returns>returns a system code with a concurrent dictionary of string and concurrent dictionary of string and byte</returns>
         public SystemCodeWithObject<ConcurrentDictionary<string, ConcurrentDictionary<string, byte>>> PopulateVendorsProducts()
         {
             // Initialize the system code response object with the concurrent dictionary as the generic collection
@@ -103,6 +110,10 @@ namespace AutoBuildApp.DataAccess
             return response;
         }
 
+        /// <summary>
+        /// This method retrieves data from the DB by getting all model numbers
+        /// </summary>
+        /// <returns>returns a system code with a list of strings</returns>
         public SystemCodeWithObject<List<string>> GetAllModelNumbers()
         {
             // Initialize the system code response object
@@ -162,6 +173,11 @@ namespace AutoBuildApp.DataAccess
             return response;
         }
 
+        /// <summary>
+        /// This method will retrieve all records for a vendor from the DB based on the filters that were specified
+        /// </summary>
+        /// <param name="product">takes in the GetProductByFilterDTO which contains the filters and the order</param>
+        /// <returns>returns a system code with a list of AddProductDTOs.</returns>
         public SystemCodeWithObject<List<AddProductDTO>> GetVendorProductsByFilter(GetProductByFilterDTO product)
         {
             // Initialize the system code response object
@@ -189,7 +205,7 @@ namespace AutoBuildApp.DataAccess
                     {
                         SqlDataAdapter adapter = new SqlDataAdapter();
 
-                        string sp_GetAllProductsByVendor = "GetAllProductsByVendor2";
+                        string sp_GetAllProductsByVendor = "GetAllProductsByVendorAccount";
                         adapter.InsertCommand = new SqlCommand(sp_GetAllProductsByVendor, connection, transaction);
                         adapter.InsertCommand.CommandType = CommandType.StoredProcedure;
                         adapter.InsertCommand.CommandText = sp_GetAllProductsByVendor;
@@ -263,6 +279,11 @@ namespace AutoBuildApp.DataAccess
             return response;
         }
 
+        /// <summary>
+        /// This method will add a product to the vendor's list of products
+        /// </summary>
+        /// <param name="product">takes in the AddProductDTO which contains the information of the product that needs to be added</param>
+        /// <returns>returns a system code with a list of AddProductDTOs.</returns>
         public AutoBuildSystemCodes AddProductToVendorListOfProducts(AddProductDTO product)
         {
             // Authorization check
@@ -311,6 +332,11 @@ namespace AutoBuildApp.DataAccess
             }
         }
 
+        /// <summary>
+        /// This method will edit a product from the vendor's list of products
+        /// </summary>
+        /// <param name="product">takes in the AddProductDTO which contains the information of the product that needs to be added</param>
+        /// <returns>returns a system code with a list of AddProductDTOs.</returns>
         public AutoBuildSystemCodes EditProductInVendorListOfProducts(AddProductDTO product)
         {
             // Authorization check
@@ -360,6 +386,11 @@ namespace AutoBuildApp.DataAccess
             }
         }
 
+        /// <summary>
+        /// This method will delete a product from the vendor's list of products
+        /// </summary>
+        /// <param name="modelNumber">takes in the model number of the product to be deleted</param>
+        /// <returns>returns a system code with a list of AddProductDTOs.</returns>
         public AutoBuildSystemCodes DeleteProductFromVendorList(string modelNumber)
         {
             // Authorization check

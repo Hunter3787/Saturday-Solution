@@ -121,22 +121,14 @@ text {
     line-height: 50px;
   }
   
-  /* .vendor-name {
-    width: 200px;
-    word-wrap: break-word;
-  }
-
-  .vendor-price {
-    width:200px;
-  }
-
-  .vendor-availability {
+  .notify-me-button {
+    text-align: center;
+    margin:auto;
+    margin-top:50px;
     width:100px;
+    height:50px;
+    display:none;
   }
-
-  .vendor-link {
-    width:200px;
-  } */
 
   text {
       font-size: 20px;
