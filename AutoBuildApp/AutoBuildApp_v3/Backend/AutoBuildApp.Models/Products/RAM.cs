@@ -12,7 +12,7 @@ namespace AutoBuildApp.Models.Products
     /// <summary>
     /// Random Access Memory class of type IComponent.
     /// </summary>
-    public class RAM : Component, IComponent
+    public class RAM : Component, Interfaces.Component
     {
         #region "Field Declarations: get; set;"
         public int NumOfModules { get; set; }

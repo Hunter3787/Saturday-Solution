@@ -14,6 +14,10 @@ namespace AutoBuildApp.Models.Enumerations
         UndeclaredVariable,
         FailedParse,
         ProductCreationFailed,
-        Unauthorized
+        Unauthorized,
+        ConnectionError,
+        InsertFailed,
+        DeleteFailed,
+        UpdateFailed
     }
 }

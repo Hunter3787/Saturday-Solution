@@ -22,7 +22,7 @@ namespace AutoBuildApp.Models.Interfaces
         CentralProcUnit Cpu { get; set; }
         RAM Ram { get; set; }
         ICooler CPUCooler { get; set; }
-        List<IComponent> Peripherals { get; set; }
+        List<Component> Peripherals { get; set; }
 
         /// <summary>
         /// Add a hard drive component to the hard drive list.
@@ -41,13 +41,13 @@ namespace AutoBuildApp.Models.Interfaces
         /// </summary>
         /// <param name="add"></param>
         /// <returns></returns>
-        bool AddPeripheral(IComponent add);
+        bool AddPeripheral(Component add);
         /// <summary>
         /// Remove an IComponetn from the peripheral list.
         /// </summary>
         /// <param name="remove"></param>
         /// <returns></returns>
-        bool RemovePeripheral(IComponent remove);
+        bool RemovePeripheral(Component remove);
         /// <summary>
         /// The sum of entire build.
         /// </summary>

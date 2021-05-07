@@ -11,12 +11,12 @@ using AutoBuildApp.Models.Interfaces;
 */
 namespace AutoBuildApp.Services
 {
-    public class BuildManagementService
+    public class BuildWithResponseService
     {
         private BuildDAO _dao;
         private CommonResponse _response;
 
-        public BuildManagementService(BuildDAO buildDAO)
+        public BuildWithResponseService(BuildDAO buildDAO)
         {
             _dao = buildDAO;
         }

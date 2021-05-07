@@ -31,13 +31,13 @@ namespace AutoBuildApp.DataAccess
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public Dictionary<ProductType, List<IComponent>>
-            GetComponentDictionary(List<IComponent> input)
+        public Dictionary<ProductType, List<Component>>
+            GetComponentDictionary(List<Component> input)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                Dictionary<ProductType, List<IComponent>> output = new Dictionary<ProductType, List<IComponent>>();
+                Dictionary<ProductType, List<Component>> output = new Dictionary<ProductType, List<Component>>();
 
                 var stored = "Search_ProductBudget";
                 using ( var command = new SqlCommand())
