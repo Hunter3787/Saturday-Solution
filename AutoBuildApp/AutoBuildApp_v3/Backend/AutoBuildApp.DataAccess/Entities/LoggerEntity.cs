@@ -17,7 +17,11 @@ namespace AutoBuildApp.DataAccess.Entities
 
         public LogTypeEntity LogLevel { get; set; }
 
-        public EventType Event { get; set; }
+        //public EventType Event { get; set; }
+
+
+        public string Event { get; set; }
+
 
         public string EventValue { get; set; }
 

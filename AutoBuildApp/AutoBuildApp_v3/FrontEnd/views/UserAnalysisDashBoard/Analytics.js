@@ -1,13 +1,11 @@
 // instantiation of the fetch URL
 const uri ='https://localhost:5001/analytics';
-let JWT_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiLCJzdWIiOiJBdXRvYnVpbGQgVXNlciIsImF1ZCI6IlVTIiwiaWF0IjoxNjE5NTI1NDkyLCJleHAiOjE2MjAxMzAyOTIsIm5iZiI6MTYyMDEzMDI5MiwiVXNlcm5hbWUiOiJraW5nUGVuaTM5MyIsIlVzZXJDTGFpbXMiOlt7IlBlcm1pc3Npb24iOiJBTEwiLCJzY29wZU9mUGVybWlzc2lvbnMiOiJBTEwifV19.77P2PjnKf9aVF8rAF7ybhpwnUe6b7ug-xlttfefelFw'
-
+let JWT_TOKEN = 
+'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiLCJzdWIiOiJBdXRvYnVpbGQgVXNlciIsImF1ZCI6IlVTIiwiaWF0IjoxNjIwMzg4Nzk3LCJleHAiOjE2MjA5OTM1OTcsIm5iZiI6MTYyMDk5MzU5NywiVXNlcm5hbWUiOiJraW5nUGVuaTM5MyIsIlVzZXJDTGFpbXMiOlt7IlBlcm1pc3Npb24iOiJBbGwiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJBbGwifV19.uOuiOwuHH-qdYYj99W_mnblJz_LIu145FT4NRE9zeug'
 
 let ana =
 document.getElementById("GetAnalytics");
-ana.addEventListener("click", GetAnalytics);
-
-
+ana.addEventListener("click",() => getItems());
 
 const fetchRequest = {
   method: 'GET',
@@ -19,65 +17,127 @@ headers: {
 }
 };
 
+const urlAnalytics = new URL("https://localhost:5001/analytics")
 
-/*    
- function process(){
-    getItems();
-  }
-  
-  function looping(){
-    setTimeout(process, 3000);
-  }
-   */
-  //var refreshData = setInterval(looping, 3000);
-
-
- function GetAnalytics() {
-  console.log('here')
-  document.getElementById("Analytics").innerHTML = "Hello World";
-
-  let customRequest = Object.assign( fetchRequest,{ method: 'GET' });
-
-  fetch(uri, customRequest)
-    //body: JSON.stringify()
-    .then(response => response.json())
-    .then(response => DisplayData(response))
-    .then(response =>  renderAnalyticsData(response.json()))
-    .catch(error => console.error('Unable to get items.', error));
-    //refreshData;
-}
-
-function renderAnalyticsData(response)
+async function FetchGraphData(GraphType)
 {
-let data = response;
+  GraphType = 1;
+  urlAnalytics.searchParams.append('GraphType', GraphType);
+  let customRequest1 = Object.assign( fetchRequest,{ method: 'GET' });
+  try{
 
-data.forEach( data =>
+    let response = await fetch(urlAnalytics, customRequest1);
+    let data = await response.json();
+
+    if(response.status === 200){
+       console.log(response.status);
+      console.log(data);
+      
+      return await response.json();
+    }
+    
+  }
+  catch(error)
   {
-
-  });
-
-
+    console.log(error);
+  }
 
 }
+
+// This function will call a fetch request.
+async function getItems() {
+
+  let GraphType = 1;
+  urlAnalytics.searchParams.append('GraphType', GraphType);
+  let customRequest1 = Object.assign( fetchRequest,{ method: 'GET' });
+  await fetch(urlAnalytics, customRequest1) // fetches the default URI
+      .then(response => response.json()) // Will receive a response from the default response.json.
+      .then(data =>  DisplayAnalyticsData(data))
+}
+
 
 
 // creating a javascript object:
-var chartDatas = {
-      xLabel  : "N/A",
-      yValue  : "N/A",
-      legend  : "N/A"
-  }
-
-var Charts = {
-  chartTitle : " ",
-  yAxisTitle : " ",
-  xAxisTitle : " ",
-   legend    : "NONE",
-  chartType  :   2,
-  xScale     :   2,
-  yScale     :   2,
-  chartDatas : Object.keys(chartDatas),
+const chartDatas = {
+  xLabel  : "N/A",
+  yValue  : "N/A",
+  legend  : "N/A"
 }
+
+const Charts = {
+chartTitle : " ",
+yAxisTitle : " ",
+xAxisTitle : " ",
+legend    : "NONE",
+chartType  :   2,
+xScale     :   2,
+yScale     :   2,
+chartDatas : Object.keys(chartDatas),
+}
+
+
+async function DisplayAnalyticsData(chart)
+{
+    //let chart = await FetchGraphData();
+    const tBody = document.getElementById("Bar2"); 
+    // This will get the id of the form from the HTML.
+    tBody.innerHTML = ' here '; 
+    // appends a null value to the inner HTML, as is not required.
+    
+
+    chart['chartDatas'].forEach(  item =>{
+
+
+
+
+
+      Object.entries(item).forEach(([key, value]) => {
+        console.log(`${key} ${value}`);
+
+        var blockchart = document.createElement('div');
+        blockchart.classList.add('blockchart');
+  
+          // create a title element, appends text to it, 
+          //and then appends all to a build block.
+          var title = document.createElement('p');
+          var titletext = document.createTextNode("chart Datas "+ item);
+          title.appendChild(titletext);
+          blockchart.appendChild(title);
+
+
+
+
+
+
+    });
+    console.log('-------------------');
+
+
+     
+
+
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+    var text =  document.createTextNode(JSON.stringify(chart));
+    tBody.appendChild(text);
+
+
+}
+
+
+
 let graphData = [];
 
 function DisplayData(graphData)

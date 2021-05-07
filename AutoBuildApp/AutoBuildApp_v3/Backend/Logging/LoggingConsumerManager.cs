@@ -55,7 +55,7 @@ namespace AutoBuildApp.Logging
             {
                 Message = logger.Message,
                 LogLevel = (LogTypeEntity)logger.LogLevel,
-                Event = logger.Event,
+                Event = logger.Event.ToString(),
                 EventValue = logger.EventValue,
                 Username = logger.Username,
                 DateTime = logger.DateTime
