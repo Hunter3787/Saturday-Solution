@@ -12,6 +12,10 @@ const fetchRequest = {
         'Authorization': 'bearer ' + token
     }
 };
+const fetchRequestAdd = {
+    method: 'GET',
+    mode: 'cors',
+};
 
 window.onload = function() {
     getItem();
@@ -33,27 +37,16 @@ async function getItem() {
 
     var buildId = sessionStorage.getItem('buildId');
 
-    const customGetRequest = {
-        method: 'GET',
-        mode: 'cors',
-        headers: {
-            'Accept' : 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': 'bearer ' + token
-        }
-    };
+    let customRequest = fetchRequest;
 
-    const customRequest = Object.assign(fetchRequest, {method: 'GET'});
+    customRequest = Object.assign(customRequest, {method: 'GET'});
 
-    console.log(fetchRequest);
+    delete customRequest.body;
 
-    await fetch(`${uri}/${queryString}${buildId}`, customGetRequest) // fetches the default URI
+    await fetch(`${uri}/${queryString}${buildId}`, customRequest) // fetches the default URI
         .then(response => response.json()) // Will receive a response from the default response.json.
         .then(item => displayItem(item)) // will call the display items function.
         .then(() => getReviews())
-        .then(console.log("reloaded"))
-        .catch(error => console.error('Unable to get items.', error)); // will catch an error and print the appropriate error message in console.
-    //refreshData;
 }
 
 async function addLike() {
@@ -66,7 +59,9 @@ async function addLike() {
         userId: "SERGE"
     };
 
-    let customRequest = Object.assign(fetchRequest, {method: 'POST', body: JSON.stringify(like)});
+    let customRequest = fetchRequest;
+
+    customRequest = Object.assign(customRequest, {method: 'POST', body: JSON.stringify(like)});
 
     let uriExtension = "like";
 
@@ -235,7 +230,6 @@ async function getReviews() {
     await fetch(`${reviewsUri}/${uriExtension}`) // fetches the default URI
         .then(response => response.json()) // Will retrieve a response from the default response.json.
         .then(data => displayReviews(data)) // will call the display items function.
-        .catch(error => console.error('Unable to get items.', error)); // will catch an error and print the appropriate error message in console.
 }
 
 // This function will add an item to the DB.
@@ -266,13 +260,9 @@ async function addReview() {
     formData.append("message", addMessageTextbox.value.trim());
     formData.append("image", photo);
 
+    let customRequest = fetchRequestAdd;
 
-    const cooost = {
-        method: 'GET',
-        mode: 'cors',
-    };
-
-    let customRequest = Object.assign(cooost, {method: 'POST', body: formData});
+    customRequest = Object.assign(customRequest, {method: 'POST', body: formData});
 
     await fetch(reviewsUri, customRequest);
 
@@ -282,7 +272,9 @@ async function addReview() {
 // this function will call the delete fetch method.
 async function deleteReview(id) {
 
-    let customRequest = Object.assign(fetchRequest, {method: 'DELETE'});
+    let customRequest = fetchRequest;
+
+    customRequest = Object.assign(customRequest, {method: 'DELETE'});
 
     await fetch(`${reviewsUri}/${id}`, customRequest);
 
@@ -315,12 +307,9 @@ async function updateReview() {
     formData.append("message", document.getElementById('edit-message').value.trim());
     formData.append("image", photo);
 
-    const gtgtgtg = {
-        method: 'GET',
-        mode: 'cors',
-    };
+    let customRequest = fetchRequestAdd;
 
-    let customRequest = Object.assign(gtgtgtg, {method: 'PUT', body: formData});
+    customRequest = Object.assign(customRequest, {method: 'PUT', body: formData});
 
     // This will fetch the PUT request to send the updated object.
     await fetch(reviewsUri, customRequest);
