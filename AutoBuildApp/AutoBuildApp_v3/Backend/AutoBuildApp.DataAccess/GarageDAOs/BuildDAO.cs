@@ -1,4 +1,5 @@
-﻿using AutoBuildApp.Models.Interfaces;
+﻿using AutoBuildApp.Models.Enumerations;
+using AutoBuildApp.Models.Interfaces;
 using System.Collections.Generic;
 
 /**
@@ -17,13 +18,9 @@ namespace AutoBuildApp.DataAccess
             _connectionString = connectionString;
         }
 
-        public IBuild GetBuildByID(int id)
+        public bool InsertBuild(IBuild build, string buildName, string user)
         {
-
-
-
-
-            return null;
+            return false;
         }
 
         public List<IBuild> GetListOfBuilds(string user)
@@ -33,10 +30,6 @@ namespace AutoBuildApp.DataAccess
             return outputList;
         }
 
-        public bool InsertBuild(IBuild build, string buildName, string user)
-        {
-            return false;
-        }
 
         public bool DeleteBuild(int id)
         {
@@ -46,6 +39,18 @@ namespace AutoBuildApp.DataAccess
         public bool ModifyBuild(IBuild incoming, int buildID)
         {
             return false;
+        }
+
+        public SystemCodeWithObject<IBuild> GetBuild(string buidName, string userName)
+        {
+            SystemCodeWithObject<IBuild> output = new SystemCodeWithObject<IBuild>();
+
+
+
+
+
+            output.Code = AutoBuildSystemCodes.Success;
+            return output;
         }
     }
 }
