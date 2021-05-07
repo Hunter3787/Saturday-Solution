@@ -108,5 +108,11 @@ namespace AutoBuildApp.DataAccess
             "AND nameOfShelf = @SHELFNAME " +
             "ORDER BY itemIndex;";
         #endregion
+
+        #region BuildDAO
+        public const string GET_ALL_BUILDS = "";
+
+
+        #endregion
     }
 }
