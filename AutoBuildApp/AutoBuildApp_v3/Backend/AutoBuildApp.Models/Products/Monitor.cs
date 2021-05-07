@@ -10,7 +10,7 @@ using AutoBuildApp.Models.Interfaces;
  */
 namespace AutoBuildApp.Models.Products
 {
-    public class Monitor : IComponent
+    public class Monitor : Interfaces.Component
     {
         #region "Field Declarations: get; set;"
         public ProductType ProductType { get; set; }

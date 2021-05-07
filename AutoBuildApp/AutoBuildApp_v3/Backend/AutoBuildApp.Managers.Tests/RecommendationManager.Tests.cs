@@ -27,7 +27,7 @@ namespace AutoBuildApp.Managers.Tests
         private CentralProcUnit _processor;
         private RAM _ram;
         private ICooler _cooler;
-        private List<IComponent> _periphs;
+        private List<Models.Interfaces.Component> _periphs;
         private IBuild _gamingBuild;
         private BuildFactory _build;
 
@@ -230,7 +230,7 @@ namespace AutoBuildApp.Managers.Tests
                 Fanless = false,
                 WaterCooling = false
             };
-            _periphs = new List<IComponent>()
+            _periphs = new List<Models.Interfaces.Component>()
             {
                 _hd2, _hd2
             };

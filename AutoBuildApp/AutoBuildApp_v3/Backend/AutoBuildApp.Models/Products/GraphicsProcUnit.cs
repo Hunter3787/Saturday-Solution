@@ -10,7 +10,7 @@ using AutoBuildApp.Models.Interfaces;
  */
 namespace AutoBuildApp.Models.Products
 {
-    public class GraphicsProcUnit : Component, IComponent
+    public class GraphicsProcUnit : Component, Interfaces.Component
     {
         #region "Field Declarations: get; set;"
         public string Chipset { get; set; }
