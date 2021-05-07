@@ -1,6 +1,7 @@
 ﻿using AutoBuildApp.DomainModels;
 using AutoBuildApp.DomainModels.Exceptions;
 using AutoBuildApp.Logging;
+using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Services;
 using AutoBuildApp.Services.FeatureServices;
 using Microsoft.AspNetCore.Http;
@@ -40,8 +41,19 @@ namespace AutoBuildApp.Managers
         /// </summary>
         /// <param name="buildPost">takes in a build post object from the controller.</param>
         /// <returns>success state bool value.</returns>
-        public async Task<bool> PublishBuild(BuildPost buildPost)
+        public async Task<bool> PublishBuild(IFormCollection data, List<IFormFile> image)
         {
+            // Initialize a local BuildPost Object to store data into and then pass to the manager.
+            var buildPost = new BuildPost()
+            {
+                Username = data["username"],
+                Title = data["title"],
+                Description = data["description"],
+                BuildType = (BuildType)int.Parse(data["buildType"]),
+                BuildImagePath = data["buildImagePath"],
+                Image = image
+            };
+
             // This try/catch block checks for a null BuildPost object.
             try
             {

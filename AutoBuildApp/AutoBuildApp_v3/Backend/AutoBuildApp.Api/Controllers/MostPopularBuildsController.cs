@@ -1,4 +1,5 @@
-﻿using AutoBuildApp.DataAccess;
+﻿using AutoBuildApp.Api.HelperFunctions;
+using AutoBuildApp.DataAccess;
 using AutoBuildApp.DomainModels;
 using AutoBuildApp.Logging;
 using AutoBuildApp.Managers;
@@ -26,8 +27,11 @@ namespace AutoBuildApp.Api.Controllers
     [ApiController]
     public class MostPopularBuildsController : ControllerBase
     {
+        // Gets the connection string of the Database
+        private static readonly string _connectionString = ConnectionManager.connectionManager.GetConnectionStringByName(ControllerGlobals.LOCALHOST_CONNECTION);
+
         // Initializes the DAO that will be used for builds.
-        private readonly MostPopularBuildsDAO _mostPopularBuildsDAO = new MostPopularBuildsDAO("Server = localhost; Database = DB; Trusted_Connection = True;");
+        private readonly MostPopularBuildsDAO _mostPopularBuildsDAO = new MostPopularBuildsDAO(_connectionString);
 
         // This will start a service when a post fetch is called. and pass in the DAO that will be used.
         private MostPopularBuildsService mostPopularBuildsService;
@@ -35,11 +39,8 @@ namespace AutoBuildApp.Api.Controllers
         // This will start a manager and pass in the service.
         private MostPopularBuildsManager mostPopularBuildsManager;
 
-        // This will start the logging consumer manager in the background so that logs may be sent to the DB.
-        private LoggingConsumerManager _loggingConsumerManager = new LoggingConsumerManager();
-
         // Creates the local instance for the logger
-        private LoggingProducerService _logger = LoggingProducerService.GetInstance;
+        private readonly LoggingProducerService _logger = LoggingProducerService.GetInstance;
 
         /// <summary>
         /// This class will show no content if fetch Options is made.
@@ -67,19 +68,8 @@ namespace AutoBuildApp.Api.Controllers
             // Pass the service into the manager.
             mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
-            // Initialize a local BuildPost Object to store data into and then pass to the manager.
-            var post = new BuildPost();
-
-            // The following 6 lines parse data from the FormData to a BuildPost object.
-            post.Username = data["username"]; 
-            post.Title = data["title"];
-            post.Description = data["description"];
-            post.BuildType = (BuildType)int.Parse(data["buildType"]);
-            post.BuildImagePath = data["buildImagePath"];
-            post.Image = image;
-
             // This will store the bool result of the MPB creation to see if it is a success or fail.
-            var returnsTrue = await mostPopularBuildsManager.PublishBuild(post);
+            var returnsTrue = await mostPopularBuildsManager.PublishBuild(data, image);
 
             // if true, it will return OK, else it will return status code error of 500
             if (returnsTrue)
