@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models;
 using Microsoft.Data.SqlClient;
-using AutoBuildApp.Models.Products;
 using AutoBuildApp.Models.Enumerations;
-using AutoBuildApp.Models.DataTransferObjects;
 
+
+/**
+ * Data Access class that handles sql database queries
+ * and requests, returning AutoBuild specific elements,
+ * such as the Shelf object.
+ * @Author Nick Marshall-Eminger
+ */
 namespace AutoBuildApp.DataAccess
 {
     public class ShelfDAO
@@ -273,7 +277,6 @@ namespace AutoBuildApp.DataAccess
         /// <param name="username">The user associated with the shelf to update.</param>
         /// <returns></returns>
         public SystemCodeWithObject<bool> UpdateQuantity(
-            string modelNumber,
             int itemIndex,
             int quantity,
             string shelfName,
@@ -286,7 +289,6 @@ namespace AutoBuildApp.DataAccess
 
             try
             {
-                IsNotNullOrEmpty(modelNumber);
                 IsNotNullOrEmpty(shelfName);
                 IsNotNullOrEmpty(username);
                 IsNotNull(quantity);
@@ -306,7 +308,10 @@ namespace AutoBuildApp.DataAccess
                     using (SqlCommand command = new SqlCommand())
                     {
                         InitializeSqlCommand(command, connection, AutoBuildSqlQueries.UPDATE_QUANTITY);
-                        // TODO: add parameters. 
+                        command.Parameters.AddWithValue("@ITEMINDEX", itemIndex);
+                        command.Parameters.AddWithValue("@QUANTITY", quantity);
+                        command.Parameters.AddWithValue("@SHELFNAME", shelfName);
+                        command.Parameters.AddWithValue("@USERNAME", username);
 
                         var rowsRemoved = command.ExecuteNonQuery();
                         if (rowsRemoved == 1)

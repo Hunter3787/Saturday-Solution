@@ -53,7 +53,18 @@ namespace AutoBuildApp.DataAccess
             "INNER JOIN UserCredentials UC ON MH.userHashID = UC.userHashID " +
             "WHERE username = @USERNAME));";
 
-        public const string UPDATE_QUANTITY = "";
+        public const string UPDATE_QUANTITY =
+            "UPDATE Save_product_Shelf " +
+            "SET quantity = @QUANTITY " +
+            "WHERE itemIndex = @ITEMINDEX " +
+            "AND shelfID = " +
+            "(SELECT shelfID " +
+            "FROM Shelves " +
+            "WHERE userID = (SELECT UA.userID FROM UserAccounts UA " +
+            "INNER JOIN MappingHash MH ON UA.userID = MH.userID " +
+            "INNER JOIN UserCredentials UC ON MH.userHashID = UC.userHashID " +
+            "WHERE username = @USERNAME) " +
+            "AND nameOfShelf = @SHELFNAME);";
 
         public const string UPDATE_SHELF_NAME =
             "UPDATE Shelves " +
