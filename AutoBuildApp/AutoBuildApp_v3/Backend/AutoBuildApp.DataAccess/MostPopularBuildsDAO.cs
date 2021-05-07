@@ -1,5 +1,7 @@
 ﻿using AutoBuildApp.DataAccess.Entities;
 using AutoBuildApp.DataAccess.Reflections;
+using AutoBuildApp.Security;
+using AutoBuildApp.Security.Enumerations;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -18,12 +20,29 @@ namespace AutoBuildApp.DataAccess
         private readonly string _connectionString; // Stores connection string.
 
         private static string BuildPostTable => nameof(BuildPostEntity);
+
+        // The registered user authorization check.
+        private readonly List<string> _allowedRolesForViewing;
+
+        // The unregistered user authorization check.
+        private readonly List<string> _allowedRolesForPosting;
+
         /// <summary>
         /// Establishes the connection with the connection string that is passed through. 
         /// </summary>
         /// <param name="connectionString">sql database string to be able to connect to database.</param>
         public MostPopularBuildsDAO(string connectionString)
         {
+            _allowedRolesForViewing = new List<string>()
+            {
+                RoleEnumType.UnregisteredRole
+            };
+
+            _allowedRolesForPosting = new List<string>()
+            {
+                RoleEnumType.BasicRole
+            };
+
             _connectionString = connectionString;
         }
 
@@ -35,6 +54,12 @@ namespace AutoBuildApp.DataAccess
         /// <returns>bool true if success, and false if unsuccessful.</returns>
         public bool PublishBuildRecord(BuildPostEntity buildPostEntity)
         {
+            // Authorization check
+            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
+            {
+                return false;
+            }
+
             // uses var connection and will automatically close once the using block has reached the end.
             using (var conn = new SqlConnection(_connectionString))
             {
@@ -89,7 +114,7 @@ namespace AutoBuildApp.DataAccess
         /// <returns>bool true if success, and false if unsuccessful.</returns>
         public bool PublishBuildRecord(BuildPostEntity buildPostEntity, string tableName)
         {
-            buildPostEntity.EntityId = $"{BuildPostTable}_{DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}";
+            // buildPostEntity.EntityId = $"{BuildPostTable}_{DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}";
             // uses var connection and will automatically close once the using block has reached the end.
             using (var conn = new SqlConnection(_connectionString))
             {
@@ -166,6 +191,12 @@ namespace AutoBuildApp.DataAccess
         /// <returns>retruns an entity object.</returns>
         public BuildPostEntity GetBuildPostRecord(string buildId)
         {
+            // Authorization check
+            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
+            {
+                return null;
+            }
+
             // uses var connection and will automatically close once the using block has reached the end.
             using (var conn = new SqlConnection(_connectionString))
             {
@@ -228,6 +259,12 @@ namespace AutoBuildApp.DataAccess
         /// <returns>returns a list of entities.</returns>
         public List<BuildPostEntity> GetAllBuildPostRecordsByQuery(string orderLikes, string buildType)
         {
+            // Authorization check
+            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
+            {
+                return null;
+            }
+
             // Initialize the query string.
             string orderBy = "ORDER BY LikeIncrementor DESC";
             string whereClause = "";
@@ -310,6 +347,12 @@ namespace AutoBuildApp.DataAccess
         /// <returns>returns a success state bool.</returns>
         public bool AddLike(LikeEntity likeEntity)
         {
+            // Authorization check
+            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
+            {
+                return false;
+            }
+
             // uses var connection and will automatically close once the using block has reached the end.
             using (var conn = new SqlConnection(_connectionString))
             {

@@ -13,6 +13,10 @@ const fetchRequest = {
     }
 };
 
+window.onload = function() {
+    getItem();
+};
+
 function process(){
     getItem();
 }

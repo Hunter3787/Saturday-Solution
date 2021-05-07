@@ -12,6 +12,10 @@ const fetchRequest = {
     }
 };
 
+window.onload = function() {
+  getItems();
+};
+
 // Adds an event listener for the key up event for a search filter.
 let searchFilter = document.getElementById('sbn');
 searchFilter.addEventListener("keyup", () => findByName(searchFilter));
