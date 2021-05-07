@@ -1,0 +1,148 @@
+h1 {
+    max-width: 50%;
+    margin:auto;
+    margin-top:50px;
+    text-align: center;
+}
+
+h3 {
+    font-size: 25px;
+}
+/* star stuff */
+/*
+
+.star label::before{
+    content:'★';
+}
+/* .stars label::before{
+    content: '★★★★★';
+    text-align: center;
+    font-size: 75px;
+    color: grey;
+    display:table;
+    text-shadow: 1px 1px #bbb;
+    width: 50%;
+    margin: 0 auto;
+    background: linear-gradient(to right, blue 50%, yellow 50%)
+} 
+
+.stars input{
+    display:none;
+}
+
+*/
+
+.image-rating-review{
+    text-align: center;
+}
+
+.product-image{
+    margin-top:50px;
+}
+
+body {
+    margin-left:200px
+}
+
+.side-nav {
+    height: 100%;
+    width: 300px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: rgb(231, 231, 231);
+    overflow-x: hidden;
+    padding-top: 20px;
+    border-right: 0px solid black;
+    padding-left:25px;
+    padding-right:25px;
+  }
+
+.side-nav h1{
+    max-width: 100%;
+    text-align: center;
+    margin-bottom: 75px;
+    text-decoration: underline;
+
+}
+
+.side-nav h3, .side-nav text {
+    font-size: 25px;
+    max-width:250px;
+    word-wrap: break-word;
+}
+
+text {
+    font-size: 20px;
+}
+
+.vendor-information-table{
+     margin:auto;
+    margin-top:100px;
+    /* width:50%  */
+  display: table;   
+  /* margin-bottom: 100px;       */
+  border: 1px solid black;         
+}
+
+.vendor-information-row-div {
+    float: left; 
+    width: 200px;
+    height: 60px;
+    /* line-height: 75px; */
+    display: block;
+    position: relative;
+    text-align: center;
+    word-wrap: break-word;
+    overflow: auto;
+    border: 1px solid black;
+    padding: 5px 5px 5px 5px;
+}
+.vendor-information-row-header-div { 
+    float: left; 
+    width: 200px;
+    height: 50px;
+    display: block;
+    position: relative;
+    text-align: center;
+    word-wrap: break-word;
+    overflow: auto;
+    border: 1px solid black;
+    padding: 5px 5px 5px 5px;
+    /* font-size:20px; */
+  }
+
+  .vendor-information-row-header {
+    display: flex;
+    width: auto;
+    clear: both;
+    position: relative;
+    line-height: 50px;
+  }
+  
+  /* .vendor-name {
+    width: 200px;
+    word-wrap: break-word;
+  }
+
+  .vendor-price {
+    width:200px;
+  }
+
+  .vendor-availability {
+    width:100px;
+  }
+
+  .vendor-link {
+    width:200px;
+  } */
+
+  text {
+      font-size: 20px;
+      text-align: center;
+  }
+
+  a {
+      font-size:20px
+  }

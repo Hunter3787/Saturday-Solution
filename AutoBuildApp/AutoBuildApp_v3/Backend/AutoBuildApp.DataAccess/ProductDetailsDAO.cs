@@ -68,6 +68,7 @@ namespace AutoBuildApp.DataAccess
                             // Get basic product information
                             while (reader.Read())
                             {
+                                product.ProductName = (string)reader["productName"];
                                 product.ImageUrl = (string)reader["imageUrl"];
                                 product.ProductType = (string)reader["productType"];
                                 product.ModelNumber = modelNumber;
@@ -113,7 +114,6 @@ namespace AutoBuildApp.DataAccess
                                 review.Date = (string)reader["reviewDate"];
 
                                 vendorInformation[currentVendor].Reviews.Add(review);
-                                Console.WriteLine(product);
 
                                 // Add to total rating
                                 totalRating += Int32.Parse(review.StarRating);
