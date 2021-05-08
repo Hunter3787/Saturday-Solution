@@ -117,7 +117,7 @@ namespace AutoBuildApp.Manger.Tests
 
             ResponseUAD expectedResponse = new ResponseUAD()
             {
-                ResponseBool =  true,
+                IsSuccessful =  true,
                 ConnectionState = true,
                // IsAuthorized = true
             };

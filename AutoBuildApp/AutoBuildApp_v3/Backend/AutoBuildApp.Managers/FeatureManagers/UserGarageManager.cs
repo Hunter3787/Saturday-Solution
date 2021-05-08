@@ -54,7 +54,7 @@ namespace AutoBuildApp.Managers
                 return new CommonResponse()
                 {
                     ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS,
-                    ResponseBool = false
+                    IsSuccessful = false
                 };
             }
             NullGuard.IsNotNull(build);
@@ -197,7 +197,7 @@ namespace AutoBuildApp.Managers
             {
                 output.GenericObject = new Shelf();
                 output.ResponseString = ResponseStringGlobals.INVALID_INPUT;
-                output.ResponseBool = false;
+                output.IsSuccessful = false;
                 return output;
 
             }
@@ -205,7 +205,7 @@ namespace AutoBuildApp.Managers
             {
                 output.GenericObject = new Shelf();
                 output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
-                output.ResponseBool = false;
+                output.IsSuccessful = false;
                 return output;
             }
 

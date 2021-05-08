@@ -100,7 +100,7 @@ namespace AutoBuildApp.DataAccess.Test
 
             ResponseUAD expectedSuccessUAD = new ResponseUAD()
             {
-                ResponseBool = true,
+                IsSuccessful = true,
                 ConnectionState = true,
             };
             ResponseUAD expectedFailedUAD = new ResponseUAD()

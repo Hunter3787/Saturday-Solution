@@ -13,7 +13,7 @@ namespace AutoBuildApp.Models.DataTransferObjects
         /// a bool value to check incoming object if it succeeded or failed 
         /// to cast as necessary 
         /// </summary>
-        public bool ResponseBool { get; set; }
+        public bool IsSuccessful { get; set; }
 
         /// <summary>
         /// the response sttring encompases both success or fail string.

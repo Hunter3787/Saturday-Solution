@@ -33,7 +33,7 @@ namespace AutoBuildApp.DataAccess
         {
             ResponseString = " ";
             JWTString = " ";
-            ResponseBool = false;
+            IsSuccessful = false;
             IsUserExists = false;
             isAuthenticated = false;
             connectionState = false;
@@ -44,7 +44,7 @@ namespace AutoBuildApp.DataAccess
         public override string ToString()
         {
             return $"\nResponse String {ResponseString }\n" +
-              $"Success Bool {ResponseBool}\nIsAuthenticated {isAuthenticated}\n" +
+              $"Success Bool {IsSuccessful}\nIsAuthenticated {isAuthenticated}\n" +
               $"Connection bool {connectionState}\n" +
               $"IsUser Exists {IsUserExists}";
 
@@ -57,7 +57,7 @@ namespace AutoBuildApp.DataAccess
                 return false;
             }
             if (this.ResponseString == other.ResponseString &&
-               this.ResponseBool == other.ResponseBool &&
+               this.IsSuccessful == other.IsSuccessful &&
                this.isAuthenticated == other.isAuthenticated &&
                this.IsUserExists == other.IsUserExists &&
                this.connectionState == other.connectionState)

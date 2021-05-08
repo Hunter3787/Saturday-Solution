@@ -18,7 +18,7 @@ namespace AutoBuildApp.DataAccess
         {
 
             ResponseString = " ";
-            ResponseBool = false;
+            IsSuccessful = false;
             ConnectionState = true;
             GetChartDatas = new List<ChartData>();
             LegendTitle = " ";
@@ -31,7 +31,7 @@ namespace AutoBuildApp.DataAccess
         {
             return 
                 $"\nResponse String {ResponseString }\n" +
-                $"Success Bool {ResponseBool}\n" +
+                $"Success Bool {IsSuccessful}\n" +
                 $"Connection bool {ConnectionState}\n";
 
         }

@@ -29,7 +29,7 @@ namespace AutoBuildApp.DataAccess.Test
 
             CommonReponseAuth ExpectedReponseNULL =
                 new CommonReponseAuth();
-            ExpectedReponseNULL.ResponseBool= false;
+            ExpectedReponseNULL.IsSuccessful= false;
             ExpectedReponseNULL.ResponseString = "NULL EXCEPTION";
 
 

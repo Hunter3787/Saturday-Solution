@@ -39,7 +39,7 @@ function register() {
     })
       .then(response => response.json())
       .then(response => displayResponse(response))
-      .catch(error => console.error('Unable to Authenticate.', error));
+      //.catch(error => console.error('Unable to Authenticate.', error));
   
     return false;
   }

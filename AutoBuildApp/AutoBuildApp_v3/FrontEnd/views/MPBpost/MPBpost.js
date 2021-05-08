@@ -1,8 +1,6 @@
-const uri = 'https://localhost:5001/mostpopularbuilds';
-const reviewsUri = 'https://localhost:5001/reviewrating';
 let posts = [];
 let reviews = [];
-let token = ' ';
+let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiLCJzdWIiOiJBdXRvYnVpbGQgVXNlciIsImF1ZCI6IlVTIiwiaWF0IjoxNjIwNDMzNDI2LCJleHAiOjE2MjEwMzgyMjYsIm5iZiI6MTYyMTAzODIyNiwiVXNlcm5hbWUiOiJTRVJHRSIsIlVzZXJDTGFpbXMiOlt7IlBlcm1pc3Npb24iOiJDcmVhdGUiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJSZXZpZXdzIn0seyJQZXJtaXNzaW9uIjoiRGVsZXRlIiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZiJ9LHsiUGVybWlzc2lvbiI6IkRlbGV0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNlbGZSZXZpZXdzIn0seyJQZXJtaXNzaW9uIjoiRWRpdCIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNlbGYifSx7IlBlcm1pc3Npb24iOiJSZWFkT25seSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IkF1dG9CdWlsZCJ9LHsiUGVybWlzc2lvbiI6IlVwZGF0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNlbGYifSx7IlBlcm1pc3Npb24iOiJVcGRhdGUiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJTZWxmUmV2aWV3cyJ9XX0.ZRTrsLvZXhhKIaXbhUgbDAMBus7oIBj8qDKreA5cJck';
 const fetchRequest = {
     method: 'GET',
     mode: 'cors',
@@ -43,7 +41,9 @@ async function getItem() {
 
     delete customRequest.body;
 
-    await fetch(`${uri}/${queryString}${buildId}`, customRequest) // fetches the default URI
+    let endpoint = appConfigurations.Endpoints.MostPopularBuilds || '';
+
+    await fetch(`${endpoint}${queryString}${buildId}`, customRequest) // fetches the default URI
         .then(response => response.json()) // Will receive a response from the default response.json.
         .then(item => displayItem(item)) // will call the display items function.
         .then(() => getReviews())
@@ -65,7 +65,9 @@ async function addLike() {
 
     let uriExtension = "like";
 
-    await fetch(`${uri}/${uriExtension}`, customRequest)
+    let endpoint = appConfigurations.Endpoints.MostPopularBuilds || '';
+
+    await fetch(`${endpoint}${uriExtension}`, customRequest)
         .then(() => getItem())
 }
 
@@ -227,7 +229,9 @@ async function getReviews() {
 
     let uriExtension = 'build/?buildId=' + sessionStorage.getItem('buildId');
 
-    await fetch(`${reviewsUri}/${uriExtension}`) // fetches the default URI
+    let endpoint = appConfigurations.Endpoints.ReviewsRatings || '';
+
+    await fetch(`${endpoint}/${uriExtension}`) // fetches the default URI
         .then(response => response.json()) // Will retrieve a response from the default response.json.
         .then(data => displayReviews(data)) // will call the display items function.
 }
@@ -264,7 +268,9 @@ async function addReview() {
 
     customRequest = Object.assign(customRequest, {method: 'POST', body: formData});
 
-    await fetch(reviewsUri, customRequest);
+    let endpoint = appConfigurations.Endpoints.ReviewsRatings || '';
+
+    await fetch(endpoint, customRequest);
 
     getItem();
 }
@@ -276,7 +282,9 @@ async function deleteReview(id) {
 
     customRequest = Object.assign(customRequest, {method: 'DELETE'});
 
-    await fetch(`${reviewsUri}/${id}`, customRequest);
+    let endpoint = appConfigurations.Endpoints.ReviewsRatings || '';
+
+    await fetch(`${endpoint}/${id}`, customRequest);
 
     getItem();
 }
@@ -311,8 +319,10 @@ async function updateReview() {
 
     customRequest = Object.assign(customRequest, {method: 'PUT', body: formData});
 
+    let endpoint = appConfigurations.Endpoints.ReviewsRatings || '';
+
     // This will fetch the PUT request to send the updated object.
-    await fetch(reviewsUri, customRequest);
+    await fetch(endpoint, customRequest);
 
     closeInput(); // will close the form when it is complete.
 

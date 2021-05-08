@@ -18,6 +18,8 @@ namespace AutoBuildApp.Models.Enumerations
         ConnectionError,
         InsertFailed,
         DeleteFailed,
-        UpdateFailed
+        UpdateFailed,
+        NullValue
+
     }
 }

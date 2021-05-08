@@ -30,12 +30,12 @@ namespace AutoBuildApp.Services
                 _dao.InsertBuild(build, buildName, user);
 
 
-                _response.ResponseBool = true;
+                _response.IsSuccessful = true;
                 _response.ResponseString = ResponseStringGlobals.SUCCESSFUL_ADDITION;
             }
             catch (TimeoutException)
             {
-                _response.ResponseBool = false;
+                _response.IsSuccessful = false;
                 _response.ResponseString = ResponseStringGlobals.DATABASE_TIMEOUT;
             }
 
@@ -48,12 +48,12 @@ namespace AutoBuildApp.Services
 
             try
             {
-                _response.ResponseBool = true;
+                _response.IsSuccessful = true;
                 _response.ResponseString = ResponseStringGlobals.SUCCESSFUL_ADDITION;
             }
             catch (TimeoutException)
             {
-                _response.ResponseBool = false;
+                _response.IsSuccessful = false;
                 _response.ResponseString = ResponseStringGlobals.DATABASE_TIMEOUT;
             }
 
@@ -66,12 +66,12 @@ namespace AutoBuildApp.Services
 
             try
             {
-                _response.ResponseBool = true;
+                _response.IsSuccessful = true;
                 _response.ResponseString = ResponseStringGlobals.SUCCESSFUL_DELETION;
             }
             catch (TimeoutException)
             {
-                _response.ResponseBool = false;
+                _response.IsSuccessful = false;
                 _response.ResponseString = ResponseStringGlobals.DATABASE_TIMEOUT;
             }
 

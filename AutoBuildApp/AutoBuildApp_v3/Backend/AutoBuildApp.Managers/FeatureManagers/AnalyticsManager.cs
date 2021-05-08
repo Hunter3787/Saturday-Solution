@@ -175,7 +175,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
 
                 return dataDTO;
             }
-            if (!responseUAD.ResponseBool|| responseUAD.GetChartDatas == null)
+            if (!responseUAD.IsSuccessful|| responseUAD.GetChartDatas == null)
             {
                 dataDTO.SuccessFlag = responseUAD.ResponseBool;
                 dataDTO.Result = responseUAD.ResponseString;
