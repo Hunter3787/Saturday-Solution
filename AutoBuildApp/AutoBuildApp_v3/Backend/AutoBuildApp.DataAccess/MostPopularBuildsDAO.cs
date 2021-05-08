@@ -36,7 +36,8 @@ namespace AutoBuildApp.DataAccess
         {
             _allowedRolesForViewing = new List<string>()
             {
-                RoleEnumType.UnregisteredRole
+                RoleEnumType.UnregisteredRole,
+                RoleEnumType.BasicRole
             };
 
             _allowedRolesForPosting = new List<string>()
@@ -56,7 +57,7 @@ namespace AutoBuildApp.DataAccess
         public bool PublishBuildRecord(BuildPostEntity buildPostEntity)
         {
             // Authorization check
-            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
+            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForPosting))
             {
                 return false;
             }
@@ -351,7 +352,7 @@ namespace AutoBuildApp.DataAccess
         public bool AddLike(LikeEntity likeEntity)
         {
             // Authorization check
-            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
+            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForPosting))
             {
                 return false;
             }
