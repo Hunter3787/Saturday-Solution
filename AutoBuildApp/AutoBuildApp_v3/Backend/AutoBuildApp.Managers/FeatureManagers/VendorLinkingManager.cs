@@ -21,7 +21,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
     /// </summary>
     public class VendorLinkingManager
     {
-        private List<string> _allowedRoles;
+        public List<string> _allowedRoles;
         private readonly LoggingProducerService _logger = LoggingProducerService.GetInstance;
         private readonly ConcurrentDictionary<string, ConcurrentDictionary<string, byte>> vendorsProducts;
         private VendorLinkingService _vendorLinkingService;
@@ -29,10 +29,10 @@ namespace AutoBuildApp.Managers.FeatureManagers
         /// <summary>
         /// This default constructor to initalize the service.
         /// </summary>
-        /// <param name="connectionString">sql database string to be able to connect to database.</param>
-        public VendorLinkingManager(string connectionString)
+        /// <param name="vendorLinkingService"> passes the service into the manager</param>
+        public VendorLinkingManager(VendorLinkingService vendorLinkingService)
         {
-            _vendorLinkingService = new VendorLinkingService(connectionString);
+            _vendorLinkingService = vendorLinkingService;
             CommonResponseWithObject<ConcurrentDictionary<string, ConcurrentDictionary<string, byte>>> response = _vendorLinkingService.PopulateVendorsProducts();
             //Todo: fix cache
             vendorsProducts = _vendorLinkingService.PopulateVendorsProducts().GenericObject;
@@ -71,7 +71,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
                 string Price = formData["price"];
                 string Url = formData["url"];
 
-                if (formData["modelNumber"] == "Model Number" || String.IsNullOrEmpty(Name) || String.IsNullOrEmpty(Price) || String.IsNullOrEmpty(Url))
+                if (formData["modelNumber"] == "Model Number" || String.IsNullOrEmpty(formData["modelNumber"]) || String.IsNullOrEmpty(Name) || String.IsNullOrEmpty(Price) || String.IsNullOrEmpty(Url))
                 {
                     throw new FormatException("Invalid input");
                 } 
@@ -122,10 +122,10 @@ namespace AutoBuildApp.Managers.FeatureManagers
         /// <param name="filtersString">takes in filters as a string which will be used to filter the product types that the user wants</param>
         /// <param name="order">takes in order as a string which will be used to order the products</param>
         /// <returns>retruns a common response object with a GetProductByFilterDTO</returns>
-        public CommonResponseWithObject<GetProductByFilterDTO> ConvertToGetProductByFilterDTO(string filtersString, string order)
+        public CommonResponseWithObject<ProductByFilterDTO> ConvertToGetProductByFilterDTO(string filtersString, string order)
         {
             // Initialize a common response object
-            CommonResponseWithObject<GetProductByFilterDTO> commonResponse = new CommonResponseWithObject<GetProductByFilterDTO>();
+            CommonResponseWithObject<ProductByFilterDTO> commonResponse = new CommonResponseWithObject<ProductByFilterDTO>();
 
             // Check authorization
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
@@ -321,7 +321,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
         /// </summary>
         /// <param name="filters">takes in a GetProductByFilterDTO and passes it to the service layer</param>
         /// <returns>retruns a common response object with a list of AddProductDTOs</returns>
-        public CommonResponseWithObject<List<AddProductDTO>> GetAllProductsByVendor(GetProductByFilterDTO filters)
+        public CommonResponseWithObject<List<AddProductDTO>> GetAllProductsByVendor(ProductByFilterDTO filters)
         {
             // Initialize a common response object
             CommonResponseWithObject<List<AddProductDTO>> commonResponse = new CommonResponseWithObject<List<AddProductDTO>>();

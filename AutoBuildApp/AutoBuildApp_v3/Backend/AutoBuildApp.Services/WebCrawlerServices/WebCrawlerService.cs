@@ -38,9 +38,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
         {
             WaitUntil = new[]
             {
-                //WaitUntilNavigation.Load,
                 WaitUntilNavigation.DOMContentLoaded,
-                //WaitUntilNavigation.Networkidle2
             }
         };
         private Dictionary<string, string> headers = new Dictionary<string, string>

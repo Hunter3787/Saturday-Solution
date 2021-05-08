@@ -4,9 +4,9 @@ using System.Text;
 
 namespace AutoBuildApp.Models.VendorLinking
 {
-    public class GetProductByFilterDTO
+    public class ProductByFilterDTO
     {
-        public Dictionary<string, bool> FilteredListOfProducts { get; private set; } = new Dictionary<string, bool>();
+        public Dictionary<string, bool> FilteredListOfProducts { get; set; } = new Dictionary<string, bool>();
         public string PriceOrder { get; set; }
     }
 }

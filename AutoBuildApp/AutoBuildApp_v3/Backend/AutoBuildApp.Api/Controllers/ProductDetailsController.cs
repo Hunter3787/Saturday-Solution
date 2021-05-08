@@ -1,7 +1,9 @@
 ﻿using AutoBuildApp.Api.HelperFunctions;
+using AutoBuildApp.DataAccess;
 using AutoBuildApp.Logging;
 using AutoBuildApp.Managers.FeatureManagers;
 using AutoBuildApp.Models.DataTransferObjects;
+using AutoBuildApp.Services.FeatureServices;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,10 +21,15 @@ namespace AutoBuildApp.Api.Controllers
         private LoggingConsumerManager _loggingConsumerManager = new LoggingConsumerManager();
         private LoggingProducerService _logger = LoggingProducerService.GetInstance;
         private ProductDetailsManager _productDetailsManager;
+        private ProductDetailsService _productDetailsService;
+        private ProductDetailsDAO _productDetailsDAO;
 
         public ProductDetailsController()
         {
-            _productDetailsManager = new ProductDetailsManager(ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
+            // Set each respective layer to their constructor and pass in its respective layers to the parameter
+            _productDetailsDAO = new ProductDetailsDAO(ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
+            _productDetailsService = new ProductDetailsService(_productDetailsDAO);
+            _productDetailsManager = new ProductDetailsManager(_productDetailsService);
         }
 
         /// <summary>

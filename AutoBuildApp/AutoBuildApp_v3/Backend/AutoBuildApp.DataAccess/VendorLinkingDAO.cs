@@ -38,7 +38,7 @@ namespace AutoBuildApp.DataAccess
         /// This method retrieves data from the DB by getting all vendors products and saving it in a cache
         /// </summary>
         /// <returns>returns a system code with a concurrent dictionary of string and concurrent dictionary of string and byte</returns>
-        public SystemCodeWithObject<ConcurrentDictionary<string, ConcurrentDictionary<string, byte>>> PopulateVendorsProducts()
+        public virtual SystemCodeWithObject<ConcurrentDictionary<string, ConcurrentDictionary<string, byte>>> PopulateVendorsProducts()
         {
             // Initialize the system code response object with the concurrent dictionary as the generic collection
             SystemCodeWithObject<ConcurrentDictionary<string, ConcurrentDictionary<string, byte>>> response = new SystemCodeWithObject<ConcurrentDictionary<string, ConcurrentDictionary<string, byte>>>();
@@ -114,7 +114,7 @@ namespace AutoBuildApp.DataAccess
         /// This method retrieves data from the DB by getting all model numbers
         /// </summary>
         /// <returns>returns a system code with a list of strings</returns>
-        public SystemCodeWithObject<List<string>> GetAllModelNumbers()
+        public virtual SystemCodeWithObject<List<string>> GetAllModelNumbers()
         {
             // Initialize the system code response object
             SystemCodeWithObject<List<string>> response = new SystemCodeWithObject<List<string>>();
@@ -123,6 +123,8 @@ namespace AutoBuildApp.DataAccess
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
                 response.Code = AutoBuildSystemCodes.Unauthorized;
+                response.GenericObject = null;
+
                 return response;
             }
 
@@ -178,15 +180,26 @@ namespace AutoBuildApp.DataAccess
         /// </summary>
         /// <param name="product">takes in the GetProductByFilterDTO which contains the filters and the order</param>
         /// <returns>returns a system code with a list of AddProductDTOs.</returns>
-        public SystemCodeWithObject<List<AddProductDTO>> GetVendorProductsByFilter(GetProductByFilterDTO product)
+        public virtual SystemCodeWithObject<List<AddProductDTO>> GetVendorProductsByFilter(ProductByFilterDTO product)
         {
             // Initialize the system code response object
             SystemCodeWithObject<List<AddProductDTO>> response = new SystemCodeWithObject<List<AddProductDTO>>();
+
+            // Product null check
+            if (product == null)
+            {
+                response.Code = AutoBuildSystemCodes.NullValue;
+                response.GenericObject = null;
+
+                return response;
+            }
 
             // Authorization check
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
                 response.Code = AutoBuildSystemCodes.Unauthorized;
+                response.GenericObject = null;
+
                 return response;
             }
 
@@ -254,6 +267,7 @@ namespace AutoBuildApp.DataAccess
                                 productInfo.Url = (string)reader["VendorLinkURL"];
                                 productInfo.ModelNumber = (string)reader["modelNumber"];
                                 productInfo.Price = Decimal.ToDouble(reader["productPrice"] == DBNull.Value ? 0 : (decimal)reader["productPrice"]);
+                                productInfo.ProductType = (string)reader["ProductType"];
 
                                 allProductsByVendor.Add(productInfo);
                             }
@@ -284,12 +298,27 @@ namespace AutoBuildApp.DataAccess
         /// </summary>
         /// <param name="product">takes in the AddProductDTO which contains the information of the product that needs to be added</param>
         /// <returns>returns a system code with a list of AddProductDTOs.</returns>
-        public AutoBuildSystemCodes AddProductToVendorListOfProducts(AddProductDTO product)
+        public virtual SystemCodeWithObject<int> AddProductToVendorListOfProducts(AddProductDTO product)
         {
+            // Initialize the system code response object
+            SystemCodeWithObject<int> response = new SystemCodeWithObject<int>();
+
+            // Product null check
+            if (product == null)
+            {
+                response.Code = AutoBuildSystemCodes.NullValue;
+                response.GenericObject = -1;
+
+                return response;
+            }
+
             // Authorization check
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
-                return AutoBuildSystemCodes.Unauthorized;
+                response.Code = AutoBuildSystemCodes.Unauthorized;
+                response.GenericObject = -1;
+
+                return response;
             }
 
             // Get the current principal on the thread
@@ -316,17 +345,24 @@ namespace AutoBuildApp.DataAccess
                         adapter.InsertCommand.Parameters.Add("@PRODUCTSTATUS", SqlDbType.VarChar).Value = product.Availability;
                         adapter.InsertCommand.Parameters.Add("@PRODUCTPRICE", SqlDbType.VarChar).Value = product.Price;
 
-                        adapter.InsertCommand.ExecuteNonQuery();
+                        int rowsReturned = adapter.InsertCommand.ExecuteNonQuery();
+
                         transaction.Commit();
 
-                        return AutoBuildSystemCodes.Success;
+                        response.Code = AutoBuildSystemCodes.Success;
+                        response.GenericObject = rowsReturned;
+
+                        return response;
                     }
                     catch (SqlException ex)
                     {
                         transaction.Rollback();
 
                         // Passes the exception number to a handler which returns an AutoBuildSystemCode
-                        return SqlExceptionHandler.GetCode(ex.Number);
+                        response.Code = SqlExceptionHandler.GetCode(ex.Number);
+                        response.GenericObject = -1;
+
+                        return response;
                     }
                 }
             }
@@ -337,12 +373,27 @@ namespace AutoBuildApp.DataAccess
         /// </summary>
         /// <param name="product">takes in the AddProductDTO which contains the information of the product that needs to be added</param>
         /// <returns>returns a system code with a list of AddProductDTOs.</returns>
-        public AutoBuildSystemCodes EditProductInVendorListOfProducts(AddProductDTO product)
+        public virtual SystemCodeWithObject<int> EditProductInVendorListOfProducts(AddProductDTO product)
         {
+            // Initialize the system code response object
+            SystemCodeWithObject<int> response = new SystemCodeWithObject<int>();
+
+            // Product null check
+            if (product == null)
+            {
+                response.Code = AutoBuildSystemCodes.NullValue;
+                response.GenericObject = -1;
+
+                return response;
+            }
+
             // Authorization check
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
-                return AutoBuildSystemCodes.Unauthorized;
+                response.Code = AutoBuildSystemCodes.Unauthorized;
+                response.GenericObject = -1;
+
+                return response;
             }
 
             // Get the current principal on the thread
@@ -369,17 +420,24 @@ namespace AutoBuildApp.DataAccess
                         adapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = product.ModelNumber;
                         adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = vendor;
 
-                        adapter.InsertCommand.ExecuteNonQuery();
+                        int rowsReturned = adapter.InsertCommand.ExecuteNonQuery();
+
                         transaction.Commit();
 
-                        return AutoBuildSystemCodes.Success;
+                        response.Code = AutoBuildSystemCodes.Success;
+                        response.GenericObject = rowsReturned;
+
+                        return response;
                     }
                     catch (SqlException ex)
                     {
                         transaction.Rollback();
 
                         // Passes the exception number to a handler which returns an AutoBuildSystemCode
-                        return SqlExceptionHandler.GetCode(ex.Number);
+                        response.Code = SqlExceptionHandler.GetCode(ex.Number);
+                        response.GenericObject = -1;
+
+                        return response;
 
                     }
                 }
@@ -391,12 +449,27 @@ namespace AutoBuildApp.DataAccess
         /// </summary>
         /// <param name="modelNumber">takes in the model number of the product to be deleted</param>
         /// <returns>returns a system code with a list of AddProductDTOs.</returns>
-        public AutoBuildSystemCodes DeleteProductFromVendorList(string modelNumber)
+        public virtual SystemCodeWithObject<int> DeleteProductFromVendorList(string modelNumber)
         {
+            // Initialize the system code response object
+            SystemCodeWithObject<int> response = new SystemCodeWithObject<int>();
+
+            // Product null check
+            if (String.IsNullOrEmpty(modelNumber))
+            {
+                response.Code = AutoBuildSystemCodes.NullValue;
+                response.GenericObject = -1;
+
+                return response;
+            }
+
             // Authorization check
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
-                return AutoBuildSystemCodes.Unauthorized;
+                response.Code = AutoBuildSystemCodes.Unauthorized;
+                response.GenericObject = -1;
+
+                return response;
             }
 
             // Get the current principal on the thread
@@ -418,17 +491,24 @@ namespace AutoBuildApp.DataAccess
                         adapter.InsertCommand.Parameters.Add("@VENDORNAME", SqlDbType.VarChar).Value = vendor;
                         adapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = modelNumber;
 
-                        adapter.InsertCommand.ExecuteNonQuery();
+                        int rowsReturned = adapter.InsertCommand.ExecuteNonQuery();
+
                         transaction.Commit();
 
-                        return AutoBuildSystemCodes.Success;
+                        response.Code = AutoBuildSystemCodes.Success;
+                        response.GenericObject = rowsReturned;
+
+                        return response;
                     }
                     catch (SqlException ex)
                     {
                         transaction.Rollback();
 
                         // Passes the exception number to a handler which returns an AutoBuildSystemCode
-                        return SqlExceptionHandler.GetCode(ex.Number);
+                        response.Code = SqlExceptionHandler.GetCode(ex.Number);
+                        response.GenericObject = -1;
+
+                        return response;
                     }
                 }
             }

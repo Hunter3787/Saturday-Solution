@@ -22,9 +22,9 @@ namespace AutoBuildApp.Services.FeatureServices
         /// This default constructor to initalize the service. Creates a VendorLinkingDAO object
         /// </summary>
         /// <param name="connectionString">sql database string to be able to connect to database.</param>
-        public ProductDetailsService(string connectionString)
+        public ProductDetailsService(ProductDetailsDAO productDetailsDAO)
         {
-            _productDetailsDAO = new ProductDetailsDAO(connectionString);
+            _productDetailsDAO = productDetailsDAO;
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace AutoBuildApp.Services.FeatureServices
         /// </summary>
         /// <param name="modelNumber">passes in a model number which will be passed to the DAO</param>
         /// <returns>returns a common response object</returns>
-        public CommonResponseWithObject<ProductDetailsDTO> GetProductByModelNumber(string modelNumber)
+        public virtual CommonResponseWithObject<ProductDetailsDTO> GetProductByModelNumber(string modelNumber)
         {
             // Initialize a common response object
             CommonResponseWithObject<ProductDetailsDTO> commonResponse = new CommonResponseWithObject<ProductDetailsDTO>();
@@ -54,17 +54,17 @@ namespace AutoBuildApp.Services.FeatureServices
         /// </summary>
         /// <param name="modelNumber">passes in a model number which will be passed to the DAO</param>
         /// <returns>returns a common response object</returns>
-        public CommonResponse AddEmailToEmailListForProduct(string modelNumber)
+        public virtual CommonResponse AddEmailToEmailListForProduct(string modelNumber)
         {
             // Initialize a common response object
             CommonResponse commonResponse = new CommonResponse();
 
             // Call the DAO method and return the system code
-            AutoBuildSystemCodes daoResponseCode = _productDetailsDAO.AddEmailToEmailListForProduct(modelNumber);
+            SystemCodeWithObject<int> daoResponse = _productDetailsDAO.AddEmailToEmailListForProduct(modelNumber);
 
             // Pass in the response code and the common response object and set the bool and the string fields
             //      The third parameter is for a custom success message for when the response code is success
-            commonResponseService.SetCommonResponse(daoResponseCode, commonResponse, ResponseStringGlobals.SUCCESSFUL_MODIFICATION);
+            commonResponseService.SetCommonResponse(daoResponse.Code, commonResponse, ResponseStringGlobals.SUCCESSFUL_MODIFICATION);
 
             return commonResponse;
         }
