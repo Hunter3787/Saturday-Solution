@@ -5,13 +5,13 @@ namespace AutoBuildApp.DataAccess
     {
         #region ShelfDAO Queries
         public const string INSERT_SHELF =
-            "INSERT INTO Shelves(userID, nameOfShelf) " +
+            "INSERT INTO Shelves(userID, nameOfShelf, createdAt, modifiedAt) " +
            "VALUES( " +
            "(SELECT UA.userID " +
            "FROM UserAccounts UA " +
            "INNER JOIN MappingHash MH ON UA.userID = MH.userID " +
            "INNER JOIN UserCredentials UC ON MH.userHashID = UC.userHashID " +
-           "WHERE username = @USERNAME) , @SHELFNAME);";
+           "WHERE username = @USERNAME) , @SHELFNAME, @CREATEDAT, @MODIFIEDAT);";
 
         public const string DELETE_SHELF =
             "DELETE FROM Shelves " +

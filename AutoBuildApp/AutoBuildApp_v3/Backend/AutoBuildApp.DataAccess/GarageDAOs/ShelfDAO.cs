@@ -31,7 +31,6 @@ namespace AutoBuildApp.DataAccess
                 RoleEnumType.VendorRole,
                 RoleEnumType.SystemAdmin
             };
-
             _connectionString = connectionString;
         }
 
@@ -76,6 +75,8 @@ namespace AutoBuildApp.DataAccess
                         InitializeSqlCommand(command, connection, AutoBuildSqlQueries.INSERT_SHELF);
                         command.Parameters.AddWithValue("@SHELFNAME", shelfName);
                         command.Parameters.AddWithValue("@USERNAME", username);
+                        command.Parameters.AddWithValue("@CREATEDAT", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                        command.Parameters.AddWithValue("@MODIFIEDAT", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
                         var rowsAdded = command.ExecuteNonQuery();
                         if (rowsAdded == 1)
@@ -575,8 +576,8 @@ namespace AutoBuildApp.DataAccess
                                 while (hasMore
                                     && (string)reader[ShelfTableCollumns.SHELF_NAME] == currentShelf
                                     && (reader[SaveProductTableCollumns.SAVED_PRODUCT_INDEX] != DBNull.Value
-                                    || reader[SaveProductTableCollumns.SAVED_PRODUCT_QUANTITY] != DBNull.Value
-                                    || reader[ProductTableColumns.PRODUCT_COLUMN_TYPE] != DBNull.Value)
+                                    && reader[SaveProductTableCollumns.SAVED_PRODUCT_QUANTITY] != DBNull.Value
+                                    && reader[ProductTableColumns.PRODUCT_COLUMN_TYPE] != DBNull.Value)
                                     )
                                 {
                                     Component component = new Component();
@@ -585,6 +586,7 @@ namespace AutoBuildApp.DataAccess
 
                                     hasMore = reader.Read();
                                 }
+                                Console.WriteLine(shelf);
                                 shelves.Add(shelf);
                             }
                         }
@@ -617,7 +619,6 @@ namespace AutoBuildApp.DataAccess
             SystemCodeWithObject<Shelf> output = new SystemCodeWithObject<Shelf>();
             output.GenericObject = new Shelf();
             var shelf = output.GenericObject;
-            shelf.ShelfName = shelfName;
 
             try
             {
@@ -652,6 +653,7 @@ namespace AutoBuildApp.DataAccess
                         {
                             while (reader.Read() && reader[ProductTableColumns.PRODUCT_COLUMN_TYPE] != DBNull.Value)
                             {
+                                shelf.ShelfName = (string)reader[ShelfTableCollumns.SHELF_NAME];
                                 Component component = new Component();
                                 PopulateComponent(component, reader);
                                 shelf.ComponentList.Add(component);
@@ -669,6 +671,12 @@ namespace AutoBuildApp.DataAccess
                     output.Code = SqlExceptionHandler.GetCode(ex.Number);
                     return output;
                 }
+            }
+
+            if(output.GenericObject.ShelfName == null)
+            {
+                output.Code = AutoBuildSystemCodes.NoEntryFound;
+                return output;
             }
 
             output.Code = AutoBuildSystemCodes.Success;

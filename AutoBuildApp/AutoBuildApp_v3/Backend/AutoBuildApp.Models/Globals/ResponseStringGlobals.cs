@@ -23,5 +23,6 @@ namespace AutoBuildApp.Models
         public const string INVALID_INPUT = "Invalid input.";
         public const string MISSING_ARGUEMENT = "One or more values were missing from your request.";
         public const string DEFAULT_RESPONSE = "An unknown error has occurred.";
+        public const string NO_ENTRY_FOUND = "No entries found.";
     }
 }

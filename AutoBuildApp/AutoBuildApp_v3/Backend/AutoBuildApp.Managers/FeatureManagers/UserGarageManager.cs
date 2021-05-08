@@ -10,6 +10,7 @@ using AutoBuildApp.Security;
 using System;
 using AutoBuildApp.Models.Builds;
 using AutoBuildApp.Models.Products;
+using AutoBuildApp.Logging;
 
 /**
 * User Garage Manager class that directs 
@@ -20,6 +21,7 @@ namespace AutoBuildApp.Managers
 {
     public class UserGarageManager
     {
+        private readonly LoggingProducerService _logger = LoggingProducerService.GetInstance;
         private readonly BuildDAO _buildDAO;
         private readonly ShelfDAO _shelfDAO;
         private readonly List<string> _approvedRoles;
@@ -61,6 +63,7 @@ namespace AutoBuildApp.Managers
             }
             catch (ArgumentNullException)
             {
+
                 output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
                 output.ResponseBool = false;
                 return output;
@@ -448,7 +451,7 @@ namespace AutoBuildApp.Managers
         /// <param name="shelfName"></param>
         /// <param name="username"></param>
         /// <returns></returns>
-        public CommonResponseWithObject<List<Shelf>> GetShelvesByUser(string shelfName, string username)
+        public CommonResponseWithObject<List<Shelf>> GetShelvesByUser(string username)
         {
             CommonResponseWithObject<List<Shelf>> output = new CommonResponseWithObject<List<Shelf>>()
             {
@@ -459,7 +462,7 @@ namespace AutoBuildApp.Managers
             try
             {
                 IsAuthorized();
-                NullGuard.IsNotNullOrEmpty(shelfName);
+                NullGuard.IsNotNullOrEmpty(username);
             }
             catch (ArgumentNullException)
             {

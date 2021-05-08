@@ -16,7 +16,7 @@ namespace AutoBuildApp.Api.Controllers
     [ApiController]
     public class RegistrationController : Controller
     {
-        RegistrationManager _registrationManager = new RegistrationManager(ConnectionManager.connectionManager.GetConnectionStringByName(ControllerGlobals.DOCKER_CONNECTION));
+        RegistrationManager _registrationManager = new RegistrationManager(ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
 
         [HttpPost]
         public IActionResult RegisterUser(string username, string firstname, string lastname, string email, string password,

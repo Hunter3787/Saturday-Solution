@@ -7,6 +7,7 @@ using AutoBuildApp.Models.Products;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security;
+using AutoBuildApp.Logging;
 
 /**
 * The ShelfWithResponseService will provide the shelf specific operatons
@@ -19,17 +20,18 @@ namespace AutoBuildApp.Services
     {
         private readonly ShelfDAO _dao;
         private readonly List<string> _approvedRoles;
+        private readonly LoggingProducerService _logger;
 
         public ShelfWithResponseService(ShelfDAO shelfDAO)
         {
             _approvedRoles = new List<string>()
-            {
+            {   
                 RoleEnumType.BasicRole,
                 RoleEnumType.DelegateAdmin,
                 RoleEnumType.VendorRole,
                 RoleEnumType.SystemAdmin
             };
-
+            _logger = LoggingProducerService.GetInstance;
             _dao = shelfDAO;
         }
 
@@ -361,6 +363,9 @@ namespace AutoBuildApp.Services
             {
                 case AutoBuildSystemCodes.Success:
                     commonResponse.ResponseString = ResponseStringGlobals.SUCCESSFUL_RESPONSE;
+                    break;
+                case AutoBuildSystemCodes.NoEntryFound:
+                    commonResponse.ResponseString = ResponseStringGlobals.NO_ENTRY_FOUND;
                     break;
                 case AutoBuildSystemCodes.Unauthorized:
                     commonResponse.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
