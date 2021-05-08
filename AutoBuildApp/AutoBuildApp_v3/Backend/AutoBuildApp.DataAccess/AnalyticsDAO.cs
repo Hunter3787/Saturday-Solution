@@ -37,7 +37,7 @@ namespace AutoBuildApp.DataAccess
 
         // Creates the local instance for the logger
 
-        // private LoggingProducerService _logger = LoggingProducerService.GetInstance;
+        //private LoggingProducerService _logger = LoggingProducerService.GetInstance;
 
 
         public AnalyticsDAO(string connection)
@@ -67,8 +67,8 @@ namespace AutoBuildApp.DataAccess
             _responseUAD = new ResponseUAD();
 
             int count = Enum.GetValues(typeof(DBViews)).Length;
-
-            if ((int)graphViewType > count || (int)graphViewType < 0)
+            Console.WriteLine("count" + count);
+            if ((int)graphViewType >= count || (int)graphViewType < 0 )
             {
                 _responseUAD.ResponseString = "InValid Graph Specified";
                 //_logger.LogInformation( AuthorizationResultType.NOT_AUTHORIZED.ToString());

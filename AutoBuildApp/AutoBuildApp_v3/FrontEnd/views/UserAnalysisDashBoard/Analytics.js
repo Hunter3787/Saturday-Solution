@@ -8,7 +8,6 @@ document.getElementById("GetAnalytics");
 ana.addEventListener("click",() => getBarItems());
 
 
-
 const fetchRequest = {
 method: 'GET',
 mode: 'cors',
@@ -45,13 +44,12 @@ catch(error)
 }
 
 }
- function getBarItems()
+ async function getBarItems()
 {
 
-  DisplayAnalyticsData(1);
-  //DisplayAnalyticsData(2);
-  //DisplayAnalyticsData(3);
-
+  //await getItems(1);
+  //await getItems(2);
+  //await getItems(5);
   //DisplayLineData(4);
   //DisplayLineData(5);
 
@@ -63,11 +61,13 @@ async function getItems(GraphType) {
 let customRequest = Object.assign( fetchRequest,{ method: 'GET' });
 urlAnalytics.searchParams.append('GraphType', GraphType);
 
-let fetchResponse = await fetch(urlAnalytics, customRequest) // fetches the default URI
-                .then(response => response.json()) // Will receive a response from the default response.json.
+ await fetch(urlAnalytics, customRequest) // fetches the default URI
+                .then(response => response.json())
+                .then(async data =>   await DisplayAnalyticsData(data, GraphType)); // Will receive a response from the default response.json.
               // .then(data =>  DisplayAnalyticsData(data, GraphType));
 
-        return fetchResponse;
+              // await the return 
+        //return await fetchResponse;
 
 }
 
@@ -90,10 +90,8 @@ const points = {
   };
 
 
-async function DisplayAnalyticsData(GraphType)
+async function DisplayAnalyticsData(data,GraphType)
 {
-
-let data = await getItems(GraphType)
 
 console.log('---------DisplayAnalyticsData----------');
   //let chart = await FetchGraphData();
@@ -152,7 +150,7 @@ console.log('---------DisplayAnalyticsData----------');
       title: Charts.chartTitle,
       barmode: 'group'
     };
- Plotly.newPlot('Graph'+ GraphType, data2, layout);
+ await Plotly.newPlot('Graph'+ GraphType, data2, layout);
 
 }
 
