@@ -333,7 +333,7 @@ method: 'PUT',
 mode: 'cors',
 headers: {
 'Accept': 'application/json',
-'Authorization': 'bearer ' + token
+'Authorization': 'bearer ' + JWT_token
 },
 //body: JSON.stringify(item)
 body: formData
@@ -352,7 +352,7 @@ method: 'PUT',
 mode: 'cors',
 headers: {
 'Accept': 'application/json',
-'Authorization': 'bearer ' + token
+'Authorization': 'bearer ' + JWT_token
 },
 //body: JSON.stringify(item)
 body: formData
@@ -379,7 +379,7 @@ method: 'DELETE',
 mode: 'cors',
 headers: {
 'Accept': 'application/json',
-'Authorization': 'bearer ' + token
+'Authorization': 'bearer ' + JWT_token
 },
 //body: JSON.stringify(item)
 body: formData
