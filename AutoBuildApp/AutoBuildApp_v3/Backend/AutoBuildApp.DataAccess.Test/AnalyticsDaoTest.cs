@@ -171,7 +171,7 @@ namespace AutoBuildApp.DataAccess.Test
             ResponseUAD responseUAD = new ResponseUAD();
 
             string connection = _conString.GetConnectionStringByName("MyConnection");
-            responseUAD = _analyticsDAO.GetGraphData(DBViews.none);
+            responseUAD = _analyticsDAO.GetGraphData(DBViews.NumberOfAccountTypes);
             Console.WriteLine(responseUAD.ToString());
 
             Assert.AreEqual(expectedUAD.ToString(), responseUAD.ToString());
