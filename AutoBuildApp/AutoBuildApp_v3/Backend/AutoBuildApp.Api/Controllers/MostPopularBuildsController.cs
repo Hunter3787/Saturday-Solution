@@ -55,7 +55,8 @@ namespace AutoBuildApp.Api.Controllers
         {
             _allowedRolesForViewing = new List<string>()
             {
-                RoleEnumType.UnregisteredRole
+                RoleEnumType.UnregisteredRole,
+                RoleEnumType.BasicRole
             };
 
             _allowedRolesForPosting = new List<string>()
@@ -96,7 +97,7 @@ namespace AutoBuildApp.Api.Controllers
         public async Task<IActionResult> PublishBuild(IFormCollection data, List<IFormFile> image)
         {
             // Check authorization
-            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
+            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForPosting))
             {
                 _logger.LogInformation("MostPopularBuilds " + AuthorizationResultType.NotAuthorized.ToString());
                 return new StatusCodeResult(StatusCodes.Status403Forbidden);
@@ -196,7 +197,7 @@ namespace AutoBuildApp.Api.Controllers
         public IActionResult AddLike(Like like)
         {
             // Check authorization
-            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
+            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForPosting))
             {
                 _logger.LogInformation("MostPopularBuilds " + AuthorizationResultType.NotAuthorized.ToString());
                 return new StatusCodeResult(StatusCodes.Status403Forbidden);

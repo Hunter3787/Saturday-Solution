@@ -46,7 +46,8 @@ namespace AutoBuildApp.Services.FeatureServices
         {
             _allowedRolesForViewing = new List<string>()
             {
-                RoleEnumType.UnregisteredRole
+                RoleEnumType.UnregisteredRole,
+                RoleEnumType.BasicRole
             };
 
             _allowedRolesForPosting = new List<string>()
@@ -71,17 +72,17 @@ namespace AutoBuildApp.Services.FeatureServices
             string username = _threadPrinciple.Identity.Name;
 
             // Authorization check
-            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
+            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForPosting))
             {
                 return false;
             }
 
             // Logs the event of the service publish method being called
-            _logger.LogInformation($"Most Popular Builds Service Publish Build was called for User:{buildPost.Username}"); //replace this with username
+            _logger.LogInformation($"Most Popular Builds Service Publish Build was called"); //replace this with username
 
             var buildPostEntity = new BuildPostEntity()
             {
-                Username = buildPost.Username, // replace this with username
+                Username = username,
                 Title = buildPost.Title,
                 Description = buildPost.Description,
                 LikeIncrementor = buildPost.LikeIncrementor,
@@ -148,10 +149,13 @@ namespace AutoBuildApp.Services.FeatureServices
         public bool AddLike(Like like)
         {
             // Authorization check
-            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
+            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForPosting))
             {
                 return false;
             }
+
+            ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            string username = _threadPrinciple.Identity.Name;
 
             // Logs the event of the service addLike method being called
             _logger.LogInformation($"Most Popular Builds Service addLike was called for user:{like.UserId} and post{like.PostId}");
@@ -159,7 +163,7 @@ namespace AutoBuildApp.Services.FeatureServices
             var likeEntity = new LikeEntity()
             {
                 PostId = like.PostId,
-                UserId = like.UserId
+                UserId = username
             };
 
             return _mostPopularBuildsDAO.AddLike(likeEntity);
@@ -211,7 +215,7 @@ namespace AutoBuildApp.Services.FeatureServices
             string storeIn = " ";
 
             // Authorization check
-            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
+            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForPosting))
             {
                 return null;
             }

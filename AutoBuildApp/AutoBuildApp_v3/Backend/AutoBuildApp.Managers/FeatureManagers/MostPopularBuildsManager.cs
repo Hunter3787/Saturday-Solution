@@ -47,7 +47,8 @@ namespace AutoBuildApp.Managers
         {
             _allowedRolesForViewing = new List<string>()
             {
-                RoleEnumType.UnregisteredRole
+                RoleEnumType.UnregisteredRole,
+                RoleEnumType.BasicRole
             };
 
             _allowedRolesForPosting = new List<string>()
@@ -69,7 +70,7 @@ namespace AutoBuildApp.Managers
         public CommonResponseWithObject<BuildPost> ConvertFormToBuildPost(IFormCollection data, List<IFormFile> image)
         {
             // Check authorization
-            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
+            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForPosting))
             {
                 _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
                 _commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
@@ -133,7 +134,7 @@ namespace AutoBuildApp.Managers
         public async Task<bool> PublishBuild(BuildPost buildPost)
         {
             // Authorization check
-            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
+            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForPosting))
             {
                 return false;
             }
@@ -314,7 +315,7 @@ namespace AutoBuildApp.Managers
         public bool AddLike(Like like)
         {
             // Authorization check
-            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
+            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForPosting))
             {
                 return false;
             }
