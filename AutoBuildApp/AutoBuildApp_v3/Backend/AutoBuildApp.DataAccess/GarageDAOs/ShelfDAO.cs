@@ -4,6 +4,9 @@ using System.Data;
 using AutoBuildApp.Models;
 using Microsoft.Data.SqlClient;
 using AutoBuildApp.Models.Enumerations;
+using AutoBuildApp.Models.Products;
+using AutoBuildApp.Security.Enumerations;
+using AutoBuildApp.Security;
 
 
 /**
@@ -17,9 +20,17 @@ namespace AutoBuildApp.DataAccess
     public class ShelfDAO
     {
         private readonly string _connectionString;
+        private readonly List<string> _approvedRoles;
 
         public ShelfDAO(string connectionString)
         {
+            _approvedRoles = new List<string>()
+            {
+                RoleEnumType.BasicRole,
+                RoleEnumType.DelegateAdmin,
+                RoleEnumType.VendorRole,
+                RoleEnumType.SystemAdmin
+            };
             _connectionString = connectionString;
         }
 
@@ -40,6 +51,12 @@ namespace AutoBuildApp.DataAccess
             {
                 IsNotNullOrEmpty(shelfName);
                 IsNotNullOrEmpty(username);
+                IsAuthorized(_approvedRoles);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.Code = AutoBuildSystemCodes.Unauthorized;
+                return output;
             }
             catch (ArgumentNullException)
             {
@@ -58,6 +75,8 @@ namespace AutoBuildApp.DataAccess
                         InitializeSqlCommand(command, connection, AutoBuildSqlQueries.INSERT_SHELF);
                         command.Parameters.AddWithValue("@SHELFNAME", shelfName);
                         command.Parameters.AddWithValue("@USERNAME", username);
+                        command.Parameters.AddWithValue("@CREATEDAT", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                        command.Parameters.AddWithValue("@MODIFIEDAT", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
                         var rowsAdded = command.ExecuteNonQuery();
                         if (rowsAdded == 1)
@@ -99,8 +118,14 @@ namespace AutoBuildApp.DataAccess
             {
                 IsNotNullOrEmpty(shelfName);
                 IsNotNullOrEmpty(username);
+                IsAuthorized(_approvedRoles);
             }
-            catch(ArgumentNullException)
+            catch (UnauthorizedAccessException)
+            {
+                output.Code = AutoBuildSystemCodes.Unauthorized;
+                return output;
+            }
+            catch (ArgumentNullException)
             {
                 output.Code = AutoBuildSystemCodes.ArguementNull;
                 return output;
@@ -162,6 +187,12 @@ namespace AutoBuildApp.DataAccess
                 IsNotNullOrEmpty(shelfName);
                 IsNotNullOrEmpty(username);
                 IsNotNull(quantity);
+                IsAuthorized(_approvedRoles);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.Code = AutoBuildSystemCodes.Unauthorized;
+                return output;
             }
             catch (ArgumentNullException)
             {
@@ -225,6 +256,12 @@ namespace AutoBuildApp.DataAccess
                 IsNotNullOrEmpty(shelfName);
                 IsNotNullOrEmpty(username);
                 IsNotNull(itemindex);
+                IsAuthorized(_approvedRoles);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.Code = AutoBuildSystemCodes.Unauthorized;
+                return output;
             }
             catch (ArgumentNullException)
             {
@@ -293,6 +330,12 @@ namespace AutoBuildApp.DataAccess
                 IsNotNullOrEmpty(username);
                 IsNotNull(quantity);
                 IsNotNull(itemIndex);
+                IsAuthorized(_approvedRoles);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.Code = AutoBuildSystemCodes.Unauthorized;
+                return output;
             }
             catch (ArgumentNullException)
             {
@@ -355,6 +398,12 @@ namespace AutoBuildApp.DataAccess
                 IsNotNullOrEmpty(oldShelfName);
                 IsNotNullOrEmpty(newShelfName);
                 IsNotNullOrEmpty(username);
+                IsAuthorized(_approvedRoles);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.Code = AutoBuildSystemCodes.Unauthorized;
+                return output;
             }
             catch (ArgumentNullException)
             {
@@ -421,6 +470,12 @@ namespace AutoBuildApp.DataAccess
                 IsNotNull(indexOrder);
                 IsNotNullOrEmpty(username);
                 IsNotNullOrEmpty(shelfName);
+                IsAuthorized(_approvedRoles);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.Code = AutoBuildSystemCodes.Unauthorized;
+                return output;
             }
             catch (ArgumentNullException)
             {
@@ -450,6 +505,7 @@ namespace AutoBuildApp.DataAccess
                         {
                             command.Transaction.Commit();
                             output.GenericObject = true;
+                            output.Code = AutoBuildSystemCodes.Success;
                         }
                         else
                         {
@@ -463,9 +519,7 @@ namespace AutoBuildApp.DataAccess
                     return output;
                 }
             }
-
-            output.Code = AutoBuildSystemCodes.Success;
-            output.GenericObject = true;
+            
             return output;
         }
 
@@ -475,7 +529,7 @@ namespace AutoBuildApp.DataAccess
         /// </summary>
         /// <param name="username">User name</param>
         /// <returns></returns>
-        public SystemCodeWithObject<List<Shelf>> GetAllShelvesByUser(string username)
+        public SystemCodeWithObject<List<Shelf>> GetShelvesByUser(string username)
         {
             SystemCodeWithObject<List<Shelf>> output = new SystemCodeWithObject<List<Shelf>>();
             output.GenericObject = new List<Shelf>();
@@ -484,6 +538,12 @@ namespace AutoBuildApp.DataAccess
             try
             {
                 IsNotNullOrEmpty(username);
+                IsAuthorized(_approvedRoles);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.Code = AutoBuildSystemCodes.Unauthorized;
+                return output;
             }
             catch (ArgumentNullException)
             {
@@ -501,7 +561,7 @@ namespace AutoBuildApp.DataAccess
                     {
 
                         InitializeSqlCommand(command, connection, AutoBuildSqlQueries.GET_ALL_SHELVES_BY_USERNAME);
-                        command.Parameters.Add(new SqlParameter("@USERNAME", username));
+                        command.Parameters.AddWithValue("@USERNAME", username);
 
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
@@ -516,16 +576,17 @@ namespace AutoBuildApp.DataAccess
                                 while (hasMore
                                     && (string)reader[ShelfTableCollumns.SHELF_NAME] == currentShelf
                                     && (reader[SaveProductTableCollumns.SAVED_PRODUCT_INDEX] != DBNull.Value
-                                    || reader[SaveProductTableCollumns.SAVED_PRODUCT_QUANTITY] != DBNull.Value
-                                    || reader[ProductTableColumns.PRODUCT_COLUMN_TYPE] != DBNull.Value)
+                                    && reader[SaveProductTableCollumns.SAVED_PRODUCT_QUANTITY] != DBNull.Value
+                                    && reader[ProductTableColumns.PRODUCT_COLUMN_TYPE] != DBNull.Value)
                                     )
                                 {
-                                    Models.Products.Component component = new Models.Products.Component();
+                                    Component component = new Component();
                                     PopulateComponent(component, reader);
                                     shelf.ComponentList.Add(component);
 
                                     hasMore = reader.Read();
                                 }
+                                Console.WriteLine(shelf);
                                 shelves.Add(shelf);
                             }
                         }
@@ -558,12 +619,17 @@ namespace AutoBuildApp.DataAccess
             SystemCodeWithObject<Shelf> output = new SystemCodeWithObject<Shelf>();
             output.GenericObject = new Shelf();
             var shelf = output.GenericObject;
-            shelf.ShelfName = shelfName;
 
             try
             {
                 IsNotNullOrEmpty(shelfName);
                 IsNotNullOrEmpty(username);
+                IsAuthorized(_approvedRoles);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.Code = AutoBuildSystemCodes.Unauthorized;
+                return output;
             }
             catch (ArgumentNullException)
             {
@@ -580,14 +646,15 @@ namespace AutoBuildApp.DataAccess
                     using (SqlCommand command = new SqlCommand())
                     {
                         InitializeSqlCommand(command, connection, AutoBuildSqlQueries.GET_SHELF_BY_NAME_AND_USER);
-                        command.Parameters.Add(new SqlParameter("@USERNAME", username));
-                        command.Parameters.Add(new SqlParameter("@SHELFNAME", shelfName));
+                        command.Parameters.AddWithValue("@USERNAME", username);
+                        command.Parameters.AddWithValue("@SHELFNAME", shelfName);
 
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read() && reader[ProductTableColumns.PRODUCT_COLUMN_TYPE] != DBNull.Value)
                             {
-                                Models.Products.Component component = new Models.Products.Component();
+                                shelf.ShelfName = (string)reader[ShelfTableCollumns.SHELF_NAME];
+                                Component component = new Component();
                                 PopulateComponent(component, reader);
                                 shelf.ComponentList.Add(component);
                             }
@@ -606,6 +673,12 @@ namespace AutoBuildApp.DataAccess
                 }
             }
 
+            if(output.GenericObject.ShelfName == null)
+            {
+                output.Code = AutoBuildSystemCodes.NoEntryFound;
+                return output;
+            }
+
             output.Code = AutoBuildSystemCodes.Success;
             return output;
         }
@@ -616,10 +689,16 @@ namespace AutoBuildApp.DataAccess
         //    SystemCodeWithObject<Component> output = new SystemCodeWithObject<Component>();
         //    ProductFactory productFactory = new ProductFactory();
         //    var component = output.GenericObject;
-            
+
         //    try
         //    {
         //        IsNotNullOrEmpty(model);
+        //        IsAuthorized(_approvedRoles);
+        //    }
+        //    catch (UnauthorizedAccessException)
+        //    {
+        //        output.Code = AutoBuildSystemCodes.Unauthorized;
+        //        return output;
         //    }
         //    catch (ArgumentNullException)
         //    {
@@ -649,7 +728,7 @@ namespace AutoBuildApp.DataAccess
         //                    PopulateComponent(component, reader);
 
         //                    // TODO: Need to get product specs.
-                         
+
         //                }
         //            }
         //            catch (System.ComponentModel.InvalidEnumArgumentException)
@@ -680,7 +759,7 @@ namespace AutoBuildApp.DataAccess
         /// </summary>
         /// <param name="toPopulate"></param>
         /// <param name="reader"></param>
-        private void PopulateComponent(Models.Products.Component toPopulate, SqlDataReader reader)
+        private void PopulateComponent(Component toPopulate, SqlDataReader reader)
         {
             toPopulate.ProductType = (ProductType)Enum.Parse(typeof(ProductType), (string)reader[ProductTableColumns.PRODUCT_COLUMN_TYPE]);
             toPopulate.ModelNumber = (string)reader[ProductTableColumns.PRODUCT_COLUMN_MODEL];
@@ -763,6 +842,18 @@ namespace AutoBuildApp.DataAccess
             if(toCheck is null)
             {
                 throw new ArgumentNullException(nameof(toCheck));
+            }
+        }
+
+        /// <summary>
+        /// Throws unauthorized access exception if
+        /// the user should not be able to perform the operation.
+        /// </summary>
+        public void IsAuthorized(List<string> roles)
+        {
+            if (!AuthorizationCheck.IsAuthorized(roles))
+            {
+                throw new UnauthorizedAccessException();
             }
         }
         #endregion

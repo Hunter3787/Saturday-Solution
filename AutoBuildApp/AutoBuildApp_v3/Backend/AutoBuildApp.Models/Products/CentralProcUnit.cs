@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Interfaces;
 
 /**
@@ -8,7 +7,7 @@ using AutoBuildApp.Models.Interfaces;
  */
 namespace AutoBuildApp.Models.Products
 {
-    public class CentralProcUnit : Component, Interfaces.Component
+    public class CentralProcUnit : Component, IComponent
     {
         #region "Field Declarations, get; set;"
         public int CoreCount { get; set; }

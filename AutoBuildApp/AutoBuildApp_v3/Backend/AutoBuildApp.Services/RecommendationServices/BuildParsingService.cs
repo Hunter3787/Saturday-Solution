@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using AutoBuildApp.Models.Products;
+using AutoBuildApp.Models.Builds;
 using AutoBuildApp.Models.Interfaces;
 
 /**
@@ -27,14 +29,14 @@ namespace AutoBuildApp.Services.RecommendationServices
         /// </summary>
         /// <param name="build"></param>
         /// <returns></returns>
-        public List<Component> CreateComponentList(IBuild build)
+        public List<IComponent> CreateComponentList(Build build)
         {
             if (build == null)
             {
                 throw new ArgumentException("No paramater passed.");
             }
 
-            var compList = new List<Component>();
+            var compList = new List<IComponent>();
 
             // For each loop using the properties of the build class type
             // to iterate through each dynamic property.
@@ -55,7 +57,7 @@ namespace AutoBuildApp.Services.RecommendationServices
                 {
                     if (item != null)
                     {
-                        compList.Add((Component)item);
+                        compList.Add((IComponent)item);
                     }
                 }
             }

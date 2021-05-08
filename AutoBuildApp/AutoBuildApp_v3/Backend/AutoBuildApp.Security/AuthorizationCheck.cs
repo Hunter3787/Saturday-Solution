@@ -29,7 +29,7 @@ namespace AutoBuildApp.Security
                     return true;
                 }
             }
-            Console.WriteLine($"RETURNING FALSE");
+            //Console.WriteLine($"RETURNING FALSE");
             return false;
         }
 

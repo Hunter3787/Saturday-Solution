@@ -51,7 +51,8 @@ namespace AutoBuildApp.Models
                 return false;
             }
 
-            return ShelfName == other.ShelfName && ComponentList.SequenceEqual(other.ComponentList);
+            return ShelfName == other.ShelfName
+                && ComponentList.SequenceEqual(other.ComponentList);
         }
 
         public override int GetHashCode()

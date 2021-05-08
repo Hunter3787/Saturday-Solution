@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using AutoBuildApp.Models.Enumerations;
+﻿using System.Collections.Generic;
 using AutoBuildApp.Models.Interfaces;
 
 /**
@@ -12,7 +10,7 @@ namespace AutoBuildApp.Models.Products
     /// <summary>
     /// Random Access Memory class of type IComponent.
     /// </summary>
-    public class RAM : Component, Interfaces.Component
+    public class RAM : Component, IComponent
     {
         #region "Field Declarations: get; set;"
         public int NumOfModules { get; set; }

@@ -10,6 +10,8 @@ using AutoBuildApp.Security.FactoryModels;
 using AutoBuildApp.Security.Interfaces;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security;
+using AutoBuildApp.Models.Builds;
+using AutoBuildApp.Models.Products;
 
 /**
  * Recommendation Manager includes business logic
@@ -60,10 +62,10 @@ namespace AutoBuildApp.Managers
         /// <param name="hddCount">Number of hard drives that the user
         /// would like to be in their final build.(Optional)</param>
         /// <returns>A list of IBuild representing the recommended builds.</returns>
-        public List<IBuild> RecommendBuilds(
+        public List<Build> RecommendBuilds(
             BuildType requestedType,
             double initialBudget,
-            List<Component> peripherals,
+            List<IComponent> peripherals,
             PSUModularity psuType,
             HardDriveType hddType,
             int hddCount)
@@ -85,16 +87,16 @@ namespace AutoBuildApp.Managers
             #endregion
 
             #region Initializations
-            Dictionary<ProductType, List<Component>> products = new Dictionary<ProductType, List<Component>>();
-            Dictionary<Component, int> scores = new Dictionary<Component, int>();
+            Dictionary<ProductType, List<IComponent>> products = new Dictionary<ProductType, List<IComponent>>();
+            Dictionary<IComponent, int> scores = new Dictionary<IComponent, int>();
             //ComponentComparisonService comparator = new ComponentComparisonService();
             GetProductService getter = new GetProductService(_dao);
             PortionBudgetService portioner = new PortionBudgetService();
             HardDriveFactory driveFacorty = new HardDriveFactory();
             BuildParsingService parser = new BuildParsingService();
             BuildFactory buildFactory = new BuildFactory();
-            List<IBuild> buildRecommendations = new List<IBuild>();
-            IBuild prototype = buildFactory.CreateBuild(requestedType);
+            List<Build> buildRecommendations = new List<Build>();
+            Build prototype = buildFactory.CreateBuild(requestedType);
             double adjustedBudget = initialBudget;
             #endregion
 
@@ -119,7 +121,7 @@ namespace AutoBuildApp.Managers
             #region Advanced option initialization
             if (psuType != PSUModularity.None)
             {
-                prototype.Psu.PsuType = psuType;
+                //prototype.Psu.PsuType = psuType;
             }
 
             if(hddType != HardDriveType.None
@@ -142,7 +144,7 @@ namespace AutoBuildApp.Managers
             // Business rule to create 5 builds and return them all.
             for (int i = 0; i < RecBusinessGlobals.BUILDS_TO_RETURN; i++)
             {
-                IBuild build = buildFactory.CreateBuild(requestedType);
+                Build build = buildFactory.CreateBuild(requestedType);
                 // Add preselected peripherals.
                 build.Peripherals = peripherals;
 
@@ -177,7 +179,7 @@ namespace AutoBuildApp.Managers
         /// <param name="buildType"></param>
         /// <param name="budget"></param>
         /// <returns></returns>
-        public List<Component> RecommendUpgrade(List<Component> components,
+        public List<IComponent> RecommendUpgrade(List<IComponent> components,
             BuildType buildType, double budget)
         {
 
@@ -191,7 +193,7 @@ namespace AutoBuildApp.Managers
         /// </summary>
         /// <param name="savedBuild"></param>
         /// <returns></returns>
-        public List<IBuild> RecommendUpgrades(IBuild savedBuild,
+        public List<Build> RecommendUpgrades(Build savedBuild,
             BuildType buildType, double budget)
         {
 
@@ -209,8 +211,8 @@ namespace AutoBuildApp.Managers
         /// <param name="scores">Dictionary to hold product scores.</param>
         /// <param name="type">Requested build type.</param>
         private void ScoreProductDictionary(
-            Dictionary<ProductType, List<Component>> products,
-            Dictionary<Component, int> scores,
+            Dictionary<ProductType, List<IComponent>> products,
+            Dictionary<IComponent, int> scores,
             BuildType type
             )
         {

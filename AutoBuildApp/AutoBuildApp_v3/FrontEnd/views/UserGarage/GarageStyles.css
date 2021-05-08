@@ -1,0 +1,78 @@
+body {
+    margin: 0;
+    font-family: Arial;
+    background-color: whitesmoke;
+}
+
+.header {
+    padding: 10px;
+    text-align: center;
+    background: #4285f4;
+    color: white;
+    overflow: auto hidden;
+    height: 100px;
+}
+
+.sidenav {
+    float: left;
+    height: 100vh;
+    width: 200px;
+    position: relative;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: lightgray;
+    overflow-x: hidden;
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.shelf-region {
+    padding: 20px;
+    position: relative;
+    background-color: lightgray;
+    height: 250px;
+}
+
+#shelf-dropdown {
+    position: relative;
+    left: 5vh;
+    top: 5vh;
+    width:120px;
+    background-color: skyblue;
+
+}
+
+.build-view {
+    position: relative;
+    background-color: purple;
+    width: fit-content;
+    height: fit-content;
+
+}
+
+.build-rectangle {
+    position: relative;
+    background-color: green;
+    
+}
+
+.shelf-view {
+    float: right;
+    height: 250px;
+    width: 75%;
+    background-color: rgba(255, 254, 254, 0.699);
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
+.component-card {
+    min-height: 220px;
+    min-width: 240px;
+    padding: 10px;
+    flex:  0 0;
+    background-color: lightgray;
+    border: solid gray 3px;
+}

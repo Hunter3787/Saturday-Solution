@@ -1,6 +1,4 @@
-﻿using System;
-using AutoBuildApp.Models.Enumerations;
-using AutoBuildApp.Models.Interfaces;
+﻿using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Builds;
 
 /**
@@ -17,7 +15,7 @@ namespace AutoBuildApp.Services.FactoryServices
     public class BuildFactory
     {
 
-        public IBuild CreateBuild(BuildType buildType)
+        public Build CreateBuild(BuildType buildType)
         {
             switch(buildType)
             {

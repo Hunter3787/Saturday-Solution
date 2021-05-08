@@ -1,4 +1,4 @@
-﻿using AutoBuildApp.Models.Interfaces;
+﻿using AutoBuildApp.Models.Products;
 using AutoBuildApp.Models.Enumerations;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
