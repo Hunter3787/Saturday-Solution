@@ -6,6 +6,7 @@ namespace AutoBuildApp.Models.DataTransferObjects
 {
     public class ProductDetailsDTO
     {
+        public string ProductName { get; set; }
         public string ImageUrl { get; set; }
         public string ProductType { get; set; }
         public string ModelNumber {get; set;}

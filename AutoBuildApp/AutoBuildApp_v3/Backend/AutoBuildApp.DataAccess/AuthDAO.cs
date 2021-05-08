@@ -71,7 +71,7 @@ namespace AutoBuildApp.DataAccess
             Console.WriteLine($" in CHECK CONNECTION");
             if (con == null)
             {
-                _CRAuth.ResponseBool = false;
+                _CRAuth.IsSuccessful = false;
                 _CRAuth.ResponseString = "NULL EXCEPTION";
                 //Console.WriteLine($" Common response expected for NULL: {_CRAuth.ToString() }" );
                 return _CRAuth;
@@ -211,7 +211,7 @@ namespace AutoBuildApp.DataAccess
                     catch (SqlException) 
                     {
                         command.Transaction.Rollback();
-                        _CRAuth.ResponseBool = false;
+                        _CRAuth.IsSuccessful = false;
 
                     }
 

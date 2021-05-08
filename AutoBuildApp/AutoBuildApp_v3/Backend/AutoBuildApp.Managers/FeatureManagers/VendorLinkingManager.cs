@@ -2,7 +2,6 @@
 using AutoBuildApp.Logging;
 using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.Models.VendorLinking;
-using AutoBuildApp.Models.WebCrawler;
 using AutoBuildApp.Security;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Services;
@@ -11,12 +10,15 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Security.Claims;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace AutoBuildApp.Managers.FeatureManagers
 {
+    /// <summary>
+    /// This class will consist of the methods used to validate
+    /// business requirements that can be seen in the BRD.
+    /// </summary>
     public class VendorLinkingManager
     {
         private List<string> _allowedRoles;
@@ -24,6 +26,10 @@ namespace AutoBuildApp.Managers.FeatureManagers
         private readonly ConcurrentDictionary<string, ConcurrentDictionary<string, byte>> vendorsProducts;
         private VendorLinkingService _vendorLinkingService;
 
+        /// <summary>
+        /// This default constructor to initalize the service.
+        /// </summary>
+        /// <param name="connectionString">sql database string to be able to connect to database.</param>
         public VendorLinkingManager(string connectionString)
         {
             _vendorLinkingService = new VendorLinkingService(connectionString);
@@ -37,6 +43,11 @@ namespace AutoBuildApp.Managers.FeatureManagers
             };
         }
 
+        /// <summary>
+        /// This method converts formdata into an AddProductDTO.
+        /// </summary>
+        /// <param name="formdata">takes in a IFormCollection object which reads from FormData.</param>
+        /// <returns>retruns a common response object with an AddProductDTO</returns>
         public CommonResponseWithObject<AddProductDTO> ConvertFormToProduct(IFormCollection formData)
         {
             // Initialize a common response object
@@ -47,11 +58,11 @@ namespace AutoBuildApp.Managers.FeatureManagers
             {
                 _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
                 commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
 
                 return commonResponse;
             }
-            
+
             // This try catch catches a format exception or a null reference exception
             try
             {
@@ -75,7 +86,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
                 product.Price = Convert.ToDouble(Price);
 
                 commonResponse.GenericObject = product;
-                commonResponse.ResponseBool = true;
+                commonResponse.IsSuccessful = true;
                 commonResponse.ResponseString = "Successfully created an AddProductDTO.";
 
                 return commonResponse;
@@ -99,12 +110,18 @@ namespace AutoBuildApp.Managers.FeatureManagers
                     commonResponse.ResponseString = "An error occurred.";
                 }
 
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
 
                 return commonResponse;
             }
         }
 
+        /// <summary>
+        /// This method will be used to convert the filtersstring and order into a GetProductByFilterDTO object.
+        /// </summary>
+        /// <param name="filtersString">takes in filters as a string which will be used to filter the product types that the user wants</param>
+        /// <param name="order">takes in order as a string which will be used to order the products</param>
+        /// <returns>retruns a common response object with a GetProductByFilterDTO</returns>
         public CommonResponseWithObject<GetProductByFilterDTO> ConvertToGetProductByFilterDTO(string filtersString, string order)
         {
             // Initialize a common response object
@@ -115,7 +132,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             {
                 _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
                 commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
 
                 return commonResponse;
             }
@@ -124,7 +141,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             if (filtersString == null)
             {
                 _logger.LogWarning("Filters string is null in vendor linking manager.");
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
                 commonResponse.ResponseString = "Filters string is null.";
 
                 return commonResponse;
@@ -159,12 +176,18 @@ namespace AutoBuildApp.Managers.FeatureManagers
                 }
             }
 
-            commonResponse.ResponseBool = true;
+            commonResponse.IsSuccessful = true;
             commonResponse.ResponseString = "Successfully converted to a GetProductByFilterDTO.";
 
             return commonResponse;
         }
 
+        /// <summary>
+        /// This method will be used to add a product to the vendor list of products 
+        /// </summary>
+        /// <param name="product">takes in an addproductdto which will have a photo added to it and then passed to the service layer</param>
+        /// <param name="photo">takes in a photo that will be set equal to the AddProductDTO's photo</param>
+        /// <returns>retruns a common response object</returns>
         public async Task<CommonResponse> AddProductToVendorListOfProducts(AddProductDTO product, IFormFile photo)
         {
             // Initialize a common response object
@@ -175,7 +198,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             {
                 _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
                 commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
 
                 return commonResponse;
             }
@@ -191,7 +214,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             {
                 _logger.LogWarning("Image was not chosen. AddProductToVendorListOfProducts manager call failed.");
                 commonResponse.ResponseString = "Image was not chosen.";
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
 
                 return commonResponse;
             }
@@ -208,7 +231,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             {
                 _logger.LogWarning("This vendor already has this model number. AddProductToVendorListOfProducts manager call failed.");
                 commonResponse.ResponseString = "This vendor already has this model number. ";
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
 
                 return commonResponse;
             }
@@ -220,7 +243,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             CommonResponse serviceResponse = _vendorLinkingService.AddProductToVendorListOfProducts(product);
 
             // If the database call was successful, we can add that product to our dictionary cache
-            if(serviceResponse.ResponseBool)
+            if(serviceResponse.IsSuccessful)
             {
                 vendorsProducts[vendor].TryAdd(modelNumber, 0);
             }
@@ -228,6 +251,12 @@ namespace AutoBuildApp.Managers.FeatureManagers
             return serviceResponse;
         }
 
+        /// <summary>
+        /// This method will be used to edit a product from the vendor list of products 
+        /// </summary>
+        /// <param name="product">takes in an addproductdto which will have a photo added to it if the user requests to edit the photo and then passed to the service layer</param>
+        /// <param name="photo">takes in a photo that will be set equal to the AddProductDTO's photo</param>
+        /// <returns>retruns a common response object</returns>
         public async Task<CommonResponse> EditProductInVendorListOfProducts(AddProductDTO product, IFormFile photo)
         {
             // Initialize a common response object
@@ -238,11 +267,11 @@ namespace AutoBuildApp.Managers.FeatureManagers
             {
                 _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
                 commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
 
                 return commonResponse;
             }
-            
+
             // If a photo is selected to edit, update the image and the image path.
             if (photo != null)
             {
@@ -254,6 +283,11 @@ namespace AutoBuildApp.Managers.FeatureManagers
             return _vendorLinkingService.EditProductInVendorListOfProducts(product);
         }
 
+        /// <summary>
+        /// This method will be used to delete a product from the vendor list of products 
+        /// </summary>
+        /// <param name="modelNumber">takes in the modelnumber as a string that will be deleted</param>
+        /// <returns>retruns a common response object</returns>
         public CommonResponse DeleteProductFromVendorList(string modelNumber)
         {
             // Initialize a common response object
@@ -264,7 +298,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             {
                 _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
                 commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
 
                 return commonResponse;
             }
@@ -274,7 +308,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             {
                 _logger.LogWarning("User inputted a null model number. DeleteProductFromVendorList manager call failed.");
                 commonResponse.ResponseString = "Model number is null.";
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
 
                 return commonResponse;
             }
@@ -282,6 +316,11 @@ namespace AutoBuildApp.Managers.FeatureManagers
             return _vendorLinkingService.DeleteProductFromVendorList(modelNumber);
         }
 
+        /// <summary>
+        /// This method will be used to get all products by vendor based on the filters parameter
+        /// </summary>
+        /// <param name="filters">takes in a GetProductByFilterDTO and passes it to the service layer</param>
+        /// <returns>retruns a common response object with a list of AddProductDTOs</returns>
         public CommonResponseWithObject<List<AddProductDTO>> GetAllProductsByVendor(GetProductByFilterDTO filters)
         {
             // Initialize a common response object
@@ -292,7 +331,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             {
                 _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
                 commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
 
                 return commonResponse;
             }
@@ -300,6 +339,10 @@ namespace AutoBuildApp.Managers.FeatureManagers
             return _vendorLinkingService.GetAllProductsByVendor(filters);
         }
 
+        /// <summary>
+        /// This method will be used to get all model numbers
+        /// </summary>
+        /// <returns>retruns a common response object with a list of strings</returns>
         public CommonResponseWithObject<List<string>> GetAllModelNumbers()
         {
             CommonResponseWithObject<List<string>> commonResponse = new CommonResponseWithObject<List<string>>();
@@ -309,7 +352,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             {
                 _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
                 commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
-                commonResponse.ResponseBool = false;
+                commonResponse.IsSuccessful = false;
 
                 return commonResponse;
             }

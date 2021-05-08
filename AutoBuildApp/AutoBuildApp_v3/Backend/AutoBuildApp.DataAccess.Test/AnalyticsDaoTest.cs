@@ -66,13 +66,13 @@ namespace AutoBuildApp.DataAccess.Test
 
             ResponseUAD expectedSuccessUAD = new ResponseUAD()
             {
-                ResponseBool = true,
+                IsSuccessful = true,
                 ConnectionState = true,
                 //IsAuthorized = true
             };
             ResponseUAD expectedFailedUAD = new ResponseUAD()
             {
-                ResponseBool = false,
+                IsSuccessful = false,
                 //IsAuthorized = false,
             };
             return new List<object[]>()

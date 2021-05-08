@@ -73,7 +73,7 @@ namespace AutoBuildApp.Managers
             {
                 _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
                 _commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
-                _commonResponse.ResponseBool = false;
+                _commonResponse.IsSuccessful = false;
 
                 return _commonResponse;
             }
@@ -93,7 +93,7 @@ namespace AutoBuildApp.Managers
                 };
 
                 _commonResponse.GenericObject = buildPost;
-                _commonResponse.ResponseBool = true;
+                _commonResponse.IsSuccessful = true;
                 _commonResponse.ResponseString = "Successfully created a Build Post.";
 
                 return _commonResponse;
@@ -119,7 +119,7 @@ namespace AutoBuildApp.Managers
                     _commonResponse.ResponseString = "An error occurred.";
                 }
 
-                _commonResponse.ResponseBool = false;
+                _commonResponse.IsSuccessful = false;
 
                 return _commonResponse;
             }

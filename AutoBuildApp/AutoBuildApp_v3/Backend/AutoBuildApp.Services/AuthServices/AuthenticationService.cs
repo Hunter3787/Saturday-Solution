@@ -93,13 +93,13 @@ namespace AutoBuildApp.Services.Auth_Services
             {
 
                 _responseAuth.isAuthenticated = false;
-                _responseAuth.ResponseBool = false;
+                _responseAuth.IsSuccessful = false;
                 return _responseAuth;
             }
 
 
             _authUserDTO = _responseAuth.AuthUserDTO;
-            _responseAuth.ResponseBool = true;
+            _responseAuth.IsSuccessful = true;
             _responseAuth.isAuthenticated = true;
 
             // conversion of userClaims to the .net built in claims 

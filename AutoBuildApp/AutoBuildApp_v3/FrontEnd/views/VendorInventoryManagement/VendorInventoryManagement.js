@@ -4,7 +4,6 @@ var tokenDanny = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiL
 var tokenNewEgg = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiLCJzdWIiOiJBdXRvYnVpbGQgVXNlciIsImF1ZCI6IlVTIiwiaWF0IjoxNjE4NDUzMzM2LCJleHAiOjE2Mjk2NzcyMzYsIm5iZiI6MTYyOTY3NzIzNiwiVXNlcm5hbWUiOiJuZXcgZWdnIiwiVXNlckNMYWltcyI6W3siUGVybWlzc2lvbiI6IkNyZWF0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlJldmlld3MifSx7IlBlcm1pc3Npb24iOiJEZWxldGUiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJTZWxmIn0seyJQZXJtaXNzaW9uIjoiRGVsZXRlIiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZlJldmlld3MifSx7IlBlcm1pc3Npb24iOiJFZGl0IiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZiJ9LHsiUGVybWlzc2lvbiI6IlJlYWRPbmx5IiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiQXV0b0J1aWxkIn0seyJQZXJtaXNzaW9uIjoiVXBkYXRlIiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZiJ9LHsiUGVybWlzc2lvbiI6IlVwZGF0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNlbGZSZXZpZXdzIn0seyJQZXJtaXNzaW9uIjoiQ3JlYXRlIiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiUHJvZHVjdHMifSx7IlBlcm1pc3Npb24iOiJVcGRhdGUiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJWZW5kb3JQcm9kdWN0cyJ9LHsiUGVybWlzc2lvbiI6IkRlbGV0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlZlbmRvclByb2R1Y3RzIn1dfQ.MQyT1fFd2VZjFlxX0RiEhpLk4liae6xuPdpewqRDpZg';
 
 var currentToken = tokenNewEgg;
-let listOfDivs = document.getElementById('listOfDivs');
 
 const fetchRequest = {
   method: 'GET',
@@ -16,9 +15,17 @@ const fetchRequest = {
   }
 };
 
+window.onload = getItemsByFilter();
+
+// Event listeners to upload the display when a filter is changed
+var checkboxes = document.querySelectorAll('input[type=checkbox]');
+checkboxes.forEach(checkbox => checkbox.addEventListener('click', getItemsByFilter));
+var radioButtons = document.querySelectorAll('input[type=radio]');
+radioButtons.forEach(button => button.addEventListener('click', getItemsByFilter));
+
 // Gets all model numbers, then populates the dropdown menu.
-function getAllModelNumbers() {
-  fetch(uri + '/modelNumbers', fetchRequest)
+async function getAllModelNumbers() {
+  await fetch(uri + '/modelNumbers', fetchRequest)
   .then(response => response.json())
   .then(data => saveModelNumbers(data));
 }
@@ -36,7 +43,7 @@ function removeOptions(dropdown) {
 
 // Takes the data, clears the dropdown menu, and populates the options
 function saveModelNumbers(data) {
-  var dropdown = document.querySelector('.modelNumberDropDown');
+  var dropdown = document.querySelector('.model-number-dropdown');
 
   removeOptions(dropdown);
 
@@ -55,7 +62,7 @@ async function addItem() {
 
   // New image div
   var newDivImage = document.createElement('div');
-  newDivImage.classList.add('div-table-col');
+  newDivImage.classList.add('div-table-row');
   newDivImage.style="width:130px; line-height:10px";
 
   // Images for the small image and the pop out image
@@ -86,33 +93,33 @@ async function addItem() {
     }
   }))
 
-  ImageUrlLarge.classList.add('largePhoto');
-  ImageUrlLarge.classList.add('displayNone');
+  ImageUrlLarge.classList.add('large-photo');
+  ImageUrlLarge.classList.add('display-none');
 
   // Add the large image to the document
   document.body.append(ImageUrlLarge);
 
   // If the mouse hovers over or if the mouse moves out, we toggle the pop out image.
   ImageUrlSmall.addEventListener('mouseover', () => {
-    ImageUrlLarge.classList.toggle('displayNone');
+    ImageUrlLarge.classList.toggle('display-none');
   })
   ImageUrlSmall.addEventListener('mouseout', () => {
-    ImageUrlLarge.classList.toggle('displayNone');
+    ImageUrlLarge.classList.toggle('display-none');
   })
   
   // New model number div
   var newDivModelNumber = document.createElement('div');
-  newDivModelNumber.classList.add('div-table-col');
+  newDivModelNumber.classList.add('div-table-row');
   newDivModelNumber.style = "width:175px";
 
   // Creates a deep copy of the drop down,  shows it, and appends it to the model number div
-  let modelNumberDropDown = document.querySelector('.modelNumberDropDown').cloneNode(true)
+  let modelNumberDropDown = document.querySelector('.model-number-dropdown').cloneNode(true)
   modelNumberDropDown.classList.remove('displayNone');
   newDivModelNumber.appendChild(modelNumberDropDown);
 
   // New name div
   var newDivName = document.createElement('div');
-  newDivName.classList.add('div-table-col');
+  newDivName.classList.add('div-table-row');
   newDivName.style="width:500px";
 
   // Creates text area and appends to new name div
@@ -123,7 +130,7 @@ async function addItem() {
 
   // New url div
   var newDivUrl = document.createElement('div');
-  newDivUrl.classList.add('div-table-col');
+  newDivUrl.classList.add('div-table-row');
   newDivUrl.style="width:300px";
 
   // Creates text area and appends to new product url div
@@ -134,7 +141,7 @@ async function addItem() {
 
   // New availability div
   var newDivAvailability = document.createElement('div');
-  newDivAvailability.classList.add('div-table-col');
+  newDivAvailability.classList.add('div-table-row');
   newDivAvailability.classList.add('center');
   newDivAvailability.style="width:100px";
 
@@ -146,7 +153,7 @@ async function addItem() {
   
   // New price div
   var newDivPrice = document.createElement('div');
-  newDivPrice.classList.add('div-table-col');
+  newDivPrice.classList.add('div-table-row');
   newDivPrice.classList.add('center');
   newDivPrice.style="width:100px";
   
@@ -162,7 +169,7 @@ async function addItem() {
 
   // New button div
   var buttonDiv = document.createElement('div');
-  buttonDiv.classList.add('div-table-col');
+  buttonDiv.classList.add('div-table-row');
   buttonDiv.classList.add('center');
   buttonDiv.style="width:120px";
   
@@ -236,11 +243,12 @@ async function addItem() {
       alert('correct');
     }
     else {
-      alert('error')
+      alert('error');
     }
   })
+
   // Refresh the items
-  .then(getItemsByFilter());
+  await getItemsByFilter();
 }
 
 // Submits the edit item to the back end
@@ -261,6 +269,7 @@ async function submitEditItem(modelNumber, newName, photo, newImageUrl,
     mode: 'cors',
     headers: {
       'Accept': 'application/json',
+      'Authorization': 'bearer ' + currentToken
     },
     body:formData
   })
@@ -273,9 +282,9 @@ async function submitEditItem(modelNumber, newName, photo, newImageUrl,
       alert('error');
     }
  })
+
   // Refresh the items
- .then(getItemsByFilter());
-  
+  await getItemsByFilter();
 }
 
 // Requests a delete operation from the back end
@@ -288,13 +297,13 @@ async function submitDeleteItem(modelNumber, newDivRow) {
   }
   // let customRequest = Object.assign(fetchRequest, {method: 'DELETE'});
 
-  // await fetch(uri + '?modelNumber=' + modelNumber, customRequest)
-  fetch(uri + '?modelNumber=' +modelNumber, {
+  await fetch(uri + '?modelNumber=' +modelNumber, {
     method: 'DELETE',
     mode: 'cors',
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': 'bearer ' + currentToken
     },
   })
   .then(response => {
@@ -306,28 +315,13 @@ async function submitDeleteItem(modelNumber, newDivRow) {
       alert('could not delete');
     }
   })
+
+  // Refresh the items
+  await getItemsByFilter();
 }
 
-
-// function getItems() {
-//   fetch(uri, fetchRequest)
-//     .then(response => response.json())
-//     .then(data => displayItemsFilter(data))
-//     .catch(error => console.error('Unable to get items.', error));
-    
-// }
-
-// function process(){
-//   getItemsByFilter();
-// }
-// function looping(){
-//   setTimeout(process, 3000);
-// }
-
-// var refreshData = setInterval(looping, 3000);
-
 // Gets the items by a specified list of filters
- function getItemsByFilter() {
+ async function getItemsByFilter() {
   var filtersQueryParameter = "?filtersString=";
   var priceQueryParameter = "&order=";
   var checkboxes = document.querySelectorAll('input[type=checkbox]');
@@ -349,9 +343,9 @@ async function submitDeleteItem(modelNumber, newDivRow) {
     }
   })
 
-  fetch(uri + filtersQueryParameter + priceQueryParameter, fetchRequest)
+  await fetch(uri + filtersQueryParameter + priceQueryParameter, fetchRequest)
   .then(response => response.json())
-  .then(getAllModelNumbers())
+  .then(await getAllModelNumbers())
   .then(async data => await displayItemsFilter(data));
 
   console.log('hey');
@@ -360,12 +354,13 @@ async function submitDeleteItem(modelNumber, newDivRow) {
 // Display all items with the set of filters
  async function displayItemsFilter(data) {
 
+  let listOfDivs = document.querySelector('.list-of-divs');
   // Reset the list of divs
   listOfDivs.innerHTML = '';
 
   // Create div that will be appended to the list of divs
   var innerListOfDivs = document.createElement('div');
-  innerListOfDivs.classList.add('innerDiv');
+  innerListOfDivs.classList.add('inner-div');
 
   // Create div that imitates a table
   var divTable = document.createElement('div');
@@ -373,53 +368,53 @@ async function submitDeleteItem(modelNumber, newDivRow) {
 
   // Create header div
   var divRow = document.createElement('div');
-  divRow.classList.add('div-table-row');
+  divRow.classList.add('div-table-row-header');
 
   // Create image header div
   var ImageHeaderDiv = document.createElement('div');
-  ImageHeaderDiv.classList.add('div-table-col');
+  ImageHeaderDiv.classList.add('div-table-row');
   ImageHeaderDiv.classList.add('center');
   ImageHeaderDiv.style="width:130px";
   ImageHeaderDiv.innerHTML="Image";
 
   // Create model number header div
   var ModelNumberHeaderDiv = document.createElement('div');
-  ModelNumberHeaderDiv.classList.add('div-table-col');
+  ModelNumberHeaderDiv.classList.add('div-table-row');
   ModelNumberHeaderDiv.classList.add('center');
   ModelNumberHeaderDiv.style="width:175px";
   ModelNumberHeaderDiv.innerHTML="Model Number";
 
   // Create name header div
   var NameHeaderDiv = document.createElement('div');
-  NameHeaderDiv.classList.add('div-table-col');
+  NameHeaderDiv.classList.add('div-table-row');
   NameHeaderDiv.classList.add('center');
   NameHeaderDiv.style="width:500px";
   NameHeaderDiv.innerHTML="Name";
 
   // Create url header div
   var UrlHeaderDiv = document.createElement('div');
-  UrlHeaderDiv.classList.add('div-table-col');
+  UrlHeaderDiv.classList.add('div-table-row');
   UrlHeaderDiv.classList.add('center');
   UrlHeaderDiv.style="width:300px";
   UrlHeaderDiv.innerHTML="Url";
 
   // Create availability header div
   var AvailabilityHeaderDiv = document.createElement('div');
-  AvailabilityHeaderDiv.classList.add('div-table-col');
+  AvailabilityHeaderDiv.classList.add('div-table-row');
   AvailabilityHeaderDiv.classList.add('center');
   AvailabilityHeaderDiv.style="width:100px";
   AvailabilityHeaderDiv.innerHTML="Availability";
 
   // Create price header div
   var PriceHeaderDiv = document.createElement('div');
-  PriceHeaderDiv.classList.add('div-table-col');
+  PriceHeaderDiv.classList.add('div-table-row');
   PriceHeaderDiv.classList.add('center');
   PriceHeaderDiv.style="width:100px";
   PriceHeaderDiv.innerHTML="Price";
 
   // Create button header div
   var ButtonHeaderDiv = document.createElement('div');
-  ButtonHeaderDiv.classList.add('div-table-col');
+  ButtonHeaderDiv.classList.add('div-table-row');
   ButtonHeaderDiv.style="width:120px";
 
   // Append all the header divs to the first row
@@ -451,7 +446,7 @@ async function submitDeleteItem(modelNumber, newDivRow) {
 
     // Create the new image div
     var newDivImage = document.createElement('div');
-    newDivImage.classList.add('div-table-col');
+    newDivImage.classList.add('div-table-row');
     newDivImage.style = "line-height: 10px; width: 130px";
 
     // Create the images and append the small image to the image div
@@ -484,14 +479,14 @@ async function submitDeleteItem(modelNumber, newDivRow) {
 
     // If the mouse hovers over or if the mouse moves out, we toggle the pop out image.
     ImageUrlSmall.addEventListener('mouseover', () => {
-      ImageUrlLarge.classList.toggle('displayNone');
+      ImageUrlLarge.classList.toggle('display-none');
     })
     ImageUrlSmall.addEventListener('mouseout', () => {
-      ImageUrlLarge.classList.toggle('displayNone');
+      ImageUrlLarge.classList.toggle('display-none');
     })
     
-    ImageUrlLarge.classList.add('largePhoto');
-    ImageUrlLarge.classList.add('displayNone');
+    ImageUrlLarge.classList.add('large-photo');
+    ImageUrlLarge.classList.add('display-none');
 
     ImageUrlLarge.src = item["imageUrl"];
     ImageUrlSmall.src = item["imageUrl"];
@@ -499,7 +494,7 @@ async function submitDeleteItem(modelNumber, newDivRow) {
 
     // New model number div
     var newDivModelNumber = document.createElement('div');
-    newDivModelNumber.classList.add('div-table-col');
+    newDivModelNumber.classList.add('div-table-row');
     newDivModelNumber.classList.add('header');
     newDivModelNumber.style="width:175px";
 
@@ -510,7 +505,7 @@ async function submitDeleteItem(modelNumber, newDivRow) {
 
     // New name div
     var newDivName = document.createElement('div');
-    newDivName.classList.add('div-table-col');
+    newDivName.classList.add('div-table-row');
     newDivName.style="width:500px";
 
     // Product name text
@@ -526,7 +521,7 @@ async function submitDeleteItem(modelNumber, newDivRow) {
 
     // New url div
     var newDivUrl = document.createElement('div');
-    newDivUrl.classList.add('div-table-col');
+    newDivUrl.classList.add('div-table-row');
     newDivUrl.style="width:300px";
 
     // Url text
@@ -543,7 +538,7 @@ async function submitDeleteItem(modelNumber, newDivRow) {
 
     // New availability div
     var newDivAvailability = document.createElement('div');
-    newDivAvailability.classList.add('div-table-col');
+    newDivAvailability.classList.add('div-table-row');
     newDivAvailability.classList.add('center');
     newDivAvailability.style="width:100px";
 
@@ -551,14 +546,12 @@ async function submitDeleteItem(modelNumber, newDivRow) {
     var AvailabilityCheckbox = document.createElement('input');
     AvailabilityCheckbox.type = "checkbox";
     AvailabilityCheckbox.style = "  transform: scale(2);";
-    if(item["availability"] == true) {
-      AvailabilityCheckbox.checked = true;
-    }
+    AvailabilityCheckbox.checked = item["availability"];
     newDivAvailability.appendChild(AvailabilityCheckbox);    
 
     // New price div
     var newDivPrice = document.createElement('div');
-    newDivPrice.classList.add('div-table-col');
+    newDivPrice.classList.add('div-table-row');
     newDivPrice.classList.add('center');
     newDivPrice.style="width:100px";
 
@@ -583,7 +576,7 @@ async function submitDeleteItem(modelNumber, newDivRow) {
 
     // New button div
     var buttonDiv = document.createElement('div');
-    buttonDiv.classList.add('div-table-col');
+    buttonDiv.classList.add('div-table-row');
     buttonDiv.classList.add('center');
     buttonDiv.style="width:120px";
 
@@ -599,16 +592,16 @@ async function submitDeleteItem(modelNumber, newDivRow) {
     deleteButton.addEventListener('click', async () => {
       await submitDeleteItem(item["modelNumber"], newDivRow);
     })
+
     // When the edit button is clicked, remove the text 
     //    and append the editable text for name, url, and price
     editButton.addEventListener('click', async () => {
       newDivName.removeChild(ProductNameText);
       newDivUrl.removeChild(UrlText);
       priceDiv.removeChild(ProductPriceText);
-      newDivName.append(ProductNameTextArea);
+      newDivName.appendChild(ProductNameTextArea);
       newDivUrl.appendChild(ProductUrlTextArea);
       priceDiv.appendChild(ProductPriceInput);
-
 
       var imageUrl = item["imageUrl"];
 
@@ -630,7 +623,8 @@ async function submitDeleteItem(modelNumber, newDivRow) {
       buttonDiv.append(saveButton);
       buttonDiv.append(deleteButton);
     })
-
+  
+    // Adds each individual div to the row div
     newDivRow.appendChild(newDivImage);
     newDivRow.appendChild(newDivModelNumber);
     newDivRow.appendChild(newDivName);
@@ -639,18 +633,12 @@ async function submitDeleteItem(modelNumber, newDivRow) {
     newDivRow.appendChild(newDivPrice);
     newDivRow.appendChild(buttonDiv);
 
+    // Add the individual row to the list of rows
     allDivRows.appendChild(newDivRow);
 
+    // Sets the location of the big image directly to the right of the small image
     ImageUrlLarge.style.left = newDivImage.offsetLeft + 450 + 'px';
-    ImageUrlLarge.style.top = newDivImage.offsetTop + 100 + 'px';
-    var btnn = document.querySelector('.test2');
-    btnn.addEventListener('click', () => {
-      ImageUrlLarge.style.left = newDivImage.offsetLeft + 450 + 'px';
-      ImageUrlLarge.style.top = newDivImage.offsetTop + 100 + 'px';
-    })
-    deleteButton.addEventListener('click', () => {
-      ImageUrlLarge.style.left = newDivImage.x + 150 + 'px';
-      ImageUrlLarge.style.top = newDivImage.y + 63 + 'px';
-    })
+    ImageUrlLarge.style.top = newDivImage.offsetTop + 50 + 'px';
+
   })
 }
