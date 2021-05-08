@@ -1,4 +1,3 @@
-const uri = 'https://localhost:5001/MostPopularBuilds';
 let posts = [];
 let token = ' ';
 const fetchRequest = {
@@ -23,8 +22,11 @@ async function postItem() {
     // sets a custom request overriding the const request.
     let customRequest = Object.assign(fetchRequest, {method: 'POST', body: postData});
 
+    // get the endpoint from the config file.
+    let endpoint = appConfigurations.Endpoints.MostPopularBuilds || '';
+
     // makes a fetch post request with the custom request.
-    await fetch(uri, customRequest)
+    await fetch(endpoint, customRequest)
 
     // redirects the page to the main page after a submission.
     window.location.assign("../MPBmain/MPB.html")

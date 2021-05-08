@@ -1,4 +1,3 @@
-const uri = 'https://localhost:5001/MostPopularBuilds/';
 let posts = [];
 let filterArray = [];
 let token = ' ';
@@ -105,7 +104,9 @@ var refreshData = setInterval(looping, 3000);
 // This function will call a fetch request.
 async function getItems() {
 
-    await fetch(uri + getFilterString(), fetchRequest) // fetches the default URI
+  let endpoint = appConfigurations.Endpoints.MostPopularBuilds || '';
+
+    await fetch(endpoint + getFilterString(), fetchRequest) // fetches the default URI
         .then(response => response.json()) // Will receive a response from the default response.json.
         .then(data => displayItems(data)) // will call the display items function.
         .then(() => findByName(searchFilter))
