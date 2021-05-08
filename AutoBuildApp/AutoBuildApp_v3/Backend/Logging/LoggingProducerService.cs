@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using AutoBuildApp.Models;
 using AutoBuildApp.DomainModels;
 using AutoBuildApp.DomainModels.Enumerations;
+using Logging;
+using Logging.Globals;
 
 /// <summary>
 /// References used from file: Solution Items/References.txt 
@@ -73,26 +75,30 @@ namespace AutoBuildApp.Logging
         // Logger standard constructor, will establish connection when new logger is created.
         private LoggingProducerService() 
         {
-            this._connectionFactory = new ConnectionFactory("tcp://localhost:61616?jms.UseAsyncSend=true"); // Stores the connection string.
-            this._connection = this._connectionFactory.CreateConnection(); // Creates a connection to the connection string destination path.
-            this._connection.Start(); // Begins the connection to the specified location.
-            this._session = _connection.CreateSession(); // Sets the shared context of the session into session.
+            // This will start the logging consumer manager in the background so that logs may be sent to the DB.
+            LoggingConsumerManager _loggingConsumerManager = new LoggingConsumerManager();
+            
+            _connectionFactory = new ConnectionFactory(LoggingGlobals.USE_ASYNC_URI); // Stores the connection string.
+            _connection = _connectionFactory.CreateConnection(); // Creates a connection to the connection string destination path.
+            _connection.Start(); // Begins the connection to the specified location.
+            _session = _connection.CreateSession(); // Sets the shared context of the session into session.
 
-            IDestination destination = _session.GetQueue("LoggingQueue"); // Gets the name of the Queue used and sets it to the destination.
+            IDestination destination = _session.GetQueue(LoggingGlobals.DESTINATION); // Gets the name of the Queue used and sets it to the destination.
 
-            this._producer = this._session.CreateProducer(destination); // This sets up for messages to be sent to the location of LoggingQueue.
+            _producer = _session.CreateProducer(destination); // This sets up for messages to be sent to the location of LoggingQueue.
 
             _counter++; // Increments the count of the Logger to keep track of instances.
         }
+
         // Constructor for log and sets operations for log to be sent to the Queue.
         public bool Log(string message, LogType level, string dateTime)
         {
-                // stores log variables into the LogObject to be sent to the Queue.
-                _logger.Message = message; 
-                _logger.LogLevel = level;
-                _logger.DateTime = dateTime;
-                SendLog(_logger); // method used to send LogObject to the Queue.
-                return true;
+            // stores log variables into the LogObject to be sent to the Queue.
+            _logger.Message = message;
+            _logger.LogLevel = level;
+            _logger.DateTime = dateTime;
+            SendLog(_logger); // method used to send LogObject to the Queue.
+            return true;
         }
 
         // Constructor for log and sets operations for log to be asynchronously sent to the Queue.
@@ -128,6 +134,58 @@ namespace AutoBuildApp.Logging
 
             return result;
         }
+
+
+        // Constructor for log and sets operations for log to be sent to the Queue.
+        public bool Log(string message, LogType level, EventType eventType, string eventValue, string username, string dateTime)
+        {
+            // stores log variables into the LogObject to be sent to the Queue.
+            _logger.Message = message; 
+            _logger.LogLevel = level;
+            _logger.Event = eventType;
+            _logger.EventValue = eventValue;
+            _logger.Username = username;
+            _logger.DateTime = dateTime;
+            SendLog(_logger); // method used to send LogObject to the Queue.
+            return true;
+        }
+
+        // Constructor for log and sets operations for log to be asynchronously sent to the Queue.
+        // These will be asynchronously sent to the Queue by starting a new thread.
+        public async Task<bool> LogAsync(string message, LogType level, EventType eventType, string eventValue, string username, string dateTime)
+        {
+            _logger = new Logger(); // store a new log object every time a new log is called.
+
+            #region Logging write lock implementation
+            // This will ensure that only one write operation is happening at a single moment.
+
+            //await semaphore.WaitAsync();
+            //try
+            //{
+            //    logObject.Message = message;
+            //    logObject.LevelLog = level;
+            //    logObject.Datetime = dateTime;
+            //    sendLog(logObject); // Call function to send log object to the queue.
+            //    Thread.Sleep(2000);
+            //}
+            //finally
+            //{
+            //    semaphore.Release();
+            //}
+
+            // stores log variables into the LogObject to be sent to the Queue.
+            #endregion
+
+            _logger.Message = message;
+            _logger.LogLevel = level;
+            _logger.Event = eventType;
+            _logger.EventValue = eventValue;
+            _logger.Username = username;
+            _logger.DateTime = dateTime;
+            var result = await Task.Run(() => SendLog(_logger)); // method used to send LogObject to the Queue.
+
+            return result;
+        }
         public bool SendLog(Logger log)
         {
             // If the connection has not been disposed, then send the object to the Log.
@@ -141,19 +199,19 @@ namespace AutoBuildApp.Logging
             }
             else
             {
-                throw new ObjectDisposedException(this.GetType().FullName); // If the connection is disposed then it will return this exception message.
+                throw new ObjectDisposedException(GetType().FullName); // If the connection is disposed then it will return this exception message.
             }
         }
         // This method will simply close all connections and sessions and set the isDisposed bool to true to state that the connections have been closed.
         public void Dispose()
         {
             // Will dispose if not already disposed.
-            if (!this._isDisposed)
+            if (!_isDisposed)
             {
-                this._producer.Dispose();
-                this._session.Dispose();
-                this._connection.Dispose();
-                this._isDisposed = true;
+                _producer.Dispose();
+                _session.Dispose();
+                _connection.Dispose();
+                _isDisposed = true;
             }
         }
     }
@@ -161,10 +219,24 @@ namespace AutoBuildApp.Logging
     // This is a class for more descriptive Logs to be called at various log levels.
     public static class LoggerEx
     {
+        public static async void LogInformation(this LoggingProducerService logger, string message, EventType eventType, string eventValue, string username) // Information log level, this is a variant of Logger.
+        {
+            // Appends the date and time to the Log for easy info to query.
+            await logger.LogAsync(message, LogType.Information, eventType, eventValue, username, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF"));
+        }
+        public static async void LogWarning(this LoggingProducerService logger, string message, EventType eventType, string eventValue, string username)
+        {
+            await logger.LogAsync(message, LogType.Warning, eventType, eventValue, username, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF"));
+        }
+        public static async void LogError(this LoggingProducerService logger, string message, EventType eventType, string eventValue, string username)
+        {
+            await logger.LogAsync(message, LogType.Error, eventType, eventValue, username, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF"));
+        }
+
         public static async void LogInformation(this LoggingProducerService logger, string message) // Information log level, this is a variant of Logger.
         {
             // Appends the date and time to the Log for easy info to query.
-            await logger.LogAsync(message, LogType.Information, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF")); 
+            await logger.LogAsync(message, LogType.Information, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF"));
         }
         public static async void LogWarning(this LoggingProducerService logger, string message)
         {
@@ -174,12 +246,5 @@ namespace AutoBuildApp.Logging
         {
             await logger.LogAsync(message, LogType.Error, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF"));
         }
-    }
-
-    // This allows the ILogger to be an interface and able to be implemented by other classes.
-    public interface ILogger
-    {
-        bool Log(string message, LogType level, string dateTime);
-        Task<bool> LogAsync(string message, LogType level, string dateTime);
     }
 }

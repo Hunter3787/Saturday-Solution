@@ -1,6 +1,8 @@
 ﻿using AutoBuildApp.DomainModels;
+using AutoBuildApp.DomainModels.Enumerations;
 using AutoBuildApp.Logging;
 using AutoBuildApp.Services;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -37,8 +39,17 @@ namespace AutoBuildApp.Managers
         /// </summary>
         /// <param name="reviewRating">ReviewRating object from controller to be sent to the service layer.</param>
         /// <returns>boolean success-state</returns>
-        public async Task<bool> CreateReviewRating(ReviewRating reviewRating)
+        public async Task<bool> CreateReviewRating(IFormCollection data, List<IFormFile> image)
         {
+            var reviewRating = new ReviewRating()
+            {
+                BuildId = data["buildId"],
+                Username = data["username"],
+                StarRating = (StarType)int.Parse(data["starRating"]),
+                Message = data["message"],
+                Image = image
+            };
+
             _logger.LogInformation($"Review Rating Manager CreateReviewRating was called for User:{reviewRating.Username}");
 
             var result = await _reviewRatingService.CreateReviewRating(reviewRating); // returns the boolean success state.
@@ -94,8 +105,16 @@ namespace AutoBuildApp.Managers
         /// </summary>
         /// <param name="reviewRating">ReviewRating object that will be sent through to the service layer</param>
         /// <returns>bool success state.</returns>
-        public async Task<bool> EditReviewRating(ReviewRating reviewRating)
+        public async Task<bool> EditReviewRating(IFormCollection data, List<IFormFile> image)
         {
+            var reviewRating = new ReviewRating()
+            {
+                EntityId = data["entityId"],
+                StarRating = (StarType)int.Parse(data["starRating"]),
+                Message = data["message"],
+                Image = image
+            };
+
             _logger.LogInformation($"Review Rating Service EditReviewRating was called for ID:{reviewRating.EntityId}");
 
             var result = await _reviewRatingService.EditReviewRating(reviewRating);

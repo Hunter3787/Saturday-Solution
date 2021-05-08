@@ -1,6 +1,10 @@
 ﻿using AutoBuildApp.DomainModels;
 using AutoBuildApp.DomainModels.Exceptions;
 using AutoBuildApp.Logging;
+using AutoBuildApp.Models.DataTransferObjects;
+using AutoBuildApp.Models.Enumerations;
+using AutoBuildApp.Security;
+using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Services;
 using AutoBuildApp.Services.FeatureServices;
 using Microsoft.AspNetCore.Http;
@@ -21,10 +25,19 @@ namespace AutoBuildApp.Managers
     public class MostPopularBuildsManager
     {
         // Initialize the logger service locally.
-        private readonly LoggingProducerService _logger = LoggingProducerService.GetInstance;
+        private readonly LoggingProducerService _logger;
 
         // creates a private variable of the service so its methods can be called.
         private readonly MostPopularBuildsService _mostPopularBuildsService;
+
+        // Initialize a common response object
+        private readonly CommonResponseWithObject<BuildPost> _commonResponse;
+
+        // The registered user authorization check.
+        private readonly List<string> _allowedRolesForViewing;
+
+        // The unregistered user authorization check.
+        private readonly List<string> _allowedRolesForPosting;
 
         /// <summary>
         /// This default constructor to initalize the service.
@@ -32,7 +45,84 @@ namespace AutoBuildApp.Managers
         /// <param name="mostPopularBuildsService">Takes in a service as a parameter to intialize it.</param>
         public MostPopularBuildsManager(MostPopularBuildsService mostPopularBuildsService)
         {
+            _allowedRolesForViewing = new List<string>()
+            {
+                RoleEnumType.UnregisteredRole
+            };
+
+            _allowedRolesForPosting = new List<string>()
+            {
+                RoleEnumType.BasicRole
+            };
+
+            _logger = LoggingProducerService.GetInstance;
+            _commonResponse = new CommonResponseWithObject<BuildPost>();
             _mostPopularBuildsService = mostPopularBuildsService;
+        }
+
+        /// <summary>
+        /// This method will convert Forms to a BuildPost object.
+        /// </summary>
+        /// <param name="data">Takes in the data from the form.</param>
+        /// <param name="image">Takes in a FormFile file.</param>
+        /// <returns>returns a common response object with bool</returns>
+        public CommonResponseWithObject<BuildPost> ConvertFormToBuildPost(IFormCollection data, List<IFormFile> image)
+        {
+            // Check authorization
+            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
+            {
+                _logger.LogInformation("VendorLinking " + AuthorizationResultType.NotAuthorized.ToString());
+                _commonResponse.ResponseString = "VendorLinking " + AuthorizationResultType.NotAuthorized.ToString();
+                _commonResponse.ResponseBool = false;
+
+                return _commonResponse;
+            }
+
+            // This try catch catches a format exception or a null reference exception
+            try
+            {
+                // Initialize a local BuildPost Object to store data into and then pass to the manager.
+                var buildPost = new BuildPost()
+                {
+                    Username = data["username"],
+                    Title = data["title"],
+                    Description = data["description"],
+                    BuildType = (BuildType)int.Parse(data["buildType"]),
+                    BuildImagePath = data["buildImagePath"],
+                    Image = image
+                };
+
+                _commonResponse.GenericObject = buildPost;
+                _commonResponse.ResponseBool = true;
+                _commonResponse.ResponseString = "Successfully created a Build Post.";
+
+                return _commonResponse;
+            }
+
+            // Catches common exceptions and returns generic response.
+            catch (Exception ex)
+            {
+                if (ex is FormatException)
+                {
+                    _logger.LogWarning(ex.Message);
+                    _commonResponse.ResponseString = "One or more fields were empty.";
+                }
+
+                else if (ex is NullReferenceException)
+                {
+                    _logger.LogWarning(ex.Message);
+                    _commonResponse.ResponseString = "Parameter was null.";
+                }
+                else
+                {
+                    _logger.LogWarning("An error occurred in vendor linking manager.");
+                    _commonResponse.ResponseString = "An error occurred.";
+                }
+
+                _commonResponse.ResponseBool = false;
+
+                return _commonResponse;
+            }
         }
 
         /// <summary>
@@ -42,6 +132,12 @@ namespace AutoBuildApp.Managers
         /// <returns>success state bool value.</returns>
         public async Task<bool> PublishBuild(BuildPost buildPost)
         {
+            // Authorization check
+            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
+            {
+                return false;
+            }
+
             // This try/catch block checks for a null BuildPost object.
             try
             {
@@ -136,6 +232,12 @@ namespace AutoBuildApp.Managers
         /// <returns>returns a build post.</returns>
         public BuildPost GetBuildPost(string buildId)
         {
+            // Authorization check
+            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
+            {
+                return null;
+            }
+
             // Log the manager get build posts being called
             _logger.LogInformation("Most Popular Builds Manager GetBuildPost was called.");
 
@@ -164,6 +266,12 @@ namespace AutoBuildApp.Managers
         /// <returns>retruns a list of Build Posts.</returns>
         public List<BuildPost> GetBuildPosts(string orderLikes, string buildType)
         {
+            // Authorization check
+            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
+            {
+                return null;
+            }
+
             // Log the manager get build posts being called
             _logger.LogInformation("Most Popular Builds Manager GetBuildPosts was called.");
 
@@ -205,6 +313,12 @@ namespace AutoBuildApp.Managers
         /// <returns>returns a success state bool.</returns>
         public bool AddLike(Like like)
         {
+            // Authorization check
+            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
+            {
+                return false;
+            }
+
             // This try/catch block checks for a null BuildPost object.
             try
             {

@@ -4,11 +4,8 @@ using System.Text;
 
 namespace AutoBuildApp.Models
 {
-    public enum EventType
+    public static class EventValue
     {
-        LoginEvent,
-        LogoutEvent,
-        ViewPageEvent,
-        None
+        public static string PageId => "01923";
     }
 }
