@@ -14,7 +14,7 @@ const fetchRequest = {
     }
   };
 
-  window.onload = getProductDetails('100-100000022BOX')
+  window.onload = getProductDetails('GV-N207SWF3OC-8GD')
 
   async function getProductDetails(modelNumber) {
       await fetch(uri + '/' + modelNumber)
