@@ -1,5 +1,6 @@
 ﻿using AutoBuildApp.Api.HelperFunctions;
 using AutoBuildApp.DataAccess;
+using AutoBuildApp.DomainModels;
 using AutoBuildApp.DomainModels.Abstractions;
 using AutoBuildApp.Managers.FeatureManagers;
 using AutoBuildApp.Security.Enumerations;
@@ -19,22 +20,10 @@ namespace AutoBuildApp.Manger.Tests
     public class UADManagerTests
     {
 
-
+        // getting the manager 
         ConnectionManager conString = ConnectionManager.connectionManager;
-        
-        // 2) passing in the name I assigned my connection string 
-        private static IEnumerable<object[]> FORMETHOD()
-        {
-            return new List<object[]>()
-            {
-               new object[]{},
-            };
 
-        }
-
-
-
-        private static IEnumerable<object[]> NonAdminPricipleData()
+        private static IEnumerable<object[]> Principle_CommonResponse_Data()
         {
             UserIdentity AdminIdentity = new UserIdentity
             {
@@ -54,51 +43,56 @@ namespace AutoBuildApp.Manger.Tests
             ClaimsIdentity basicClaimsIdentity = new ClaimsIdentity
             (AdminIdentity, basicClaims.Claims(), AdminIdentity.AuthenticationType, AdminIdentity.Name, " ");
 
-            ResponseUAD expectedSuccessUAD = new ResponseUAD()
+
+
+            AnalyticsDataDTO analyticsDataDTOExpectedSuccess = new AnalyticsDataDTO()
             {
-                ResponseBool = true,
-                ConnectionState = true,
-                //IsAuthorized = true
-            };
-            ResponseUAD expectedFailedUAD = new ResponseUAD()
+                SuccessFlag = true,
+                Result =  "Successful Data retrieval",
+        };
+            AnalyticsDataDTO analyticsDataDTOExpectedFail = new AnalyticsDataDTO()
             {
-                ResponseBool = false,
-               // IsAuthorized = false,
+                SuccessFlag = false,
+                Result = AuthorizationResultType.NotAuthorized.ToString(),
+
             };
+
             return new List<object[]>()
             {
-               //new object[]{ new ClaimsPrincipal(adminClaimsIdentity),expectedSuccessUAD },
-               new object[]{ new ClaimsPrincipal(basicClaimsIdentity) },
+               new object[]{ new ClaimsPrincipal(basicClaimsIdentity), analyticsDataDTOExpectedFail },
+               //new object[]{ new ClaimsPrincipal(adminClaimsIdentity), analyticsDataDTOExpectedSuccess },
             };
 
         }
-
-
 
         [TestMethod]
         [DataTestMethod]
-        [DynamicData(nameof(NonAdminPricipleData), DynamicDataSourceType.Method)]
-        public void GetAllChartData_NOT_AUTHORIZED_Returned
-          (ClaimsPrincipal principalGenerated)
+        [DynamicData(nameof(Principle_CommonResponse_Data), DynamicDataSourceType.Method)]
+        public void GetChartData_AnalyticsDTO_Returned
+          (ClaimsPrincipal principalGenerated, AnalyticsDataDTO analyticsDataDTOExpected)
         {
-            Thread.CurrentPrincipal = principalGenerated;
-            ResponseUAD responseUAD = new ResponseUAD();
+            // setting up:
+            Thread.CurrentPrincipal = principalGenerated; // setting the passes principle to the thread
+            ResponseUAD expectedResponseUAD = new ResponseUAD(); // inst
 
             string connection = conString.GetConnectionStringByName("MyConnection");
 
-            AnalyticsManager _uadManager = new AnalyticsManager(connection);
+            AnalyticsManager uadManager = new AnalyticsManager(connection);
 
-           // string actual = _uadManager.GetAllChartData();
-           
-            string expected = AuthorizationResultType.NotAuthorized.ToString();
+            AnalyticsDataDTO analyticsDataDTOActual = new AnalyticsDataDTO();
+            analyticsDataDTOActual = uadManager.GetChartData(0);
 
-           // Assert.AreEqual(expected, actual);
+            string actual = analyticsDataDTOActual.Result;
+            string expected = analyticsDataDTOExpected.Result;
+
+
+           Assert.AreEqual(expected, actual);
 
         }
 
 
 
-        private static IEnumerable<object[]> AdminPricipleData()
+        private static IEnumerable<object[]> PricipleData()
         {
             UserIdentity AdminIdentity = new UserIdentity
             {
@@ -109,9 +103,17 @@ namespace AutoBuildApp.Manger.Tests
 
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
             IClaims adminClaims = claimsFactory.GetClaims(RoleEnumType.SystemAdmin);
+            IClaims basicClaims = claimsFactory.GetClaims(RoleEnumType.BasicRole);
 
             ClaimsIdentity adminClaimsIdentity = new ClaimsIdentity
             (AdminIdentity, adminClaims.Claims(), AdminIdentity.AuthenticationType, AdminIdentity.Name, " ");
+
+
+            ClaimsIdentity basicClaimsIdentity = new ClaimsIdentity
+            (AdminIdentity, basicClaims.Claims(), AdminIdentity.AuthenticationType, AdminIdentity.Name, " ");
+
+
+
 
             ResponseUAD expectedResponse = new ResponseUAD()
             {
@@ -119,19 +121,34 @@ namespace AutoBuildApp.Manger.Tests
                 ConnectionState = true,
                // IsAuthorized = true
             };
+
+
+            ResponseUAD expectedFailedUAD = new ResponseUAD()
+            {
+                ResponseBool = false,
+                ResponseString = AuthorizationResultType.NotAuthorized.ToString(),
+            };
+
+
             return new List<object[]>()
             {
-               new object[]{ new ClaimsPrincipal(adminClaimsIdentity),expectedResponse }
+               new object[]{ new ClaimsPrincipal(adminClaimsIdentity),expectedResponse },
+               new object[]{ new ClaimsPrincipal(basicClaimsIdentity),expectedFailedUAD },
+
             };
 
         }
 
 
-
+        /// <summary>
+        /// this is an intergration test:
+        /// </summary>
+        /// <param name="principalGenerated"></param>
+        /// <param name="expectedResponse"></param>
         [TestMethod]
         [DataTestMethod]
-        [DynamicData(nameof(AdminPricipleData), DynamicDataSourceType.Method)]
-        public void GetAllChartData_IList_Returned
+        [DynamicData(nameof(PricipleData), DynamicDataSourceType.Method)]
+        public void GetGraphData_PermissioinsRequired_ValidResponseReturned
        (ClaimsPrincipal principalGenerated, ResponseUAD expectedResponse)
         {
             Thread.CurrentPrincipal = principalGenerated;
@@ -149,11 +166,38 @@ namespace AutoBuildApp.Manger.Tests
         }
 
 
+        private static IEnumerable<object[]> getNullPayload()
+        {
+            AnalyticsManager AnalyticsManagerNull = null;
+            AnalyticsManager AnalyticsManagerNULLParam = new AnalyticsManager(null);
+            AnalyticsManager AnalyticsManagerString = new AnalyticsManager("    ");
+
+            return new List<object[]>()
+            {
+               new object[]{ AnalyticsManagerNull, "NULL OBJECT PROVIDED"},
+               new object[]{ AnalyticsManagerNULLParam, "NULL OBJECT PROVIDED"},
+               new object[]{ AnalyticsManagerString, "NULL OBJECT PROVIDED"}
+            };
+        }
 
 
 
+        [TestMethod]
+        [DataTestMethod]
+        [DynamicData(nameof(getNullPayload), DynamicDataSourceType.Method)]
+        public void AuthDAO_Null_Object_ReturnNullException(AnalyticsManager obj, string expectedParamName)
+        {
+            try
+            {
+                AnalyticsManager authDAO = (AnalyticsManager)obj;
+            }
+            //Assert:
+            catch (ArgumentNullException ex)
+            {
+                Assert.AreEqual(expectedParamName, ex.ParamName);
+            }
 
-
+        }
 
 
 

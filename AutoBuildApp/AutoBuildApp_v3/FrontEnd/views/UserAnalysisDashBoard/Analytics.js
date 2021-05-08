@@ -5,15 +5,17 @@ let JWT_TOKEN =
 
 let ana =
 document.getElementById("GetAnalytics");
-ana.addEventListener("click",() => getItems());
+ana.addEventListener("click",() => getBarItems());
+
+
 
 const fetchRequest = {
-  method: 'GET',
-  mode: 'cors',
+method: 'GET',
+mode: 'cors',
 headers: {
-  'Accept': 'application/json',
-  'Content-Type': 'application/json',
-  'Authorization': 'Bearer ' + JWT_TOKEN
+'Accept': 'application/json',
+'Content-Type': 'application/json',
+'Authorization': 'Bearer ' + JWT_TOKEN
 }
 };
 
@@ -21,161 +23,219 @@ const urlAnalytics = new URL("https://localhost:5001/analytics")
 
 async function FetchGraphData(GraphType)
 {
-  GraphType = 1;
-  urlAnalytics.searchParams.append('GraphType', GraphType);
-  let customRequest1 = Object.assign( fetchRequest,{ method: 'GET' });
-  try{
+GraphType = 1;
+urlAnalytics.searchParams.append('GraphType', GraphType);
+let customRequest1 = Object.assign( fetchRequest,{ method: 'GET' });
+try{
 
-    let response = await fetch(urlAnalytics, customRequest1);
-    let data = await response.json();
+  let response = await fetch(urlAnalytics, customRequest1);
+  let data = await response.json();
 
-    if(response.status === 200){
-       console.log(response.status);
-      console.log(data);
-      
-      return await response.json();
-    }
+  if(response.status === 200){
+      console.log(response.status);
+    console.log(data);
     
+    return await response.json();
   }
-  catch(error)
-  {
-    console.log(error);
-  }
+  
+}
+catch(error)
+{
+  console.log(error);
+}
+
+}
+ function getBarItems()
+{
+
+  DisplayAnalyticsData(1);
+  //DisplayAnalyticsData(2);
+  //DisplayAnalyticsData(3);
+
+  //DisplayLineData(4);
+  //DisplayLineData(5);
 
 }
 
 // This function will call a fetch request.
-async function getItems() {
+async function getItems(GraphType) {
 
-  let GraphType = 1;
-  urlAnalytics.searchParams.append('GraphType', GraphType);
-  let customRequest1 = Object.assign( fetchRequest,{ method: 'GET' });
-  await fetch(urlAnalytics, customRequest1) // fetches the default URI
-      .then(response => response.json()) // Will receive a response from the default response.json.
-      .then(data =>  DisplayAnalyticsData(data))
+let customRequest = Object.assign( fetchRequest,{ method: 'GET' });
+urlAnalytics.searchParams.append('GraphType', GraphType);
+
+let fetchResponse = await fetch(urlAnalytics, customRequest) // fetches the default URI
+                .then(response => response.json()) // Will receive a response from the default response.json.
+              // .then(data =>  DisplayAnalyticsData(data, GraphType));
+
+        return fetchResponse;
+
 }
-
-
 
 // creating a javascript object:
-const chartDatas = {
-  xLabel  : "N/A",
-  yValue  : "N/A",
-  legend  : "N/A"
-}
-
 const Charts = {
 chartTitle : " ",
 yAxisTitle : " ",
 xAxisTitle : " ",
 legend    : "NONE",
-chartType  :   2,
-xScale     :   2,
-yScale     :   2,
-chartDatas : Object.keys(chartDatas),
-}
+chartType :   1,
+xScale     :  1,
+yScale     :  1,
+};
+
+const points = {
+  x  : [],
+  y  : [],
+  legend: [],
+  type : 'bar'
+  };
 
 
-async function DisplayAnalyticsData(chart)
+async function DisplayAnalyticsData(GraphType)
 {
-    //let chart = await FetchGraphData();
-    const tBody = document.getElementById("Bar2"); 
-    // This will get the id of the form from the HTML.
-    tBody.innerHTML = ' here '; 
-    // appends a null value to the inner HTML, as is not required.
-    
 
-    chart['chartDatas'].forEach(  item =>{
+let data = await getItems(GraphType)
 
+console.log('---------DisplayAnalyticsData----------');
+  //let chart = await FetchGraphData();
+  const innerDiv= document.getElementById("Bar1"); 
+  // This will get the id of the form from the HTML.
+  innerDiv.innerHTML = ' here\n'; 
 
+    Charts.chartTitle = data['chartTitle'];
+    Charts.xAxisTitle = data['xAxisTitle'];
+    Charts.yAxisTitle = data['yAxisTitle'];
+    Charts.legend = data['legend'];
+    console.log('---------Charts ----------');
+    console.log(Charts);
 
+      data["chartDatas"].forEach( item =>{
 
+        let xvalues =
+            points.x.push(item['xLabel']);
+          
+            points.y.push(item['yValue']);
 
-      Object.entries(item).forEach(([key, value]) => {
-        console.log(`${key} ${value}`);
+            points.legend.push(item['legend']);
 
-        var blockchart = document.createElement('div');
-        blockchart.classList.add('blockchart');
-  
-          // create a title element, appends text to it, 
-          //and then appends all to a build block.
+      });
+      var blockchart = document.createElement('div');
+          blockchart.classList.add('blockchart');
+        
           var title = document.createElement('p');
-          var titletext = document.createTextNode("chart Datas "+ item);
+          var titletext = document.createTextNode(points.legend);
           title.appendChild(titletext);
           blockchart.appendChild(title);
 
+          innerDiv.appendChild(blockchart);
 
-
-
-
-
-    });
-    console.log('-------------------');
-
-
-     
-
-
-    });
-
-
-
-
-
-
-
-
-
-
-
-
-
-    var text =  document.createTextNode(JSON.stringify(chart));
-    tBody.appendChild(text);
-
+          
+    console.log('here i am ')
+    console.log(points.x)
+    var trace2 = {
+      x: points.x,
+      y: points.y,
+      type: 'bar',
+      text: points.legend.map(String),
+      textposition: 'auto',
+      hoverinfo: 'none',
+      marker: {
+        color: 'rgb(158,202,225)',
+        opacity: 0.6,
+        line: {
+          color: 'rgb(8,48,107)',
+          width: 1.5
+        }
+      }
+    };
+    var data2 = [trace2];
+    var layout = {
+      title: Charts.chartTitle,
+      barmode: 'group'
+    };
+ Plotly.newPlot('Graph'+ GraphType, data2, layout);
 
 }
 
 
-
-let graphData = [];
-
-function DisplayData(graphData)
+async function DisplayLineData(GraphType)
 {
-  console.log(graphData)
- //var data = JSON.stringify(graphData);
- var data = JSON.parse(graphData);
-    const tBody = document.getElementById("GetAnalytics"); 
-    // This will get the id of the form from the HTML.
-    tBody.innerHTML = 'here'; 
-    // appends a null value to the inner HTML, as is not required.
 
-    var text =  document.createTextNode(JSON.stringify(graphData));
-    tBody.appendChild(text);
-    console.log("here2");
+let data = await getItems(GraphType)
 
+console.log('---------DisplayAnalyticsData----------');
+  //let chart = await FetchGraphData();
+  const innerDiv= document.getElementById("Bar1"); 
+  // This will get the id of the form from the HTML.
+  innerDiv.innerHTML = ' here\n'; 
 
-    const item = 
-    graphData.find(item => item["analyticChartsRequisted"] === id.toString()); // finds the item that the id is associated with.
+    Charts.chartTitle = data['chartTitle'];
+    Charts.xAxisTitle = data['xAxisTitle'];
+    Charts.yAxisTitle = data['yAxisTitle'];
+    Charts.legend = data['legend'];
+    console.log('---------Charts ----------');
+    console.log(Charts);
 
-    item.forEach(element => {
-      console.log("here3");
-      tBody.appendChild(element.chartTitle)
+      data["chartDatas"].forEach( item =>{
 
+            points.x.push(item['xLabel']);
+          
+            points.y.push(item['yValue']);
 
-      var chartDatas = element.chartDatas
-      console.log('Title')
-      console.log(element.chartTitle)
-      console.log('x,y,z')
-      chartDatas.forEach(
-        ele=> { 
-            console.log(ele.xLabel)
-            console.log(ele.yValue)
-            console.log(ele.legend)
-        });
+            points.legend.push(item['legend']);
 
-      
-    });
-   
+      });
+      var blockchart = document.createElement('div');
+          blockchart.classList.add('blockchart');
+        
+          var title = document.createElement('p');
+          var titletext = document.createTextNode(points.legend);
+          title.appendChild(titletext);
+          blockchart.appendChild(title);
+
+          innerDiv.appendChild(blockchart);
+
+    console.log(points)
+    console.log('here i am ')
+    var trace2 = {
+      x: points.x,
+      mode: 'lines',  
+      y: points.y,
+      type: 'scatter',
+      text: points.legend.map(String),
+      textposition: 'auto',
+      hoverinfo: 'none',
+      marker: {
+        color: 'rgb(158,202,225)',
+        opacity: 0.6,
+        line: {
+          color: 'rgb(8,48,107)',
+          width: 1.5
+        }
+      }
+    };
+    var data2 = [trace2];
+    var layout = {
+      title: Charts.chartTitle,
+      barmode: 'group',
+      xaxis: {
+              title: Charts.xAxisTitle,
+              titlefont: {
+              family: 'Arial, sans-serif',
+              size: 18,
+              color: 'lightgrey'
+              }
+              },
+      yaxis: {
+              title: Charts.yAxisTitle,
+              titlefont: {
+              family: 'Arial, sans-serif',
+              size: 18,
+              color: 'lightgrey',
+              }
+          }
+          
+          };
+ Plotly.newPlot('Graph'+ GraphType, data2, layout);
 
 }
+

@@ -25,6 +25,38 @@ namespace AutoBuildApp.DataAccess.Test
              _uadDAO = new AnalyticsDAO(connection);
         }
 
+        private static IEnumerable<object[]> getNullPayload()
+        {
+            AnalyticsDAO AnalyticsDAONull = null;
+            AnalyticsDAO AnalyticsDAONULLParam = new AnalyticsDAO(null);
+            AnalyticsDAO AnalyticsDAOEmptyString = new AnalyticsDAO("    ");
+
+            return new List<object[]>()
+            {
+               new object[]{ AnalyticsDAONull, "NULL OBJECT PROVIDED"},
+               new object[]{ AnalyticsDAONULLParam, "NULL OBJECT PROVIDED"},
+               new object[]{ AnalyticsDAOEmptyString, "NULL OBJECT PROVIDED"}
+            };
+        }
+
+        [TestMethod]
+        [DataTestMethod]
+        [DynamicData(nameof(getNullPayload), DynamicDataSourceType.Method)]
+        public void AuthDAO_Null_Object_ReturnNullException(AnalyticsDAO obj, string expectedParamName)
+        {
+            try
+            {
+                AnalyticsDAO authDAO = (AnalyticsDAO)obj;
+            }
+            //Assert:
+            catch (ArgumentNullException ex)
+            {
+                Assert.AreEqual(expectedParamName, ex.ParamName);
+            }
+
+        }
+
+
         private static IEnumerable<object[]> FORMETHOD()
         {
             return new List<object[]>()
@@ -57,24 +89,25 @@ namespace AutoBuildApp.DataAccess.Test
             IClaims adminClaims = claimsFactory.GetClaims(RoleEnumType.SystemAdmin);
             IClaims basicClaims = claimsFactory.GetClaims(RoleEnumType.BasicRole);
 
-            ClaimsIdentity adminClaimsIdentity = new ClaimsIdentity
+            ClaimsIdentity adminClaimsIdentity =  new ClaimsIdentity
             (AdminIdentity, adminClaims.Claims(), AdminIdentity.AuthenticationType, AdminIdentity.Name, " ");
 
 
             ClaimsIdentity basicClaimsIdentity = new ClaimsIdentity
             (AdminIdentity, basicClaims.Claims(), AdminIdentity.AuthenticationType, AdminIdentity.Name, " ");
 
+
+
             ResponseUAD expectedSuccessUAD = new ResponseUAD()
             {
                 ResponseBool = true,
                 ConnectionState = true,
-                //IsAuthorized = true
             };
             ResponseUAD expectedFailedUAD = new ResponseUAD()
             {
                 ResponseBool = false,
-                //IsAuthorized = false,
-            };
+                ResponseString = AuthorizationResultType.NotAuthorized.ToString(),
+        };
             return new List<object[]>()
             {
                new object[]{ new ClaimsPrincipal(adminClaimsIdentity),expectedSuccessUAD },
@@ -86,14 +119,17 @@ namespace AutoBuildApp.DataAccess.Test
         [TestMethod]
         [DataTestMethod]
         [DynamicData(nameof(GetAllAnalytics_Data), DynamicDataSourceType.Method)]
-        public void GetAllAnalytics_ResponseReturned
+        public void GetAllAnalytics_ValidAndInvalidParmissions_ResponseReturned
             (ClaimsPrincipal principalGenerated, ResponseUAD expectedUAD)
         {
+
+
+
            Thread.CurrentPrincipal = principalGenerated;
             ResponseUAD responseUAD = new ResponseUAD();
             
             string connection = conString.GetConnectionStringByName("MyConnection");
-            responseUAD = _uadDAO.GetGraphData(DBViews.PageViewsPerMonth);
+            responseUAD = _uadDAO.GetGraphData(DBViews.none);
 
 
             //Console.WriteLine(expectedUAD.ToString());

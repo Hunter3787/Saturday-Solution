@@ -2,17 +2,16 @@
 using AutoBuildApp.DataAccess;
 using AutoBuildApp.DataAccess.Entities;
 using AutoBuildApp.Logging;
-using AutoBuildApp.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AutoBuildApp.CrossCutting.Tests
 {
     [TestClass]
     public class LoggingServiceTest
     {
+
+
 
 
 
@@ -67,7 +66,7 @@ namespace AutoBuildApp.CrossCutting.Tests
             LoggerDAO loggerDAO = new LoggerDAO(connection);
 
 
-            logger.LogInformation("testing the send log to db!!");
+            logger.LogInformation("testing the rgwrgwrgsend log hghfdhfdfd");
 
            
         }
@@ -99,7 +98,7 @@ namespace AutoBuildApp.CrossCutting.Tests
 
             // utilizing the logger procedure:
 
-            bool actualBool = SP_loggingDAO.method(loggerEntity);
+            bool actualBool = SP_loggingDAO.InsertLog(loggerEntity);
             Assert.IsTrue(actualBool);
 
 

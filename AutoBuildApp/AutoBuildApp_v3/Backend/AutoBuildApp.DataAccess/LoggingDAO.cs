@@ -33,7 +33,7 @@ namespace AutoBuildApp.DataAccess
 
         }
 
-        public bool method(LoggerEntity logger)
+        public bool InsertLog(LoggerEntity logger)
         {
 
             using (SqlConnection conn = new SqlConnection(ConnectionString))
@@ -61,7 +61,7 @@ namespace AutoBuildApp.DataAccess
                         command.Parameters.AddWithValue("@EVENTVALUE", logger.EventValue);
                         command.Parameters.AddWithValue("@MESSAGE"   , logger.Message);
                         command.Parameters.AddWithValue("@LOGLEVEL"  , logger.LogLevel);
-                        command.Parameters.AddWithValue("@DATETIME"  , logger.DateTime).SqlDbType = SqlDbType.DateTime;
+                        command.Parameters.AddWithValue("@DATETIME", logger.DateTime);
 
                         #endregion
                         var reader = command.ExecuteNonQuery();

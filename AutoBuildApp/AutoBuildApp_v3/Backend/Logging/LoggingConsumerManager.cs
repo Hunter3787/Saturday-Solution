@@ -6,6 +6,7 @@ using AutoBuildApp.DomainModels;
 using AutoBuildApp.DataAccess.Entities;
 using AutoBuildApp.Logging;
 using Logging.Globals;
+using AutoBuildApp.DataAccess;
 
 /// <summary>
 /// References used from file: Solution Items/References.txt 
@@ -62,8 +63,16 @@ namespace AutoBuildApp.Logging
             };
 
             // Will initialize the LoggerDataAccess with a connection string.
-            LoggerDAO loggerDataAccess = new LoggerDAO(LoggingGlobals.DB_CONNECTION); 
-            loggerDataAccess.CreateLogRecord(loggerEntity); // send the log object through to be sent to the database.
+
+            //commented out
+
+           // LoggerDAO loggerDataAccess = new LoggerDAO(LoggingGlobals.DB_CONNECTION); 
+           // loggerDataAccess.CreateLogRecord(loggerEntity); // send the log object through to be sent to the database.
+
+            // added by zeinab
+            LoggingDAO loggingDAO = new LoggingDAO(LoggingGlobals.DB_CONNECTION);
+            loggingDAO.InsertLog(loggerEntity);
+        
         }
         // This method will simply close all connections and sessions and set the isDisposed bool to true to state that the connections have been closed.
         public void Dispose()
