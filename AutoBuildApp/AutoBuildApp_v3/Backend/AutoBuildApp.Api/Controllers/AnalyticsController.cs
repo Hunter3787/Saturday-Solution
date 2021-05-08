@@ -16,6 +16,8 @@ using System.Security.Claims;
 using System.Threading;
 using System.Collections.Generic;
 using System;
+using AutoBuildApp.Logging;
+using AutoBuildApp.Models.Enumerations;
 
 namespace AutoBuildApp.Api.Controllers
 {
@@ -30,7 +32,7 @@ namespace AutoBuildApp.Api.Controllers
         ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
 
         // Creates the local instance for the logger
-        // private LoggingProducerService _logger = LoggingProducerService.GetInstance;
+        private LoggingProducerService _logger;
 
         // instantiate the consumer. 
 
@@ -57,6 +59,15 @@ namespace AutoBuildApp.Api.Controllers
 
 
             _analyticsManager = new AnalyticsManager(connection);
+            _logger = LoggingProducerService.GetInstance;
+
+            _logger.LogInformation("Analytics page is called BY USER", Models.EventType.ViewPageEvent,
+               PageIDType.AnalyticsPage.ToString(), Thread.CurrentPrincipal.Identity.Name.ToString());
+
+
+            _logger.LogInformation("Analytics page is called PASSING NULL USER", Models.EventType.ViewPageEvent,
+                PageIDType.AnalyticsPage.ToString(), "");
+
 
         }
 
@@ -91,21 +102,27 @@ namespace AutoBuildApp.Api.Controllers
 
         }
 
+
+
         [HttpGet]
-        public IActionResult RetrieveGraphs(int GraphType)
+        public IActionResult RetrieveGraphs(int graphType)
         {
-            return Ok("good job");
+            //return Ok("good job");
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
-                // _logger.LogWarning("Unauthorized Access Attempted");
+                 _logger.LogWarning("Unauthorized Access!!!");
+
+                _logger.LogWarning("StatusCodes.Status403Forbidden");
+
                 return new StatusCodeResult(StatusCodes.Status403Forbidden);
             }
 
-            AnalyticsDataDTO dataDTO  = _analyticsManager.GetChartData(GraphType);
+            AnalyticsDataDTO dataDTO  = _analyticsManager.GetChartData(graphType);
+           
 
             if (dataDTO.Result.Equals(AuthorizationResultType.NotAuthorized.ToString()))
             {
-                // _logger.LogWarning("Unauthorized Access Attempted");
+                 _logger.LogWarning("Unauthorized Access Attempted");
                 return new StatusCodeResult(StatusCodes.Status403Forbidden);
             }
             if (!dataDTO.SuccessFlag)
@@ -113,7 +130,7 @@ namespace AutoBuildApp.Api.Controllers
                 
                     // _logger.LogWarning(result.result);
                     var result = dataDTO.Result;
-                    return Ok(result);
+                return Ok(result);
                     //return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
             return Ok(dataDTO.analyticChartsRequisted);

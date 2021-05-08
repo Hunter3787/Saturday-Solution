@@ -14,66 +14,132 @@ namespace AutoBuildApp.DataAccess.Test
     [TestClass]
     public class AnalyticsDaoTest
     {
-        // since this is a test for the DAO: will instantiate here
+        //1) Calling connection manager for the connection string
+        ConnectionManager _conString = ConnectionManager.connectionManager;
+        // 2) declaring the dao 
+        private AnalyticsDAO _analyticsDAO;
+        private ClaimsPrincipal _principalGenerated;
 
-        ConnectionManager conString = ConnectionManager.connectionManager;
-        // 2) passing in the name I assigned my connection string 
-        private AnalyticsDAO _uadDAO;
+
         public AnalyticsDaoTest()
         {
-            string connection = conString.GetConnectionStringByName("MyConnection");
-             _uadDAO = new AnalyticsDAO(connection);
+            // getting the connection string by given name
+            // that lives in the appsetting 
+            string connection = _conString.GetConnectionStringByName("MyConnection");
+            _analyticsDAO = new AnalyticsDAO(connection);
+
+            // Instantiating the user identity for the thread.
+            UserIdentity adminIdentity = new UserIdentity
+            {
+                Name = "X USER",
+                IsAuthenticated = true,
+                AuthenticationType = "JWT"
+            };
+            ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
+            IClaims adminClaims = claimsFactory.GetClaims(RoleEnumType.SystemAdmin);
+            // Instantiation of the admin identity and basic user identity 
+            ClaimsIdentity adminClaimsIdentity = new ClaimsIdentity
+            (adminIdentity, adminClaims.Claims(), adminIdentity.AuthenticationType, adminIdentity.Name, " ");
+            _principalGenerated =  new ClaimsPrincipal(adminClaimsIdentity);
+
+
         }
 
-        private static IEnumerable<object[]> FORMETHOD()
+        /// <summary>
+        /// The NullPossibleCases method accounts for all possible null values 
+        /// that should be caught and handles
+        /// </summary>
+        /// <returns></returns>
+        private static IEnumerable<object[]> NullPossibleCases()
         {
+            string expectedExceptionParamName = "NULL OBJECT PROVIDED";
+            // in the case the DAO object is null
+            AnalyticsDAO analyticsDAONull = null;
+            // in case connection string parameter is null
+            AnalyticsDAO analyticsDAONULLParam = new AnalyticsDAO(null);
+            // in case connection string parameter is empty
+            AnalyticsDAO analyticsDAOEmptyString = new AnalyticsDAO("    ");
+
             return new List<object[]>()
             {
-               new object[]{}, 
+               new object[]{ analyticsDAONull, expectedExceptionParamName},
+               new object[]{ analyticsDAONULLParam, expectedExceptionParamName},
+               new object[]{ analyticsDAOEmptyString, expectedExceptionParamName }
             };
-
         }
 
         [TestMethod]
         [DataTestMethod]
-        //[DynamicData(nameof(getPermissionsData), DynamicDataSourceType.Method)]
-        public void METHOD()
-        { 
-            // have a rollback
+        [DynamicData(nameof(NullPossibleCases), DynamicDataSourceType.Method)]
+        public void AuthDAO_Null_Cases_ReturnNullException(AnalyticsDAO obj, string expectedParamName)
+        {
+            try
+            {
+                AnalyticsDAO authDAO = (AnalyticsDAO)obj;
+            }
+            //Assert:
+            catch (ArgumentNullException ex)
+            {
+                Assert.AreEqual(expectedParamName, ex.ParamName);
+            }
 
         }
 
 
-        private static IEnumerable<object[]> GetAllAnalytics_Data()
+        [TestMethod]
+        public void GetGraphData_Null_Cases_ReturnNullException()
         {
-            UserIdentity AdminIdentity = new UserIdentity
+
+            Thread.CurrentPrincipal = _principalGenerated;
+            /// here is the expected common response for authorizaed user
+            ResponseUAD actualResponse = new ResponseUAD();
+
+            actualResponse =  _analyticsDAO.GetGraphData((DBViews)6);
+            string expectedResponse = "InValid Graph Specified";
+
+            Assert.AreEqual( expectedResponse, actualResponse.ResponseString);
+
+
+
+        }
+
+
+
+        private static IEnumerable<object[]> AuhtorizationCheckData()
+        {
+            // Instantiating the user identity for the thread.
+            UserIdentity adminIdentity = new UserIdentity
             {
-                Name = "ADMIN USER",
+                Name = "X USER",
                 IsAuthenticated = true,
                 AuthenticationType = "JWT"
             };
 
+            // Instantiating the claims factory to get the claims per a "role" passed
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
             IClaims adminClaims = claimsFactory.GetClaims(RoleEnumType.SystemAdmin);
             IClaims basicClaims = claimsFactory.GetClaims(RoleEnumType.BasicRole);
 
+            // Instantiation of the admin identity and basic user identity 
             ClaimsIdentity adminClaimsIdentity = new ClaimsIdentity
-            (AdminIdentity, adminClaims.Claims(), AdminIdentity.AuthenticationType, AdminIdentity.Name, " ");
-
+            (adminIdentity, adminClaims.Claims(), adminIdentity.AuthenticationType, adminIdentity.Name, " ");
 
             ClaimsIdentity basicClaimsIdentity = new ClaimsIdentity
-            (AdminIdentity, basicClaims.Claims(), AdminIdentity.AuthenticationType, AdminIdentity.Name, " ");
+            (adminIdentity, basicClaims.Claims(), adminIdentity.AuthenticationType, adminIdentity.Name, " ");
 
+
+            /// here is the expected common response for authorizaed user
             ResponseUAD expectedSuccessUAD = new ResponseUAD()
             {
                 IsSuccessful = true,
                 ConnectionState = true,
-                //IsAuthorized = true
             };
+
+            /// here is the expected common response for UN authorizaed user
             ResponseUAD expectedFailedUAD = new ResponseUAD()
             {
                 IsSuccessful = false,
-                //IsAuthorized = false,
+                ResponseString = AuthorizationResultType.NotAuthorized.ToString(),
             };
             return new List<object[]>()
             {
@@ -85,17 +151,18 @@ namespace AutoBuildApp.DataAccess.Test
 
         [TestMethod]
         [DataTestMethod]
-        [DynamicData(nameof(GetAllAnalytics_Data), DynamicDataSourceType.Method)]
-        public void GetAllAnalytics_ResponseReturned
+        [DynamicData(nameof(AuhtorizationCheckData), DynamicDataSourceType.Method)]
+        public void GetAllAnalytics_ValidAndInvalidParmissions_ResponseReturned
             (ClaimsPrincipal principalGenerated, ResponseUAD expectedUAD)
         {
-           Thread.CurrentPrincipal = principalGenerated;
+
+
+
+            Thread.CurrentPrincipal = principalGenerated;
             ResponseUAD responseUAD = new ResponseUAD();
-            
-            string connection = conString.GetConnectionStringByName("MyConnection");
-            responseUAD = _uadDAO.GetGraphData(DBViews.PageViewsPerMonth);
 
-
+            string connection = _conString.GetConnectionStringByName("MyConnection");
+            responseUAD = _analyticsDAO.GetGraphData(DBViews.none);
             //Console.WriteLine(expectedUAD.ToString());
             Console.WriteLine(responseUAD.ToString());
 
@@ -103,6 +170,26 @@ namespace AutoBuildApp.DataAccess.Test
 
         }
 
+
+
+
+        private static IEnumerable<object[]> FORMETHOD()
+        {
+            return new List<object[]>()
+            {
+               new object[]{},
+            };
+
+        }
+
+        [TestMethod]
+        [DataTestMethod]
+        //[DynamicData(nameof(getPermissionsData), DynamicDataSourceType.Method)]
+        public void METHOD()
+        {
+            // have a rollback
+
+        }
 
     }
 

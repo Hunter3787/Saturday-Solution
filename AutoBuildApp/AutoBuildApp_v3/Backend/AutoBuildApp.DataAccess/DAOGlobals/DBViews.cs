@@ -6,11 +6,11 @@ namespace AutoBuildApp.DataAccess//.DAOGlobals
 {
     public enum DBViews 
     {
-        none,
-        PageViewsPerMonth,
-        RegPerMonthByType,
-        AvgSessPerAccntType,
-        VisitsPerFeature,
-        NumberOfAccountTypes,
+        none = 0,
+        PageViewsPerMonth = 5,
+        RegPerMonthByType = 4 ,
+        AvgSessPerAccntType =3,
+        VisitsPerFeature = 2,
+        NumberOfAccountTypes = 1,
     }
 }

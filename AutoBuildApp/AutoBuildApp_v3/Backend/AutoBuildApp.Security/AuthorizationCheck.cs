@@ -19,17 +19,14 @@ namespace AutoBuildApp.Security
         {
             foreach (string role in AllowedRoles)
             {
-                //Console.WriteLine($" ROLE: {role}");
                 IClaims claims = _claimsFactory.GetClaims(role);
                 // FIRST LINE OF DEFENCE 
 
                 if (AuthorizationService.CheckPermissions(claims.Claims()))
                 {
-                    //Console.WriteLine($"RETURNING TRUE");
                     return true;
                 }
             }
-            //Console.WriteLine($"RETURNING FALSE");
             return false;
         }
 

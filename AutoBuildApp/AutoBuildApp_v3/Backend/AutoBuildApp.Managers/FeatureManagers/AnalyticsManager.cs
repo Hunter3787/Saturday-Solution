@@ -2,7 +2,9 @@
 using AutoBuildApp.DomainModels;
 using AutoBuildApp.DomainModels.Abstractions;
 using AutoBuildApp.DomainModels.Enumerations;
+using AutoBuildApp.Logging;
 using AutoBuildApp.Models;
+using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.Security;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
@@ -19,13 +21,36 @@ namespace AutoBuildApp.Managers.FeatureManagers
 
         private AnalyticsDAO _uadDAO;
         private List<string> _allowedRoles; //specify rles
-        
+
+        #region logegr 
+
+        // Creates the local instance for the logger
+        private LoggingProducerService _logger;
+
+        #endregion
+
 
         public AnalyticsManager(string ConnectiontString)
         {
-            _uadDAO = new AnalyticsDAO(ConnectiontString);
-            _allowedRoles = new List<string>()
-            { RoleEnumType.SystemAdmin };
+            try
+            {
+                 _uadDAO = new AnalyticsDAO(ConnectiontString);
+                 _allowedRoles = new List<string>()
+                { RoleEnumType.SystemAdmin };
+
+                _logger = LoggingProducerService.GetInstance;
+
+            }
+
+            catch (ArgumentNullException)
+            {
+                if (ConnectiontString == null)
+                {
+                    var expectedParamName = "NULL OBJECT PROVIDED";
+                    throw new ArgumentNullException(expectedParamName);
+                }
+            }
+
         }
 
         //public IList<Charts> GetCharts(ResponseUAD responseUAD, DBViews specifiedChart = DBViews.none)
@@ -122,7 +147,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
         //}
 
         // TURN INTO ASYNC 
-        public AnalyticsDataDTO GetChartData(int GraphType)
+        public AnalyticsDataDTO GetChartData(int graphType)
         {
             AnalyticsDataDTO dataDTO = new AnalyticsDataDTO();
             ResponseUAD responseUAD = new ResponseUAD();
@@ -132,43 +157,41 @@ namespace AutoBuildApp.Managers.FeatureManagers
             //Initial Authorization Check
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
-                Console.WriteLine($" IF STATEMENT 1");
-                Console.WriteLine($" {dataDTO.ToString()}");
 
               dataDTO.Result = notAuthorized;
                 dataDTO.SuccessFlag = false;
+                _logger.LogWarning("Unauthorized Access");
                 return dataDTO;
 
             }
-            responseUAD = _uadDAO.GetGraphData((DBViews)GraphType);
+            responseUAD = _uadDAO.GetGraphData((DBViews)graphType);
             if (responseUAD.ResponseString.Equals(notAuthorized))
             {
 
                 dataDTO.SuccessFlag = false;
                 dataDTO.Result = responseUAD.ResponseString;
 
-                Console.WriteLine($" IF STATEMENT 2");
-                Console.WriteLine($" {dataDTO.ToString()}");
+
 
                 return dataDTO;
             }
             if (!responseUAD.IsSuccessful|| responseUAD.GetChartDatas == null)
             {
+                dataDTO.SuccessFlag = responseUAD.IsSuccessful;
+                dataDTO.Result = responseUAD.ResponseString;
+                _logger.LogWarning($" analytics retriaval failed: {responseUAD.ResponseString}");
 
-                Console.WriteLine($" IF STATEMENT 3");
+                return dataDTO;
+            }
+            else //if(responseUAD.ResponseBool)
+            {
+                IList<ChartData> GetChartDatas = responseUAD.GetChartDatas;
+
+
                 dataDTO.SuccessFlag = responseUAD.IsSuccessful;
                 dataDTO.Result = responseUAD.ResponseString;
 
-                Console.WriteLine($" {dataDTO.ToString()}");
-                return dataDTO;
-            }
-            else if(responseUAD.IsSuccessful)
-            {
-
-                Console.WriteLine($" ELSE IF STATEMENT 4");
-
-
-               Charts analyticsChart = new Charts();
+                Charts analyticsChart = new Charts();
                 #region GRAPHS
                 analyticsChart =
                      new Charts(
@@ -176,27 +199,13 @@ namespace AutoBuildApp.Managers.FeatureManagers
                         XTitle: responseUAD.XTitle,
                         YTitle: responseUAD.YTitle,
                         legendTitle: responseUAD.LegendTitle,
-                        chartDatas: responseUAD.GetChartDatas,
+                        chartDatas: GetChartDatas,
                         chartType: ChartType.Bar);
                 #endregion
-
-
-                Console.WriteLine($" THE DATA BROUGHT BACK: {analyticsChart.ToString()}");
                 dataDTO.analyticChartsRequisted = analyticsChart;
-
-                Console.WriteLine($"\nTHE DATA BROUGHT BACK PART 2: " +
-                    $"{dataDTO.ToString()}");
-
-
                 return dataDTO;
 
             }
-
-            Console.WriteLine($" OUTSIDE ");
-            return null;
-
-
-
         }
 
 
