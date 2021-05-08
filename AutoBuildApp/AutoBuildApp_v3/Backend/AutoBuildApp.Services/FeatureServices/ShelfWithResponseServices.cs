@@ -48,7 +48,7 @@ namespace AutoBuildApp.Services
             if (!AuthorizationCheck.IsAuthorized(_approvedRoles))
             {
                 output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
-                output.ResponseBool = false;
+                output.IsSuccessful = false;
                 return output;
             }
 
@@ -82,7 +82,7 @@ namespace AutoBuildApp.Services
             if (!AuthorizationCheck.IsAuthorized(_approvedRoles))
             {
                 output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
-                output.ResponseBool = false;
+                output.IsSuccessful = false;
                 return output;
             }
 
@@ -117,7 +117,7 @@ namespace AutoBuildApp.Services
             if (!AuthorizationCheck.IsAuthorized(_approvedRoles))
             {
                 output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
-                output.ResponseBool = false;
+                output.IsSuccessful = false;
                 return output;
             }
 
@@ -153,7 +153,7 @@ namespace AutoBuildApp.Services
             if (!AuthorizationCheck.IsAuthorized(_approvedRoles))
             {
                 output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
-                output.ResponseBool = false;
+                output.IsSuccessful = false;
                 return output;
             }
 
@@ -188,7 +188,7 @@ namespace AutoBuildApp.Services
             if (!AuthorizationCheck.IsAuthorized(_approvedRoles))
             {
                 output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
-                output.ResponseBool = false;
+                output.IsSuccessful = false;
                 return output;
             }
 
@@ -223,7 +223,7 @@ namespace AutoBuildApp.Services
             if (!AuthorizationCheck.IsAuthorized(_approvedRoles))
             {
                 output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
-                output.ResponseBool = false;
+                output.IsSuccessful = false;
                 return output;
             }
 
@@ -259,7 +259,7 @@ namespace AutoBuildApp.Services
             if (!AuthorizationCheck.IsAuthorized(_approvedRoles))
             {
                 output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
-                output.ResponseBool = false;
+                output.IsSuccessful = false;
                 return output;
             }
 

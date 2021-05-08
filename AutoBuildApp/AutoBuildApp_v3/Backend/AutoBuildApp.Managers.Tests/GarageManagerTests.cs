@@ -189,7 +189,7 @@ namespace AutoBuildApp.Manger.Tests
             // Assert
             Assert.IsTrue(expectedList.SequenceEqual(actualList));
             //CollectionAssert.AreEqual(expectedList, actualList);
-            Assert.AreEqual(expectedBool, actual.ResponseBool);
+            Assert.AreEqual(expectedBool, actual.IsSuccessful);
             
         }
 
@@ -209,7 +209,7 @@ namespace AutoBuildApp.Manger.Tests
 
             // Assert
             Assert.AreEqual(expectedString, actual.ResponseString);
-            Assert.AreEqual(expectedBool, actual.ResponseBool);
+            Assert.AreEqual(expectedBool, actual.IsSuccessful);
         }
 
         /// <summary>
@@ -237,7 +237,7 @@ namespace AutoBuildApp.Manger.Tests
 
             // Assert
             Assert.AreEqual(expectedString, actual.ResponseString);
-            Assert.AreEqual(expectedBool, actual.ResponseBool);
+            Assert.AreEqual(expectedBool, actual.IsSuccessful);
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace AutoBuildApp.Manger.Tests
 
             // Assert
             Assert.AreEqual(expectedString, actual.ResponseString);
-            Assert.AreEqual(expectedBool, actual.ResponseBool);
+            Assert.AreEqual(expectedBool, actual.IsSuccessful);
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace AutoBuildApp.Manger.Tests
             _testManager.DeleteShelf(shelfName);
 
             // Assert
-            Assert.AreEqual(expectedBool, actual.ResponseBool);
+            Assert.AreEqual(expectedBool, actual.IsSuccessful);
             Assert.AreEqual(expectedString, actual.ResponseString);
         }
 
