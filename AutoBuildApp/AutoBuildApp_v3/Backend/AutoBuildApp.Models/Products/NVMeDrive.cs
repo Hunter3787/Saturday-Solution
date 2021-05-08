@@ -8,7 +8,7 @@ using AutoBuildApp.Models.Interfaces;
  */
 namespace AutoBuildApp.Models.Products
 {
-    public class NVMeDrive : HardDrive, IComponent
+    public class NVMeDrive : HardDrive, Interfaces.Component
     {
         #region "Field Declarations: get; set;"
         public HardDriveType DriveType { get; set; }

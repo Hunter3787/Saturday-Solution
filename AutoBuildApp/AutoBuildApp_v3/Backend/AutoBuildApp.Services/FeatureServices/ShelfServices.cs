@@ -4,6 +4,7 @@ using AutoBuildApp.Models;
 using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.DataAccess;
 using AutoBuildApp.Models.Interfaces;
+using System.ComponentModel;
 
 /**
 * The ShelfServices will provide the shelf specific operatons.
@@ -27,12 +28,12 @@ namespace AutoBuildApp.Services
 
             try
             {
-                output.ResponseBool = _dao.InsertShelf(shelfName, user);
+                //output.IsSuccessful = _dao.InsertShelf(shelfName, user);
                 output.ResponseString = ResponseStringGlobals.SUCCESSFUL_CREATION;
             }
             catch (TimeoutException)
             {
-                output.ResponseBool = false;
+                output.IsSuccessful = false;
                 output.ResponseString = ResponseStringGlobals.DATABASE_TIMEOUT;
             }
 
@@ -49,7 +50,7 @@ namespace AutoBuildApp.Services
             }
             catch (TimeoutException)
             {
-                output.ResponseBool = false;
+                output.IsSuccessful = false;
                 output.ResponseString = ResponseStringGlobals.DATABASE_TIMEOUT;
             }
 
@@ -63,7 +64,7 @@ namespace AutoBuildApp.Services
             {
                 //output.ResponseBool = _dao.UpdateShelf(oldName, newName, user);
 
-                if(output.ResponseBool == false)
+                if(output.IsSuccessful == false)
                 {
                     output.ResponseString = ResponseStringGlobals.FAILED_MODIFICATION;
                 }
@@ -74,7 +75,7 @@ namespace AutoBuildApp.Services
             }
             catch (TimeoutException)
             {
-                output.ResponseBool = false;
+                output.IsSuccessful = false;
                 output.ResponseString = ResponseStringGlobals.DATABASE_TIMEOUT;
             }
 

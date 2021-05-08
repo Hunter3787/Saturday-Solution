@@ -11,7 +11,7 @@ namespace AutoBuildApp.Models.Products
     /// <summary>
     /// Power Supply Unit class to represent the computers power source.
     /// </summary>
-    public class PowerSupplyUnit : Component, IComponent
+    public class PowerSupplyUnit : Component, Interfaces.Component
     {
         #region "Field Declarations: get; set;"
         public string FormFactor { get; set; }

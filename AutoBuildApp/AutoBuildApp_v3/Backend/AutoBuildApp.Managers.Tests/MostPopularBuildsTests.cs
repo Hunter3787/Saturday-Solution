@@ -1,360 +1,425 @@
-﻿//using AutoBuildApp.DataAccess;
-//using AutoBuildApp.DomainModels;
-//using AutoBuildApp.Managers;
-//using AutoBuildApp.Models.Enumerations;
-//using AutoBuildApp.Services.FeatureServices;
-//using NUnit.Framework;
-//using System;
-//using System.Collections.Generic;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using AutoBuildApp.DataAccess;
+using AutoBuildApp.DomainModels;
+using AutoBuildApp.Managers;
+using AutoBuildApp.Models.Enumerations;
+using AutoBuildApp.Security.Enumerations;
+using AutoBuildApp.Security.FactoryModels;
+using AutoBuildApp.Security.Interfaces;
+using AutoBuildApp.Security.Models;
+using AutoBuildApp.Services.FeatureServices;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
-//namespace AutoBuildApp.Manger.Tests
-//{
-//    /// <summary>
-//    /// This class will test all methods that have been created as well as verify that they do indeed work.
-//    /// and that the BRD reqs. are validated.
-//    /// </summary>
-//    [TestFixture]
-//    public class MostPopularBuildsTests
-//    {
-//        private const string testConnectionString = "Server = localhost; Database = TestDB; Trusted_Connection = True;";
+namespace AutoBuildApp.Manger.Tests
+{
+    /// <summary>
+    /// This class will test all methods that have been created as well as verify that they do indeed work.
+    /// and that the BRD reqs. are validated.
+    /// </summary>
+    [TestFixture]
+    public class MostPopularBuildsTests
+    {
+        private const string testConnectionString = "Server = localhost; Database = TestDB; Trusted_Connection = True;";
 
-//        /// <summary>
-//        /// This test will check if the publish build method will return false
-//        /// if the object passed through is null.
-//        /// </summary>
-//        [Test]
-//        public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfObjectIsNull()
-//        {
-//            // Arrange
-//            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
-//            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
-//            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+        private readonly ClaimsPrincipal _basicClaimsPrincipal;
+        private readonly ClaimsPrincipal _secondBasicClaimsPrincipal;
 
-//            BuildPost buildPost = null;
+        public MostPopularBuildsTests()
+        {
+            UserIdentity userIdentity = new UserIdentity
+            {
+                Name = "SERGE",
+                IsAuthenticated = true,
+                AuthenticationType = "JWT"
+            };
 
-//            // Act
-//            var result = await mostPopularBuildsManager.PublishBuild(buildPost);
+            UserIdentity adminIdentity = new UserIdentity
+            {
+                Name = "ADMIN USER",
+                IsAuthenticated = true,
+                AuthenticationType = "JWT"
+            };
 
-//            // Assert
-//            Assert.IsFalse(result);
-//        }
+            ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
+            IClaims basicClaims = claimsFactory.GetClaims(RoleEnumType.BasicRole);
+            IClaims secondBasicClaims = claimsFactory.GetClaims(RoleEnumType.BasicRole);
 
-//        /// <summary>
-//        /// This test will check if the publish build method will return false
-//        /// if the object has any vars that are null.
-//        /// </summary>
-//        [Test]
-//        public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfAnyNullVarsInBuildPostObject()
-//        {
-//            // Arrange
-//            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
-//            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
-//            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
-
-//            bool result = false;
-
-//            // Act
-//            var nullUsernameBuildPost = new BuildPost()
-//            {
-//                Username = null,
-//                Title = "Test Title",
-//                Description = "Test Desctiption",
-//                LikeIncrementor = 0,
-//                BuildType = BuildType.None,
-//                BuildImagePath = @"C:\Users\Serge\Desktop\images\test.jpg",
-//                DateTime = "2021"
-//            };
-
-//            var nullTitleBuildPost = new BuildPost()
-//            {
-//                Username = "Test Username",
-//                Title = null,
-//                Description = "Test Desctiption",
-//                LikeIncrementor = 0,
-//                BuildType = BuildType.None,
-//                BuildImagePath = @"C:\Users\Serge\Desktop\images\test.jpg",
-//                DateTime = "2021"
-//            };
-
-//            var nullDescriptionBuildPost = new BuildPost()
-//            {
-//                Username = "Test Username",
-//                Title = "Test Title",
-//                Description = null,
-//                LikeIncrementor = 0,
-//                BuildType = BuildType.None,
-//                BuildImagePath = @"C:\Users\Serge\Desktop\images\test.jpg",
-//                DateTime = "2021"
-//            };
-
-//            var nullUsernameResultTask = await mostPopularBuildsManager.PublishBuild(nullUsernameBuildPost);
-//            var nullTitleResultTask = await mostPopularBuildsManager.PublishBuild(nullTitleBuildPost);
-//            var nullDescriptionResultTask = await mostPopularBuildsManager.PublishBuild(nullDescriptionBuildPost);
-
-//            if (!nullUsernameResultTask && !nullTitleResultTask && !nullDescriptionResultTask)
-//                result = true;
-
-//            // Assert
-//            Assert.IsTrue(result);
-//        }
-
-//        /// <summary>
-//        /// This test will check if the publish build method will return false
-//        /// if the title length string surpasses 50 characters.
-//        /// </summary>
-//        [Test]
-//        public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfTitleCharsAreGreaterThan50()
-//        {
-//            // Arrange
-//            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
-//            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
-//            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
-
-//            StringBuilder testTitleString = new StringBuilder();
+            ClaimsIdentity basicClaimsIdentity = new ClaimsIdentity
+            (userIdentity, basicClaims.Claims(), userIdentity.AuthenticationType, userIdentity.Name, " ");
             
-//            var surpassLength = 51;
+            ClaimsIdentity secondBasicClaimsIdentity = new ClaimsIdentity
+            (adminIdentity, secondBasicClaims.Claims(), adminIdentity.AuthenticationType, adminIdentity.Name, " ");
 
-//            for(int i=0; i<surpassLength; i++)
-//            {
-//                testTitleString.Append('c');
-//            }
+            _basicClaimsPrincipal = new ClaimsPrincipal(basicClaimsIdentity);
+            _secondBasicClaimsPrincipal = new ClaimsPrincipal(secondBasicClaimsIdentity);
+        }
 
-//            // Act
-//            var buildPost = new BuildPost()
-//            {
-//                Username = "Test Username",
-//                Title = testTitleString.ToString(),
-//                Description = "Test Desctiption",
-//                LikeIncrementor = 0,
-//                BuildType = BuildType.None,
-//                BuildImagePath = @"C:\Users\Serge\Desktop\images\test.jpg",
-//                DateTime = "2021"
-//            };
+        /// <summary>
+        /// This test will check if the publish build method will return false
+        /// if the object passed through is null.
+        /// </summary>
+        [Test]
+        public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfObjectIsNull()
+        {
+            // Arrange
+            Thread.CurrentPrincipal = _basicClaimsPrincipal;
 
-//            var result = await mostPopularBuildsManager.PublishBuild(buildPost);
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
+            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
-//            // Assert
-//            Assert.IsFalse(result);
-//        }
+            BuildPost buildPost = null;
 
-//        /// <summary>
-//        /// This test will check if the publish build method will return false
-//        /// if the description length string surpasses 10,000 characters.
-//        /// </summary>
-//        [Test]
-//        public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfDescriptionCharsAreGreaterThan10k()
-//        {
-//            // Arrange
-//            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
-//            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
-//            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+            // Act
+            var result = await mostPopularBuildsManager.PublishBuild(buildPost);
 
-//            StringBuilder testDescriptionString = new StringBuilder();
+            // Assert
+            Assert.IsFalse(result);
+        }
 
-//            var surpassLength = 10001;
+        /// <summary>
+        /// This test will check if the publish build method will return false
+        /// if the object has any vars that are null.
+        /// </summary>
+        [Test]
+        public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfAnyNullVarsInBuildPostObject()
+        {
+            // Arrange
+            Thread.CurrentPrincipal = _basicClaimsPrincipal;
 
-//            for (int i = 0; i < surpassLength; i++)
-//            {
-//                testDescriptionString.Append('c');
-//            }
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
+            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
-//            // Act
-//            var buildPost = new BuildPost()
-//            {
-//                Username = "Test Username",
-//                Title = "Test Title",
-//                Description = testDescriptionString.ToString(),
-//                LikeIncrementor = 0,
-//                BuildType = BuildType.None,
-//                BuildImagePath = @"C:\Users\Serge\Desktop\images\test.jpg",
-//                DateTime = "2021"
-//            };
+            bool result = false;
 
-//            var result = await mostPopularBuildsManager.PublishBuild(buildPost);
+            // Act
+            var nullUsernameBuildPost = new BuildPost()
+            {
+                Username = null,
+                Title = "Test Title",
+                Description = "Test Desctiption",
+                LikeIncrementor = 0,
+                BuildType = BuildType.None,
+                BuildImagePath = @"C:\Users\Serge\Desktop\images\test.jpg",
+                DateTime = "2021"
+            };
 
-//            // Assert
-//            Assert.IsFalse(result);
-//        }
+            var nullTitleBuildPost = new BuildPost()
+            {
+                Username = "Test Username",
+                Title = null,
+                Description = "Test Desctiption",
+                LikeIncrementor = 0,
+                BuildType = BuildType.None,
+                BuildImagePath = @"C:\Users\Serge\Desktop\images\test.jpg",
+                DateTime = "2021"
+            };
 
-//        /// <summary>
-//        /// This test will check if the publish build method will return true
-//        /// if all conditions are met
-//        /// </summary>
-//        [Test]
-//        public async Task MostPopularBuilds_PublishBuild_ReturnTrueIfAllConditionsAreMet()
-//        {
-//            // Arrange
-//            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
-//            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
-//            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+            var nullDescriptionBuildPost = new BuildPost()
+            {
+                Username = "Test Username",
+                Title = "Test Title",
+                Description = null,
+                LikeIncrementor = 0,
+                BuildType = BuildType.None,
+                BuildImagePath = @"C:\Users\Serge\Desktop\images\test.jpg",
+                DateTime = "2021"
+            };
 
-//            // Act
-//            var buildPost = new BuildPost()
-//            {
-//                Username = "TestUsername",
-//                Title = "TestTitle",
-//                Description = "TestDescription",
-//                BuildType = BuildType.None,
-//            };
+            var nullUsernameResultTask = await mostPopularBuildsManager.PublishBuild(nullUsernameBuildPost);
+            var nullTitleResultTask = await mostPopularBuildsManager.PublishBuild(nullTitleBuildPost);
+            var nullDescriptionResultTask = await mostPopularBuildsManager.PublishBuild(nullDescriptionBuildPost);
 
-//            var result = await mostPopularBuildsManager.PublishBuild(buildPost);
+            if (!nullUsernameResultTask && !nullTitleResultTask && !nullDescriptionResultTask)
+                result = true;
 
-//            // Assert
-//            Assert.IsTrue(result);
-//        }
+            // Assert
+            Assert.IsTrue(result);
+        }
 
-//        /// <summary>
-//        /// This test will check if a non-query search is successful.
-//        /// </summary>
-//        [Test]
-//        public void MostPopularBuilds_GetBuildPosts_ReturnTrueIfNormalCallIsSuccessful()
-//        {
-//            // Arrange
-//            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
-//            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
-//            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+        /// <summary>
+        /// This test will check if the publish build method will return false
+        /// if the title length string surpasses 50 characters.
+        /// </summary>
+        [Test]
+        public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfTitleCharsAreGreaterThan50()
+        {
+            // Arrange
+            Thread.CurrentPrincipal = _basicClaimsPrincipal;
 
-//            var rowCount = mostPopularBuildsManager.GetBuildPosts(null, null).Count;
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
+            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
-//            // Initialize the ID to two less of the first DB entity ID.
-//            var id = 29998;
+            StringBuilder testTitleString = new StringBuilder();
+            
+            var surpassLength = 51;
 
-//            var expectedResultEntityIds = new List<string>();
+            for(int i=0; i<surpassLength; i++)
+            {
+                testTitleString.Append('c');
+            }
 
-//            for (var i = 0; i < rowCount; i++)
-//            {
-//                id += 2;
+            // Act
+            var buildPost = new BuildPost()
+            {
+                Username = "Test Username",
+                Title = testTitleString.ToString(),
+                Description = "Test Desctiption",
+                LikeIncrementor = 0,
+                BuildType = BuildType.None,
+                BuildImagePath = @"C:\Users\Serge\Desktop\images\test.jpg",
+                DateTime = "2021"
+            };
 
-//                expectedResultEntityIds.Add(id.ToString());
-//            }
+            var result = await mostPopularBuildsManager.PublishBuild(buildPost);
 
-//            // Act
-//            var actualResultList = mostPopularBuildsManager.GetBuildPosts(null, null);
+            // Assert
+            Assert.IsFalse(result);
+        }
 
-//            List<string> actualResultEntityIds = new List<string>();
+        /// <summary>
+        /// This test will check if the publish build method will return false
+        /// if the description length string surpasses 10,000 characters.
+        /// </summary>
+        [Test]
+        public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfDescriptionCharsAreGreaterThan10k()
+        {
+            // Arrange
+            Thread.CurrentPrincipal = _basicClaimsPrincipal;
 
-//            foreach (var actualResult in actualResultList)
-//                actualResultEntityIds.Add(actualResult.EntityId);
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
+            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
-//            // Assert Assert.That(actualResult, Is.EquivalentTo(expectedResult));
-//            Assert.That(actualResultEntityIds, Is.EquivalentTo(expectedResultEntityIds));
-//        }
+            StringBuilder testDescriptionString = new StringBuilder();
 
-//        /// <summary>
-//        /// This test will check if a queried search is made.
-//        /// </summary>
-//        [Test]
-//        public void MostPopularBuilds_GetBuildPosts_ReturnTrueIfSortedQueriesCallIsSuccessful()
-//        {
-//            // Arrange
-//            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
-//            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
-//            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+            var surpassLength = 10001;
 
-//            var expectedResultList = mostPopularBuildsManager.GetBuildPosts(null, null);
+            for (int i = 0; i < surpassLength; i++)
+            {
+                testDescriptionString.Append('c');
+            }
 
-//            expectedResultList.RemoveAll(o => (int)o.BuildType != 2);
+            // Act
+            var buildPost = new BuildPost()
+            {
+                Username = "Test Username",
+                Title = "Test Title",
+                Description = testDescriptionString.ToString(),
+                LikeIncrementor = 0,
+                BuildType = BuildType.None,
+                BuildImagePath = @"C:\Users\Serge\Desktop\images\test.jpg",
+                DateTime = "2021"
+            };
 
-//            expectedResultList.Reverse();
+            var result = await mostPopularBuildsManager.PublishBuild(buildPost);
 
-//            var expectedListParsed = new List<(string, int)>();
+            // Assert
+            Assert.IsFalse(result);
+        }
 
-//            foreach (var item in expectedResultList)
-//            {
-//                expectedListParsed.Add((item.EntityId, (int)item.BuildType));
-//            }
+        /// <summary>
+        /// This test will check if more than 3 posts can be made.
+        /// </summary>
+        [Test]
+        public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfMoreThanThreePostsAreMadeByTheSameUser()
+        {
+            // Arrange
+            Thread.CurrentPrincipal = _basicClaimsPrincipal;
 
-//            // Act
-//            var actualResultList = mostPopularBuildsManager.GetBuildPosts("AscendingLikes", "BuildType_Gaming");
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
+            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
-//            var actualListParsed = new List<(string, int)>();
+            // Act
+            var buildPost = new BuildPost()
+            {
+                Username = "SERGE",
+                Title = "TestTitle",
+                Description = "TestDescription",
+                BuildType = BuildType.None,
+            };
 
-//            foreach (var item in actualResultList)
-//            {
-//                actualListParsed.Add((item.EntityId, (int)item.BuildType));
-//            }
+            await mostPopularBuildsManager.PublishBuild(buildPost);
+            await mostPopularBuildsManager.PublishBuild(buildPost);
+            await mostPopularBuildsManager.PublishBuild(buildPost);
+
+            var result = await mostPopularBuildsManager.PublishBuild(buildPost);
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+        /// <summary>
+        /// This test will check if the publish build method will return true
+        /// if all conditions are met
+        /// </summary>
+        [Test]
+        public async Task MostPopularBuilds_PublishBuild_ReturnTrueIfAllConditionsAreMet()
+        {
+            // Arrange
+            Thread.CurrentPrincipal = _secondBasicClaimsPrincipal;
+
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
+            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+
+            // Act
+            var buildPost = new BuildPost()
+            {
+                Username = "TestUsername",
+                Title = "TestTitle",
+                Description = "TestDescription",
+                BuildType = BuildType.None,
+            };
+
+            var result = await mostPopularBuildsManager.PublishBuild(buildPost);
+
+            // Assert
+            Assert.IsTrue(result);
+        }
+
+        /// <summary>
+        /// This test will check if a non-query search is successful.
+        /// </summary>
+        [Test]
+        public void MostPopularBuilds_GetBuildPosts_ReturnTrueIfNormalCallIsSuccessful()
+        {
+            // Arrange
+            Thread.CurrentPrincipal = _basicClaimsPrincipal;
+
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
+            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+
+            var rowCount = mostPopularBuildsManager.GetBuildPosts(null, null).Count;
+
+            // Initialize the ID to two less of the first DB entity ID.
+            var id = 29998;
+
+            var expectedResultEntityIds = new List<string>();
+
+            for (var i = 0; i < rowCount; i++)
+            {
+                id += 2;
+
+                expectedResultEntityIds.Add(id.ToString());
+            }
+
+            // Act
+            var actualResultList = mostPopularBuildsManager.GetBuildPosts(null, null);
+
+            List<string> actualResultEntityIds = new List<string>();
+
+            foreach (var actualResult in actualResultList)
+                actualResultEntityIds.Add(actualResult.EntityId);
+
+            // Assert Assert.That(actualResult, Is.EquivalentTo(expectedResult));
+            Assert.That(actualResultEntityIds, Is.EquivalentTo(expectedResultEntityIds));
+        }
+
+        /// <summary>
+        /// This test will check if a queried search is made.
+        /// </summary>
+        [Test]
+        public void MostPopularBuilds_GetBuildPosts_ReturnTrueIfSortedQueriesCallIsSuccessful()
+        {
+            // Arrange
+            Thread.CurrentPrincipal = _basicClaimsPrincipal;
+
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
+            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+
+            var expectedResultList = mostPopularBuildsManager.GetBuildPosts(null, null);
+
+            expectedResultList.RemoveAll(o => (int)o.BuildType != 2);
+
+            expectedResultList.Reverse();
+
+            var expectedListParsed = new List<(string, int)>();
+
+            foreach (var item in expectedResultList)
+            {
+                expectedListParsed.Add((item.EntityId, (int)item.BuildType));
+            }
+
+            // Act
+            var actualResultList = mostPopularBuildsManager.GetBuildPosts("AscendingLikes", "BuildType_Gaming");
+
+            var actualListParsed = new List<(string, int)>();
+
+            foreach (var item in actualResultList)
+            {
+                actualListParsed.Add((item.EntityId, (int)item.BuildType));
+            }
 
 
-//            // Assert Assert.That(actualResult, Is.EquivalentTo(expectedResult));
-//            Assert.That(actualListParsed, Is.EquivalentTo(expectedListParsed));
-//        }
+            // Assert Assert.That(actualResult, Is.EquivalentTo(expectedResult));
+            Assert.That(actualListParsed, Is.EquivalentTo(expectedListParsed));
+        }
 
-//        /// <summary>
-//        /// This test will check if a particular build has been returned.
-//        /// </summary>
-//        [Test]
-//        public void MostPopularBuilds_GetBuildPost_ReturnTrueIfTheReturnedPostIsTheExpectedPost()
-//        {
-//            // Arrange
-//            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
-//            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
-//            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+        /// <summary>
+        /// This test will check if a particular build has been returned.
+        /// </summary>
+        [Test]
+        public void MostPopularBuilds_GetBuildPost_ReturnTrueIfTheReturnedPostIsTheExpectedPost()
+        {
+            // Arrange
+            Thread.CurrentPrincipal = _basicClaimsPrincipal;
 
-//            var expectedResult = "30000";
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
+            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
-//            // Act
-//            var actualResult = mostPopularBuildsManager.GetBuildPost(expectedResult);
+            var expectedResult = "30000";
 
-//            // Assert
-//            Assert.That(actualResult.EntityId, Is.EquivalentTo(expectedResult));
-//        }
+            // Act
+            var actualResult = mostPopularBuildsManager.GetBuildPost(expectedResult);
 
-//        /// <summary>
-//        /// This test will check if a like has been added to a build post.
-//        /// </summary>
-//        [Test]
-//        public void MostPopularBuilds_AddLike_ReturnTrueIfALikeWasAdded()
-//        {
-//            // Arrange
-//            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
-//            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
-//            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+            // Assert
+            Assert.That(actualResult.EntityId, Is.EquivalentTo(expectedResult));
+        }
 
-//            // Act
-//            var fakeUser = $"TestUser_{DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}";
+        /// <summary>
+        /// This test will check if a like has already been made by a user.
+        /// </summary>
+        [Test]
+        public void MostPopularBuilds_AddLike_ReturnTrueForFirstLikeAndFalseForDuplicateLike()
+        {
+            // Arrange
+            Thread.CurrentPrincipal = _basicClaimsPrincipal;
 
-//            var like = new Like()
-//            {
-//                PostId = "30000",
-//                UserId = fakeUser
-//            };
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
+            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
-//            var result = mostPopularBuildsManager.AddLike(like);
+            // Act
+            var fakeUser = "fakeUser";
 
-//            // Assert
-//            Assert.IsTrue(result);
-//        }
+            var like = new Like()
+            {
+                PostId = "30000",
+                UserId = fakeUser
+            };
 
-//        /// <summary>
-//        /// This test will check if a like has already been made by a user.
-//        /// </summary>
-//        [Test]
-//        public void MostPopularBuilds_AddLike_ReturnFalseIfALikeWasAddedButAlreadyExistsForUser()
-//        {
-//            // Arrange
-//            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
-//            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
-//            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+            // This first function creates a like.
+            var firstLike = mostPopularBuildsManager.AddLike(like);
 
-//            // Act
-//            var fakeUser = "fakeUser";
+            // This second call creates a second like with the same credentials, returning false, because of duplicate entries.
+            var secondLike = mostPopularBuildsManager.AddLike(like);
 
-//            var like = new Like()
-//            {
-//                PostId = "30000",
-//                UserId = fakeUser
-//            };
+            // Assert
+            Assert.IsTrue(firstLike);
+            Assert.IsFalse(secondLike);
+        }
 
-//            // This first function creates a like.
-//            mostPopularBuildsManager.AddLike(like);
-
-//            // This second call creates a second like with the same credentials, returning false, because of duplicate entries.
-//            var result = mostPopularBuildsManager.AddLike(like);
-
-//            // Assert
-//            Assert.IsFalse(result);
-//        }
-//    }
-//}
+    }
+}

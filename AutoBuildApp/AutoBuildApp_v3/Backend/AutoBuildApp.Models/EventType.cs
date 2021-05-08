@@ -9,5 +9,6 @@ namespace AutoBuildApp.Models
         LoginEvent,
         LogoutEvent,
         ViewPageEvent,
+        None
     }
 }

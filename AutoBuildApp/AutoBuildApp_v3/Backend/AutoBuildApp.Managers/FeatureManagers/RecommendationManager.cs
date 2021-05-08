@@ -63,7 +63,7 @@ namespace AutoBuildApp.Managers
         public List<IBuild> RecommendBuilds(
             BuildType requestedType,
             double initialBudget,
-            List<IComponent> peripherals,
+            List<Component> peripherals,
             PSUModularity psuType,
             HardDriveType hddType,
             int hddCount)
@@ -85,8 +85,8 @@ namespace AutoBuildApp.Managers
             #endregion
 
             #region Initializations
-            Dictionary<ProductType, List<IComponent>> products = new Dictionary<ProductType, List<IComponent>>();
-            Dictionary<IComponent, int> scores = new Dictionary<IComponent, int>();
+            Dictionary<ProductType, List<Component>> products = new Dictionary<ProductType, List<Component>>();
+            Dictionary<Component, int> scores = new Dictionary<Component, int>();
             //ComponentComparisonService comparator = new ComponentComparisonService();
             GetProductService getter = new GetProductService(_dao);
             PortionBudgetService portioner = new PortionBudgetService();
@@ -105,7 +105,7 @@ namespace AutoBuildApp.Managers
             }
             else if (peripherals != null)
             {
-                foreach (IComponent extras in peripherals)
+                foreach (Component extras in peripherals)
                 {
                     adjustedBudget -= extras.GetTotalcost();
                 }
@@ -177,7 +177,7 @@ namespace AutoBuildApp.Managers
         /// <param name="buildType"></param>
         /// <param name="budget"></param>
         /// <returns></returns>
-        public List<IComponent> RecommendUpgrade(List<IComponent> components,
+        public List<Component> RecommendUpgrade(List<Component> components,
             BuildType buildType, double budget)
         {
 
@@ -209,8 +209,8 @@ namespace AutoBuildApp.Managers
         /// <param name="scores">Dictionary to hold product scores.</param>
         /// <param name="type">Requested build type.</param>
         private void ScoreProductDictionary(
-            Dictionary<ProductType, List<IComponent>> products,
-            Dictionary<IComponent, int> scores,
+            Dictionary<ProductType, List<Component>> products,
+            Dictionary<Component, int> scores,
             BuildType type
             )
         {
@@ -218,7 +218,7 @@ namespace AutoBuildApp.Managers
 
             foreach (ProductType key in products.Keys)
             {
-                foreach (IComponent component in products[key])
+                foreach (Component component in products[key])
                 {
                     if (!scores.ContainsKey(component))
                     {

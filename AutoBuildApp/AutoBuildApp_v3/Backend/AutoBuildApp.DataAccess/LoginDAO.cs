@@ -115,7 +115,7 @@ namespace AutoBuildApp.DataAccess
                                 if ((bool)reader[locked])
                                 {
                                     _CRAuth.ResponseString = "Account is locked";
-                                    _CRAuth.ResponseBool = false;
+                                    _CRAuth.IsSuccessful = false;
                                     reader.Close();
                                     return _CRAuth;
                                 }
@@ -145,7 +145,7 @@ namespace AutoBuildApp.DataAccess
                     catch (SqlException)
                     {
                         command.Transaction.Rollback();
-                        _CRAuth.ResponseBool = false;
+                        _CRAuth.IsSuccessful = false;
 
                     }
                     //Console.WriteLine($"Auth DAO Common response check:: {_CRAuth.ToString()}");

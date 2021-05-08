@@ -2,12 +2,17 @@
 using AutoBuildApp.DataAccess.Entities;
 using AutoBuildApp.DomainModels;
 using AutoBuildApp.Logging;
+using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.Models.Enumerations;
+using AutoBuildApp.Security;
+using AutoBuildApp.Security.Enumerations;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Claims;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AutoBuildApp.Services.FeatureServices
@@ -19,10 +24,19 @@ namespace AutoBuildApp.Services.FeatureServices
     public class MostPopularBuildsService
     {
         // Initializes the logger.
-        private readonly LoggingProducerService _logger = LoggingProducerService.GetInstance;
+        private readonly LoggingProducerService _logger;
 
         // Initialize a private DAO inside of the serice so that any method can call DAO methods.
         private readonly MostPopularBuildsDAO _mostPopularBuildsDAO;
+
+        // Initialize a common response object
+        private readonly CommonResponseWithObject<BuildPost> _commonResponse;
+
+        // The registered user authorization check.
+        private readonly List<string> _allowedRolesForViewing;
+
+        // The unregistered user authorization check.
+        private readonly List<string> _allowedRolesForPosting;
 
         /// <summary>
         /// This will initialize the private DAO with the one that is passed in.
@@ -30,6 +44,19 @@ namespace AutoBuildApp.Services.FeatureServices
         /// <param name="mostPopularBuildsDAO">Takes in a MPB DAO to use for initlilization.</param>
         public MostPopularBuildsService(MostPopularBuildsDAO mostPopularBuildsDAO)
         {
+            _allowedRolesForViewing = new List<string>()
+            {
+                RoleEnumType.UnregisteredRole,
+                RoleEnumType.BasicRole
+            };
+
+            _allowedRolesForPosting = new List<string>()
+            {
+                RoleEnumType.BasicRole
+            };
+
+            _logger = LoggingProducerService.GetInstance;
+            _commonResponse = new CommonResponseWithObject<BuildPost>();
             _mostPopularBuildsDAO = mostPopularBuildsDAO;
         }
 
@@ -41,12 +68,21 @@ namespace AutoBuildApp.Services.FeatureServices
         /// <returns>returns a bool marking its success or failure.</returns>
         public bool PublishBuild(BuildPost buildPost)
         {
+            ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            string username = _threadPrinciple.Identity.Name;
+
+            // Authorization check
+            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForPosting))
+            {
+                return false;
+            }
+
             // Logs the event of the service publish method being called
-            _logger.LogInformation($"Most Popular Builds Service Publish Build was called for User:{buildPost.Username}");
+            _logger.LogInformation($"Most Popular Builds Service Publish Build was called"); //replace this with username
 
             var buildPostEntity = new BuildPostEntity()
             {
-                Username = buildPost.Username,
+                Username = username,
                 Title = buildPost.Title,
                 Description = buildPost.Description,
                 LikeIncrementor = buildPost.LikeIncrementor,
@@ -67,6 +103,12 @@ namespace AutoBuildApp.Services.FeatureServices
         /// <returns>returns a list of build posts</returns>
         public List<BuildPost> GetBuildPosts(string orderLikes, string buildType)
         {
+            // Authorization check
+            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
+            {
+                return null;
+            }
+
             // Logs the event of getting build posts in the service layer.
             _logger.LogInformation("Most Popular Builds Service GetBuildPosts was called.");
 
@@ -106,13 +148,22 @@ namespace AutoBuildApp.Services.FeatureServices
         /// <returns>returns a success state bool.</returns>
         public bool AddLike(Like like)
         {
+            // Authorization check
+            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForPosting))
+            {
+                return false;
+            }
+
+            ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            string username = _threadPrinciple.Identity.Name;
+
             // Logs the event of the service addLike method being called
             _logger.LogInformation($"Most Popular Builds Service addLike was called for user:{like.UserId} and post{like.PostId}");
 
             var likeEntity = new LikeEntity()
             {
                 PostId = like.PostId,
-                UserId = like.UserId
+                UserId = username
             };
 
             return _mostPopularBuildsDAO.AddLike(likeEntity);
@@ -125,6 +176,12 @@ namespace AutoBuildApp.Services.FeatureServices
         /// <returns>retruns a build post object.</returns>
         public BuildPost GetBuildPost(string buildId)
         {
+            // Authorization check
+            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
+            {
+                return null;
+            }
+
             // Logs the event of getting build posts in the service layer.
             _logger.LogInformation("Most Popular Builds Service GetBuildPost was called.");
 
@@ -156,6 +213,12 @@ namespace AutoBuildApp.Services.FeatureServices
         public async Task<string> UploadImage(string username, List<IFormFile> files)
         {
             string storeIn = " ";
+
+            // Authorization check
+            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForPosting))
+            {
+                return null;
+            }
 
             if (files == null)
                 return storeIn;

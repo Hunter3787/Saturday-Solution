@@ -74,7 +74,7 @@ namespace AutoBuildApp.Api.Controllers
             {
                 var output =_manager.GetShelfByName(shelfName, username);
 
-                if (!output.ResponseBool)
+                if (!output.IsSuccessful)
                 {
                     return Ok(output);
                 }

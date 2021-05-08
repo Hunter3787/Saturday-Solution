@@ -1,16 +1,15 @@
-.listOfDivs {
+.list-of-divs {
   display:inline-block;
-  margin-left: 500px;
 }
 
-.innerDiv {
+.inner-div {
   margin-left: 500px;
   margin-left: 280px;
   display:block;
   position:relative;
 }
 
-.sidenav {
+.side-nav {
   height: 100%;
   width: 200px;
   position: fixed;
@@ -23,7 +22,7 @@
   border-right: 0px solid black;
 }
 
-.sidenav h1, h3{
+.side-nav h1, h3{
   text-align: center;
 }
 
@@ -31,28 +30,6 @@
   display: block; 
   margin: 0 auto;
   margin-top: 50px;
-}
-
-.getItems {
-  margin:0 auto;
-  margin-left: 250px;
-}
-
-.hideAdd {
-  display:none;
-}
-
-.infoDiv {
-  display:none;
-}
-
-table, td {
-  border: 1px solid black;
-  margin-bottom: 100px;
-}
-
-tr {
-  text-align:center;
 }
 
 textarea {
@@ -63,16 +40,12 @@ textarea {
   margin-top:8px
 }
 
-.successButton {
-  display:none;
-}
-
-.largePhoto {
+.large-photo {
   position: absolute;
   border: 1px solid black;
 }
 
-.displayNone {
+.display-none {
   display:none;
 }
 
@@ -82,14 +55,14 @@ textarea {
   border: 1px solid black;         
 }
   
-.div-table-row {
+.div-table-row-header {
   display: flex;
   width: auto;
   clear: both;
   position: relative;
 }
 
-.div-table-col-image {
+.div-table-row-image {
   float: left; 
   width: 200px;
   height: 75px;
@@ -109,7 +82,7 @@ img {
   margin-bottom: 8px;
 }
 
-.div-table-col { 
+.div-table-row { 
   float: left; 
   width: 200px;
   height: 75px;
@@ -122,23 +95,16 @@ img {
   padding: 5px 5px 5px 5px;
 }
 
-.div-table-col.center {
+.div-table-row.center {
   line-height: 75px;
 }
 
-.textClass {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  overflow:auto;
-}
-
-.modelNumberDropDown {
+.model-number-dropdown {
   width:150px;
   text-align: center;
 }
 
-#modelNumberDropDown option{
+#model-number-dropdown option{
   width:100px;
   text-align: center;
   background-color: black;

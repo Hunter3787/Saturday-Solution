@@ -1,7 +1,6 @@
-const uri = 'https://localhost:5001/MostPopularBuilds/';
 let posts = [];
 let filterArray = [];
-let token = ' ';
+let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiLCJzdWIiOiJBdXRvYnVpbGQgVXNlciIsImF1ZCI6IlVTIiwiaWF0IjoxNjIwNDMzNDI2LCJleHAiOjE2MjEwMzgyMjYsIm5iZiI6MTYyMTAzODIyNiwiVXNlcm5hbWUiOiJTRVJHRSIsIlVzZXJDTGFpbXMiOlt7IlBlcm1pc3Npb24iOiJDcmVhdGUiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJSZXZpZXdzIn0seyJQZXJtaXNzaW9uIjoiRGVsZXRlIiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZiJ9LHsiUGVybWlzc2lvbiI6IkRlbGV0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNlbGZSZXZpZXdzIn0seyJQZXJtaXNzaW9uIjoiRWRpdCIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNlbGYifSx7IlBlcm1pc3Npb24iOiJSZWFkT25seSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IkF1dG9CdWlsZCJ9LHsiUGVybWlzc2lvbiI6IlVwZGF0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNlbGYifSx7IlBlcm1pc3Npb24iOiJVcGRhdGUiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJTZWxmUmV2aWV3cyJ9XX0.ZRTrsLvZXhhKIaXbhUgbDAMBus7oIBj8qDKreA5cJck';
 const fetchRequest = {
     method: 'GET',
     mode: 'cors',
@@ -10,6 +9,10 @@ const fetchRequest = {
         'Content-Type': 'application/json',
         'Authorization': 'bearer ' + token
     }
+};
+
+window.onload = function() {
+  getItems();
 };
 
 // Adds an event listener for the key up event for a search filter.
@@ -101,15 +104,12 @@ var refreshData = setInterval(looping, 3000);
 // This function will call a fetch request.
 async function getItems() {
 
-  console.log(uri + getFilterString())
+  let endpoint = appConfigurations.Endpoints.MostPopularBuilds || '';
 
-    await fetch(uri + getFilterString(), fetchRequest) // fetches the default URI
+    await fetch(endpoint + getFilterString(), fetchRequest) // fetches the default URI
         .then(response => response.json()) // Will receive a response from the default response.json.
         .then(data => displayItems(data)) // will call the display items function.
         .then(() => findByName(searchFilter))
-        .then(console.log("reloaded"))
-        .catch(error => console.error('Unable to get items.', error)); // will catch an error and print the appropriate error message in console.
-    refreshData;
 }
 
 // This function will display items received from the http response.

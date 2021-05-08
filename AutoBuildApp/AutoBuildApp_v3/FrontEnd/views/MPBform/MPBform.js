@@ -1,9 +1,11 @@
-const uri = 'https://localhost:5001/MostPopularBuilds';
 let posts = [];
-let token = ' ';
+let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiLCJzdWIiOiJBdXRvYnVpbGQgVXNlciIsImF1ZCI6IlVTIiwiaWF0IjoxNjIwNDMzNDI2LCJleHAiOjE2MjEwMzgyMjYsIm5iZiI6MTYyMTAzODIyNiwiVXNlcm5hbWUiOiJTRVJHRSIsIlVzZXJDTGFpbXMiOlt7IlBlcm1pc3Npb24iOiJDcmVhdGUiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJSZXZpZXdzIn0seyJQZXJtaXNzaW9uIjoiRGVsZXRlIiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZiJ9LHsiUGVybWlzc2lvbiI6IkRlbGV0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNlbGZSZXZpZXdzIn0seyJQZXJtaXNzaW9uIjoiRWRpdCIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNlbGYifSx7IlBlcm1pc3Npb24iOiJSZWFkT25seSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IkF1dG9CdWlsZCJ9LHsiUGVybWlzc2lvbiI6IlVwZGF0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNlbGYifSx7IlBlcm1pc3Npb24iOiJVcGRhdGUiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJTZWxmUmV2aWV3cyJ9XX0.ZRTrsLvZXhhKIaXbhUgbDAMBus7oIBj8qDKreA5cJck';
 const fetchRequest = {
     method: 'GET',
     mode: 'cors',
+    headers: {
+        'Authorization': 'bearer ' + token
+    }
 };
 
 // sets a keyup event listener for the textarea element.
@@ -23,8 +25,11 @@ async function postItem() {
     // sets a custom request overriding the const request.
     let customRequest = Object.assign(fetchRequest, {method: 'POST', body: postData});
 
+    // get the endpoint from the config file.
+    let endpoint = appConfigurations.Endpoints.MostPopularBuilds || '';
+
     // makes a fetch post request with the custom request.
-    await fetch(uri, customRequest)
+    await fetch(endpoint, customRequest)
 
     // redirects the page to the main page after a submission.
     window.location.assign("../MPBmain/MPB.html")

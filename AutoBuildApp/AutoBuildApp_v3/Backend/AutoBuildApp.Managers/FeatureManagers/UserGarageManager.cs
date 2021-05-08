@@ -26,8 +26,8 @@ namespace AutoBuildApp.Managers
         private ShelfDAO _shelfDAO;
 
         private List<string> _approvedRoles;
-        private ShelfService _shelfService;
-        private BuildManagementService _buildService;
+        private ShelfWithResponseService _shelfService;
+        private BuildWithResponseService _buildService;
         private readonly string _currentUser;
 
         public UserGarageManager(string connectionString)
@@ -39,8 +39,8 @@ namespace AutoBuildApp.Managers
 
             _buildDAO = new BuildDAO(connectionString);
             _shelfDAO = new ShelfDAO(connectionString);
-            _shelfService = new ShelfService(_shelfDAO);
-            _buildService = new BuildManagementService(_buildDAO);
+            _shelfService = new ShelfWithResponseService(_shelfDAO);
+            _buildService = new BuildWithResponseService(_buildDAO);
             _currentUser = Thread.CurrentPrincipal.Identity.Name;
 
 
@@ -54,7 +54,7 @@ namespace AutoBuildApp.Managers
                 return new CommonResponse()
                 {
                     ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS,
-                    ResponseBool = false
+                    IsSuccessful = false
                 };
             }
             NullGuard.IsNotNull(build);
@@ -143,15 +143,19 @@ namespace AutoBuildApp.Managers
             // Add Business rules
 
             // If(user == current)
-            CommonResponse response = _shelfService.DeleteShelf(shelfName);
+            CommonResponse response = _shelfService.DeleteShelf(shelfName,_currentUser);
 
             return response;
         }
 
-        public CommonResponse AddToShelf(IComponent item, string shelfName, string user)
+        public CommonResponse AddToShelf(Component item, string shelfName, string user)
         {
             // Add Business rules
-            CommonResponse response = _shelfService.AddToShelf(item, shelfName, user);
+            CommonResponse response = _shelfService.AddToShelf(
+                item.ModelNumber,
+                item.Quantity,
+                shelfName,
+                _currentUser);
 
             return response;
         }
@@ -159,23 +163,23 @@ namespace AutoBuildApp.Managers
         public CommonResponse RemoveFromShelf(int itemIndex, string shelfName)
         {
             // Add Business rules
-            CommonResponse response = _shelfService.RemoveFromShelf(itemIndex, shelfName);
+            CommonResponse response = _shelfService.RemoveFromShelf(itemIndex, shelfName, _currentUser);
 
             return response;
         }
 
-        public CommonResponse ModifyCount(int count, string itemID, string shelfName)
+        public CommonResponse ModifyQuantity(int itemIndex, int quanitty, string itemID, string shelfName)
         {
             // Add Business rules
-            CommonResponse response = _shelfService.ChangeQuantity(count, itemID, shelfName);
+            CommonResponse response = _shelfService.ChangeQuantity(itemIndex,quanitty, itemID, shelfName);
 
             return response;
         }
 
-        public CommonResponse MoveItemOnShelf(int indexStart, int indexEnd, string user)
+        public CommonResponse MoveItemOnShelf(List<int> indices, string shelfName, string username)
         {
             // Add business rules
-            CommonResponse response = _shelfService.ModifyShelf(indexStart, indexEnd, user);
+            CommonResponse response = _shelfService.ReorderShelf(indices, shelfName, username);
 
             return response;
         }
@@ -193,7 +197,7 @@ namespace AutoBuildApp.Managers
             {
                 output.GenericObject = new Shelf();
                 output.ResponseString = ResponseStringGlobals.INVALID_INPUT;
-                output.ResponseBool = false;
+                output.IsSuccessful = false;
                 return output;
 
             }
@@ -201,7 +205,7 @@ namespace AutoBuildApp.Managers
             {
                 output.GenericObject = new Shelf();
                 output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
-                output.ResponseBool = false;
+                output.IsSuccessful = false;
                 return output;
             }
 

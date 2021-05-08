@@ -10,7 +10,7 @@ namespace AutoBuildApp.Models.DataTransferObjects
 {
     public interface IProductDAO
     {
-        List<ProductEntity> GetEntities(List<IComponent> toFind);
+        List<ProductEntity> GetEntities(List<Component> toFind);
         List<ProductEntity> GetEntitiesByType(ProductType type);
         List<ProductEntity> GetAllProductEntities();
     }

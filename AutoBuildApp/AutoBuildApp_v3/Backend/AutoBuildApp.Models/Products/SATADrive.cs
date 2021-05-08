@@ -10,7 +10,7 @@ using AutoBuildApp.Models.Interfaces;
  */
 namespace AutoBuildApp.Models.Products
 {
-    public class SATADrive : HardDrive, IComponent
+    public class SATADrive : HardDrive, Interfaces.Component
     {
         #region "Field Declarations: get; set;"
         public HardDriveType DriveType { get; set; }
