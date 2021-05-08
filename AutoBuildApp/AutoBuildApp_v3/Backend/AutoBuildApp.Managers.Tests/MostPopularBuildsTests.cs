@@ -214,6 +214,38 @@ namespace AutoBuildApp.Manger.Tests
         }
 
         /// <summary>
+        /// This test will check if more than 3 posts can be made.
+        /// </summary>
+        [Test]
+        public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfMoreThanThreePostsAreMadeByTheSameUser()
+        {
+            // Arrange
+            Thread.CurrentPrincipal = _claimsPrincipal;
+
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
+            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+
+            // Act
+            var buildPost = new BuildPost()
+            {
+                Username = "SERGE",
+                Title = "TestTitle",
+                Description = "TestDescription",
+                BuildType = BuildType.None,
+            };
+
+            await mostPopularBuildsManager.PublishBuild(buildPost);
+            await mostPopularBuildsManager.PublishBuild(buildPost);
+            await mostPopularBuildsManager.PublishBuild(buildPost);
+
+            var result = await mostPopularBuildsManager.PublishBuild(buildPost);
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+        /// <summary>
         /// This test will check if the publish build method will return true
         /// if all conditions are met
         /// </summary>
@@ -403,5 +435,6 @@ namespace AutoBuildApp.Manger.Tests
             // Assert
             Assert.IsFalse(result);
         }
+
     }
 }
