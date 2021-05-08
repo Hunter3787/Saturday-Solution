@@ -1,21 +1,14 @@
 ﻿using AutoBuildApp.Api.HelperFunctions;
-using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.DomainModels;
-using AutoBuildApp.DomainModels.Abstractions;
-using AutoBuildApp.DomainModels.Enumerations;
 using AutoBuildApp.Managers.FeatureManagers;
 using AutoBuildApp.Security;
 using AutoBuildApp.Security.Enumerations;
-using AutoBuildApp.Security.FactoryModels;
-using AutoBuildApp.Security.Interfaces;
-using AutoBuildApp.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Threading;
 using System.Collections.Generic;
-using System;
 using AutoBuildApp.Logging;
 using AutoBuildApp.Models.Enumerations;
 

@@ -1,4 +1,5 @@
 ﻿using AutoBuildApp.Api.HelperFunctions;
+using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
 using AutoBuildApp.Security.Interfaces;
@@ -18,7 +19,11 @@ namespace AutoBuildApp.DataAccess.Test
         ConnectionManager _conString = ConnectionManager.connectionManager;
         // 2) declaring the dao 
         private AnalyticsDAO _analyticsDAO;
+
+        #region Variables for thr principle on thread.
         private ClaimsPrincipal _principalGenerated;
+        // Instantiating the claims factory to get the claims per a "role" passed
+        #endregion
 
 
         public AnalyticsDaoTest()
@@ -35,12 +40,13 @@ namespace AutoBuildApp.DataAccess.Test
                 IsAuthenticated = true,
                 AuthenticationType = "JWT"
             };
-            ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
-            IClaims adminClaims = claimsFactory.GetClaims(RoleEnumType.SystemAdmin);
+            ClaimsFactory _claimsFactory = new ConcreteClaimsFactory();
+            IClaims adminClaims = _claimsFactory.GetClaims(RoleEnumType.SystemAdmin);
+
             // Instantiation of the admin identity and basic user identity 
             ClaimsIdentity adminClaimsIdentity = new ClaimsIdentity
             (adminIdentity, adminClaims.Claims(), adminIdentity.AuthenticationType, adminIdentity.Name, " ");
-            _principalGenerated =  new ClaimsPrincipal(adminClaimsIdentity);
+            _principalGenerated = new ClaimsPrincipal(adminClaimsIdentity);
 
 
         }
@@ -87,17 +93,22 @@ namespace AutoBuildApp.DataAccess.Test
 
 
         [TestMethod]
-        public void GetGraphData_Null_Cases_ReturnNullException()
+        //unsuccessful data inputs
+        [DataRow(6)]
+        [DataRow(-1)]
+        [DataRow(500)]
+        [DataRow(-500)]
+        public void GetGraphData_Null_Cases_ReturnNullException(int graphType)
         {
 
             Thread.CurrentPrincipal = _principalGenerated;
             /// here is the expected common response for authorizaed user
             ResponseUAD actualResponse = new ResponseUAD();
 
-            actualResponse =  _analyticsDAO.GetGraphData((DBViews)6);
+            actualResponse = _analyticsDAO.GetGraphData((DBViews)graphType);
             string expectedResponse = "InValid Graph Specified";
 
-            Assert.AreEqual( expectedResponse, actualResponse.ResponseString);
+            Assert.AreEqual(expectedResponse, actualResponse.ResponseString);
 
 
 
@@ -115,9 +126,9 @@ namespace AutoBuildApp.DataAccess.Test
                 AuthenticationType = "JWT"
             };
 
-            // Instantiating the claims factory to get the claims per a "role" passed
             ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
             IClaims adminClaims = claimsFactory.GetClaims(RoleEnumType.SystemAdmin);
+
             IClaims basicClaims = claimsFactory.GetClaims(RoleEnumType.BasicRole);
 
             // Instantiation of the admin identity and basic user identity 
@@ -131,6 +142,7 @@ namespace AutoBuildApp.DataAccess.Test
             /// here is the expected common response for authorizaed user
             ResponseUAD expectedSuccessUAD = new ResponseUAD()
             {
+                ResponseString = "Successful Data retrieval",
                 IsSuccessful = true,
                 ConnectionState = true,
             };
@@ -155,15 +167,11 @@ namespace AutoBuildApp.DataAccess.Test
         public void GetAllAnalytics_ValidAndInvalidParmissions_ResponseReturned
             (ClaimsPrincipal principalGenerated, ResponseUAD expectedUAD)
         {
-
-
-
             Thread.CurrentPrincipal = principalGenerated;
             ResponseUAD responseUAD = new ResponseUAD();
 
             string connection = _conString.GetConnectionStringByName("MyConnection");
             responseUAD = _analyticsDAO.GetGraphData(DBViews.none);
-            //Console.WriteLine(expectedUAD.ToString());
             Console.WriteLine(responseUAD.ToString());
 
             Assert.AreEqual(expectedUAD.ToString(), responseUAD.ToString());
@@ -183,11 +191,29 @@ namespace AutoBuildApp.DataAccess.Test
         }
 
         [TestMethod]
-        [DataTestMethod]
+        [DataRow(1)]
+        [DataRow(2)]
+        [DataRow(3)]
+        [DataRow(4)]
+        [DataRow(5)]
+
+        //[DataRow(6)]
         //[DynamicData(nameof(getPermissionsData), DynamicDataSourceType.Method)]
-        public void METHOD()
+        public void GetGraphData_ReturnGraphDataAsExpected(int graphType)
         {
-            // have a rollback
+
+            Thread.CurrentPrincipal = _principalGenerated;
+
+            ResponseUAD actualResponse = new ResponseUAD();
+
+            actualResponse = _analyticsDAO.GetGraphData((DBViews)graphType);
+
+            IList<ChartData> GetChartDatas = new List<ChartData>();
+
+            Assert.AreNotEqual(GetChartDatas.Count, actualResponse.GetChartDatas.Count);
+
+
+
 
         }
 

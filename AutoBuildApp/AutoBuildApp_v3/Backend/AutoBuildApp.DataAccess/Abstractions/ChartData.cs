@@ -20,35 +20,13 @@ namespace AutoBuildApp.Models.DataTransferObjects
         /// </summary>
         public object YValue { get; set; }
 
-        /// <summary>
-        /// XLabel represents the
-        /// X Name Tick in the chart/ graph.
-        /// </summary>
-        //public string XLabelString { get; set; }
-
-        /// <summary>
-        /// XLabel represents the
-        /// X Name Tick in the chart/ graph.
-        /// </summary>
-        //public float XLabelInt { get; set; }
 
         /// <summary>
         /// Legend represents essentially 
         /// the Z value in the chart.
         /// </summary>
         public object Legend { get; set; }
-        /// <summary>
-        /// YValue represent the corresponding
-        /// value to the X-Value.
-        /// </summary>
-       // public string YValueString { get; set; }
-
-        /// <summary>
-        /// YValue represent the corresponding
-        /// value to the X-Value.
-        /// </summary>
-        //public int YValueInt { get; set; }
-
+        
 
         public ChartData()
         {
@@ -59,7 +37,7 @@ namespace AutoBuildApp.Models.DataTransferObjects
 
         public ChartData(object xLabel, object yValue, object legend)
         {
-
+            // here we check the data type and cast them into thier intended type
             try
             {
 
@@ -93,6 +71,7 @@ namespace AutoBuildApp.Models.DataTransferObjects
             }
             catch (ArgumentNullException)
             {
+                // handling the null paramteres case
                 if (xLabel == null || yValue == null || legend == null)
                 {
 
