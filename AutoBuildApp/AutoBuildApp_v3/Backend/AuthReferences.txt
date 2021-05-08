@@ -69,4 +69,5 @@ connection string from the appsettings.json
 
  2- 
 
-
+ for encryption in js and decryption in c#
+ https://www.programmersought.com/article/9242241361/

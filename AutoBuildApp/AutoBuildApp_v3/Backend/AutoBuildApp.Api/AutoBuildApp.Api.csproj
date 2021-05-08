@@ -6,6 +6,7 @@
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'AutoBuildApp.Api' " />
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
   </ItemGroup>
 

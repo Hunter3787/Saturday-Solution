@@ -54,7 +54,8 @@
 //            var reviewRating = new ReviewRatingManager(reviewService);
 
 //            // Act
-//            var result = reviewRating.CreateReviewRating(new ReviewRating { 
+//            var result = reviewRating.CreateReviewRating(new ReviewRating
+//            {
 //                Username = "Zee",
 //                Message = "Hello",
 //                StarRating = StarType.Four_Stars,

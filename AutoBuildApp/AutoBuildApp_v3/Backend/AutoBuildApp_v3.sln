@@ -50,7 +50,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Connor's Console", "Connor'
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cross Cutting Concerns", "Cross Cutting Concerns", "{EB9C2905-4E18-4C51-AB39-9108845D0D5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logging", "Logging\Logging.csproj", "{B2B45FD3-6CBC-4ACA-86EC-2C2552A81622}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logging", "Logging\Logging.csproj", "{B2B45FD3-6CBC-4ACA-86EC-2C2552A81622}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

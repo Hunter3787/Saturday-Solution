@@ -1,4 +1,3 @@
-let token = ' ';
 
 var updateUsername = document.getElementById("updateUsername")
 
