@@ -12,6 +12,7 @@
     <None Remove=".DS_Store" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.2" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="2.1.2" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
   </ItemGroup>

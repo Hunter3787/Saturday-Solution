@@ -18,11 +18,13 @@ namespace AutoBuildApp.Services.UserServices
             _userManagementDAO = userManagementDAO;
         }
 
+        // sets up the UserResults object
         public List<UserResults> GetUsersList()
         {
             var userResultEntities = _userManagementDAO.getUsers();
             var userResults = new List<UserResults>();
 
+            // for each userResult entity sets values for that user
             foreach(UserEntity userResultEntity in userResultEntities)
             {
                 var userResult = new UserResults()
@@ -37,6 +39,7 @@ namespace AutoBuildApp.Services.UserServices
                     UserRole = userResultEntity.UserRole,
                     LockState = userResultEntity.LockState
                 };
+                // adds the results to the growing list
                 userResults.Add(userResult);
             }
             return userResults;

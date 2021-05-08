@@ -87,7 +87,6 @@ namespace AutoBuildApp.Api.Controllers
         [HttpPost]
         public ActionResult<AuthUserDTO> AuthenticateUser(UserCredentials userCredentials)
         {
-
             this._userCredentials = userCredentials;
             var JWTToken = _loginManager.AuthenticateUser(_userCredentials);
             // ok we need to set the JWT into the auth httponly cookie so that the 

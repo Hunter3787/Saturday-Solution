@@ -34,7 +34,7 @@ namespace AutoBuildApp.Api.Controllers
         //}
         RegistrationManager _registrationManager = new RegistrationManager(ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
 
-        [HttpPost]
+        [HttpPost]  
         //public async Task<IActionResult> RegisterUser(string username, string firstname, string lastname, string email, string password,
         //    string passwordCheck)
         public IActionResult RegisterUser(string username, string firstname, string lastname, string email, string password,

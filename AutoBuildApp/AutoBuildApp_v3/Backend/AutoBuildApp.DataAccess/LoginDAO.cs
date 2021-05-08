@@ -1,8 +1,10 @@
 ﻿using AutoBuildApp.DataAccess.Entities;
 using AutoBuildApp.Security.Models;
 using Microsoft.Data.SqlClient;
+using BC = BCrypt.Net.BCrypt;
 using System;
 using System.Data;
+using BCrypt.Net;
 
 namespace AutoBuildApp.DataAccess 
 { 
@@ -66,8 +68,8 @@ namespace AutoBuildApp.DataAccess
             {
                 conn.Open();
                 // naming convention SP_ name of procudrure
-                string SP_retrievePermissions = "RetrievePermissions";
-                using (SqlCommand command = new SqlCommand(SP_retrievePermissions, conn))
+                string SP_retrievePermissionsLogin = "RetrievePermissionsLogin";
+                using (SqlCommand command = new SqlCommand(SP_retrievePermissionsLogin, conn))
                 {
 
                     try
@@ -80,14 +82,12 @@ namespace AutoBuildApp.DataAccess
                     // 1) Create a Command, and set its CommandType property to StoredProcedure.
                     command.CommandType = CommandType.StoredProcedure;
                     // 2) Set the CommandText to the name of the stored procedure.
-                    command.CommandText = SP_retrievePermissions;
+                    command.CommandText = SP_retrievePermissionsLogin;
                     //Add any required parameters to the Command.Parameters collection.
                     // command.Parameters.AddWithValue("@username", userCredentials.Username);
-                    var param = new SqlParameter[2];
+                    var param = new SqlParameter[1];
                     param[0] = new SqlParameter("@username", userCredentials.Username);
                     param[0].Value = userCredentials.Username;
-                    param[1] = new SqlParameter("@passhash", userCredentials.Password);
-                    param[1].Value = userCredentials.Password;
                     // add the commands the parameters for the stored procedure
                     command.Parameters.AddRange(param);
                     #endregion
@@ -98,6 +98,7 @@ namespace AutoBuildApp.DataAccess
                             {
                                 _CRAuth.ResponseString = "User not found";
                                 _CRAuth.IsUserExists = false;
+                                return _CRAuth;
                             }
                            
                             //READ AND STORE All THE ORDINALS YOU NEED
@@ -105,7 +106,7 @@ namespace AutoBuildApp.DataAccess
                             int permissions = reader.GetOrdinal("permission");
                             int scope = reader.GetOrdinal("scopeOfPermission");
                             int locked = reader.GetOrdinal("locked");
-                            int emailConfirmed = reader.GetOrdinal("emailConfirmed");
+                            //int emailConfirmed = reader.GetOrdinal("emailConfirmed");
 
 
 
@@ -118,13 +119,19 @@ namespace AutoBuildApp.DataAccess
                                     reader.Close();
                                     return _CRAuth;
                                 }
-                                else if ((bool)reader[emailConfirmed])
+                                else if (!BCrypt.Net.BCrypt.Verify(userCredentials.Password, reader["passwordHash"].ToString())) // use the bang!!!!!!! 
                                 {
-                                    _CRAuth.ResponseString = "Email not verified";
-                                    _CRAuth.ResponseBool = false;
-                                    reader.Close();
+                                    _CRAuth.ResponseString = "User not found";
+                                    _CRAuth.IsUserExists = false;
                                     return _CRAuth;
                                 }
+                                //else if ((bool)reader[emailConfirmed])
+                                //{
+                                //    _CRAuth.ResponseString = "Email not verified";
+                                //    _CRAuth.ResponseBool = false;
+                                //    reader.Close();
+                                //    return _CRAuth;
+                                //}
                                 _userClaims = new Claims();
                                 _CRAuth.AuthUserDTO.UserName = (string)reader[username];
                                 _userClaims.Permission = (string)reader[permissions];
