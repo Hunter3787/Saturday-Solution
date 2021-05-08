@@ -390,12 +390,12 @@ namespace AutoBuildApp.Manger.Tests
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
             // Act
-            var fakeUser = $"SERGE";
+            var userId = $"SERGE";
 
             var like = new Like()
             {
                 PostId = "30000",
-                UserId = fakeUser
+                UserId = userId
             };
 
             var result = mostPopularBuildsManager.AddLike(like);
