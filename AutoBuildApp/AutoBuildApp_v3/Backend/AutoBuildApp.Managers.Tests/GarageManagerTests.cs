@@ -142,7 +142,7 @@ namespace AutoBuildApp.Manger.Tests
             // Arrange
             CommonResponse expected = new CommonResponse();
             CommonResponse actual;
-            expected.ResponseBool = true;
+            expected.IsSuccessful = true;
             expected.ResponseString = ResponseStringGlobals.SUCCESSFUL_CREATION;
             string shelfName = "Tacobell";
 
@@ -154,7 +154,7 @@ namespace AutoBuildApp.Manger.Tests
             _testManager.DeleteShelf(shelfName);
 
             // Assert
-            Assert.AreEqual(expected.ResponseBool,actual.ResponseBool);
+            Assert.AreEqual(expected.IsSuccessful,actual.IsSuccessful);
             Assert.AreEqual(expected.ResponseString, actual.ResponseString);  
         }
 

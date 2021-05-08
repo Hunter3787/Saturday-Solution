@@ -42,7 +42,7 @@ namespace AutoBuildApp.Services.Tests
             _CRAuthIsAuthenticated.IsUserExists = true;
             _CRAuthIsAuthenticated.connectionState = true;
 
-            _CRAuthIsAuthenticated.ResponseBool = true;
+            _CRAuthIsAuthenticated.IsSuccessful = true;
             _CRAuthIsAuthenticated.isAuthenticated = true;
 
             CommonReponseAuth _CRAuthNotAuthenticated = new CommonReponseAuth();
@@ -50,7 +50,7 @@ namespace AutoBuildApp.Services.Tests
             _CRAuthNotAuthenticated.IsUserExists = false;
             _CRAuthNotAuthenticated.connectionState = true;
 
-            _CRAuthNotAuthenticated.ResponseBool = false;
+            _CRAuthNotAuthenticated.IsSuccessful = false;
             _CRAuthNotAuthenticated.isAuthenticated = false;
 
 

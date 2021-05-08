@@ -58,14 +58,14 @@ namespace AutoBuildApp.Managers
             catch (UnauthorizedAccessException)
             {
                 output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
-                output.ResponseBool = false;
+                output.IsSuccessful = false;
                 return output;
             }
             catch (ArgumentNullException)
             {
 
                 output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
-                output.ResponseBool = false;
+                output.IsSuccessful = false;
                 return output;
             }
 
@@ -86,13 +86,13 @@ namespace AutoBuildApp.Managers
             catch (UnauthorizedAccessException)
             {
                 output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
-                output.ResponseBool = false;
+                output.IsSuccessful = false;
                 return output;
             }
             catch (ArgumentNullException)
             {
                 output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
-                output.ResponseBool = false;
+                output.IsSuccessful = false;
                 return output;
             }
 
@@ -154,7 +154,7 @@ namespace AutoBuildApp.Managers
         {
             CommonResponse output = new CommonResponse()
             {
-                ResponseBool = false,
+                IsSuccessful = false,
             };
 
             try
@@ -190,7 +190,7 @@ namespace AutoBuildApp.Managers
         {
             CommonResponse output = new CommonResponse()
             {
-                ResponseBool = false,
+                IsSuccessful = false,
             };
 
             try
@@ -237,7 +237,7 @@ namespace AutoBuildApp.Managers
         {
             CommonResponse output = new CommonResponse()
             {
-                ResponseBool = false,
+                IsSuccessful = false,
             };
 
             try
@@ -272,7 +272,7 @@ namespace AutoBuildApp.Managers
         {
             CommonResponse output = new CommonResponse()
             {
-                ResponseBool = false,
+                IsSuccessful = false,
             };
 
             try
@@ -320,7 +320,7 @@ namespace AutoBuildApp.Managers
         {
             CommonResponse output = new CommonResponse()
             {
-                ResponseBool = false,
+                IsSuccessful = false,
             };
 
             try
@@ -364,7 +364,7 @@ namespace AutoBuildApp.Managers
         {
             CommonResponse output = new CommonResponse()
             {
-                ResponseBool = false,
+                IsSuccessful = false,
             };
 
             try
@@ -419,7 +419,7 @@ namespace AutoBuildApp.Managers
         {
             CommonResponseWithObject<Shelf> output = new CommonResponseWithObject<Shelf>()
             {
-                ResponseBool = false,
+                IsSuccessful = false,
                 GenericObject = new Shelf()
             };
 
@@ -455,7 +455,7 @@ namespace AutoBuildApp.Managers
         {
             CommonResponseWithObject<List<Shelf>> output = new CommonResponseWithObject<List<Shelf>>()
             {
-                ResponseBool = false,
+                IsSuccessful = false,
                 GenericObject = new List<Shelf>()
             };
 

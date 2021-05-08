@@ -152,17 +152,17 @@ namespace AutoBuildApp.Managers.FeatureManagers
 
                 return dataDTO;
             }
-            if (!responseUAD.ResponseBool|| responseUAD.GetChartDatas == null)
+            if (!responseUAD.IsSuccessful|| responseUAD.GetChartDatas == null)
             {
 
                 Console.WriteLine($" IF STATEMENT 3");
-                dataDTO.SuccessFlag = responseUAD.ResponseBool;
+                dataDTO.SuccessFlag = responseUAD.IsSuccessful;
                 dataDTO.Result = responseUAD.ResponseString;
 
                 Console.WriteLine($" {dataDTO.ToString()}");
                 return dataDTO;
             }
-            else if(responseUAD.ResponseBool)
+            else if(responseUAD.IsSuccessful)
             {
 
                 Console.WriteLine($" ELSE IF STATEMENT 4");

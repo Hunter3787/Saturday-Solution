@@ -2,11 +2,17 @@
 using AutoBuildApp.DomainModels;
 using AutoBuildApp.Managers;
 using AutoBuildApp.Models.Enumerations;
+using AutoBuildApp.Security.Enumerations;
+using AutoBuildApp.Security.FactoryModels;
+using AutoBuildApp.Security.Interfaces;
+using AutoBuildApp.Security.Models;
 using AutoBuildApp.Services.FeatureServices;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AutoBuildApp.Manger.Tests
@@ -20,6 +26,39 @@ namespace AutoBuildApp.Manger.Tests
     {
         private const string testConnectionString = "Server = localhost; Database = TestDB; Trusted_Connection = True;";
 
+        private readonly ClaimsPrincipal _basicClaimsPrincipal;
+        private readonly ClaimsPrincipal _secondBasicClaimsPrincipal;
+
+        public MostPopularBuildsTests()
+        {
+            UserIdentity userIdentity = new UserIdentity
+            {
+                Name = "SERGE",
+                IsAuthenticated = true,
+                AuthenticationType = "JWT"
+            };
+
+            UserIdentity adminIdentity = new UserIdentity
+            {
+                Name = "ADMIN USER",
+                IsAuthenticated = true,
+                AuthenticationType = "JWT"
+            };
+
+            ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
+            IClaims basicClaims = claimsFactory.GetClaims(RoleEnumType.BasicRole);
+            IClaims secondBasicClaims = claimsFactory.GetClaims(RoleEnumType.BasicRole);
+
+            ClaimsIdentity basicClaimsIdentity = new ClaimsIdentity
+            (userIdentity, basicClaims.Claims(), userIdentity.AuthenticationType, userIdentity.Name, " ");
+            
+            ClaimsIdentity secondBasicClaimsIdentity = new ClaimsIdentity
+            (adminIdentity, secondBasicClaims.Claims(), adminIdentity.AuthenticationType, adminIdentity.Name, " ");
+
+            _basicClaimsPrincipal = new ClaimsPrincipal(basicClaimsIdentity);
+            _secondBasicClaimsPrincipal = new ClaimsPrincipal(secondBasicClaimsIdentity);
+        }
+
         /// <summary>
         /// This test will check if the publish build method will return false
         /// if the object passed through is null.
@@ -28,6 +67,8 @@ namespace AutoBuildApp.Manger.Tests
         public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfObjectIsNull()
         {
             // Arrange
+            Thread.CurrentPrincipal = _basicClaimsPrincipal;
+
             var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
@@ -49,6 +90,8 @@ namespace AutoBuildApp.Manger.Tests
         public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfAnyNullVarsInBuildPostObject()
         {
             // Arrange
+            Thread.CurrentPrincipal = _basicClaimsPrincipal;
+
             var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
@@ -108,6 +151,8 @@ namespace AutoBuildApp.Manger.Tests
         public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfTitleCharsAreGreaterThan50()
         {
             // Arrange
+            Thread.CurrentPrincipal = _basicClaimsPrincipal;
+
             var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
@@ -147,6 +192,8 @@ namespace AutoBuildApp.Manger.Tests
         public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfDescriptionCharsAreGreaterThan10k()
         {
             // Arrange
+            Thread.CurrentPrincipal = _basicClaimsPrincipal;
+
             var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
@@ -179,6 +226,38 @@ namespace AutoBuildApp.Manger.Tests
         }
 
         /// <summary>
+        /// This test will check if more than 3 posts can be made.
+        /// </summary>
+        [Test]
+        public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfMoreThanThreePostsAreMadeByTheSameUser()
+        {
+            // Arrange
+            Thread.CurrentPrincipal = _basicClaimsPrincipal;
+
+            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
+            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
+            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
+
+            // Act
+            var buildPost = new BuildPost()
+            {
+                Username = "SERGE",
+                Title = "TestTitle",
+                Description = "TestDescription",
+                BuildType = BuildType.None,
+            };
+
+            await mostPopularBuildsManager.PublishBuild(buildPost);
+            await mostPopularBuildsManager.PublishBuild(buildPost);
+            await mostPopularBuildsManager.PublishBuild(buildPost);
+
+            var result = await mostPopularBuildsManager.PublishBuild(buildPost);
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+        /// <summary>
         /// This test will check if the publish build method will return true
         /// if all conditions are met
         /// </summary>
@@ -186,6 +265,8 @@ namespace AutoBuildApp.Manger.Tests
         public async Task MostPopularBuilds_PublishBuild_ReturnTrueIfAllConditionsAreMet()
         {
             // Arrange
+            Thread.CurrentPrincipal = _secondBasicClaimsPrincipal;
+
             var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
@@ -212,6 +293,8 @@ namespace AutoBuildApp.Manger.Tests
         public void MostPopularBuilds_GetBuildPosts_ReturnTrueIfNormalCallIsSuccessful()
         {
             // Arrange
+            Thread.CurrentPrincipal = _basicClaimsPrincipal;
+
             var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
@@ -249,6 +332,8 @@ namespace AutoBuildApp.Manger.Tests
         public void MostPopularBuilds_GetBuildPosts_ReturnTrueIfSortedQueriesCallIsSuccessful()
         {
             // Arrange
+            Thread.CurrentPrincipal = _basicClaimsPrincipal;
+
             var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
@@ -288,6 +373,8 @@ namespace AutoBuildApp.Manger.Tests
         public void MostPopularBuilds_GetBuildPost_ReturnTrueIfTheReturnedPostIsTheExpectedPost()
         {
             // Arrange
+            Thread.CurrentPrincipal = _basicClaimsPrincipal;
+
             var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
@@ -302,38 +389,14 @@ namespace AutoBuildApp.Manger.Tests
         }
 
         /// <summary>
-        /// This test will check if a like has been added to a build post.
-        /// </summary>
-        [Test]
-        public void MostPopularBuilds_AddLike_ReturnTrueIfALikeWasAdded()
-        {
-            // Arrange
-            var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
-            var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
-            var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
-
-            // Act
-            var fakeUser = $"TestUser_{DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}";
-
-            var like = new Like()
-            {
-                PostId = "30000",
-                UserId = fakeUser
-            };
-
-            var result = mostPopularBuildsManager.AddLike(like);
-
-            // Assert
-            Assert.IsTrue(result);
-        }
-
-        /// <summary>
         /// This test will check if a like has already been made by a user.
         /// </summary>
         [Test]
-        public void MostPopularBuilds_AddLike_ReturnFalseIfALikeWasAddedButAlreadyExistsForUser()
+        public void MostPopularBuilds_AddLike_ReturnTrueForFirstLikeAndFalseForDuplicateLike()
         {
             // Arrange
+            Thread.CurrentPrincipal = _basicClaimsPrincipal;
+
             var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
@@ -348,13 +411,15 @@ namespace AutoBuildApp.Manger.Tests
             };
 
             // This first function creates a like.
-            mostPopularBuildsManager.AddLike(like);
+            var firstLike = mostPopularBuildsManager.AddLike(like);
 
             // This second call creates a second like with the same credentials, returning false, because of duplicate entries.
-            var result = mostPopularBuildsManager.AddLike(like);
+            var secondLike = mostPopularBuildsManager.AddLike(like);
 
             // Assert
-            Assert.IsFalse(result);
+            Assert.IsTrue(firstLike);
+            Assert.IsFalse(secondLike);
         }
+
     }
 }

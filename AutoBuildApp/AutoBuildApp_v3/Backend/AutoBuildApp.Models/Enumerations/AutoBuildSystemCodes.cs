@@ -19,6 +19,8 @@ namespace AutoBuildApp.Models.Enumerations
         InsertFailed,
         DeleteFailed,
         UpdateFailed,
-        NoEntryFound
+        NoEntryFound,
+        NullValue
+
     }
 }

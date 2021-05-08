@@ -54,7 +54,7 @@ namespace AutoBuildApp.Services
 
             var temp = _dao.InsertShelf(shelfName, username);
 
-            output.ResponseBool = temp.GenericObject;
+            output.IsSuccessful = temp.GenericObject;
 
             // If successful add custom response bool for creation.
             if (!temp.GenericObject)
@@ -88,7 +88,7 @@ namespace AutoBuildApp.Services
 
             var temp = _dao.DeleteShelf(shelfName, username);
 
-            output.ResponseBool = temp.GenericObject;
+            output.IsSuccessful = temp.GenericObject;
 
             // If successful add custom response bool for creation.
             if (!temp.GenericObject)
@@ -123,7 +123,7 @@ namespace AutoBuildApp.Services
 
             var temp = _dao.UpdateShelfName(oldName, newName, username);
 
-            output.ResponseBool = temp.GenericObject;
+            output.IsSuccessful = temp.GenericObject;
 
             // If successful add custom response bool for creation.
             if (!temp.GenericObject)
@@ -159,7 +159,7 @@ namespace AutoBuildApp.Services
 
             var temp = _dao.AddComponent(modelNumber, quantity, shelfName, username);
 
-            output.ResponseBool = temp.GenericObject;
+            output.IsSuccessful = temp.GenericObject;
 
             // If successful add custom response bool for creation.
             if (!temp.GenericObject)
@@ -194,7 +194,7 @@ namespace AutoBuildApp.Services
 
             var temp = _dao.RemoveComponent(itemIndex, shelfName, username);
 
-            output.ResponseBool = temp.GenericObject;
+            output.IsSuccessful = temp.GenericObject;
 
             // If successful add custom response bool for creation.
             if (!temp.GenericObject)
@@ -229,7 +229,7 @@ namespace AutoBuildApp.Services
 
             var temp = _dao.UpdateShelfOrder(indicies, shelfName, username);
 
-            output.ResponseBool = temp.GenericObject;
+            output.IsSuccessful = temp.GenericObject;
 
             // If successful add custom response bool for creation.
             if (!temp.GenericObject)
@@ -265,7 +265,7 @@ namespace AutoBuildApp.Services
 
             var temp = _dao.UpdateQuantity(itemIndex, quantity, shelfName, username);
 
-            output.ResponseBool = temp.GenericObject;
+            output.IsSuccessful = temp.GenericObject;
 
             // If successful add custom response bool for creation.
             if (!temp.GenericObject)
@@ -290,7 +290,7 @@ namespace AutoBuildApp.Services
         {
             CommonResponseWithObject<Shelf> output = new CommonResponseWithObject<Shelf>()
             {
-                ResponseBool = false
+                IsSuccessful = false
             };
 
             if (!AuthorizationCheck.IsAuthorized(_approvedRoles))
@@ -307,7 +307,7 @@ namespace AutoBuildApp.Services
 
             if(temp.Code == AutoBuildSystemCodes.Success)
             {
-                output.ResponseBool = true;
+                output.IsSuccessful = true;
             }
 
             return output;
@@ -322,7 +322,7 @@ namespace AutoBuildApp.Services
         {
             CommonResponseWithObject<List<Shelf>> output = new CommonResponseWithObject<List<Shelf>>()
             {
-                ResponseBool = false
+                IsSuccessful = false
             };
 
             if (!AuthorizationCheck.IsAuthorized(_approvedRoles))
@@ -339,7 +339,7 @@ namespace AutoBuildApp.Services
 
             if(temp.Code == AutoBuildSystemCodes.Success)
             {
-                output.ResponseBool = true;
+                output.IsSuccessful = true;
             }
 
             return output;
