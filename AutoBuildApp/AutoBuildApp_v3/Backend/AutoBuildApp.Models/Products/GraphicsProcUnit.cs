@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using AutoBuildApp.Models.Enumerations;
-using AutoBuildApp.Models.Interfaces;
+﻿using AutoBuildApp.Models.Interfaces;
 
 /**
  * Graphics Processing Unit class for use with AutoBuild App
@@ -10,7 +7,7 @@ using AutoBuildApp.Models.Interfaces;
  */
 namespace AutoBuildApp.Models.Products
 {
-    public class GraphicsProcUnit : Component, Interfaces.Component
+    public class GraphicsProcUnit : Component, IComponent
     {
         #region "Field Declarations: get; set;"
         public string Chipset { get; set; }

@@ -10,7 +10,7 @@ namespace AutoBuildApp.Models.Products
             switch (productType)
             {
                 case ProductType.Case:
-                    return new ComputerCase();
+                    return new Component();
                 case ProductType.Cooler:
                     return new WaterCooler();
                 case ProductType.CPU:
@@ -19,7 +19,7 @@ namespace AutoBuildApp.Models.Products
                     return new Fan();
                 case ProductType.GPU:
                     return new GraphicsProcUnit();
-                case ProductType.MotherBoard:
+                case ProductType.Motherboard:
                     return new Motherboard();
                 case ProductType.PSU:
                     return new PowerSupplyUnit();

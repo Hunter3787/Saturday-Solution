@@ -25,7 +25,7 @@ namespace AutoBuildApp.Models.Tests
         private CentralProcUnit _processor;
         private RAM _ram;
         private ICooler _cooler;
-        private List<Interfaces.Component> _periphs;
+        private List<IComponent> _periphs;
         private IBuild _gamingBuild;
         private BuildFactory _build;
 
@@ -89,7 +89,7 @@ namespace AutoBuildApp.Models.Tests
             };
             _mobo = new Motherboard
             {
-                ProductType = ProductType.MotherBoard,
+                ProductType = ProductType.Motherboard,
                 ModelNumber = "133",
                 ManufacturerName = "Giga",
                 Price = 148.03,
@@ -226,7 +226,7 @@ namespace AutoBuildApp.Models.Tests
                 Fanless = false,
                 WaterCooling = false
             };
-            _periphs = new List<Interfaces.Component>()
+            _periphs = new List<IComponent>()
             {
                 _hd2, _hd2
             };

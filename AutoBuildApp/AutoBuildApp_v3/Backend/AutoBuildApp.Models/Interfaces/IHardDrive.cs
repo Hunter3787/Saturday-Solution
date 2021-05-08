@@ -6,7 +6,7 @@
  */
 namespace AutoBuildApp.Models.Interfaces
 {
-    public interface IHardDrive : Component
+    public interface IHardDrive : IComponent
     {
         string Capacity { get; set; }
         string Cache { get; set; }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Interfaces;
 
 /**
@@ -8,7 +7,7 @@ using AutoBuildApp.Models.Interfaces;
  */
 namespace AutoBuildApp.Models.Products
 {
-    public class Fan : Component, Interfaces.Component, ICooler
+    public class Fan : Component, IComponent, ICooler
     {
 
         #region "Field Declarations: get; set;"
