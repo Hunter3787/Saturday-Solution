@@ -21,9 +21,9 @@ namespace AutoBuildApp.Managers.FeatureManagers
         /// This default constructor to initalize the service.
         /// </summary>
         /// <param name="connectionString">sql database string to be able to connect to database.</param>
-        public ProductDetailsManager(string connectionString)
+        public ProductDetailsManager(ProductDetailsService productDetailsService)
         {
-            _productDetailsService = new ProductDetailsService(connectionString);
+            _productDetailsService = productDetailsService;
             _allowedRoles = new List<string>()
             {
                 RoleEnumType.SystemAdmin,

@@ -33,6 +33,11 @@ namespace AutoBuildApp.Services.FeatureServices
                     response.ResponseString = ResponseStringGlobals.NO_CHANGE_OCCURRED;
 
                     break;
+                case AutoBuildSystemCodes.NullValue:
+                    response.IsSuccessful = false;
+                    response.ResponseString = ResponseStringGlobals.INVALID_INPUT;
+
+                    break;
                 default:
                     response.IsSuccessful = false;
                     response.ResponseString = ResponseStringGlobals.DEFAULT_RESPONSE;

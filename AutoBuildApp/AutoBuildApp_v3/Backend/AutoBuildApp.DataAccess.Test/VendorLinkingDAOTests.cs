@@ -46,6 +46,24 @@ namespace AutoBuildApp.DataAccess.Test
         }
         #endregion
 
+        #region VendorLinkingDAO_DeleteProductFromVendorList_SuccessfulDeletion
+        [TestMethod]
+        [DataRow("B450 PRO4")]
+        public void VendorLinkingDAO_04_DeleteProductFromVendorList_SuccessfulDeletion(string modelNumber)
+        {
+            // Arrange
+            SystemCodeWithObject<int> result;
+            Thread.CurrentPrincipal = _claimsPrincipal;
+
+            // Act
+            result = _vendorLinkingDAO.DeleteProductFromVendorList(modelNumber);
+
+            // Assert
+            Assert.IsTrue(result.Code == AutoBuildSystemCodes.Success);
+            Assert.IsTrue(result.GenericObject == 1);
+        }
+        #endregion
+
         #region VendorLinkingDAO_AddProductToVendorList_SuccessfulAddition
         [TestMethod]
         [DataRow("B450 PRO4")]
@@ -98,21 +116,31 @@ namespace AutoBuildApp.DataAccess.Test
 
             // Assert
             Assert.IsTrue(result.Code == AutoBuildSystemCodes.DuplicateValue);
-            Assert.IsTrue(result.GenericObject == 0);
+            Assert.IsTrue(result.GenericObject == -1);
         }
         #endregion
 
-        #region VendorLinkingDAO_DeleteProductFromVendorList_SuccessfulDeletion
+        #region VendorLinkingDAO_EditProductInVendorListOfProducts_SuccesfulEdit
         [TestMethod]
         [DataRow("B450 PRO4")]
-        public void VendorLinkingDAO_3_DeleteProductFromVendorList_SuccessfulDeletion(string modelNumber)
+        public void VendorLinkingDAO_3_EditProductInVendorListOfProducts_SuccesfulEdit(string modelNumber)
         {
             // Arrange
             SystemCodeWithObject<int> result;
             Thread.CurrentPrincipal = _claimsPrincipal;
+            AddProductDTO addProductDTO = new AddProductDTO
+            {
+                Company = "new egg",
+                Availability = true,
+                ImageUrl = "ImageUrl",
+                Name = "Name",
+                ModelNumber = modelNumber,
+                Price = 55.5,
+                Url = "Url"
+            };
 
             // Act
-            result = _vendorLinkingDAO.DeleteProductFromVendorList(modelNumber);
+            result = _vendorLinkingDAO.EditProductInVendorListOfProducts(addProductDTO);
 
             // Assert
             Assert.IsTrue(result.Code == AutoBuildSystemCodes.Success);
@@ -120,10 +148,11 @@ namespace AutoBuildApp.DataAccess.Test
         }
         #endregion
 
+
         #region VendorLinkingDAO_DeleteProductFromVendorList_ModelNumberDoesNotExist
         [TestMethod]
         [DataRow("gibberish")]
-        public void VendorLinkingDAO_4_DeleteProductFromVendorList_ModelNumberDoesNotExist(string modelNumber)
+        public void VendorLinkingDAO_5_DeleteProductFromVendorList_ModelNumberDoesNotExist(string modelNumber)
         {
             // Arrange
             SystemCodeWithObject<int> result;
@@ -140,7 +169,7 @@ namespace AutoBuildApp.DataAccess.Test
 
         #region VendorLinkingDAO_AuthorizationReturnsFalse
         [TestMethod]
-        public void VendorLinkingDAO_5_AuthorizationReturnsFalse()
+        public void VendorLinkingDAO_6_AuthorizationReturnsFalse()
         {
             // Arrange
             SystemCodeWithObject<List<string>> result;
@@ -166,7 +195,7 @@ namespace AutoBuildApp.DataAccess.Test
 
         #region VendorLinkingDAO_GetAllModelNumbers_Success
         [TestMethod]
-        public void VendorLinkingDAO_6_AuthorizationReturnsFalse()
+        public void VendorLinkingDAO_7_GetAllModelNumbers_Success()
         {
             // Arrange
             SystemCodeWithObject<List<string>> result;
@@ -183,7 +212,7 @@ namespace AutoBuildApp.DataAccess.Test
 
         #region VendorLinkingDAO_PopulateVendorsProducts_ReturnsNotNullAndNotEmpty
         [TestMethod]
-        public void VendorLinkingDAO_7_PopulateVendorsProducts_ReturnsNotNullAndNotEmpty()
+        public void VendorLinkingDAO_8_PopulateVendorsProducts_ReturnsNotNullAndNotEmpty()
         {
             // Arrange
             SystemCodeWithObject<ConcurrentDictionary<string, ConcurrentDictionary<string, byte>>> result;
@@ -201,7 +230,7 @@ namespace AutoBuildApp.DataAccess.Test
 
         #region VendorLinkingDAO_GetVendorProductsByFilter_ReturnListOfCPUs_OnlyCPUExistsInList
         [TestMethod]
-        public void VendorLinkingDAO_8_GetVendorProductsByFilter_ReturnListOfCPUs_OnlyCPUExistsInList()
+        public void VendorLinkingDAO_9_GetVendorProductsByFilter_ReturnListOfCPUs_OnlyCPUExistsInList()
         {
             // Arrange
             SystemCodeWithObject<List<AddProductDTO>> result;
@@ -237,7 +266,7 @@ namespace AutoBuildApp.DataAccess.Test
 
         #region VendorLinkingDAO_GetVendorProductsByFilter_NoProductExistsWithSpecifiedFilter_ReturnEmpty
         [TestMethod]
-        public void VendorLinkingDAO_9_GetVendorProductsByFilter_NoProductExistsWithSpecifiedFilter_ReturnEmpty()
+        public void VendorLinkingDAO_9a_GetVendorProductsByFilter_NoProductExistsWithSpecifiedFilter_ReturnEmpty()
         {
             // Arrange
             SystemCodeWithObject<List<AddProductDTO>> result;

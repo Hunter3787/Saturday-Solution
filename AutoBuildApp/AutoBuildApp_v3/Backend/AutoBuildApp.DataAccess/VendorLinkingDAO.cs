@@ -123,6 +123,8 @@ namespace AutoBuildApp.DataAccess
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
                 response.Code = AutoBuildSystemCodes.Unauthorized;
+                response.GenericObject = null;
+
                 return response;
             }
 
@@ -183,10 +185,21 @@ namespace AutoBuildApp.DataAccess
             // Initialize the system code response object
             SystemCodeWithObject<List<AddProductDTO>> response = new SystemCodeWithObject<List<AddProductDTO>>();
 
+            // Product null check
+            if (product == null)
+            {
+                response.Code = AutoBuildSystemCodes.NullValue;
+                response.GenericObject = null;
+
+                return response;
+            }
+
             // Authorization check
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
                 response.Code = AutoBuildSystemCodes.Unauthorized;
+                response.GenericObject = null;
+
                 return response;
             }
 
@@ -290,11 +303,20 @@ namespace AutoBuildApp.DataAccess
             // Initialize the system code response object
             SystemCodeWithObject<int> response = new SystemCodeWithObject<int>();
 
+            // Product null check
+            if (product == null)
+            {
+                response.Code = AutoBuildSystemCodes.NullValue;
+                response.GenericObject = -1;
+
+                return response;
+            }
+
             // Authorization check
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
                 response.Code = AutoBuildSystemCodes.Unauthorized;
-                response.GenericObject = 0;
+                response.GenericObject = -1;
 
                 return response;
             }
@@ -334,9 +356,11 @@ namespace AutoBuildApp.DataAccess
                     }
                     catch (SqlException ex)
                     {
+                        transaction.Rollback();
+
                         // Passes the exception number to a handler which returns an AutoBuildSystemCode
                         response.Code = SqlExceptionHandler.GetCode(ex.Number);
-                        response.GenericObject = 0;
+                        response.GenericObject = -1;
 
                         return response;
                     }
@@ -354,11 +378,20 @@ namespace AutoBuildApp.DataAccess
             // Initialize the system code response object
             SystemCodeWithObject<int> response = new SystemCodeWithObject<int>();
 
+            // Product null check
+            if (product == null)
+            {
+                response.Code = AutoBuildSystemCodes.NullValue;
+                response.GenericObject = -1;
+
+                return response;
+            }
+
             // Authorization check
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
                 response.Code = AutoBuildSystemCodes.Unauthorized;
-                response.GenericObject = 0;
+                response.GenericObject = -1;
 
                 return response;
             }
@@ -398,9 +431,11 @@ namespace AutoBuildApp.DataAccess
                     }
                     catch (SqlException ex)
                     {
+                        transaction.Rollback();
+
                         // Passes the exception number to a handler which returns an AutoBuildSystemCode
                         response.Code = SqlExceptionHandler.GetCode(ex.Number);
-                        response.GenericObject = 0;
+                        response.GenericObject = -1;
 
                         return response;
 
@@ -419,11 +454,20 @@ namespace AutoBuildApp.DataAccess
             // Initialize the system code response object
             SystemCodeWithObject<int> response = new SystemCodeWithObject<int>();
 
+            // Product null check
+            if (String.IsNullOrEmpty(modelNumber))
+            {
+                response.Code = AutoBuildSystemCodes.NullValue;
+                response.GenericObject = -1;
+
+                return response;
+            }
+
             // Authorization check
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
                 response.Code = AutoBuildSystemCodes.Unauthorized;
-                response.GenericObject = 0;
+                response.GenericObject = -1;
 
                 return response;
             }
@@ -462,7 +506,7 @@ namespace AutoBuildApp.DataAccess
 
                         // Passes the exception number to a handler which returns an AutoBuildSystemCode
                         response.Code = SqlExceptionHandler.GetCode(ex.Number);
-                        response.GenericObject = 0;
+                        response.GenericObject = -1;
 
                         return response;
                     }

@@ -127,8 +127,27 @@ namespace AutoBuildApp.Services.Tests
             result = _vendorLinkingService.DeleteProductFromVendorList(modelNumber);
 
             // Assert
-            Assert.IsTrue(result.IsSuccessful);
+            Assert.IsFalse(result.IsSuccessful);
             Assert.IsTrue(result.ResponseString.Equals(ResponseStringGlobals.NO_CHANGE_OCCURRED));
+        }
+        #endregion
+
+        #region VendorLinkingService_GetVendorProductsByFilter
+        [TestMethod]
+        public void VendorLinkingService_AllMethodsWithParameter_ParameterNull_ReturnInvalidInput()
+        {
+            // Arrange
+            Thread.CurrentPrincipal = _claimsPrincipal;
+            CommonResponse result = new CommonResponse();
+            VendorLinkingDAO vendorLinkingDAO = new VendorLinkingDAO("");
+            VendorLinkingService vendorLinkingService = new VendorLinkingService(vendorLinkingDAO);
+
+            // Act
+            result = vendorLinkingService.GetAllProductsByVendor(null);
+
+            // Assert
+            Assert.IsFalse(result.IsSuccessful);
+            Assert.IsTrue(result.ResponseString.Equals(ResponseStringGlobals.INVALID_INPUT));
         }
         #endregion
     }
