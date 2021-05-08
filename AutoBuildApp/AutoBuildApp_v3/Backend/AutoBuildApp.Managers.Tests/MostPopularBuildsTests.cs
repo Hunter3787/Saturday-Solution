@@ -2,11 +2,17 @@
 using AutoBuildApp.DomainModels;
 using AutoBuildApp.Managers;
 using AutoBuildApp.Models.Enumerations;
+using AutoBuildApp.Security.Enumerations;
+using AutoBuildApp.Security.FactoryModels;
+using AutoBuildApp.Security.Interfaces;
+using AutoBuildApp.Security.Models;
 using AutoBuildApp.Services.FeatureServices;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AutoBuildApp.Manger.Tests
@@ -20,6 +26,27 @@ namespace AutoBuildApp.Manger.Tests
     {
         private const string testConnectionString = "Server = localhost; Database = TestDB; Trusted_Connection = True;";
 
+        private readonly ClaimsPrincipal _claimsPrincipal;
+
+        public MostPopularBuildsTests()
+        {
+            UserIdentity userIdentity = new UserIdentity
+            {
+                Name = "ADMIN USER",
+                IsAuthenticated = true,
+                AuthenticationType = "JWT"
+            };
+
+            ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
+            IClaims basicClaims = claimsFactory.GetClaims(RoleEnumType.UnregisteredRole);
+
+            ClaimsIdentity basicClaimsIdentity = new ClaimsIdentity
+            (userIdentity, basicClaims.Claims(), userIdentity.AuthenticationType, userIdentity.Name, " ");
+
+            _claimsPrincipal = new ClaimsPrincipal(basicClaimsIdentity) ;
+
+        }
+
         /// <summary>
         /// This test will check if the publish build method will return false
         /// if the object passed through is null.
@@ -28,6 +55,8 @@ namespace AutoBuildApp.Manger.Tests
         public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfObjectIsNull()
         {
             // Arrange
+            Thread.CurrentPrincipal = _claimsPrincipal;
+
             var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
@@ -49,6 +78,8 @@ namespace AutoBuildApp.Manger.Tests
         public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfAnyNullVarsInBuildPostObject()
         {
             // Arrange
+            Thread.CurrentPrincipal = _claimsPrincipal;
+
             var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
@@ -108,6 +139,8 @@ namespace AutoBuildApp.Manger.Tests
         public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfTitleCharsAreGreaterThan50()
         {
             // Arrange
+            Thread.CurrentPrincipal = _claimsPrincipal;
+
             var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
@@ -147,6 +180,8 @@ namespace AutoBuildApp.Manger.Tests
         public async Task MostPopularBuilds_PublishBuild_ReturnFalseIfDescriptionCharsAreGreaterThan10k()
         {
             // Arrange
+            Thread.CurrentPrincipal = _claimsPrincipal;
+
             var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
@@ -186,6 +221,8 @@ namespace AutoBuildApp.Manger.Tests
         public async Task MostPopularBuilds_PublishBuild_ReturnTrueIfAllConditionsAreMet()
         {
             // Arrange
+            Thread.CurrentPrincipal = _claimsPrincipal;
+
             var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
@@ -212,6 +249,8 @@ namespace AutoBuildApp.Manger.Tests
         public void MostPopularBuilds_GetBuildPosts_ReturnTrueIfNormalCallIsSuccessful()
         {
             // Arrange
+            Thread.CurrentPrincipal = _claimsPrincipal;
+
             var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
@@ -249,6 +288,8 @@ namespace AutoBuildApp.Manger.Tests
         public void MostPopularBuilds_GetBuildPosts_ReturnTrueIfSortedQueriesCallIsSuccessful()
         {
             // Arrange
+            Thread.CurrentPrincipal = _claimsPrincipal;
+
             var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
@@ -288,6 +329,8 @@ namespace AutoBuildApp.Manger.Tests
         public void MostPopularBuilds_GetBuildPost_ReturnTrueIfTheReturnedPostIsTheExpectedPost()
         {
             // Arrange
+            Thread.CurrentPrincipal = _claimsPrincipal;
+
             var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
@@ -308,12 +351,14 @@ namespace AutoBuildApp.Manger.Tests
         public void MostPopularBuilds_AddLike_ReturnTrueIfALikeWasAdded()
         {
             // Arrange
+            Thread.CurrentPrincipal = _claimsPrincipal;
+
             var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
 
             // Act
-            var fakeUser = $"TestUser_{DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}";
+            var fakeUser = $"SERGE";
 
             var like = new Like()
             {
@@ -334,6 +379,8 @@ namespace AutoBuildApp.Manger.Tests
         public void MostPopularBuilds_AddLike_ReturnFalseIfALikeWasAddedButAlreadyExistsForUser()
         {
             // Arrange
+            Thread.CurrentPrincipal = _claimsPrincipal;
+
             var mostPopularBuildsDAO = new MostPopularBuildsDAO(testConnectionString);
             var mostPopularBuildsService = new MostPopularBuildsService(mostPopularBuildsDAO);
             var mostPopularBuildsManager = new MostPopularBuildsManager(mostPopularBuildsService);
