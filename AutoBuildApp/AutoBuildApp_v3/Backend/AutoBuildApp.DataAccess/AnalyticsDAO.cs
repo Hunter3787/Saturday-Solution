@@ -16,8 +16,6 @@ namespace AutoBuildApp.DataAccess
 {
     public class AnalyticsDAO
     {
-        private ResponseUAD _responseUAD;
-
         private List<string> _allowedRoles; //specify rles
 
         public string ConnectionString { get; set; }
@@ -61,18 +59,16 @@ namespace AutoBuildApp.DataAccess
 
         public ResponseUAD GetGraphData(DBViews graphViewType)
         {
-
-
-            // _logger.LogInformation("Analytics requested");
-            _responseUAD = new ResponseUAD();
+              ResponseUAD responseUAD = new ResponseUAD();
 
             int count = Enum.GetValues(typeof(DBViews)).Length;
-            Console.WriteLine("count" + count);
-            if ((int)graphViewType >= count || (int)graphViewType < 0 )
+            if ((int)graphViewType >= count || (int)graphViewType <= 0 )
             {
-                _responseUAD.ResponseString = "InValid Graph Specified";
+                responseUAD.ResponseString = "InValid Graph Specified";
+
+                responseUAD.IsSuccessful = false;
                 //_logger.LogInformation( AuthorizationResultType.NOT_AUTHORIZED.ToString());
-                return _responseUAD;
+                return responseUAD;
             }
 
 
@@ -80,9 +76,9 @@ namespace AutoBuildApp.DataAccess
 
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
-                _responseUAD.ResponseString = AuthorizationResultType.NotAuthorized.ToString();
+                responseUAD.ResponseString = AuthorizationResultType.NotAuthorized.ToString();
                 //_logger.LogInformation( AuthorizationResultType.NOT_AUTHORIZED.ToString());
-                return _responseUAD;
+                return responseUAD;
             }
             using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
@@ -108,11 +104,13 @@ namespace AutoBuildApp.DataAccess
 
                         using (var reader = command.ExecuteReader())
                         {
+                            // checking if there are rows
                             if (!reader.HasRows) // use the bang!!!!!!! 
                             {
-                                _responseUAD.ResponseString = "No Data At The Moment";
-                                _responseUAD.IsSuccessful = false;
-                                return _responseUAD;
+                                // if no rows then no data being retrieved 
+                                responseUAD.ResponseString = "No Data At The Moment";
+                                responseUAD.IsSuccessful = false;
+                                return responseUAD;
                             }
                             else
                             {
@@ -127,13 +125,13 @@ namespace AutoBuildApp.DataAccess
                                 int LegendTitle_ord = reader.GetOrdinal(LEGEND_TITLE);
 
                                 bool flag = true;
-                                while (reader.Read())
+                                while (reader.Read()) // reading the rows
                                 {
                                     if (flag) // I only want these columns read once
                                     {
-                                        _responseUAD.XTitle = (string)reader[XTitle_ord];
-                                        _responseUAD.YTitle = (string)reader[YTitle_ord];
-                                        _responseUAD.LegendTitle = (string)reader[LegendTitle_ord];
+                                        responseUAD.XTitle = (string)reader[XTitle_ord];
+                                        responseUAD.YTitle = (string)reader[YTitle_ord];
+                                        responseUAD.LegendTitle = (string)reader[LegendTitle_ord];
                                         flag = false;
                                         //Console.WriteLine("{0} - {1} - {2}",
                                         //    _responseUAD.XTitle,
@@ -146,7 +144,8 @@ namespace AutoBuildApp.DataAccess
                                             (object)reader[X_Value_ord],
                                             (object)reader[Y_Value_ord],
                                             (object)reader[Legend_ord]);
-                                    _responseUAD.GetChartDatas.Add(chartData);
+                                    // and adding those datas to the chartsdata list 
+                                    responseUAD.GetChartDatas.Add(chartData);
                                 }
                             }
 
@@ -159,19 +158,20 @@ namespace AutoBuildApp.DataAccess
                         command.Transaction.Rollback();
                         if (!conn.State.Equals(ConnectionState.Open))
                         {
-                            _responseUAD.ConnectionState = false;
+                            responseUAD.ConnectionState = false;
                         }
-                        Console.WriteLine("SqlException.GetType: {0}", e.GetType());
-                        Console.WriteLine("SqlException.Source: {0}", e.Source);
-                        Console.WriteLine("SqlException.ErrorCode: {0}", e.ErrorCode);
-                        Console.WriteLine("SqlException.Message: {0}", e.Message);
+                        //Console.WriteLine("SqlException.GetType: {0}", e.GetType());
+                        //Console.WriteLine("SqlException.Source: {0}", e.Source);
+                        //Console.WriteLine("SqlException.ErrorCode: {0}", e.ErrorCode);
+                        //Console.WriteLine("SqlException.Message: {0}", e.Message);
 
                     }
                 }
             }
-            _responseUAD.ResponseString = "Successful Data retrieval";
-            _responseUAD.IsSuccessful = true;
-            return _responseUAD;
+            // finally set the success into the respose and return the common response 
+            responseUAD.ResponseString = "Successful Data retrieval";
+            responseUAD.IsSuccessful = true;
+            return responseUAD;
         }
 
 
