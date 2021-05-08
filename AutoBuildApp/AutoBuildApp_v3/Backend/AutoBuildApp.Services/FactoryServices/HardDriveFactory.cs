@@ -10,7 +10,7 @@ namespace AutoBuildApp.Services.FactoryServices
         {
         }
 
-        public Component CreateHardDrive(HardDriveType driveType)
+        public IHardDrive CreateHardDrive(HardDriveType driveType)
         {
             switch (driveType)
             {

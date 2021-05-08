@@ -21,7 +21,7 @@ namespace AutoBuildApp.DataAccess.Test
         private Component _cmCaseMCM;
         private Component _monPsuCentury;
         private Component _gskillRAMF4;
-        private Component _samSSDMZ;
+        private HardDrive _samSSDMZ;
         List<Build> _twoBuilds;
 
         public BuildDAOTests()
@@ -34,20 +34,23 @@ namespace AutoBuildApp.DataAccess.Test
             {
                 BuildName = "SecondBuild"
             };
+            _myBuild = new Build()
+            {
+                BuildName = "MyBuild"
+            };
 
-            //_myBuild = new Build()
-            //{
-            //    BuildName = "MyBuild",
-            //    Cpu = _amdCPU1BOX,
-            //    Mobo = _asusMoboZ390,
-            //    Case = _cmCaseMCM,
-            //    Psu = _monPsuCentury,
-            //    Ram = _gskillRAMF4,
-            //    Gpu = _gigaGPUGV
-            //};
-            _myBuild.AddHardDrive(_samSSDMZ);
+            _myBuild = new Build()
+            {
+                BuildName = "MyBuild",
+                Cpu = (CentralProcUnit)_amdCPU1BOX,
+                Mobo = (Motherboard)_asusMoboZ390,
+                Case = (ComputerCase)_cmCaseMCM,
+                Psu = (PowerSupplyUnit)_monPsuCentury,
+                Ram = (RAM)_gskillRAMF4,
+                Gpu = (GraphicsProcUnit)_gigaGPUGV
+            };
 
-            _amdCPU1BOX = new Component
+            _amdCPU1BOX = new CentralProcUnit
             {
                 Quantity = 1,
                 ManufacturerName = "AMD",
@@ -55,7 +58,7 @@ namespace AutoBuildApp.DataAccess.Test
                 ModelNumber = "100-100000071BOX"
             };
 
-            _asusMoboZ390 = new Component()
+            _asusMoboZ390 = new Motherboard()
             {
                 Quantity = 1,
                 ManufacturerName = "ASUS",
@@ -63,7 +66,7 @@ namespace AutoBuildApp.DataAccess.Test
                 ModelNumber = "Z390-Plus Gaming (Wi-Fi)"
             };
 
-            _gigaGPUGV = new Component()
+            _gigaGPUGV = new GraphicsProcUnit()
             {
                 Quantity = 1,
                 ManufacturerName = "GIGABYTE",
@@ -71,7 +74,7 @@ namespace AutoBuildApp.DataAccess.Test
                 ModelNumber = "GV-N2060OC-6GD ver 2.0"
             };
 
-            _cmCaseMCM = new Component()
+            _cmCaseMCM = new ComputerCase()
             {
                 Quantity = 1,
                 ManufacturerName = "Cooler Master",
@@ -79,7 +82,7 @@ namespace AutoBuildApp.DataAccess.Test
                 ModelNumber = "MCM-H500P-MGNN-S11"
             };
 
-            _monPsuCentury = new Component()
+            _monPsuCentury = new PowerSupplyUnit()
             {
                 Quantity = 1,
                 ManufacturerName = "Montech",
@@ -87,7 +90,7 @@ namespace AutoBuildApp.DataAccess.Test
                 ModelNumber = "Century Series"
             };
 
-            _gskillRAMF4 = new Component()
+            _gskillRAMF4 = new RAM()
             {
                 Quantity = 1,
                 ManufacturerName = "G.SKILL",
@@ -95,13 +98,15 @@ namespace AutoBuildApp.DataAccess.Test
                 ModelNumber = "F4 - 3600C19D - 16GVRB"
             };
 
-            _samSSDMZ = new Component()
+            _samSSDMZ = new HardDrive()
             {
                 Quantity = 1,
                 ManufacturerName = "SAMSUNG",
                 ProductType = ProductType.SSD,
                 ModelNumber = "MZ-V7S500B/AM"
             };
+
+            _myBuild.AddHardDrive(_samSSDMZ);
 
             _twoBuilds = new List<Build>()
             {
@@ -137,9 +142,6 @@ namespace AutoBuildApp.DataAccess.Test
             Assert.AreEqual(build1, build2);
 
         }
-
-
-
 
     }
 }

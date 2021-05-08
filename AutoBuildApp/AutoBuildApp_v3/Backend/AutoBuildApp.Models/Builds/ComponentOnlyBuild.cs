@@ -1,36 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Products;
 
 namespace AutoBuildApp.Models.Builds
 {
-    public class Build : IBuild, IEquatable<Build>
+    public class ComponentOnlyBuild
     {
         public string BuildName;
-        public List<IHardDrive> HardDrives { get; set; }
-        public ComputerCase Case { get; set; }
-        public Motherboard Mobo { get; set; }
-        public PowerSupplyUnit Psu { get; set; }
-        public GraphicsProcUnit Gpu { get; set; }
-        public CentralProcUnit Cpu { get; set; }
-        public RAM Ram { get; set; }
-        public ICooler CPUCooler { get; set; }
-        public List<IComponent> Peripherals { get; set; }
+        public List<Component> HardDrives { get; set; }
+        public Component Case { get; set; }
+        public Component Mobo { get; set; }
+        public Component Psu { get; set; }
+        public Component Gpu { get; set; }
+        public Component Cpu { get; set; }
+        public Component Ram { get; set; }
+        public Component CPUCooler { get; set; }
+        public List<Component> Peripherals { get; set; }
         public List<string> ImageStrings { get; set; }
 
-        public Build()
+        public ComponentOnlyBuild()
         {
-            HardDrives = new List<IHardDrive>();
-            Case = new ComputerCase();
-            Mobo = new Motherboard();
-            Psu = new PowerSupplyUnit();
-            Gpu = new GraphicsProcUnit();
-            Cpu = new CentralProcUnit();
-            Ram = new RAM();
-            CPUCooler = new Fan();
-            Peripherals = new List<IComponent>();
+            HardDrives = new List<Component>();
+            Case = new Component();
+            Mobo = new Component();
+            Psu = new Component();
+            Gpu = new Component();
+            Cpu = new Component();
+            Ram = new Component();
+            CPUCooler = new Component();
+            Peripherals = new List<Component>();
             ImageStrings = new List<string>();
         }
 
@@ -41,7 +39,7 @@ namespace AutoBuildApp.Models.Builds
         /// </summary>
         /// <param name="add"></param>
         /// <returns></returns>
-        public bool AddHardDrive(IHardDrive add)
+        public bool AddHardDrive(Component add)
         {
             if (add == null)
             {
@@ -50,7 +48,7 @@ namespace AutoBuildApp.Models.Builds
 
             if (HardDrives == null)
             {
-                HardDrives = new List<IHardDrive>();
+                HardDrives = new List<Component>();
             }
 
             if (HardDrives.Contains(add))
@@ -72,7 +70,7 @@ namespace AutoBuildApp.Models.Builds
         /// </summary>
         /// <param name="remove"></param>
         /// <returns></returns>
-        public bool RemoveHardDrive(IHardDrive remove)
+        public bool RemoveHardDrive(Component remove)
         {
             if (remove == null
                 || HardDrives == null
@@ -101,7 +99,7 @@ namespace AutoBuildApp.Models.Builds
         /// </summary>
         /// <param name="delete"></param>
         /// <returns></returns>
-        public bool DeleteHardDrive(IHardDrive delete)
+        public bool DeleteHardDrive(Component delete)
         {
             if (delete == null
                 || HardDrives == null
@@ -121,7 +119,7 @@ namespace AutoBuildApp.Models.Builds
         /// </summary>
         /// <param name="add"></param>
         /// <returns></returns>
-        public bool AddPeripheral(IComponent add)
+        public bool AddPeripheral(Component add)
         {
             if (add == null)
             {
@@ -130,7 +128,7 @@ namespace AutoBuildApp.Models.Builds
 
             if (Peripherals == null)
             {
-                Peripherals = new List<IComponent>();
+                Peripherals = new List<Component>();
             }
 
             if (Peripherals.Contains(add))
@@ -152,7 +150,7 @@ namespace AutoBuildApp.Models.Builds
         /// </summary>
         /// <param name="remove"></param>
         /// <returns></returns>
-        public bool RemovePeripheral(IComponent remove)
+        public bool RemovePeripheral(Component remove)
         {
             if (remove == null
                 || Peripherals == null
@@ -181,7 +179,7 @@ namespace AutoBuildApp.Models.Builds
         /// </summary>
         /// <param name="delete"></param>
         /// <returns></returns>
-        public bool DeletePeripheral(IComponent delete)
+        public bool DeletePeripheral(Component delete)
         {
             if (delete == null
                 || Peripherals == null
@@ -250,7 +248,7 @@ namespace AutoBuildApp.Models.Builds
 
             if (HardDrives != null)
             {
-                foreach (IHardDrive hdd in HardDrives)
+                foreach (Component hdd in HardDrives)
                 {
                     total += hdd.GetTotalcost();
                 }
@@ -258,7 +256,7 @@ namespace AutoBuildApp.Models.Builds
 
             if (Peripherals != null)
             {
-                foreach (IComponent peri in Peripherals)
+                foreach (Component peri in Peripherals)
                 {
                     total += peri.GetTotalcost();
                 }
@@ -327,70 +325,5 @@ namespace AutoBuildApp.Models.Builds
 
             return total;
         }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null)
-            {
-                return false;
-            }
-
-            if (!(obj is Build))
-            {
-                return false;
-            }
-
-            Build temp = (Build)obj;
-
-            if (BuildName == temp.BuildName)
-                if (HardDrives.SequenceEqual(temp.HardDrives))
-                if(Case == temp.Case)
-                if(Mobo == temp.Mobo)
-                if(Psu == temp.Psu)
-                if(Gpu == temp.Gpu)
-                if(Cpu == temp.Cpu)
-                if(Ram == temp.Ram)
-                if(CPUCooler == temp.CPUCooler)
-                if(Peripherals.SequenceEqual(temp.Peripherals))
-                if(ImageStrings.SequenceEqual(temp.ImageStrings))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        public bool Equals(Build other)
-        {
-            if (other == null)
-            {
-                return false;
-            }
-
-            if (BuildName == other.BuildName
-                && HardDrives.SequenceEqual(other.HardDrives)
-                && Case == other.Case
-                && Mobo == other.Mobo
-                && Psu == other.Psu
-                && Gpu == other.Gpu
-                && Cpu == other.Cpu
-                && Ram == other.Ram
-                && CPUCooler == other.CPUCooler
-                && Peripherals.SequenceEqual(other.Peripherals)
-                && ImageStrings.SequenceEqual(other.ImageStrings)
-                )
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-
- 
     }
 }

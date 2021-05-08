@@ -1,14 +1,11 @@
 ﻿using AutoBuildApp.Models;
 using System.Collections.Generic;
-using AutoBuildApp.Security.FactoryModels;
-using AutoBuildApp.Security.Interfaces;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Services;
 using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.DataAccess;
 using AutoBuildApp.Managers.Guards;
 using System.Threading;
-using System.Security.Claims;
 using AutoBuildApp.Security;
 using System;
 using AutoBuildApp.Models.Builds;
@@ -23,52 +20,78 @@ namespace AutoBuildApp.Managers
 {
     public class UserGarageManager
     {
-        private BuildDAO _buildDAO;
-        private ShelfDAO _shelfDAO;
-
-        private List<string> _approvedRoles;
-        private ShelfWithResponseService _shelfService;
-        private BuildWithResponseService _buildService;
+        private readonly BuildDAO _buildDAO;
+        private readonly ShelfDAO _shelfDAO;
+        private readonly List<string> _approvedRoles;
+        private readonly ShelfWithResponseService _shelfService;
+        private readonly BuildWithResponseService _buildService;
         private readonly string _currentUser;
 
         public UserGarageManager(string connectionString)
-        { 
-            //ClaimsFactory claimsFactory = new ConcreteClaimsFactory();
+        {
             _approvedRoles = new List<string>()
-            { RoleEnumType.BasicRole,RoleEnumType.DelegateAdmin,
-            RoleEnumType.VendorRole, RoleEnumType.SystemAdmin};
+            {
+                RoleEnumType.BasicRole,
+                RoleEnumType.DelegateAdmin,
+                RoleEnumType.VendorRole,
+                RoleEnumType.SystemAdmin
+            };
 
             _buildDAO = new BuildDAO(connectionString);
             _shelfDAO = new ShelfDAO(connectionString);
             _shelfService = new ShelfWithResponseService(_shelfDAO);
             _buildService = new BuildWithResponseService(_buildDAO);
             _currentUser = Thread.CurrentPrincipal.Identity.Name;
-
-
         }
 
         public CommonResponse AddBuild(Build build, string buildname)
         {
-            // temp
-            if (!AuthorizationCheck.IsAuthorized(_approvedRoles)) // added per Zee
+            CommonResponse output = new CommonResponse();
+            try
             {
-                return new CommonResponse()
-                {
-                    ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS,
-                    ResponseBool = false
-                };
+                NullGuard.IsNotNull(build);
+                NullGuard.IsNotNullOrEmpty(buildname);
+                IsAuthorized();
             }
-            NullGuard.IsNotNull(build);
-            NullGuard.IsNotNullOrEmpty(buildname);
+            catch (UnauthorizedAccessException)
+            {
+                output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
+                output.ResponseBool = false;
+                return output;
+            }
+            catch (ArgumentNullException)
+            {
+                output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
+                output.ResponseBool = false;
+                return output;
+            }
 
             CommonResponse response = _buildService.AddBuild(build, buildname, _currentUser);
 
             return response;
         }
 
-        public CommonResponse CopyBuildToGarage(string buildID)
+
+        public CommonResponse CopyBuildToGarage(string buildName)
         {
-            NullGuard.IsNotNullOrEmpty(buildID);
+            CommonResponse output = new CommonResponse();
+            try
+            {
+                NullGuard.IsNotNullOrEmpty(buildName);
+                IsAuthorized();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
+                output.ResponseBool = false;
+                return output;
+            }
+            catch (ArgumentNullException)
+            {
+                output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
+                output.ResponseBool = false;
+                return output;
+            }
 
             CommonResponse response = _buildService.CopyBuild();
 
@@ -119,75 +142,17 @@ namespace AutoBuildApp.Managers
             return response;
         }
 
-        // Starting point
-        public CommonResponse CreateShelf(string shelfName, string user)
+        /// <summary>
+        /// Create shelf under current user's garage.
+        /// </summary>
+        /// <param name="shelfName"></param>
+        /// <returns></returns>
+        public CommonResponse CreateShelf(string shelfName)
         {
-            NullGuard.IsNotNullOrEmpty(shelfName);
-            NullGuard.IsNotNullOrEmpty(user);
-
-            // TODO:Add input validation.
-            CommonResponse response = _shelfService.CreateShelf(shelfName, user);
-
-            return response;
-        }
-
-        public CommonResponse RenameShelf(string from, string to, string user)
-        {
-            // TODO:Add input validation.
-            CommonResponse response = _shelfService.ChangeShelfName(from, to, user);
-
-            return response;
-        }
-
-        public CommonResponse DeleteShelf(string shelfName, string user)
-        {
-            // Add Business rules
-
-            // If(user == current)
-            CommonResponse response = _shelfService.DeleteShelf(shelfName,_currentUser);
-
-            return response;
-        }
-
-        public CommonResponse AddToShelf(Component item, string shelfName, string user)
-        {
-            // Add Business rules
-            CommonResponse response = _shelfService.AddToShelf(
-                item.ModelNumber,
-                item.Quantity,
-                shelfName,
-                _currentUser);
-
-            return response;
-        }
-
-        public CommonResponse RemoveFromShelf(int itemIndex, string shelfName)
-        {
-            // Add Business rules
-            CommonResponse response = _shelfService.RemoveFromShelf(itemIndex, shelfName, _currentUser);
-
-            return response;
-        }
-
-        public CommonResponse ModifyQuantity(int itemIndex, int quanitty, string itemID, string shelfName)
-        {
-            // Add Business rules
-            CommonResponse response = _shelfService.ChangeQuantity(itemIndex,quanitty, itemID, shelfName);
-
-            return response;
-        }
-
-        public CommonResponse MoveItemOnShelf(List<int> indices, string shelfName, string username)
-        {
-            // Add business rules
-            CommonResponse response = _shelfService.ReorderShelf(indices, shelfName, username);
-
-            return response;
-        }
-
-        public CommonResponseWithObject<Shelf> GetShelfByName(string shelfName, string username)
-        {
-            CommonResponseWithObject<Shelf> output = new CommonResponseWithObject<Shelf>();
+            CommonResponse output = new CommonResponse()
+            {
+                ResponseBool = false,
+            };
 
             try
             {
@@ -196,21 +161,319 @@ namespace AutoBuildApp.Managers
             }
             catch (ArgumentNullException)
             {
-                output.GenericObject = new Shelf();
                 output.ResponseString = ResponseStringGlobals.INVALID_INPUT;
-                output.ResponseBool = false;
                 return output;
 
             }
             catch (UnauthorizedAccessException)
             {
-                output.GenericObject = new Shelf();
                 output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
-                output.ResponseBool = false;
+                return output;
+            }
+
+            output = _shelfService.CreateShelf(shelfName.Trim(), _currentUser);
+
+            return output;
+        }
+
+        /// <summary>
+        /// Rename a shelf in a user's garage.
+        /// </summary>
+        /// <param name="oldShelfName"></param>
+        /// <param name="newShelfName"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public CommonResponse RenameShelf(string oldShelfName, string newShelfName)
+        {
+            CommonResponse output = new CommonResponse()
+            {
+                ResponseBool = false,
+            };
+
+            try
+            {
+                IsAuthorized();
+                NullGuard.IsNotNullOrEmpty(oldShelfName);
+                NullGuard.IsNotNullOrEmpty(newShelfName);
+            }
+            catch (ArgumentNullException)
+            {
+                output.ResponseString = ResponseStringGlobals.INVALID_INPUT;
+                return output;
+
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
+                return output;
+            }
+
+            // Checks to see if the new name matches the old name.
+            if(oldShelfName == newShelfName.Trim())
+            {
+                output.ResponseString = ResponseStringGlobals.DUPLICATE_VALUE;
+                return output;
+            }
+
+            // Businesss rule to keep names
+            // from being repeated by adding spaces.
+            output = _shelfService.ChangeShelfName(
+                oldShelfName,
+                newShelfName.Trim(),
+                _currentUser);
+
+            return output;
+        }
+
+        /// <summary>
+        /// Delete a shelf from a user's account.
+        /// </summary>
+        /// <param name="shelfName"></param>
+        /// <returns></returns>
+        public CommonResponse DeleteShelf(string shelfName)
+        {
+            CommonResponse output = new CommonResponse()
+            {
+                ResponseBool = false,
+            };
+
+            try
+            {
+                IsAuthorized();
+                NullGuard.IsNotNullOrEmpty(shelfName);
+            }
+            catch (ArgumentNullException)
+            {
+                output.ResponseString = ResponseStringGlobals.INVALID_INPUT;
+                return output;
+
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
+                return output;
+            }
+
+            CommonResponse response = _shelfService.DeleteShelf(shelfName,_currentUser);
+
+            return response;
+        }
+
+        /// <summary>
+        /// Add an item to a user's shelf.
+        /// </summary>
+        /// <param name="component"></param>
+        /// <param name="shelfName"></param>
+        /// <returns></returns>
+        public CommonResponse AddToShelf(Component component, string shelfName)
+        {
+            CommonResponse output = new CommonResponse()
+            {
+                ResponseBool = false,
+            };
+
+            try
+            {
+                IsAuthorized();
+                NullGuard.IsNotNullOrEmpty(shelfName);
+                NullGuard.IsNotNull(component);
+            }
+            catch (ArgumentNullException)
+            {
+                output.ResponseString = ResponseStringGlobals.INVALID_INPUT;
+                return output;
+
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
+                return output;
+            }
+
+            // Business rule, prevent negative quantity.
+            if (component.Quantity < UserGarageGlobals.MIN_INDEX)
+            {
+                output.ResponseString = ResponseStringGlobals.INVALID_INPUT;
+                return output;
+            }
+
+            // Add Business rules
+            output = _shelfService.AddToShelf(
+                component.ModelNumber,
+                component.Quantity,
+                shelfName,
+                _currentUser);
+
+            return output;
+        }
+
+        /// <summary>
+        /// Remove an item from the user's shelf.
+        /// </summary>
+        /// <param name="itemIndex"></param>
+        /// <param name="shelfName"></param>
+        /// <returns></returns>
+        public CommonResponse RemoveFromShelf(int itemIndex, string shelfName)
+        {
+            CommonResponse output = new CommonResponse()
+            {
+                ResponseBool = false,
+            };
+
+            try
+            {
+                IsAuthorized();
+                NullGuard.IsNotNullOrEmpty(shelfName);
+                NullGuard.IsNotNull(itemIndex);
+            }
+            catch (ArgumentNullException)
+            {
+                output.ResponseString = ResponseStringGlobals.INVALID_INPUT;
+                return output;
+
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
+                return output;
+            }
+
+            // Business rule, prevent negative indices.
+            if(itemIndex < UserGarageGlobals.MIN_INDEX)
+            {
+                output.ResponseString = ResponseStringGlobals.INVALID_INPUT;
+                return output;
+            }
+
+            output= _shelfService.RemoveFromShelf(itemIndex, shelfName, _currentUser);
+
+            return output;
+        }
+
+        /// <summary>
+        /// Update the quantity of a product on the user's shelf.
+        /// </summary>
+        /// <param name="itemIndex"></param>
+        /// <param name="quantity"></param>
+        /// <param name="shelfName"></param>
+        /// <returns></returns>
+        public CommonResponse UpdateQuantity(int itemIndex, int quantity, string shelfName)
+        {
+            CommonResponse output = new CommonResponse()
+            {
+                ResponseBool = false,
+            };
+
+            try
+            {
+                IsAuthorized();
+                NullGuard.IsNotNullOrEmpty(shelfName);
+                NullGuard.IsNotNull(itemIndex);
+                NullGuard.IsNotNull(quantity);
+            }
+            catch (ArgumentNullException)
+            {
+                output.ResponseString = ResponseStringGlobals.INVALID_INPUT;
+                return output;
+
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
+                return output;
+            }
+
+            // Quantity must be at least 1.
+            if(quantity <= UserGarageGlobals.MIN_INTEGER_VALUE)
+            {
+                output.ResponseString = ResponseStringGlobals.INVALID_INPUT;
+                return output;
+            }
+
+            output = _shelfService.UpdateQuantity(itemIndex, quantity, shelfName, _currentUser);
+
+            return output;
+        }
+
+        public CommonResponse MoveItemOnShelf(
+            List<int> indices,
+            string shelfName,
+            string username)
+        {
+            // Add business rules
+            CommonResponse response = _shelfService.ReorderShelf(indices, shelfName, username);
+            // TODO
+            return response;
+        }
+
+        /// <summary>
+        /// Requests all shelves based on a username.
+        /// </summary>
+        /// <param name="shelfName"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public CommonResponseWithObject<Shelf> GetShelfByName(string shelfName, string username)
+        {
+            CommonResponseWithObject<Shelf> output = new CommonResponseWithObject<Shelf>()
+            {
+                ResponseBool = false,
+                GenericObject = new Shelf()
+            };
+
+            try
+            {
+                IsAuthorized();
+                NullGuard.IsNotNullOrEmpty(shelfName);
+            }
+            catch (ArgumentNullException)
+            {
+                output.ResponseString = ResponseStringGlobals.INVALID_INPUT; 
+                return output;
+
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
                 return output;
             }
 
             output = _shelfService.GetShelfByName(shelfName, username);
+
+            return output;
+        }
+
+        /// <summary>
+        /// Requests all shelves based on a username.
+        /// </summary>
+        /// <param name="shelfName"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public CommonResponseWithObject<List<Shelf>> GetShelvesByUser(string shelfName, string username)
+        {
+            CommonResponseWithObject<List<Shelf>> output = new CommonResponseWithObject<List<Shelf>>()
+            {
+                ResponseBool = false,
+                GenericObject = new List<Shelf>()
+            };
+
+            try
+            {
+                IsAuthorized();
+                NullGuard.IsNotNullOrEmpty(shelfName);
+            }
+            catch (ArgumentNullException)
+            {
+                output.ResponseString = ResponseStringGlobals.INVALID_INPUT;
+                return output;
+
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
+                return output;
+            }
+
+            output = _shelfService.GetShelvesByUser(username);
 
             return output;
         }
@@ -224,20 +487,25 @@ namespace AutoBuildApp.Managers
         //    return output;
         //}
 
-        /// <summary>
-        /// Private method to compare the current uesr to the
-        /// user who is currently being viewed. 
-        /// </summary>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        private void IsCurrentUser(string user)
-        {
-            if (_currentUser != user)
-            {
-                throw new UnauthorizedAccessException();
-            }
-        }
+        // Unused at this time.
+        ///// <summary>
+        ///// Private method to compare the current uesr to the
+        ///// user who is currently being viewed. 
+        ///// </summary>
+        ///// <param name="user"></param>
+        ///// <returns></returns>
+        //private void IsCurrentUser(string user)
+        //{
+        //    if (_currentUser != user)
+        //    {
+        //        throw new UnauthorizedAccessException();
+        //    }
+        //}
 
+        /// <summary>
+        /// Helper to perform and throw exception
+        /// to be handled if user is unauthorized.
+        /// </summary>
         private void IsAuthorized()
         {
             if (!AuthorizationCheck.IsAuthorized(_approvedRoles))

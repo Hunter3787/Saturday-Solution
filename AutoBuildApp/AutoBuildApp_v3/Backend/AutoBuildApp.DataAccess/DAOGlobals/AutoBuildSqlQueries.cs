@@ -151,7 +151,7 @@ namespace AutoBuildApp.DataAccess
             "WHERE username = @USERNAME));";
 
         public const string INSERT_EMPTY_BUILD =
-            "INSERT INTO PcBuilds(userID, buildName, createdAt, createdby, position) " +
+            "INSERT INTO PcBuilds(userID, buildName, createdAt, createdby, position, imagePath) " +
             "VALUES(" +
             "(SELECT UA.userID " +
             "FROM UserAccounts UA " +
@@ -168,7 +168,8 @@ namespace AutoBuildApp.DataAccess
             "FROM UserAccounts UA " +
             "INNER JOIN MappingHash MH ON UA.userID = MH.userID " +
             "INNER JOIN UserCredentials UC ON MH.userHashID = UC.userHashID " +
-            "WHERE username = @USERNAME)));";
+            "WHERE username = @USERNAME)), " +
+            "@IMAGEPATH);";
 
         public const string ADD_TO_BUILD =
             "INSERT INTO Save_Product_Build(buildID, productID, quantity) " +

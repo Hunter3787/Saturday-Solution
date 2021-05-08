@@ -5,6 +5,9 @@ using AutoBuildApp.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AutoBuildApp.Models;
 using AutoBuildApp.Models.DataTransferObjects;
+using AutoBuildApp.Api.HelperFunctions;
+using AutoBuildApp.Api.Controllers;
+using System.Threading;
 
 namespace AutoBuildApp.Manger.Tests
 {
@@ -12,12 +15,19 @@ namespace AutoBuildApp.Manger.Tests
     public class UserGarageManagerTests
     {
         private UserGarageManager _testManager;
-        private readonly string _testString = "Data Source=localhost;Initial Catalog=DB;Integrated Security=True; user id=sa; password=Quake3arena!;";
+        private readonly string _connString;
+
+        public UserGarageManagerTests()
+        {
+            _connString = ConnectionManager
+                .connectionManager
+                .GetConnectionStringByName(ControllerGlobals.DOCKER_CONNECTION);
+        }
 
         [TestInitialize]
         public void Setup()
         {
-            _testManager = new UserGarageManager(_testString);
+            _testManager = new UserGarageManager(_connString);
         }
 
         [TestCleanup]
@@ -150,13 +160,28 @@ namespace AutoBuildApp.Manger.Tests
             expected.ResponseString = ResponseStringGlobals.SUCCESSFUL_CREATION;
             string user = "Nick";
             string shelfName = "Tacobell";
+            
 
             // Act
-            actual = _testManager.CreateShelf(shelfName, user);
+            //actual = _testManager
+            
 
             // Assert
             Assert.AreEqual(expected.ResponseBool,actual.ResponseBool);
             Assert.AreEqual(expected.ResponseString, actual.ResponseString);
+        }
+
+        [TestMethod]
+        public void UserGarageManager_GetShelvesByUser()
+        {
+            // Arrange
+
+
+            // Act
+
+            // Assert
+
+            
         }
 
         /// <summary>

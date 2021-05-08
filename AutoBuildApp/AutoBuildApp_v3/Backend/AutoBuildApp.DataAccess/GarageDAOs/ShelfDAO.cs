@@ -5,6 +5,8 @@ using AutoBuildApp.Models;
 using Microsoft.Data.SqlClient;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Products;
+using AutoBuildApp.Security.Enumerations;
+using AutoBuildApp.Security;
 
 
 /**
@@ -18,9 +20,18 @@ namespace AutoBuildApp.DataAccess
     public class ShelfDAO
     {
         private readonly string _connectionString;
+        private readonly List<string> _approvedRoles;
 
         public ShelfDAO(string connectionString)
         {
+            _approvedRoles = new List<string>()
+            {
+                RoleEnumType.BasicRole,
+                RoleEnumType.DelegateAdmin,
+                RoleEnumType.VendorRole,
+                RoleEnumType.SystemAdmin
+            };
+
             _connectionString = connectionString;
         }
 
@@ -41,6 +52,12 @@ namespace AutoBuildApp.DataAccess
             {
                 IsNotNullOrEmpty(shelfName);
                 IsNotNullOrEmpty(username);
+                IsAuthorized(_approvedRoles);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.Code = AutoBuildSystemCodes.Unauthorized;
+                return output;
             }
             catch (ArgumentNullException)
             {
@@ -100,8 +117,14 @@ namespace AutoBuildApp.DataAccess
             {
                 IsNotNullOrEmpty(shelfName);
                 IsNotNullOrEmpty(username);
+                IsAuthorized(_approvedRoles);
             }
-            catch(ArgumentNullException)
+            catch (UnauthorizedAccessException)
+            {
+                output.Code = AutoBuildSystemCodes.Unauthorized;
+                return output;
+            }
+            catch (ArgumentNullException)
             {
                 output.Code = AutoBuildSystemCodes.ArguementNull;
                 return output;
@@ -163,6 +186,12 @@ namespace AutoBuildApp.DataAccess
                 IsNotNullOrEmpty(shelfName);
                 IsNotNullOrEmpty(username);
                 IsNotNull(quantity);
+                IsAuthorized(_approvedRoles);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.Code = AutoBuildSystemCodes.Unauthorized;
+                return output;
             }
             catch (ArgumentNullException)
             {
@@ -226,6 +255,12 @@ namespace AutoBuildApp.DataAccess
                 IsNotNullOrEmpty(shelfName);
                 IsNotNullOrEmpty(username);
                 IsNotNull(itemindex);
+                IsAuthorized(_approvedRoles);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.Code = AutoBuildSystemCodes.Unauthorized;
+                return output;
             }
             catch (ArgumentNullException)
             {
@@ -294,6 +329,12 @@ namespace AutoBuildApp.DataAccess
                 IsNotNullOrEmpty(username);
                 IsNotNull(quantity);
                 IsNotNull(itemIndex);
+                IsAuthorized(_approvedRoles);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.Code = AutoBuildSystemCodes.Unauthorized;
+                return output;
             }
             catch (ArgumentNullException)
             {
@@ -356,6 +397,12 @@ namespace AutoBuildApp.DataAccess
                 IsNotNullOrEmpty(oldShelfName);
                 IsNotNullOrEmpty(newShelfName);
                 IsNotNullOrEmpty(username);
+                IsAuthorized(_approvedRoles);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.Code = AutoBuildSystemCodes.Unauthorized;
+                return output;
             }
             catch (ArgumentNullException)
             {
@@ -422,6 +469,12 @@ namespace AutoBuildApp.DataAccess
                 IsNotNull(indexOrder);
                 IsNotNullOrEmpty(username);
                 IsNotNullOrEmpty(shelfName);
+                IsAuthorized(_approvedRoles);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.Code = AutoBuildSystemCodes.Unauthorized;
+                return output;
             }
             catch (ArgumentNullException)
             {
@@ -475,7 +528,7 @@ namespace AutoBuildApp.DataAccess
         /// </summary>
         /// <param name="username">User name</param>
         /// <returns></returns>
-        public SystemCodeWithObject<List<Shelf>> GetAllShelvesByUser(string username)
+        public SystemCodeWithObject<List<Shelf>> GetShelvesByUser(string username)
         {
             SystemCodeWithObject<List<Shelf>> output = new SystemCodeWithObject<List<Shelf>>();
             output.GenericObject = new List<Shelf>();
@@ -484,6 +537,12 @@ namespace AutoBuildApp.DataAccess
             try
             {
                 IsNotNullOrEmpty(username);
+                IsAuthorized(_approvedRoles);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.Code = AutoBuildSystemCodes.Unauthorized;
+                return output;
             }
             catch (ArgumentNullException)
             {
@@ -564,6 +623,12 @@ namespace AutoBuildApp.DataAccess
             {
                 IsNotNullOrEmpty(shelfName);
                 IsNotNullOrEmpty(username);
+                IsAuthorized(_approvedRoles);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.Code = AutoBuildSystemCodes.Unauthorized;
+                return output;
             }
             catch (ArgumentNullException)
             {
@@ -616,10 +681,16 @@ namespace AutoBuildApp.DataAccess
         //    SystemCodeWithObject<Component> output = new SystemCodeWithObject<Component>();
         //    ProductFactory productFactory = new ProductFactory();
         //    var component = output.GenericObject;
-            
+
         //    try
         //    {
         //        IsNotNullOrEmpty(model);
+        //        IsAuthorized(_approvedRoles);
+        //    }
+        //    catch (UnauthorizedAccessException)
+        //    {
+        //        output.Code = AutoBuildSystemCodes.Unauthorized;
+        //        return output;
         //    }
         //    catch (ArgumentNullException)
         //    {
@@ -649,7 +720,7 @@ namespace AutoBuildApp.DataAccess
         //                    PopulateComponent(component, reader);
 
         //                    // TODO: Need to get product specs.
-                         
+
         //                }
         //            }
         //            catch (System.ComponentModel.InvalidEnumArgumentException)
@@ -763,6 +834,18 @@ namespace AutoBuildApp.DataAccess
             if(toCheck is null)
             {
                 throw new ArgumentNullException(nameof(toCheck));
+            }
+        }
+
+        /// <summary>
+        /// Throws unauthorized access exception if
+        /// the user should not be able to perform the operation.
+        /// </summary>
+        public void IsAuthorized(List<string> roles)
+        {
+            if (!AuthorizationCheck.IsAuthorized(roles))
+            {
+                throw new UnauthorizedAccessException();
             }
         }
         #endregion

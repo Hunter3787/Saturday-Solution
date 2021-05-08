@@ -304,7 +304,7 @@ namespace AutoBuildApp.DataAccess.Test
 
 
             // Act
-            var actual = shelfDAO.GetAllShelvesByUser(username);
+            var actual = shelfDAO.GetShelvesByUser(username);
             var actualList = actual.GenericObject;
 
             // Assert

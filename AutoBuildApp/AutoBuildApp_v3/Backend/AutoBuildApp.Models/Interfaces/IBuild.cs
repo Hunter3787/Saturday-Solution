@@ -29,25 +29,25 @@ namespace AutoBuildApp.Models.Interfaces
         /// </summary>
         /// <param name="add"></param>
         /// <returns>Bool</returns>
-        bool AddHardDrive(Component add);
+        bool AddHardDrive(IHardDrive add);
         /// <summary>
         /// Remove a hard drive component from the hard drive list.
         /// </summary>
         /// <param name="remove"></param>
         /// <returns></returns>
-        bool RemoveHardDrive(Component remove);
+        bool RemoveHardDrive(IHardDrive remove);
         /// <summary>
         /// Add an IComponent to the peripeheral list.
         /// </summary>
         /// <param name="add"></param>
         /// <returns></returns>
-        bool AddPeripheral(Component add);
+        bool AddPeripheral(IComponent add);
         /// <summary>
         /// Remove an IComponetn from the peripheral list.
         /// </summary>
         /// <param name="remove"></param>
         /// <returns></returns>
-        bool RemovePeripheral(Component remove);
+        bool RemovePeripheral(IComponent remove);
         /// <summary>
         /// The sum of entire build.
         /// </summary>

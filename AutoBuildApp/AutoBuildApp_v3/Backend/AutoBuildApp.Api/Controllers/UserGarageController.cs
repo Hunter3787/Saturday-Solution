@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Cors;
 using AutoBuildApp.Managers;
-using AutoBuildApp.DomainModels;
 using AutoBuildApp.Api.HelperFunctions;
 using System;
-using AutoBuildApp.Services;
 using AutoBuildApp.Logging;
+using System.Collections.Generic;
+using AutoBuildApp.Security.Enumerations;
 
 /**
 * User Garage controller that accepts incoming requests 
@@ -20,9 +20,19 @@ namespace AutoBuildApp.Api.Controllers
     [EnableCors("CorsPolicy")]
     public class UserGarageController : ControllerBase
     {
-        private LoggingProducerService _logger = LoggingProducerService.GetInstance;
+        private readonly LoggingProducerService _logger = LoggingProducerService.GetInstance;
         private UserGarageManager _manager;
-        private readonly string _connString = ConnectionManager.connectionManager.GetConnectionStringByName(ControllerGlobals.DOCKER_CONNECTION);
+        private readonly string _connString =
+            ConnectionManager
+            .connectionManager
+            .GetConnectionStringByName(ControllerGlobals.DOCKER_CONNECTION);
+        private readonly List<string> _approvedRoles = new List<string>()
+        {
+            RoleEnumType.BasicRole,
+            RoleEnumType.DelegateAdmin,
+            RoleEnumType.VendorRole,
+            RoleEnumType.SystemAdmin
+        };
 
         [HttpGet("getBuilds")]
         public IActionResult GetBuilds()
@@ -83,10 +93,12 @@ namespace AutoBuildApp.Api.Controllers
             }
             catch (ArgumentNullException)
             {
-                _logger.LogWarning("GetShelf: Bad Request");
+                
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
         }
+
+        [HttpGet("getShelves")]
 
         [HttpPost("addItem")]
         public IActionResult AddToShelf()
