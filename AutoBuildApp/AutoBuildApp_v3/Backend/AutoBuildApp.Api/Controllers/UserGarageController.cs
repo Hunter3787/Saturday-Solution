@@ -2,11 +2,14 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Cors;
 using AutoBuildApp.Managers;
-using AutoBuildApp.DomainModels;
 using AutoBuildApp.Api.HelperFunctions;
 using System;
-using AutoBuildApp.Services;
 using AutoBuildApp.Logging;
+using System.Collections.Generic;
+using AutoBuildApp.Security.Enumerations;
+using System.Threading;
+using System.Security.Claims;
+using AutoBuildApp.Security;
 
 /**
 * User Garage controller that accepts incoming requests 
@@ -20,9 +23,23 @@ namespace AutoBuildApp.Api.Controllers
     [EnableCors("CorsPolicy")]
     public class UserGarageController : ControllerBase
     {
-        private LoggingProducerService _logger = LoggingProducerService.GetInstance;
+        //private readonly LoggingProducerService _logger = LoggingProducerService.GetInstance;
         private UserGarageManager _manager;
-        private readonly string _connString = ConnectionManager.connectionManager.GetConnectionStringByName(ControllerGlobals.DOCKER_CONNECTION);
+        private readonly string _connString =
+            ConnectionManager
+            .connectionManager
+            .GetConnectionStringByName(ControllerGlobals.DOCKER_CONNECTION);
+        private readonly List<string> _approvedRoles = new List<string>()
+        {
+            RoleEnumType.BasicRole,
+            RoleEnumType.DelegateAdmin,
+            RoleEnumType.VendorRole,
+            RoleEnumType.SystemAdmin
+        };
+        private readonly string _singleShelfFetch = "Requested a single shelf.";
+        private readonly string _userShelvesFetch = "Requested all a users shelves.";
+        private readonly string _internalError = "Internal error has occured.";
+        private readonly string _badRequest = "A bad request was made.";
 
         [HttpGet("getBuilds")]
         public IActionResult GetBuilds()
@@ -72,18 +89,36 @@ namespace AutoBuildApp.Api.Controllers
             _manager = new UserGarageManager(_connString);
             try
             {
+                IsAuthorized();
+                var principle = (ClaimsPrincipal)Thread.CurrentPrincipal;
+                Console.WriteLine(principle.Claims);
+                //_logger.LogInformation(_singleShelfFetch);
                 var output =_manager.GetShelfByName(shelfName, username);
 
-                if (!output.IsSuccessful)
-                {
-                    return Ok(output);
-                }
-
-                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+                return Ok(output);
             }
             catch (ArgumentNullException)
             {
-                _logger.LogWarning("GetShelf: Bad Request");
+                //_logger.LogWarning(_badRequest);
+                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            }
+        }
+
+        [HttpGet("getShelves")]
+        public IActionResult GetShelvesByUser(string username)
+        {
+            _manager = new UserGarageManager(_connString);
+            try
+            {
+                IsAuthorized();
+                //_logger.LogInformation();
+                var output = _manager.GetShelvesByUser(username);
+
+                return Ok(output);
+            }
+            catch (ArgumentNullException)
+            {
+                //_logger.LogWarning();
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
         }
@@ -116,7 +151,7 @@ namespace AutoBuildApp.Api.Controllers
             return Ok();
         }
 
-        [HttpPut]
+        [HttpPut("orderShelf")]
         public IActionResult OrderShelf()
         {
 
@@ -129,6 +164,14 @@ namespace AutoBuildApp.Api.Controllers
         {
             // TODO
             return Ok();
+        }
+
+        public void IsAuthorized()
+        {
+            if (!AuthorizationCheck.IsAuthorized(_approvedRoles))
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
     }
 }

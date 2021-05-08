@@ -1,11 +1,12 @@
 ﻿using AutoBuildApp.Models.DataTransferObjects;
-using AutoBuildApp.Models.Interfaces;
+using AutoBuildApp.Models.Products;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.DataAccess.Entities;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System;
+using AutoBuildApp.Models.Interfaces;
 
 /**
 * This Data Access Object will handle collection and transformation of 
@@ -115,7 +116,7 @@ namespace AutoBuildApp.DataAccess
         /// </summary>
         /// <param name="toFind"></param>
         /// <returns></returns>
-        public List<ProductEntity> GetEntities(List<Component> toFind)
+        public List<ProductEntity> GetEntities(List<IComponent> toFind)
         {
             List<ProductEntity> entitiesList = new List<ProductEntity>();
 
@@ -179,14 +180,14 @@ namespace AutoBuildApp.DataAccess
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public Dictionary<ProductType, List<Component>> GetProductsByList(
-            List<Component> input)
+        public Dictionary<ProductType, List<IComponent>> GetProductsByList(
+            List<IComponent> input)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                Dictionary<ProductType, List<Component>> output
-                    = new Dictionary<ProductType, List<Component>>();
+                Dictionary<ProductType, List<IComponent>> output
+                    = new Dictionary<ProductType, List<IComponent>>();
 
                 var stored = "Search_ProductBudget";
                 using ( var command = new SqlCommand())

@@ -31,10 +31,11 @@ namespace AutoBuildApp.Api.HelperFunctions
             /// authenticated.
             /// 
 
+            UserIdentity guestUser = new UserIdentity();
             //UserIdentity guestUser = new UserIdentity();
             // https://leastprivilege.com/2012/09/24/claimsidentity-isauthenticated-and-authenticationtype-in-net-4-5/ 
             ClaimsIdentity identity = new 
-                ClaimsIdentity(unregistered.Claims());
+                ClaimsIdentity(guestUser, unregistered.Claims());
             ClaimsPrincipal _principal = new ClaimsPrincipal(identity);
              //some printing
             //Console.WriteLine($"IN THE GUEST");

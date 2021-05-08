@@ -33,11 +33,11 @@ namespace AutoBuildApp.Services.CatalogServices
         /// </summary>
         /// <param name="components"></param>
         /// <returns></returns>
-        public Dictionary<ProductType, List<Models.Interfaces.Component>> GetProductDictionary(
-            List<Models.Interfaces.Component> components)
+        public Dictionary<ProductType, List<IComponent>> GetProductDictionary(
+            List<IComponent> components)
         {
-            Dictionary<ProductType, List<Models.Interfaces.Component>> outputDictionary
-                = new Dictionary<ProductType, List<Models.Interfaces.Component>>();
+            Dictionary<ProductType, List<IComponent>> outputDictionary
+                = new Dictionary<ProductType, List<IComponent>>();
 
             // Call DAO for rows
             List<ProductEntity> entities = _productDao.GetEntities(components);
@@ -67,15 +67,15 @@ namespace AutoBuildApp.Services.CatalogServices
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public List<Models.Interfaces.Component> GetComponents(ProductType type)
+        public List<IComponent> GetComponents(ProductType type)
         {
-            List<Models.Interfaces.Component> output = new List<Models.Interfaces.Component>();
+            List<IComponent> output = new List<IComponent>();
 
 
             return output;
         }
 
-        public Models.Interfaces.Component GetComponent(string pid)
+        public Component GetComponent(string pid)
         {
             return null;
         }

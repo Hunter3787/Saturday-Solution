@@ -1,8 +1,8 @@
 ﻿using System;
-using AutoBuildApp.Models.Interfaces;
 using System.Collections.Generic;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Services.FactoryServices;
+using AutoBuildApp.Models.Interfaces;
 
 /**
  * The Budget Portion Service designed to portion out the total budget
@@ -29,10 +29,10 @@ namespace AutoBuildApp.Services.RecommendationServices
         /// <param name="type">BuildType</param>
         /// <param name="budget">Double</param>
         /// <returns>List of IComponents</returns>
-        public List<Component> PortionOutBudget
-            (List<Component> input, BuildType type, double budget)
+        public List<IComponent> PortionOutBudget
+            (List<IComponent> input, BuildType type, double budget)
         {
-            var outputList = new List<Component>(input);
+            var outputList = new List<IComponent>(input);
             var budgetWeights = KeyFactory.CreateKey(type);
             
             if (budget < RecServiceGlobals.MIN_BUDGET || input == null)

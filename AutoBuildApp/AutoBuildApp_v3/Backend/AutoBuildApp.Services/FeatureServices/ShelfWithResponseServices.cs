@@ -5,6 +5,9 @@ using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.DataAccess;
 using AutoBuildApp.Models.Products;
 using AutoBuildApp.Models.Enumerations;
+using AutoBuildApp.Security.Enumerations;
+using AutoBuildApp.Security;
+using AutoBuildApp.Logging;
 
 /**
 * The ShelfWithResponseService will provide the shelf specific operatons
@@ -15,10 +18,20 @@ namespace AutoBuildApp.Services
 {
     public class ShelfWithResponseService
     {
-        private ShelfDAO _dao;
+        private readonly ShelfDAO _dao;
+        private readonly List<string> _approvedRoles;
+        private readonly LoggingProducerService _logger;
 
         public ShelfWithResponseService(ShelfDAO shelfDAO)
         {
+            _approvedRoles = new List<string>()
+            {   
+                RoleEnumType.BasicRole,
+                RoleEnumType.DelegateAdmin,
+                RoleEnumType.VendorRole,
+                RoleEnumType.SystemAdmin
+            };
+            _logger = LoggingProducerService.GetInstance;
             _dao = shelfDAO;
         }
 
@@ -31,6 +44,14 @@ namespace AutoBuildApp.Services
         public CommonResponse CreateShelf(string shelfName, string username)
         {
             CommonResponse output = new CommonResponse();
+
+            if (!AuthorizationCheck.IsAuthorized(_approvedRoles))
+            {
+                output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
+                output.IsSuccessful = false;
+                return output;
+            }
+
             var temp = _dao.InsertShelf(shelfName, username);
 
             output.IsSuccessful = temp.GenericObject;
@@ -57,6 +78,14 @@ namespace AutoBuildApp.Services
         public CommonResponse DeleteShelf(string shelfName, string username)
         {
             CommonResponse output = new CommonResponse();
+
+            if (!AuthorizationCheck.IsAuthorized(_approvedRoles))
+            {
+                output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
+                output.IsSuccessful = false;
+                return output;
+            }
+
             var temp = _dao.DeleteShelf(shelfName, username);
 
             output.IsSuccessful = temp.GenericObject;
@@ -84,6 +113,14 @@ namespace AutoBuildApp.Services
         public CommonResponse ChangeShelfName(string oldName, string newName, string username)
         {
             CommonResponse output = new CommonResponse();
+
+            if (!AuthorizationCheck.IsAuthorized(_approvedRoles))
+            {
+                output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
+                output.IsSuccessful = false;
+                return output;
+            }
+
             var temp = _dao.UpdateShelfName(oldName, newName, username);
 
             output.IsSuccessful = temp.GenericObject;
@@ -112,6 +149,14 @@ namespace AutoBuildApp.Services
         public CommonResponse AddToShelf(string modelNumber, int quantity, string shelfName, string username)
         {
             CommonResponse output = new CommonResponse();
+
+            if (!AuthorizationCheck.IsAuthorized(_approvedRoles))
+            {
+                output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
+                output.IsSuccessful = false;
+                return output;
+            }
+
             var temp = _dao.AddComponent(modelNumber, quantity, shelfName, username);
 
             output.IsSuccessful = temp.GenericObject;
@@ -139,6 +184,14 @@ namespace AutoBuildApp.Services
         public CommonResponse RemoveFromShelf(int itemIndex, string shelfName, string username)
         {
             CommonResponse output = new CommonResponse();
+
+            if (!AuthorizationCheck.IsAuthorized(_approvedRoles))
+            {
+                output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
+                output.IsSuccessful = false;
+                return output;
+            }
+
             var temp = _dao.RemoveComponent(itemIndex, shelfName, username);
 
             output.IsSuccessful = temp.GenericObject;
@@ -166,6 +219,14 @@ namespace AutoBuildApp.Services
         public CommonResponse ReorderShelf(List<int> indicies, string shelfName, string username)
         {
             CommonResponse output = new CommonResponse();
+
+            if (!AuthorizationCheck.IsAuthorized(_approvedRoles))
+            {
+                output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
+                output.IsSuccessful = false;
+                return output;
+            }
+
             var temp = _dao.UpdateShelfOrder(indicies, shelfName, username);
 
             output.IsSuccessful = temp.GenericObject;
@@ -191,9 +252,17 @@ namespace AutoBuildApp.Services
         /// <param name="shelfName">The name of the shelf the item resides on.</param>
         /// <param name="username">The name of the user the shelf is associated with.</param>
         /// <returns>True or false with a response string.</returns>
-        public CommonResponse ChangeQuantity(int itemIndex, int quantity, string shelfName, string username)
+        public CommonResponse UpdateQuantity(int itemIndex, int quantity, string shelfName, string username)
         {
             CommonResponse output = new CommonResponse();
+
+            if (!AuthorizationCheck.IsAuthorized(_approvedRoles))
+            {
+                output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
+                output.IsSuccessful = false;
+                return output;
+            }
+
             var temp = _dao.UpdateQuantity(itemIndex, quantity, shelfName, username);
 
             output.IsSuccessful = temp.GenericObject;
@@ -223,6 +292,14 @@ namespace AutoBuildApp.Services
             {
                 IsSuccessful = false
             };
+
+            if (!AuthorizationCheck.IsAuthorized(_approvedRoles))
+            {
+                output.GenericObject = new Shelf();
+                output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
+                return output;
+            }
+
             var temp = _dao.GetShelfByName(shelfName, username);
             output.GenericObject = temp.GenericObject;
 
@@ -241,13 +318,21 @@ namespace AutoBuildApp.Services
         /// </summary>
         /// <param name="username">Name associated with the account to retrieve from.</param>
         /// <returns></returns>
-        public CommonResponseWithObject<List<Shelf>> GetAllusernameShelves(string username)
+        public CommonResponseWithObject<List<Shelf>> GetShelvesByUser(string username)
         {
             CommonResponseWithObject<List<Shelf>> output = new CommonResponseWithObject<List<Shelf>>()
             {
                 IsSuccessful = false
             };
-            var temp = _dao.GetAllShelvesByUser(username);
+
+            if (!AuthorizationCheck.IsAuthorized(_approvedRoles))
+            {
+                output.GenericObject = new List<Shelf>();
+                output.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;
+                return output;
+            }
+
+            var temp = _dao.GetShelvesByUser(username);
             output.GenericObject = temp.GenericObject;
 
             CodeToStringHandler(output, temp.Code);
@@ -268,9 +353,9 @@ namespace AutoBuildApp.Services
         //    return output;
         //}
 
+        #region Private Helper Methods
         /// <summary>
         /// Helper function to insert the strings from each expected error code.
-        #region Private Helper Method
         /// </summary>
         private void CodeToStringHandler(CommonResponse commonResponse, AutoBuildSystemCodes code)
         {
@@ -278,6 +363,9 @@ namespace AutoBuildApp.Services
             {
                 case AutoBuildSystemCodes.Success:
                     commonResponse.ResponseString = ResponseStringGlobals.SUCCESSFUL_RESPONSE;
+                    break;
+                case AutoBuildSystemCodes.NoEntryFound:
+                    commonResponse.ResponseString = ResponseStringGlobals.NO_ENTRY_FOUND;
                     break;
                 case AutoBuildSystemCodes.Unauthorized:
                     commonResponse.ResponseString = ResponseStringGlobals.UNAUTHORIZED_ACCESS;

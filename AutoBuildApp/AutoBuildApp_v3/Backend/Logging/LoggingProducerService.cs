@@ -222,29 +222,29 @@ namespace AutoBuildApp.Logging
         public static async void LogInformation(this LoggingProducerService logger, string message, EventType eventType, string eventValue, string username) // Information log level, this is a variant of Logger.
         {
             // Appends the date and time to the Log for easy info to query.
-            await logger.LogAsync(message, LogType.Information, eventType, eventValue, username, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF"));
+            await logger.LogAsync(message, LogType.Information, eventType, eventValue, username, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
         }
         public static async void LogWarning(this LoggingProducerService logger, string message, EventType eventType, string eventValue, string username)
         {
-            await logger.LogAsync(message, LogType.Warning, eventType, eventValue, username, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF"));
+            await logger.LogAsync(message, LogType.Warning, eventType, eventValue, username, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
         }
         public static async void LogError(this LoggingProducerService logger, string message, EventType eventType, string eventValue, string username)
         {
-            await logger.LogAsync(message, LogType.Error, eventType, eventValue, username, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF"));
+            await logger.LogAsync(message, LogType.Error, eventType, eventValue, username, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
         }
 
         public static async void LogInformation(this LoggingProducerService logger, string message) // Information log level, this is a variant of Logger.
         {
             // Appends the date and time to the Log for easy info to query.
-            await logger.LogAsync(message, LogType.Information, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF"));
+            await logger.LogAsync(message, LogType.Information, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
         }
         public static async void LogWarning(this LoggingProducerService logger, string message)
         {
-            await logger.LogAsync(message, LogType.Warning, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF"));
+            await logger.LogAsync(message, LogType.Warning, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
         }
         public static async void LogError(this LoggingProducerService logger, string message)
         {
-            await logger.LogAsync(message, LogType.Error, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:FFFFFFF"));
+            await logger.LogAsync(message, LogType.Error, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
         }
     }
 }

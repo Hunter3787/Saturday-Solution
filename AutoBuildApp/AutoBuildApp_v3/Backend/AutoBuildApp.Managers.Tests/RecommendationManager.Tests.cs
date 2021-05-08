@@ -27,7 +27,7 @@ namespace AutoBuildApp.Managers.Tests
         private CentralProcUnit _processor;
         private RAM _ram;
         private ICooler _cooler;
-        private List<Models.Interfaces.Component> _periphs;
+        private List<IComponent> _periphs;
         private IBuild _gamingBuild;
         private BuildFactory _build;
 
@@ -37,7 +37,7 @@ namespace AutoBuildApp.Managers.Tests
         {
             _build = new BuildFactory();
             _manager = new RecommendationManager("testString");
-            _gamingBuild = _build.CreateBuild(BuildType.Gaming);
+            _gamingBuild = (IBuild)_build.CreateBuild(BuildType.Gaming);
             _hd1 = new NVMeDrive
             {
                 DriveType = HardDriveType.NVMe,
@@ -92,7 +92,7 @@ namespace AutoBuildApp.Managers.Tests
             };
             _mobo = new Motherboard
             {
-                ProductType = ProductType.MotherBoard,
+                ProductType = ProductType.Motherboard,
                 ModelNumber = "133",
                 ManufacturerName = "Giga",
                 Price = 148.03,
@@ -230,7 +230,7 @@ namespace AutoBuildApp.Managers.Tests
                 Fanless = false,
                 WaterCooling = false
             };
-            _periphs = new List<Models.Interfaces.Component>()
+            _periphs = new List<IComponent>()
             {
                 _hd2, _hd2
             };

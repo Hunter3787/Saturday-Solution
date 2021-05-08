@@ -14,7 +14,7 @@ namespace AutoBuildApp.Models.Enumerations
         Monitor,
         Keyboard,
         Mouse,
-        MotherBoard,
+        Motherboard,
         PSU,
         Fan,
         Cooler,

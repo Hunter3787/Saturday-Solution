@@ -8,7 +8,7 @@ using AutoBuildApp.Models.Interfaces;
  */
 namespace AutoBuildApp.Models.Products
 {
-    public class SolidStateDrive : HardDrive, Interfaces.Component
+    public class SolidStateDrive : HardDrive, IComponent
     {
 
         #region "Field Declarations: get; set;"

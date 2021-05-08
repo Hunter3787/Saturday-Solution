@@ -25,7 +25,7 @@ namespace AutoBuildApp.Services.FactoryServices
                         { ProductType.Cooler, .03 },
                         { ProductType.RAM, .08 },
                         { ProductType.PSU, .06 },
-                        { ProductType.MotherBoard, .08 }
+                        { ProductType.Motherboard, .08 }
                     };
                 //Repated for now.
                 case BuildType.WordProcessing:
@@ -38,7 +38,7 @@ namespace AutoBuildApp.Services.FactoryServices
                         { ProductType.Cooler, .03 },
                         { ProductType.RAM, .08 },
                         { ProductType.PSU, .06 },
-                        { ProductType.MotherBoard, .08 }
+                        { ProductType.Motherboard, .08 }
                     };
                 //Default is gaming build.
                 default:
@@ -51,7 +51,7 @@ namespace AutoBuildApp.Services.FactoryServices
                         { ProductType.Cooler, .03 },
                         { ProductType.RAM, .08 },
                         { ProductType.PSU, .06 },
-                        { ProductType.MotherBoard, .08 }
+                        { ProductType.Motherboard, .08 }
                     };
             }
         }

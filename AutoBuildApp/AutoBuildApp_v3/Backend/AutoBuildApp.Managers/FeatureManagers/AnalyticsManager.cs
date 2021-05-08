@@ -2,14 +2,16 @@
 using AutoBuildApp.DomainModels;
 using AutoBuildApp.DomainModels.Abstractions;
 using AutoBuildApp.DomainModels.Enumerations;
+using AutoBuildApp.Logging;
 using AutoBuildApp.Models;
+using AutoBuildApp.Models.DataTransferObjects;
+using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Security;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
 using System;
 using System.Collections.Generic;
-
-
+using System.Threading;
 
 namespace AutoBuildApp.Managers.FeatureManagers
 {
@@ -18,14 +20,40 @@ namespace AutoBuildApp.Managers.FeatureManagers
         // principle after they are authenticated 
 
         private AnalyticsDAO _uadDAO;
-        private List<string> _allowedRoles; //specify rles
-        
+        //specifies the roles that the analytics controller allows 
+        private List<string> _allowedRoles;
 
-        public AnalyticsManager(string ConnectiontString)
+        #region logegr 
+
+        // Creates the local instance for the logger
+        private LoggingProducerService _logger;
+
+        #endregion
+
+
+        public AnalyticsManager(string connectiontString)
         {
-            _uadDAO = new AnalyticsDAO(ConnectiontString);
-            _allowedRoles = new List<string>()
-            { RoleEnumType.SystemAdmin };
+            try
+            {
+                 _uadDAO = new AnalyticsDAO(connectiontString);
+                // instantiation of the allowed roles
+                 _allowedRoles = new List<string>()
+                { RoleEnumType.SystemAdmin };
+
+                // get instance of logger singleton
+                _logger = LoggingProducerService.GetInstance;
+
+            }
+
+            catch (ArgumentNullException)
+            {
+                if (connectiontString == null)
+                {
+                    var expectedParamName = "NULL OBJECT PROVIDED";
+                    throw new ArgumentNullException(expectedParamName);
+                }
+            }
+
         }
 
         //public IList<Charts> GetCharts(ResponseUAD responseUAD, DBViews specifiedChart = DBViews.none)
@@ -122,93 +150,83 @@ namespace AutoBuildApp.Managers.FeatureManagers
         //}
 
         // TURN INTO ASYNC 
-        public AnalyticsDataDTO GetChartData(int GraphType)
+
+        /// <summary>
+        /// the GetChartData cals the DAO and passes throught the graphtype for retrieval
+        /// </summary>
+        /// <param name="graphType"></param>
+        /// <returns></returns>
+        public AnalyticsDataDTO GetChartData(int graphType)
         {
+            // instantiation of the DTO that will be sent back to the controller
             AnalyticsDataDTO dataDTO = new AnalyticsDataDTO();
+            // instantiation of the response which will be expected by the DAO
             ResponseUAD responseUAD = new ResponseUAD();
 
+            // expected string in case of not authorized
             string notAuthorized = AuthorizationResultType.NotAuthorized.ToString();
 
-            //Initial Authorization Check
+            //Initial Authorization Check in the manager
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
             {
-                Console.WriteLine($" IF STATEMENT 1");
-                Console.WriteLine($" {dataDTO.ToString()}");
-
-              dataDTO.Result = notAuthorized;
+                // if not authorized send back :not authorized" with success flag False
+                dataDTO.Result = notAuthorized;
                 dataDTO.SuccessFlag = false;
+                // log that failure 
+                _logger.LogWarning(AuthorizationResultType.NotAuthorized.ToString() + "made by"
+                    + Thread.CurrentPrincipal.Identity.Name);
+                // return the dto with fail state back
                 return dataDTO;
 
             }
-            responseUAD = _uadDAO.GetGraphData((DBViews)GraphType);
+            // if authorized go ahead and call the DAO for graph data 
+            responseUAD = _uadDAO.GetGraphData((DBViews)graphType);
             if (responseUAD.ResponseString.Equals(notAuthorized))
             {
-
                 dataDTO.SuccessFlag = false;
                 dataDTO.Result = responseUAD.ResponseString;
-
-                Console.WriteLine($" IF STATEMENT 2");
-                Console.WriteLine($" {dataDTO.ToString()}");
-
                 return dataDTO;
             }
+            // if the response from the DAO does not contain data 
             if (!responseUAD.IsSuccessful|| responseUAD.GetChartDatas == null)
             {
-
-                Console.WriteLine($" IF STATEMENT 3");
+                // update the DTO to have the results from the responseDAO
                 dataDTO.SuccessFlag = responseUAD.IsSuccessful;
                 dataDTO.Result = responseUAD.ResponseString;
-
-                Console.WriteLine($" {dataDTO.ToString()}");
+                // log the fail
+                _logger.LogWarning($" analytics retriaval failed: {responseUAD.ResponseString}");
+                // return the dAO
                 return dataDTO;
             }
-            else if(responseUAD.IsSuccessful)
+            else // else everything went good
             {
 
-                Console.WriteLine($" ELSE IF STATEMENT 4");
-
-
-               Charts analyticsChart = new Charts();
+                IList<ChartData> GetChartDatas = responseUAD.GetChartDatas;
+                dataDTO.SuccessFlag = responseUAD.IsSuccessful;
+                dataDTO.Result = responseUAD.ResponseString;
+                // lets go ahead and store the charts datas into a list from the response from the UAD
+                Charts analyticsChart = new Charts();
                 #region GRAPHS
                 analyticsChart =
                      new Charts(
-                        //"The Number Of Accounts Held Amongst Account Types",
+                        // here we case between the toe objects 
                         XTitle: responseUAD.XTitle,
                         YTitle: responseUAD.YTitle,
                         legendTitle: responseUAD.LegendTitle,
-                        chartDatas: responseUAD.GetChartDatas,
+                        chartDatas: GetChartDatas,
                         chartType: ChartType.Bar);
                 #endregion
-
-
-                Console.WriteLine($" THE DATA BROUGHT BACK: {analyticsChart.ToString()}");
                 dataDTO.analyticChartsRequisted = analyticsChart;
-
-                Console.WriteLine($"\nTHE DATA BROUGHT BACK PART 2: " +
-                    $"{dataDTO.ToString()}");
-
-
+                //let us log that success of data retrieval and by the user on the thread.
+                _logger.LogInformation(
+                   Thread.CurrentPrincipal.Identity.Name,
+                    Models.EventType.AdminDataRetrievalEvent,
+                    PageIDType.AnalyticsPage.ToString(), 
+                    Thread.CurrentPrincipal.Identity.Name.ToString());
+                // finnally return the dTo to the controller 
                 return dataDTO;
 
             }
-
-            Console.WriteLine($" OUTSIDE ");
-            return null;
-
-
-
         }
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }

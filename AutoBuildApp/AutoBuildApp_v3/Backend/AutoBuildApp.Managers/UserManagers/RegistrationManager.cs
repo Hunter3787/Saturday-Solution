@@ -16,7 +16,7 @@ namespace AutoBuildApp.Managers
         private InputValidityManager _inputValidityManager;
         private RegistrationDAO _RegistrationDAO;
 
-        public RegistrationManager(String _cnnctString)
+        public RegistrationManager(string _cnnctString)
         {
             _inputValidityManager = new InputValidityManager();
             _RegistrationDAO = new RegistrationDAO(_cnnctString);
