@@ -22,6 +22,7 @@ namespace AutoBuildApp.Models
         public const string UNAUTHORIZED_ACCESS = "Unauthorized access.";
         public const string INVALID_INPUT = "Invalid input.";
         public const string MISSING_ARGUEMENT = "One or more values were missing from your request.";
+        public const string NO_CHANGE_OCCURRED = "No change occurred.";
         public const string DEFAULT_RESPONSE = "An unknown error has occurred.";
         public const string NO_ENTRY_FOUND = "No entries found.";
     }

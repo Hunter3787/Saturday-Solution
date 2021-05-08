@@ -28,6 +28,11 @@ namespace AutoBuildApp.Services.FeatureServices
                     response.ResponseString = ResponseStringGlobals.DUPLICATE_VALUE;
 
                     break;
+                case AutoBuildSystemCodes.NoChangeOccurred:
+                    response.IsSuccessful = false;
+                    response.ResponseString = ResponseStringGlobals.NO_CHANGE_OCCURRED;
+
+                    break;
                 default:
                     response.IsSuccessful = false;
                     response.ResponseString = ResponseStringGlobals.DEFAULT_RESPONSE;

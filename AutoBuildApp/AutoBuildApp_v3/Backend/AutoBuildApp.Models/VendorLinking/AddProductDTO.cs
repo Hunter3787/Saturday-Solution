@@ -13,5 +13,6 @@ namespace AutoBuildApp.Models.VendorLinking
         public string Url { get; set; }
         public string ModelNumber { get; set; }
         public double Price { get; set; }
+        public string ProductType { get; set; }
     }
 }

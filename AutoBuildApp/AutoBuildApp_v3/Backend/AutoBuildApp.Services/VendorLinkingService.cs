@@ -22,7 +22,7 @@ namespace AutoBuildApp.Services
     /// </summary>
     public class VendorLinkingService
     {
-        private List<string> _allowedRoles;
+        public List<string> _allowedRoles;
         private VendorLinkingDAO _vendorLinkingDAO;
         private readonly LoggingProducerService _logger = LoggingProducerService.GetInstance;
         private CommonResponseService commonResponseService = new CommonResponseService();
@@ -31,9 +31,9 @@ namespace AutoBuildApp.Services
         /// This default constructor to initalize the service. Initializes and sets the allowed roles and creates a VendorLinkingDAO object
         /// </summary>
         /// <param name="connectionString">sql database string to be able to connect to database.</param>
-        public VendorLinkingService(string connectionString)
+        public VendorLinkingService(VendorLinkingDAO vendorLinkingDAO)
         {
-            _vendorLinkingDAO = new VendorLinkingDAO(connectionString);
+            _vendorLinkingDAO = vendorLinkingDAO;
             _allowedRoles = new List<string>()
             {
                 RoleEnumType.SystemAdmin,
@@ -45,7 +45,7 @@ namespace AutoBuildApp.Services
         /// This method will be used to populate the vendors products (cache)
         /// </summary>
         /// <returns>returns a common response object with a concurrent dictionary of string and concurrent dictionoary of string and byte.</returns>
-        public CommonResponseWithObject<ConcurrentDictionary<string, ConcurrentDictionary<string, byte>>> PopulateVendorsProducts()
+        public virtual CommonResponseWithObject<ConcurrentDictionary<string, ConcurrentDictionary<string, byte>>> PopulateVendorsProducts()
         {
             // Initialize a common response object
             CommonResponseWithObject<ConcurrentDictionary<string, ConcurrentDictionary<string, byte>>> commonResponse = new CommonResponseWithObject<ConcurrentDictionary<string, ConcurrentDictionary<string, byte>>>();
@@ -79,7 +79,7 @@ namespace AutoBuildApp.Services
         /// </summary>
         /// <param name="product">passes in an AddProductDTO which will be passed to the DAO</param>
         /// <returns>returns a common response object</returns>
-        public CommonResponse AddProductToVendorListOfProducts(AddProductDTO product)
+        public virtual CommonResponse AddProductToVendorListOfProducts(AddProductDTO product)
         {
             // Initialize a common response object
             CommonResponse commonResponse = new CommonResponse(); 
@@ -95,11 +95,17 @@ namespace AutoBuildApp.Services
             }
 
             // Call the DAO method and return the system code
-            AutoBuildSystemCodes daoResponseCode = _vendorLinkingDAO.AddProductToVendorListOfProducts(product);
+            SystemCodeWithObject<int> daoResponse = _vendorLinkingDAO.AddProductToVendorListOfProducts(product);
+
+            // If the rows returned is 0, change the code to no change occurred.
+            if (daoResponse.GenericObject == 0)
+            {
+                daoResponse.Code = AutoBuildSystemCodes.NoChangeOccurred;
+            }
 
             // Pass in the response code and the common response object and set the bool and the string fields
             //      The third parameter is for a custom success message
-            commonResponseService.SetCommonResponse(daoResponseCode, commonResponse, ResponseStringGlobals.SUCCESSFUL_ADDITION);
+            commonResponseService.SetCommonResponse(daoResponse.Code, commonResponse, ResponseStringGlobals.SUCCESSFUL_ADDITION);
 
             return commonResponse;
         }
@@ -109,7 +115,7 @@ namespace AutoBuildApp.Services
         /// </summary>
         /// <param name="product">passes in an AddProductDTO which will be passed to the DAO</param>
         /// <returns>returns a common response object</returns>
-        public CommonResponse EditProductInVendorListOfProducts(AddProductDTO product)
+        public virtual CommonResponse EditProductInVendorListOfProducts(AddProductDTO product)
         {
             // Initialize a common response object
             CommonResponse commonResponse = new CommonResponse();
@@ -125,11 +131,17 @@ namespace AutoBuildApp.Services
             }
 
             // Call the DAO method and return the system code
-            AutoBuildSystemCodes daoResponseCode = _vendorLinkingDAO.EditProductInVendorListOfProducts(product);
+            SystemCodeWithObject<int> daoResponse = _vendorLinkingDAO.EditProductInVendorListOfProducts(product);
+
+            // If the rows returned is 0, change the code to no change occurred.
+            if (daoResponse.GenericObject == 0)
+            {
+                daoResponse.Code = AutoBuildSystemCodes.NoChangeOccurred;
+            }
 
             // Pass in the response code and the common response object and set the bool and the string fields
             //      The third parameter is for a custom success message for when the response code is success
-            commonResponseService.SetCommonResponse(daoResponseCode, commonResponse, ResponseStringGlobals.SUCCESSFUL_MODIFICATION);
+            commonResponseService.SetCommonResponse(daoResponse.Code, commonResponse, ResponseStringGlobals.SUCCESSFUL_MODIFICATION);
 
             return commonResponse;
         }
@@ -139,7 +151,7 @@ namespace AutoBuildApp.Services
         /// </summary>
         /// <param name="modelNumber">passes in string model number which will be deleted</param>
         /// <returns>returns a common response object</returns>
-        public CommonResponse DeleteProductFromVendorList(string modelNumber)
+        public virtual CommonResponse DeleteProductFromVendorList(string modelNumber)
         {
 
             // Initialize a common response object
@@ -156,11 +168,17 @@ namespace AutoBuildApp.Services
             }
 
             // Call the DAO method and return the system code
-            AutoBuildSystemCodes daoResponseCode = _vendorLinkingDAO.DeleteProductFromVendorList(modelNumber);
+            SystemCodeWithObject<int> daoResponse = _vendorLinkingDAO.DeleteProductFromVendorList(modelNumber);
+
+            // If the rows returned is 0, change the code to no change occurred.
+            if (daoResponse.GenericObject == 0)
+            {
+                daoResponse.Code = AutoBuildSystemCodes.NoChangeOccurred;
+            }
 
             // Pass in the response code and the common response object and set the bool and the string fields
             //      The third parameter is for a custom success message for when the response code is success
-            commonResponseService.SetCommonResponse(daoResponseCode, commonResponse, ResponseStringGlobals.SUCCESSFUL_DELETION);
+            commonResponseService.SetCommonResponse(daoResponse.Code, commonResponse, ResponseStringGlobals.SUCCESSFUL_DELETION);
 
             return commonResponse;
         }
@@ -170,7 +188,7 @@ namespace AutoBuildApp.Services
         /// </summary>
         /// <param name="filters">passes in a GetProductByFilterDTO which will be passed to the DAO</param>
         /// <returns>returns a common response object</returns>
-        public CommonResponseWithObject<List<AddProductDTO>> GetAllProductsByVendor(GetProductByFilterDTO filters)
+        public virtual CommonResponseWithObject<List<AddProductDTO>> GetAllProductsByVendor(ProductByFilterDTO filters)
         {
             // Initialize a common response object that has a collection field
             CommonResponseWithObject<List<AddProductDTO>> commonResponse = new CommonResponseWithObject<List<AddProductDTO>>();
@@ -202,7 +220,7 @@ namespace AutoBuildApp.Services
         /// </summary>
         /// <param name="filters">passes in a GetProductByFilterDTO which will be passed to the DAO</param>
         /// <returns>returns a common response object</returns>
-        public CommonResponseWithObject<List<string>> GetAllModelNumbers()
+        public virtual CommonResponseWithObject<List<string>> GetAllModelNumbers()
         {
             // Initialize a Common Response object that has a collection field
             CommonResponseWithObject<List<string>> commonResponse = new CommonResponseWithObject<List<string>>();
@@ -235,7 +253,7 @@ namespace AutoBuildApp.Services
         /// <param name="username">passes in a username which is used to determine which user to save the information to</param>
         /// <param name="file">passes in a formfile which is the file to be saved</param>
         /// <returns>returns a string for the file path</returns>
-        public async Task<string> UploadImage(string username, IFormFile file)
+        public virtual async Task<string> UploadImage(string username, IFormFile file)
         {
             string storeIn = "";
 
