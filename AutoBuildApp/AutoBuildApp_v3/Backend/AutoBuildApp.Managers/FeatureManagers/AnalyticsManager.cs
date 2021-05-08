@@ -177,7 +177,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
             }
             if (!responseUAD.IsSuccessful|| responseUAD.GetChartDatas == null)
             {
-                dataDTO.SuccessFlag = responseUAD.ResponseBool;
+                dataDTO.SuccessFlag = responseUAD.IsSuccessful;
                 dataDTO.Result = responseUAD.ResponseString;
                 _logger.LogWarning($" analytics retriaval failed: {responseUAD.ResponseString}");
 
@@ -188,7 +188,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
                 IList<ChartData> GetChartDatas = responseUAD.GetChartDatas;
 
 
-                dataDTO.SuccessFlag = responseUAD.ResponseBool;
+                dataDTO.SuccessFlag = responseUAD.IsSuccessful;
                 dataDTO.Result = responseUAD.ResponseString;
 
                 Charts analyticsChart = new Charts();

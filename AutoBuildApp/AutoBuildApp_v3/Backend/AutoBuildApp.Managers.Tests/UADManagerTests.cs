@@ -125,7 +125,7 @@ namespace AutoBuildApp.Manger.Tests
 
             ResponseUAD expectedFailedUAD = new ResponseUAD()
             {
-                ResponseBool = false,
+                IsSuccessful = false,
                 ResponseString = AuthorizationResultType.NotAuthorized.ToString(),
             };
 

@@ -105,7 +105,7 @@ namespace AutoBuildApp.DataAccess.Test
             };
             ResponseUAD expectedFailedUAD = new ResponseUAD()
             {
-                ResponseBool = false,
+                IsSuccessful = false,
                 ResponseString = AuthorizationResultType.NotAuthorized.ToString(),
         };
             return new List<object[]>()

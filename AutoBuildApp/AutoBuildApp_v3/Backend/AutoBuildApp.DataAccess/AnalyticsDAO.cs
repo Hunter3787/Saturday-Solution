@@ -111,7 +111,7 @@ namespace AutoBuildApp.DataAccess
                             if (!reader.HasRows) // use the bang!!!!!!! 
                             {
                                 _responseUAD.ResponseString = "No Data At The Moment";
-                                _responseUAD.ResponseBool = false;
+                                _responseUAD.IsSuccessful = false;
                                 return _responseUAD;
                             }
                             else
@@ -170,7 +170,7 @@ namespace AutoBuildApp.DataAccess
                 }
             }
             _responseUAD.ResponseString = "Successful Data retrieval";
-            _responseUAD.ResponseBool = true;
+            _responseUAD.IsSuccessful = true;
             return _responseUAD;
         }
 
