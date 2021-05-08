@@ -27,8 +27,6 @@ namespace AutoBuildApp.Managers.FeatureManagers
         // Creates the local instance for the logger
         private LoggingProducerService _logger;
 
-
-
         #endregion
 
 
@@ -149,7 +147,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
         //}
 
         // TURN INTO ASYNC 
-        public AnalyticsDataDTO GetChartData(int GraphType)
+        public AnalyticsDataDTO GetChartData(int graphType)
         {
             AnalyticsDataDTO dataDTO = new AnalyticsDataDTO();
             ResponseUAD responseUAD = new ResponseUAD();
@@ -166,7 +164,7 @@ namespace AutoBuildApp.Managers.FeatureManagers
                 return dataDTO;
 
             }
-            responseUAD = _uadDAO.GetGraphData((DBViews)GraphType);
+            responseUAD = _uadDAO.GetGraphData((DBViews)graphType);
             if (responseUAD.ResponseString.Equals(notAuthorized))
             {
 

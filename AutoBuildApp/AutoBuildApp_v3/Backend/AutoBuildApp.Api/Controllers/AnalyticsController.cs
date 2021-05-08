@@ -102,8 +102,10 @@ namespace AutoBuildApp.Api.Controllers
 
         }
 
+
+
         [HttpGet]
-        public IActionResult RetrieveGraphs(int GraphType)
+        public IActionResult RetrieveGraphs(int graphType)
         {
             //return Ok("good job");
             if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
@@ -115,7 +117,7 @@ namespace AutoBuildApp.Api.Controllers
                 return new StatusCodeResult(StatusCodes.Status403Forbidden);
             }
 
-            AnalyticsDataDTO dataDTO  = _analyticsManager.GetChartData(GraphType);
+            AnalyticsDataDTO dataDTO  = _analyticsManager.GetChartData(graphType);
            
 
             if (dataDTO.Result.Equals(AuthorizationResultType.NotAuthorized.ToString()))
