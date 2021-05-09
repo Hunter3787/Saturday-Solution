@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using AutoBuildApp.Api.HelperFunctions;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -9,15 +10,13 @@ using System.Threading.Tasks;
 namespace AutoBuildApp.Api.Controllers
 {
 
-    [EnableCors("CorsPolicy")] // applying the cors policy so that the client can
-    // make a call the this controller 
+    [EnableCors("CorsPolicy")]
+    [Route("[controller]")]
     [ApiController]
-    [Route("[controller]")] // the route
     public class HomeController : ControllerBase
     {
+        private static readonly string _defaultRoute = ConnectionManager.connectionManager.GetConnectionStringByName(ControllerGlobals.DEFAULT_ROUTE);
 
-
-        [HttpGet]
         [HttpGet]
         public IActionResult Index()
         {
@@ -25,5 +24,10 @@ namespace AutoBuildApp.Api.Controllers
 
         }
 
+        [HttpGet("Error")]
+        public IActionResult Error()
+        {
+            return Redirect(_defaultRoute);
+        }
     }
 }
