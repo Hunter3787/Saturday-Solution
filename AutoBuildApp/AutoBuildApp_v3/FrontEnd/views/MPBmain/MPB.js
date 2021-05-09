@@ -125,7 +125,6 @@ async function getItems() {
            } 
            return response.json()
           })
-        //.then(response => response.json()) // Will receive a response from the default response.json.
         .then(data => displayItems(data)) // will call the display items function.
         .then(() => findByName(searchFilter))
 }
