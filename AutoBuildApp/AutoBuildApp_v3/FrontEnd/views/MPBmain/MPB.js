@@ -78,6 +78,10 @@ function getFilterString()
       }
   }
 
+  if ((orderLikes === null || orderLikes === '') && (buildType === null || buildType === '')){
+    return '';
+  }
+
   // This creates a string that will be appended to the query string.
   const params = new URLSearchParams({
     buildType: buildType,
@@ -106,9 +110,11 @@ async function getItems() {
 
   let endpoint = appConfigurations.Endpoints.MostPopularBuilds;
   
-  if (endpoint === null || endpoint === '')
-  {
+  if (endpoint === null || endpoint === ''){
     endpoint = appConfigurations.Endpoints.default;
+  }
+  else{
+    endpoint = endpoint + getFilterString();
   }
 
     await fetch(endpoint, fetchRequest) // fetches the default URI
