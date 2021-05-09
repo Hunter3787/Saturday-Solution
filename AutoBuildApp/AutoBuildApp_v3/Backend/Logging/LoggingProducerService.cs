@@ -5,8 +5,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoBuildApp.Models;
-using AutoBuildApp.DomainModels;
-using AutoBuildApp.DomainModels.Enumerations;
 using Logging;
 using Logging.Globals;
 
@@ -75,9 +73,7 @@ namespace AutoBuildApp.Logging
         // Logger standard constructor, will establish connection when new logger is created.
         private LoggingProducerService() 
         {
-            // This will start the logging consumer manager in the background so that logs may be sent to the DB.
-            LoggingConsumerManager _loggingConsumerManager = new LoggingConsumerManager();
-            
+            // This will start the logging consumer manager in the background so that logs may be sent to the DB.            
             _connectionFactory = new ConnectionFactory(LoggingGlobals.USE_ASYNC_URI); // Stores the connection string.
             _connection = _connectionFactory.CreateConnection(); // Creates a connection to the connection string destination path.
             _connection.Start(); // Begins the connection to the specified location.
