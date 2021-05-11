@@ -137,3 +137,33 @@ td {
     border: 1px solid;
     padding: 5px;
 }
+
+  /******************************** Footer ************************************/  
+
+  footer {
+    padding: 10px;
+    background-color: darkgrey;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 150px;
+    width: 100%;
+    overflow: hidden;
+    margin-bottom: 0;
+    z-index: 1;
+    overflow-x: hidden;
+    text-align: center;
+    padding-bottom: 20px;
+  }
+  
+  footer .custom-a {
+    padding-right: 10px;
+  }
+  
+  footer .custom-a:hover {
+    color: whitesmoke;
+    padding-right: 10px;
+    color: #D35400;
+  }
+  
+  /********************************************************************/  
