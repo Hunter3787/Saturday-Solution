@@ -15,6 +15,8 @@ body {
     padding-bottom: 20px;
   }
 
+/******************************** Navigation Bar************************************/  
+
   .custom-nav {
     padding: 10px;
     text-align: left;
@@ -36,6 +38,10 @@ body {
     display: inline-block;
   }
 
+  .custom-nav .nav-title:hover {
+    cursor: pointer;
+  }
+
   .custom-nav .custom-a {
     color: whitesmoke;
     padding-right: 10px;
@@ -46,7 +52,6 @@ body {
     padding-right: 10px;
     color: #D35400;
   }
-
 
   .custom-nav .nav-button {
     padding: 10px;
@@ -81,6 +86,10 @@ body {
     box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
   }
 
+  /********************************************************************/  
+
+  /******************************** Header ************************************/  
+
   .formheader {
     padding: 10px;
     text-align: center;
@@ -93,6 +102,8 @@ body {
   .formheader .formtitle {
     color: whitesmoke;
   }
+
+  /********************************************************************/  
 
   .mpb{
   }
@@ -165,6 +176,7 @@ body {
   
   .main {
     margin-left: 220px;
+    margin-bottom: 150px;
     font-size: 28px; 
     padding: 0px 10px;
     overflow: hidden;
@@ -243,6 +255,8 @@ body {
     .sidenav a {font-size: 18px;}
   }
 
+  /******************************** Footer ************************************/  
+
 footer {
   padding: 10px;
   background-color: darkgrey;
@@ -251,7 +265,7 @@ footer {
   bottom: 0;
   height: 150px;
   width: 100%;
-  overflow:hidden;
+  overflow: hidden;
   margin-bottom: 0;
   z-index: 1;
   overflow-x: hidden;
@@ -268,3 +282,5 @@ footer .custom-a:hover {
   padding-right: 10px;
   color: #D35400;
 }
+
+/********************************************************************/  

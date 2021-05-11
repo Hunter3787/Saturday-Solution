@@ -86,28 +86,6 @@ body {
     box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
   }
 
-  /* @media screen and (max-width: 600px) {
-    .custom-nav a:not(:first-child) {display: none;}
-    .custom-nav a.icon {
-      float: right;
-      display: block;
-    }
-  }
-  
-  @media screen and (max-width: 600px) {
-    .custom-nav.responsive {position: relative;}
-    .custom-nav.responsive .icon {
-      position: absolute;
-      right: 0;
-      top: 0;
-    }
-    .custom-nav.responsive a {
-      float: none;
-      display: block;
-      text-align: left;
-    }
-  } */
-
   /********************************************************************/  
 
   /******************************** Header ************************************/  
@@ -115,7 +93,7 @@ body {
   .formheader {
     padding: 10px;
     text-align: center;
-    background: #9B59B6;
+    background: #46a6ff;
     color: white;
     overflow: auto hidden;
     height: 100px;
@@ -125,7 +103,10 @@ body {
     color: whitesmoke;
   }
 
-  /********************************************************************/ 
+  /********************************************************************/  
+
+
+
 
 
 input[type='submit'], button, [aria-label] {

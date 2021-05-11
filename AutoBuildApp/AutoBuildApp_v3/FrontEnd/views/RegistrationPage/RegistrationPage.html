@@ -9,7 +9,22 @@
 
 <body>
 
-    <h1>Registration Page</h1>
+    <div class="custom-nav">
+        <span>
+            <img src="/assets/images/Logo/Logo.png" alt="logo"/>
+            <h1 class="nav-title" onclick="location.href='/views/MPBmain/MPB.html'">AutoBuild</h1>
+            <a class="custom-a" href="/views/MPBmain/MPB.html">Home</a>
+            <a class="custom-a" href="">PC Builder and Upgrader</a>
+            <a class="custom-a" href="">Component Catalog</a>
+            <button type="button" class="nav-button" onclick="location.href='/views/LoginPage/LoginPage.html'">Login</button>
+            <button type="button" class="nav-button" onclick="location.href='/views/RegistrationPage/RegistrationPage.html'">Register</button>
+        </span>
+    </div>
+
+    <div class="formheader">
+        <h1 class="formtitle">Register</h1>
+    </div>
+
     <h3>Enter Credentials</h3>
     <form action="javascript:void(0);" method="POST" id="Register">
         <input type="text" id="add-username" placeholder="Username">
