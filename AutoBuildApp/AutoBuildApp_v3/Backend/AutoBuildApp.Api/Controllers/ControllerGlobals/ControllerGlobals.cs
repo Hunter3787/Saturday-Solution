@@ -6,5 +6,6 @@ namespace AutoBuildApp.Api.Controllers
         public const string LOCALHOST_CONNECTION = "MyConnection";
         public const string ADMIN_CREDENTIALS_CONNECTION = "DBAdmin";
         public const string DOCKER_CONNECTION = "DockerConnection";
+        public const string DEFAULT_ROUTE = "DefaultRoute";
     }
 }

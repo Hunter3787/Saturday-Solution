@@ -1,11 +1,10 @@
-﻿using AutoBuildApp.DomainModels.Enumerations;
-using AutoBuildApp.Models;
+﻿using AutoBuildApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logging
+namespace AutoBuildApp.Logging
 {
     // This allows the ILogger to be an interface and able to be implemented by other classes.
     public interface ILogger

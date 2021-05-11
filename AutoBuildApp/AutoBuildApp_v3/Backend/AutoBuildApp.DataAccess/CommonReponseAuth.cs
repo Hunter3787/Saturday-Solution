@@ -1,7 +1,7 @@
 ﻿using AutoBuildApp.DataAccess.Entities;
 using System;
 using AutoBuildApp.Models.DataTransferObjects;
-
+using AutoBuildApp.Logging;
 
 namespace AutoBuildApp.DataAccess
 {
@@ -14,6 +14,9 @@ namespace AutoBuildApp.DataAccess
     /// </summary>
     public class CommonReponseAuth : CommonResponse, IEquatable<CommonReponseAuth>
     {
+        // Initialize the logger service locally.
+        private readonly LoggingProducerService _logger;
+
 
         public bool connectionState { get; set; }
 
