@@ -8,5 +8,7 @@ namespace AutoBuildApp.Models.VendorLinking
     {
         public Dictionary<string, bool> FilteredListOfProducts { get; set; } = new Dictionary<string, bool>();
         public string PriceOrder { get; set; }
+        public int MinimumPrice { get; set; }
+        public int MaximumPrice { get; set; }
     }
 }

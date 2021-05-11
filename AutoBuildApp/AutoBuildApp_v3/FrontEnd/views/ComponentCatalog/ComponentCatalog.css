@@ -1,0 +1,123 @@
+.list-of-divs {
+    display:inline-block;
+    margin-left:400px;
+  }
+  
+  .inner-div {
+    margin-left: 500px;
+    margin-left: 280px;
+    display:block;
+    position:relative;
+  }
+  
+  .side-nav {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: rgb(231, 231, 231);
+    overflow-x: hidden;
+    padding-top: 20px;
+    border-right: 0px solid black;
+    padding-left:25px;
+  }
+  
+  .side-nav h1, h3{
+    text-align: center;
+  }
+  
+  .filter-button {
+    display: block; 
+    margin: 0 auto;
+    margin-top: 50px;
+  }
+  
+  textarea {
+    font-family:"Arial";
+    font-size:14px;
+    resize: none;
+    padding: 5px 5px 5px 5px;
+    margin-top:8px
+  }
+  
+  .large-photo {
+    position: absolute;
+    border: 1px solid black;
+  }
+  
+  .display-none {
+    display:none;
+  }
+  
+  .div-table {
+    display: table;   
+    margin-bottom: 100px;      
+    border: 1px solid black;         
+  }
+    
+  .div-table-row-header {
+    display: flex;
+    width: auto;
+    clear: both;
+    position: relative;
+  }
+  
+  .div-table-row-image {
+    float: left; 
+    width: 200px;
+    height: 75px;
+    display: flex;
+    position: relative;
+    line-height: 60px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;  
+    border: 1px solid black;
+    padding: 5px 5px 5px 5px;
+  }
+  
+  img {
+    text-align: center;
+    vertical-align: middle;
+    margin-bottom: 8px;
+  }
+  
+  .div-table-row { 
+    float: left; 
+    width: 200px;
+    height: 75px;
+    display: block;
+    position: relative;
+    text-align: center;
+    word-wrap: break-word;
+    overflow: auto;
+    border: 1px solid black;
+    padding: 5px 5px 5px 5px;
+  }
+  
+  .div-table-row.center {
+    line-height: 75px;
+  }
+  
+  .model-number-dropdown {
+    width:150px;
+    text-align: center;
+  }
+  
+  #model-number-dropdown option{
+    width:100px;
+    text-align: center;
+    background-color: black;
+  }
+
+
+  h4 {
+      font-size: 20px;
+  }
+
+  .title {
+      text-align: center;
+      font-size: 35px;
+  }
