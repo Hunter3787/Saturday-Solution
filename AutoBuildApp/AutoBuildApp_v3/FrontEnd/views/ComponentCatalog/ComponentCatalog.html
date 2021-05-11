@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Component Catalog</title>
+    <link rel="stylesheet" href="ComponentCatalog.css" />
+
+</head>
+
+<body>
+    <select class="model-number-dropdown">
+        <option>Model Number</option>
+    </select>
+
+    <h1 class="title">Component Catalog</h1>
+
+    <div class="list-of-divs">
+    </div>
+    <div class="side-nav">
+        <h1>Filters</h1>
+        <h3>Product Type</h3>
+
+        <input type="checkbox" class="checkbox-filter" name="build" id="motherboard-button" checked>
+        <label for="motherboard-button">Motherboard</label><br>
+        <input type="checkbox" class="checkbox-filter" name="build" id="cpu-button" checked>
+        <label for="cpu-button">CPU</label><br>
+        <input type="checkbox" class="checkbox-filter" name="build" id="gpu-button" checked>
+        <label for="gpu-button">GPU</label><br>
+        <input type="checkbox" class="checkbox-filter" name="build" id="case-button" checked>
+        <label for="case-button">Case</label><br>
+        <input type="checkbox" class="checkbox-filter" name="build" id="power supply-button" checked>
+        <label for="psu-button">Power Supply</label><br>
+        <input type="checkbox" class="checkbox-filter" name="build" id="ram-button" checked>
+        <label for="ram-button">RAM</label><br>
+        <input type="checkbox" class="checkbox-filter" name="build" id="ssd-button" checked>
+        <label for="ssd-button">SSD</label><br>
+        <input type="checkbox" class="checkbox-filter" name="build" id="hard drive-button" checked>
+        <label for="hd-button">HD</label><br>
+
+        <h3>Price</h3>
+        <input type="radio" class="checkbox-filter" name="likes" id="price_desc" checked>
+        <label for="F1">Most Expensive</label><br>
+        <input type="radio" class="checkbox-filter" name="likes" id="price_asc">
+        <label for="F1">Least Expensive</label><br>
+        <input type="radio" class="checkbox-filter" name="likes" id="name_asc">
+        <label for="F1">A to Z</label><br>
+        <input type="radio" class="checkbox-filter" name="likes" id="name_desc">
+        <label for="F1">Z to A</label><br>
+
+        <h4>Minimum Value
+            <input class='minimum-value-input' type="text" placeholder="Min">
+        </h4>
+        <h4>Maximum Value
+            <input class='maximum-value-input' type="text" placeholder="Max">
+        </h4>
+    </div>
+
+    <script src="ComponentCatalog.js" asp-append-version="true"></script>
+
+</body>
+
+</html>

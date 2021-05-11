@@ -293,6 +293,10 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         Console.Write("price\t");
                         string priceString = (price == null) || String.IsNullOrEmpty(price.ToString()) ? null : price.ToString();
 
+                        // Remove the $ and the ,
+                        priceString = priceString.Replace("$", "").Replace(",","");
+
+                        double priceDouble = Double.Parse(priceString);
                         // click ratings
                         //new egg
                         var numberOfReviewsBeforeReload = await page.EvaluateExpressionAsync(reviewerNameQuerySelector);
@@ -327,6 +331,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         //{
 
                             totalStarRating = await page.EvaluateExpressionAsync("document.querySelector('.rating-views .rating-views-num').innerText");
+
                         //}
                             Console.Write("totalStarRating\t");
 
@@ -336,14 +341,23 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         }
 
                         string totalStarRatingString = "0";
+                        double totalStarRatingDouble = 0;
+
                         if (totalStarRating != null) {
                             totalStarRatingString = totalStarRating.ToString()[0].ToString();
+                            totalStarRatingDouble = Double.Parse(totalStarRatingString);
                         }
 
+
                         string totalNumberOfReviewsString = "0";
+                        int totalNumberOfReviewsInt = 0;
+
                         if(totalNumberOfReviews != null)
                         {
                             totalNumberOfReviewsString = totalNumberOfReviews.ToString().Split(' ')[0];
+                            totalNumberOfReviewsString = totalNumberOfReviewsString.Replace("$", "").Replace(",", "");
+
+                            totalNumberOfReviewsInt = Int32.Parse(totalNumberOfReviewsString);
                         }
 
 
@@ -374,7 +388,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         string brand = specsVals.ElementAt(brandIndex).ToString();
                         companyName = companyName.ToLower();
                         Models.WebCrawler.Product product = new Models.WebCrawler.Product(imageUrl.ToString(), availability, companyName, url, modelNumber, title.ToString(), productType,
-                            brand, totalStarRatingString, totalNumberOfReviewsString, priceString, specsDictionary, reviews);
+                            brand, totalStarRatingDouble, totalNumberOfReviewsInt, priceDouble, specsDictionary, reviews);
 
                         // amazon
                         //var reviewsLink = await page.EvaluateExpressionAsync("document.querySelector('[data-hook=see-all-reviews-link-foot]').href");
