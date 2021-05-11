@@ -21,7 +21,7 @@ namespace AutoBuildApp.Api.Controllers
 
     public class UserManagementController : Controller
     {
-        private List<string> _allowedRoles; //specify roles
+        private List<string> _adminRoles; //specify roles
         private readonly LoggingProducerService _logger = LoggingProducerService.GetInstance;
 
         // UMDAO has the connection string
@@ -29,7 +29,7 @@ namespace AutoBuildApp.Api.Controllers
 
         public UserManagementController()
         {
-            _allowedRoles = new List<string>()
+            _adminRoles = new List<string>()
             { RoleEnumType.SystemAdmin,
               RoleEnumType.DelegateAdmin};
         }
@@ -89,7 +89,7 @@ namespace AutoBuildApp.Api.Controllers
         [HttpGet]
         public IActionResult GetAllUserAccounts()
         {
-            if (!AuthorizationCheck.IsAuthorized(_allowedRoles))
+            if (!AuthorizationCheck.IsAuthorized(_adminRoles))
             {
                 _logger.LogWarning("Unauthorized Access!!!");
 
