@@ -9,16 +9,155 @@
         <link rel="stylesheet" href="GarageStyles.css">
     </head>
     <body>
-        <div class="header">
-            <h1 class="garage-name">Garage</h1>
+        <div class="custom-nav">
+            <span>
+                <img src="/assets/images/Logo/Logo.png" alt="logo"/>
+                <h1 class="nav-title" onclick="location.href='/views/MPBmain/MPB.html'">AutoBuild</h1>
+                <a class="custom-a" href="/views/MPBmain/MPB.html">Home</a>
+                <a class="custom-a" href="">PC Builder and Upgrader</a>
+                <a class="custom-a" href="">Component Catalog</a>
+                <button type="button" class="nav-button" onclick="location.href='/views/LoginPage/LoginPage.html'">Login</button>
+                <button type="button" class="nav-button" onclick="location.href='/views/RegistrationPage/RegistrationPage.html'">Register</button>
+            </span>
         </div>
-        <div id="garage-nav" class="sidenav">
+    
+        <div class="formheader">
+            <h1 class="formtitle">User Garage</h1>
+        </div>
 
+        <div class="sidenav">
+            <h1>Filters</h1>
+            <h3>Search:</h3>
+                <input type="text" class="search-filter" id="sbn" placeholder="name">
+            <h3>Star Ratings</h3>
+                <input type="radio" class="checkbox-filter" name="rating" id="rating1" value="">
+                <label for="F1">Most</label><br>
+                <input type="radio" class="checkbox-filter" name="rating" id="rating2" value="">
+                <label for="F1">Least</label><br>
+            <h3>Date Created</h3>
+                <input type="radio" class="checkbox-filter" name="created" id="created1" value="">
+                <label for="F1">Recent</label><br>
+                <input type="radio" class="checkbox-filter" name="created" id="created2" value="">
+                <label for="F1">Old</label><br>
+            <h3>Images</h3>
+                <input type="radio" class="checkbox-filter" name="images" id="images1" value="">
+                <label for="F1">Images</label><br>
+                <input type="radio" class="checkbox-filter" name="images" id="images2" value="">
+                <label for="F1">No Images</label><br>
+            <h3>My Creations</h3>
+                <input type="radio" class="checkbox-filter" name="creations" id="creations1" value="">
+                <label for="F1">All</label><br>
+                <input type="radio" class="checkbox-filter" name="creations" id="creations2" value="">
+                <label for="F1">Created by Me</label><br>
         </div>
-        <div class="shelf-region">
-            <select id="shelf-dropdown">
-                <option>Option 1</option>
-            </select>
+
+        <div class="garage-container">
+            <div class="dropdown">
+                <h2>Select a Shelf</h2>
+                <select id="shelf-dropdown">
+                    <option>Option 1</option>
+                    <option>Option 2</option>
+                    <option>Option 3</option>
+                </select>
+            </div>
+
+            <div class="shelf">
+                <div class="item-details">
+                    <h4>Item Name</h4>
+                    <h4>Detail 1</h4>
+                    <h4>Detail 2</h4>
+                    <h4>Detail 3</h4>
+                </div>
+                <div class="items">
+                    <a href="">Item 1</a>
+                    <a href="">Item 2</a>
+                    <a href="">Item 3</a>
+                    <a href="">Item 4</a>
+                    <a href="">Item 5</a>
+                    <a href="">Item 6</a>
+                    <a href="">Item 7</a>
+                    <a href="">Item 8</a>
+                    <a href="">Item 9</a>
+                    <a href="">Item 10</a>
+                    <a href="">Item 11</a>
+                    <a href="">Item 12</a>
+                    <a href="">Item 13</a>
+                    <a href="">Item 14</a>
+                </div>
+            </div>
+
+            <h1>Builds</h1>
+
+            <div class="build-container">
+                <div class="build-details-container">
+                    <div class="build-details">
+                        <div class="thumbnail">
+                            <div class="image">
+                                <img src="/assets/BruceLee.png" alt="build-image">
+                            </div>
+                            <div class="name">
+                                <h4>Build Name</h4>
+                            </div>                        
+                        </div>
+                        <div class="details">
+                            <h5>Details</h5>
+                            <h3>Price</h3>
+                        </div>
+                    </div>
+                    <div class="build-details">
+                        <div class="thumbnail">
+                            <div class="image">
+                                <img src="/assets/BruceLee.png" alt="build-image">
+                            </div>
+                            <div class="name">
+                                <h4>Build Name</h4>
+                            </div>                        
+                        </div>
+                        <div class="details">
+                            <h5>Details</h5>
+                            <h3>Price</h3>
+                        </div>
+                    </div>
+                    <div class="build-details">
+                        <div class="thumbnail">
+                            <div class="image">
+                                <img src="/assets/BruceLee.png" alt="build-image">
+                            </div>
+                            <div class="name">
+                                <h4>Build Name</h4>
+                            </div>                        
+                        </div>
+                        <div class="details">
+                            <h5>Details</h5>
+                            <h3>Price</h3>
+                        </div>
+                    </div>
+                    <div class="build-details">
+                        <div class="thumbnail">
+                            <div class="image">
+                                <img src="/assets/BruceLee.png" alt="build-image">
+                            </div>
+                            <div class="name">
+                                <h4>Build Name</h4>
+                            </div>                        
+                        </div>
+                        <div class="details">
+                            <h5>Details</h5>
+                            <h3>Price</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="shelf-region">
+            <div class="">
+                <select id="shelf-dropdown">
+                    <option>Option 1</option>
+                    <option>Option 2</option>
+                    <option>Option 3</option>
+                </select>
+            </div>
             <div id="shelf" class="shelf-view">
                 <div class="component-card">
                     <div class="card-content">
@@ -36,7 +175,13 @@
 
                 </div>
             </div>
-        </div>
+        </div> -->
+
+        <footer>
+            <span>&copy; 2021</span>
+            <a class="custom-a" href="/views/Privacy-Policy/PrivacyPolicy.html">Privacy Policy</a>
+        </footer>
+
         <script src="GaragePage.js" asp-append-version="true"></script>
     </body>
 </html>
