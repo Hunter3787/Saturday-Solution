@@ -8,29 +8,6 @@ h1 {
 h3 {
     font-size: 25px;
 }
-/* star stuff */
-/*
-
-.star label::before{
-    content:'★';
-}
-/* .stars label::before{
-    content: '★★★★★';
-    text-align: center;
-    font-size: 75px;
-    color: grey;
-    display:table;
-    text-shadow: 1px 1px #bbb;
-    width: 50%;
-    margin: 0 auto;
-    background: linear-gradient(to right, blue 50%, yellow 50%)
-} 
-
-.stars input{
-    display:none;
-}
-
-*/
 
 .image-rating-review{
     text-align: center;
@@ -80,9 +57,7 @@ text {
 .vendor-information-table{
      margin:auto;
     margin-top:100px;
-    /* width:50%  */
   display: table;   
-  /* margin-bottom: 100px;       */
   border: 1px solid black;         
 }
 
@@ -90,7 +65,6 @@ text {
     float: left; 
     width: 200px;
     height: 60px;
-    /* line-height: 75px; */
     display: block;
     position: relative;
     text-align: center;
@@ -110,7 +84,6 @@ text {
     overflow: auto;
     border: 1px solid black;
     padding: 5px 5px 5px 5px;
-    /* font-size:20px; */
   }
 
   .vendor-information-row-header {

@@ -238,7 +238,6 @@ async function addItem() {
   })
   // Display the output message to the screen
   .then(response => {
-    console.log(response);
     if(response.ok) {
       alert('correct');
     }
@@ -348,7 +347,6 @@ async function submitDeleteItem(modelNumber, newDivRow) {
   .then(await getAllModelNumbers())
   .then(async data => await displayItemsFilter(data));
 
-  console.log('hey');
 }
 
 // Display all items with the set of filters

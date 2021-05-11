@@ -78,6 +78,10 @@ function getFilterString()
       }
   }
 
+  if ((orderLikes === null || orderLikes === '') && (buildType === null || buildType === '')){
+    return '';
+  }
+
   // This creates a string that will be appended to the query string.
   const params = new URLSearchParams({
     buildType: buildType,
@@ -104,10 +108,23 @@ var refreshData = setInterval(looping, 3000);
 // This function will call a fetch request.
 async function getItems() {
 
-  let endpoint = appConfigurations.Endpoints.MostPopularBuilds || '';
+  let endpoint = appConfigurations.Endpoints.MostPopularBuilds;
+  
+  if (endpoint === null || endpoint === ''){
+    endpoint = appConfigurations.Endpoints.default;
+  }
+  else{
+    endpoint = endpoint + getFilterString();
+  }
 
-    await fetch(endpoint + getFilterString(), fetchRequest) // fetches the default URI
-        .then(response => response.json()) // Will receive a response from the default response.json.
+    await fetch(endpoint, fetchRequest) // fetches the default URI
+        .then(function(response) {
+           if(response.redirected){
+             console.log(response.url)
+            window.location.href = response.url
+           } 
+           return response.json()
+          })
         .then(data => displayItems(data)) // will call the display items function.
         .then(() => findByName(searchFilter))
 }

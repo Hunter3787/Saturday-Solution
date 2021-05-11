@@ -38,7 +38,7 @@ namespace AutoBuildApp.DataAccess
 
             using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
-                Console.WriteLine($"\t METHOD \n");
+                //Console.WriteLine($"\t METHOD \n");
                 conn.Open();
                 // naming convention SP_ name of procudrure
                 string SP_INSERTLOGS = "INSERTLOGS";
@@ -65,7 +65,7 @@ namespace AutoBuildApp.DataAccess
 
                         #endregion
                         var reader = command.ExecuteNonQuery();
-                        Console.WriteLine(reader.ToString());
+                        //Console.WriteLine(reader.ToString());
 
                         command.Transaction.Commit();
                         if (reader >= 1)
@@ -77,7 +77,7 @@ namespace AutoBuildApp.DataAccess
                     }
                     catch (SqlException e)
                     {
-                        Console.WriteLine(e.Message);
+                        //Console.WriteLine(e.Message);
                         command.Transaction.Rollback();
 
                         return false;

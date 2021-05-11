@@ -16,7 +16,6 @@ namespace AutoBuildApp.DataAccess
     /// </summary>
     public class ProductDetailsDAO
     {
-        private List<string> _allowedRoles;
         private string _connectionString;
 
         /// <summary>
@@ -26,11 +25,6 @@ namespace AutoBuildApp.DataAccess
         public ProductDetailsDAO(string connectionString)
         {
             _connectionString = connectionString;
-            _allowedRoles = new List<string>()
-            {
-                RoleEnumType.SystemAdmin,
-                RoleEnumType.VendorRole
-            };
         }
 
         /// <summary>
@@ -38,10 +32,20 @@ namespace AutoBuildApp.DataAccess
         /// </summary>
         /// <param name="modelNumber">takes in the model number of the product retrieved</param>
         /// <returns>returns a system code with a ProductDetailDTO.</returns>
-        public SystemCodeWithObject<ProductDetailsDTO> GetProductByModelNumber(string modelNumber)
+        public virtual SystemCodeWithObject<ProductDetailsDTO> GetProductByModelNumber(string modelNumber)
         {
+
             // Initialize the system code response object with a Product as the generic object
             SystemCodeWithObject<ProductDetailsDTO> response = new SystemCodeWithObject<ProductDetailsDTO>();
+
+            // Check if model number is null or empty
+            if (String.IsNullOrEmpty(modelNumber))
+            {
+                response.Code = AutoBuildSystemCodes.NullValue;
+                response.GenericObject = null;
+
+                return response;
+            }
 
             // Initialize the Product
             ProductDetailsDTO product = new ProductDetailsDTO();
@@ -81,7 +85,7 @@ namespace AutoBuildApp.DataAccess
                             // If the reader returns 0 rows, then the model number doesn't exist in our database
                             if(!reader.HasRows)
                             {
-                                response.Code = AutoBuildSystemCodes.NullValue;
+                                response.Code = AutoBuildSystemCodes.NoEntryFound;
                                 response.GenericObject = null;
 
                                 return response;
@@ -124,7 +128,6 @@ namespace AutoBuildApp.DataAccess
                             while (reader.Read())
                             {
                                 string vendorName = (string)reader["vendorName"];
-
 
                                 // Instantiate review and populate it
                                 Review review = new Review();
@@ -188,8 +191,19 @@ namespace AutoBuildApp.DataAccess
         /// </summary>
         /// <param name="modelNumber">takes in the model number of the product to be put on the email list with an email</param>
         /// <returns>returns a system code </returns>
-        public AutoBuildSystemCodes AddEmailToEmailListForProduct(string modelNumber)
+        public virtual SystemCodeWithObject<int> AddEmailToEmailListForProduct(string modelNumber)
         {
+            SystemCodeWithObject<int> response = new SystemCodeWithObject<int>();
+
+            // Check if model number is null or empty
+            if (String.IsNullOrEmpty(modelNumber))
+            {
+                response.Code = AutoBuildSystemCodes.NullValue;
+                response.GenericObject = -1;
+
+                return response;
+            }
+
             // Get the current principal on the thread
             ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
             string username = _threadPrinciple.Identity.Name;
@@ -206,24 +220,27 @@ namespace AutoBuildApp.DataAccess
                         string sql = "insert into emaillist (email, productID) values" +
                             "((select email from useraccounts where userid = (select userid from mappinghash where userhashid = (select userhashid from usercredentials where username = @username))), " +
                             "(select productid from products where modelnumber = @modelnumber));";
-                            //"(select username from usercredentials where username = @USERNAME)), (select productID from products where modelNumber = @MODELNUMBER))";
 
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
                         adapter.InsertCommand.Parameters.Add("@USERNAME", SqlDbType.VarChar).Value = username;
                         adapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = modelNumber;
 
+                        int rowsReturned = adapter.InsertCommand.ExecuteNonQuery();
 
-                        adapter.InsertCommand.ExecuteNonQuery();
                         transaction.Commit();
 
-                        return AutoBuildSystemCodes.Success;
+                        response.Code = AutoBuildSystemCodes.Success;
+                        response.GenericObject = rowsReturned;
+
+                        return response;
                     }
                     catch (SqlException ex)
                     {
-                        transaction.Rollback();
-
                         // Passes the exception number to a handler which returns an AutoBuildSystemCode
-                        return SqlExceptionHandler.GetCode(ex.Number);
+                        response.Code = SqlExceptionHandler.GetCode(ex.Number);
+                        response.GenericObject = -1;
+
+                        return response;
                     }
                 }
             }

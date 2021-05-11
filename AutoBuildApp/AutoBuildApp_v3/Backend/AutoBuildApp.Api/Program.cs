@@ -1,5 +1,6 @@
 using AutoBuildApp.Api.Controllers;
 using AutoBuildApp.Api.HelperFunctions;
+using AutoBuildApp.Logging;
 using AutoBuildApp.Models;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.WebCrawler;
@@ -21,6 +22,7 @@ namespace AutoBuildApp.Api
     {
         public static void Main(string[] args)
         {
+            LoggingConsumerManager _loggingConsumerManager = new LoggingConsumerManager();
             #region Daniel web crawler
             //new Thread(() =>
             //{

@@ -320,16 +320,17 @@ namespace AutoBuildApp.DataAccess
                         adapter.InsertCommand.Parameters.Add("@LISTINGNAME", SqlDbType.VarChar).Value = product.Name;
                         adapter.InsertCommand.Parameters.Add("@VENDORLINKURL", SqlDbType.VarChar).Value = product.Url;
                         adapter.InsertCommand.Parameters.Add("@PRODUCTSTATUS", SqlDbType.VarChar).Value = product.Availability ;
-                        if(product.Price == null)
-                        {
-                            adapter.InsertCommand.Parameters.Add("@PRODUCTPRICE", SqlDbType.Decimal).Value = DBNull.Value;
-                        }
-                        else
-                        {
-                            adapter.InsertCommand.Parameters.Add("@PRODUCTPRICE", SqlDbType.Decimal).Value = Double.Parse(product.Price.Replace("$", "").Replace(",", ""));
-                        }
-                        adapter.InsertCommand.Parameters.Add("@RATING", SqlDbType.VarChar).Value = product.TotalRating;
-                        adapter.InsertCommand.Parameters.Add("@REVIEWS", SqlDbType.VarChar).Value = product.TotalNumberOfReviews;
+                        //if(product.Price == null)
+                        //{
+                        //    adapter.InsertCommand.Parameters.Add("@PRODUCTPRICE", SqlDbType.Decimal).Value = DBNull.Value;
+                        //}
+                        //else
+                        //{
+                        //    adapter.InsertCommand.Parameters.Add("@PRODUCTPRICE", SqlDbType.Decimal).Value = Double.Parse(product.Price.Replace("$", "").Replace(",", ""));
+                        //}
+                        adapter.InsertCommand.Parameters.Add("@PRODUCTPRICE", SqlDbType.Decimal).Value = product.Price;
+                        adapter.InsertCommand.Parameters.Add("@RATING", SqlDbType.Decimal).Value = product.TotalRating;
+                        adapter.InsertCommand.Parameters.Add("@REVIEWS", SqlDbType.BigInt).Value = product.TotalNumberOfReviews;
 
                         adapter.InsertCommand.ExecuteNonQuery();
                         

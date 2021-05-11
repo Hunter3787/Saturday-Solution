@@ -2,7 +2,7 @@
 /// References used from file: Solution Items/References.txt 
 /// [1]
 /// </summary>
-namespace AutoBuildApp.DomainModels.Enumerations
+namespace AutoBuildApp.Logging
 {
     /// <summary>
     /// This is the enumeration class to differetiate between log levels.

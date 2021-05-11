@@ -1,10 +1,12 @@
 ﻿using AutoBuildApp.Api.HelperFunctions;
+using AutoBuildApp.DataAccess;
 using AutoBuildApp.Logging;
 using AutoBuildApp.Managers.FeatureManagers;
 using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.Models.VendorLinking;
 using AutoBuildApp.Security;
 using AutoBuildApp.Security.Enumerations;
+using AutoBuildApp.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +28,8 @@ namespace AutoBuildApp.Api.Controllers
         private LoggingProducerService _logger = LoggingProducerService.GetInstance;
         private List<string> _allowedRoles;
         private VendorLinkingManager _vendorLinkingManager;
+        private VendorLinkingService _vendorLinkingService;
+        private VendorLinkingDAO _vendorLinkingDAO;
 
         /// <summary>
         /// The default constructor to initalize the controller. Initializes and sets the allowed roles and creates a VendorLinkingManager object.
@@ -33,12 +37,14 @@ namespace AutoBuildApp.Api.Controllers
         public VendorLinkingController()
         {
             _allowedRoles = new List<string>()
-            { 
-                RoleEnumType.SystemAdmin,
+            {
                 RoleEnumType.VendorRole
             };
 
-            _vendorLinkingManager = new VendorLinkingManager(ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
+            // Initializes each layer and passes into the respective layer
+            _vendorLinkingDAO = new VendorLinkingDAO(ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
+            _vendorLinkingService = new VendorLinkingService(_vendorLinkingDAO);
+            _vendorLinkingManager = new VendorLinkingManager(_vendorLinkingService);
         }
 
         /// <summary>
@@ -63,13 +69,6 @@ namespace AutoBuildApp.Api.Controllers
             // If DTOCommonResponse is false, the request failed to convert the form to the product
             if (!dtoCommonResponse.IsSuccessful)
             {
-                //ContentResult result = new ContentResult();
-                //result.StatusCode = StatusCodes.Status400BadRequest;
-                //result.ContentType = "text/plain";
-                //result.Content = "yooo";
-                ////return HttpStatusCodeResult(403, "hey");
-                ////return Content(new StatusCodeResult(StatusCodes.Status400BadRequest), "hey");
-                //return result;
                 _logger.LogWarning("AddProductToVendorListOfProducts failed.");
                 return new StatusCodeResult(StatusCodes.Status400BadRequest);
             }
@@ -85,8 +84,6 @@ namespace AutoBuildApp.Api.Controllers
 
             _logger.LogInformation("EditProductInVendorListOfProducts succeeded.");
             return Ok();
-
-
         }
 
         /// <summary>
@@ -203,7 +200,7 @@ namespace AutoBuildApp.Api.Controllers
             }
 
             // Takes the filters and the order from the front end and converts it into a GetProductByFilterDTO
-            CommonResponseWithObject<GetProductByFilterDTO> dtoCommonResponse = _vendorLinkingManager.ConvertToGetProductByFilterDTO(filtersString, order);
+            CommonResponseWithObject<ProductByFilterDTO> dtoCommonResponse = _vendorLinkingManager.ConvertToGetProductByFilterDTO(filtersString, order);
 
             // If dtoCommonResponse is false, the request failed to convert to ProductByFilterDTO
             if (!dtoCommonResponse.IsSuccessful)
