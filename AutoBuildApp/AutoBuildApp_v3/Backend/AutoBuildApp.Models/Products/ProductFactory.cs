@@ -10,7 +10,7 @@ namespace AutoBuildApp.Models.Products
             switch (productType)
             {
                 case ProductType.Case:
-                    return new Component();
+                    return new ComputerCase();
                 case ProductType.Cooler:
                     return new WaterCooler();
                 case ProductType.CPU:

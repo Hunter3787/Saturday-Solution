@@ -4,7 +4,7 @@ using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Services.FactoryServices;
 using AutoBuildApp.Services.RecommendationServices;
-using AutoBuildApp.Services.CatalogServices;
+using AutoBuildApp.Services;
 using AutoBuildApp.DataAccess;
 using AutoBuildApp.Security.FactoryModels;
 using AutoBuildApp.Security.Interfaces;
@@ -138,7 +138,7 @@ namespace AutoBuildApp.Managers
                 requestedType,
                 adjustedBudget);
 
-            products = getter.GetProductDictionary(portionedList);
+            products = getter.GetComponentDictionary(portionedList);
             ScoreProductDictionary(products, scores, requestedType);
 
             // Business rule to create 5 builds and return them all.

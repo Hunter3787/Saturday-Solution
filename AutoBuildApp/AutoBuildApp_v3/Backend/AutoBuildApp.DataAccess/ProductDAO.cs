@@ -81,7 +81,7 @@ namespace AutoBuildApp.DataAccess
 
                             ProductEntity tempEntity = new ProductEntity()
                             {
-                                Type = (string)reader[ProductTableColumns.PRODUCT_COLUMN_TYPE],
+                                ProductType = (string)reader[ProductTableColumns.PRODUCT_COLUMN_TYPE],
                                 // Name = (string)reader[ProductTableColumns.PRODUCT_COLUMN_NAME],
                                 Manufacturer = (string)reader[ProductTableColumns.PRODUCT_COLUMN_MANUFACTURER],
                                 Model = (string)reader[ProductTableColumns.PRODUCT_COLUMN_MODEL]
