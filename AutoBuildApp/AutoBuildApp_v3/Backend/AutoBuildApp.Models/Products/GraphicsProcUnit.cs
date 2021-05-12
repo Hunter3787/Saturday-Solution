@@ -1,4 +1,5 @@
 ﻿using AutoBuildApp.Models.Interfaces;
+using AutoBuildApp.Models.Enumerations;
 
 /**
  * Graphics Processing Unit class for use with AutoBuild App
@@ -36,6 +37,7 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         public GraphicsProcUnit() : base()
         {
+            ProductType = ProductType.GPU;
         }
     }
 }

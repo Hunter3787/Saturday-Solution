@@ -9,6 +9,7 @@ namespace AutoBuildApp.Models.Builds
     public class Build : IBuild, IEquatable<Build>
     {
         public string BuildName;
+        public SolidStateDrive SSD { get; set; }
         public List<IHardDrive> HardDrives { get; set; }
         public ComputerCase Case { get; set; }
         public Motherboard Mobo { get; set; }
@@ -22,6 +23,7 @@ namespace AutoBuildApp.Models.Builds
 
         public Build()
         {
+            SSD = new SolidStateDrive();
             HardDrives = new List<IHardDrive>();
             Case = new ComputerCase();
             Mobo = new Motherboard();

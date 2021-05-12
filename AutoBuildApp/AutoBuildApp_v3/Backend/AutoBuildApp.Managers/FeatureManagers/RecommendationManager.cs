@@ -71,10 +71,10 @@ namespace AutoBuildApp.Managers
             int hddCount)
         {
             #region Guards
-            if (!AuthorizationService.CheckPermissions(_unregistered.Claims()))
-            {
-                throw new UnauthorizedAccessException("Unauthorized user");
-            }
+            //if (!AuthorizationService.CheckPermissions(_unregistered.Claims()))
+            //{
+            //    throw new UnauthorizedAccessException("Unauthorized user");
+            //}
             
             if (initialBudget < RecBusinessGlobals.MIN_BUDGET)
             {
@@ -127,12 +127,14 @@ namespace AutoBuildApp.Managers
             if(hddType != HardDriveType.None
                 && hddCount > RecBusinessGlobals.MIN_INTEGER_VALUE)
             {
-                var hddToAdd = driveFacorty.CreateHardDrive(hddType);
-                prototype.AddHardDrive(hddToAdd);
+                //var hddToAdd = driveFacorty.CreateHardDrive(hddType);
+                //prototype.AddHardDrive(hddToAdd);
             }
             #endregion
 
             var componentList = parser.CreateComponentList(prototype);
+            componentList.RemoveAt(7);
+            //componentList.Add(new HardDrive());
             var portionedList = portioner.PortionOutBudget(
                 componentList,
                 requestedType,
@@ -141,13 +143,23 @@ namespace AutoBuildApp.Managers
             products = getter.GetComponentDictionary(portionedList);
             ScoreProductDictionary(products, scores, requestedType);
 
+            SortByPriceDesc(products);
             // Business rule to create 5 builds and return them all.
-            for (int i = 0; i < RecBusinessGlobals.BUILDS_TO_RETURN; i++)
+            for (int i = 0; i < 1; i++)
             {
                 Build build = buildFactory.CreateBuild(requestedType);
                 // Add preselected peripherals.
                 build.Peripherals = peripherals;
 
+                build.Mobo = (Motherboard)products[ProductType.Motherboard][0];
+                build.Cpu = (CentralProcUnit)products[ProductType.CPU][0];
+                build.Ram = (RAM)products[ProductType.RAM][0];
+                build.Case = (ComputerCase)products[ProductType.Case][0];
+                build.Gpu = (GraphicsProcUnit)products[ProductType.GPU][0];
+                build.Psu = (PowerSupplyUnit)products[ProductType.PSU][0];
+                build.SSD = (SolidStateDrive)products[ProductType.SSD][0];
+                //build.AddHardDrive((HardDrive)products[ProductType.HDD][0]);
+                //build.HardDrives.Add((HardDrive)products[ProductType.HDD][0]);
 
                 // Get the highest scored mother board.
                 // Find compatable CPU, RAM, and Case
@@ -231,5 +243,16 @@ namespace AutoBuildApp.Managers
             }
         }
         #endregion
+
+        private void SortByPriceDesc(Dictionary<ProductType, List<IComponent>> products)
+        {
+            foreach(var keyValue in products)
+            {
+                keyValue.Value.Sort(delegate (IComponent x, IComponent y)
+                {
+                    return y.Price.CompareTo(x.Price);
+                });
+            }
+        }
     }
 }
