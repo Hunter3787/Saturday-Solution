@@ -119,7 +119,7 @@ namespace AutoBuildApp.Services
                 output.ModelNumber = toCreate.Model;
                 output.AddImage(toCreate.ImageURL);
 
-                //FillComponentSpecs(toCreate, output);                
+                FillComponentSpecs(toCreate, output);                
             }
             catch (ArgumentException)
             {
