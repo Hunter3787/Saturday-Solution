@@ -12,7 +12,7 @@ namespace AutoBuildApp.Models.Products
     {
         #region "Field Declarations: get; set;"
         public string Socket { get; set; }
-        public MoboFormFactor MoboForm{ get; set; }
+        public string MoboForm{ get; set; }
         public string Chipset { get; set; }
         public string MaxMemory { get; set; }
         public MemoryType MaxMemoryType { get; set; }
