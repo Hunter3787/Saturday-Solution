@@ -79,7 +79,7 @@ namespace AutoBuildApp.Api
 
             //    List<StartingLink> listOfLinks = new List<StartingLink>
             //    {
-            //        //new StartingLink("https://www.newegg.com/AMD-Motherboards/SubCategory/ID-22/Page-1?Tid=7625", "motherboard"),
+            //        new StartingLink("https://www.newegg.com/AMD-Motherboards/SubCategory/ID-22/Page-1?Tid=7625", ProductType.Motherboard.ToString()),
             //        new StartingLink("https://www.newegg.com/Processors-Desktops/SubCategory/ID-343/Page-1?Tid=7671", ProductType.CPU.ToString()),
             //        new StartingLink("https://www.newegg.com/p/pl?cm_sp=Cat_Motherboards_2-_-Visnav-_-Intel-Motherboards_1&page=1&N=100007627", ProductType.Motherboard.ToString()),
             //        new StartingLink("https://www.newegg.com/Desktop-Graphics-Cards/SubCategory/ID-48/Page-1?Tid=7709", ProductType.GPU.ToString()),
@@ -89,7 +89,7 @@ namespace AutoBuildApp.Api
             //        new StartingLink("https://www.newegg.com/Internal-SSDs/SubCategory/ID-636/Page-1?Tid=11693", ProductType.SSD.ToString()),
             //        new StartingLink("https://www.newegg.com/Desktop-Internal-Hard-Drives/SubCategory/ID-14/Page-1?Tid=167523", ProductType.HDD.ToString())
             //    };
-            //    WebCrawlerService wcs = new WebCrawlerService(ConnectionManager.connectionManager.GetConnectionStringByName(ControllerGlobals.DOCKER_CONNECTION));
+            //    WebCrawlerService wcs = new WebCrawlerService(ConnectionManager.connectionManager.GetConnectionStringByName(ControllerGlobals.ADMIN_CREDENTIALS_CONNECTION));
             //    //List<string> allLinks = AsyncContext.Run(() => wcs.grabHrefLinksFromPageAsync("https://www.amazon.com/s?k=Computer+CPU+Processors&i=computers&rh=n%3A229189&page=1&_encoding=UTF8&c=ts&qid=1617671746&ts_id=229189&ref=sr_pg_2",
             //    //    "page=", "Array.from(document.querySelectorAll('.a-size-mini.a-spacing-none.a-color-base.s-line-clamp-2 .a-link-normal.a-text-normal')).map(a=>a.href)", "https://www.amazon.com", amazonBlackList));
 

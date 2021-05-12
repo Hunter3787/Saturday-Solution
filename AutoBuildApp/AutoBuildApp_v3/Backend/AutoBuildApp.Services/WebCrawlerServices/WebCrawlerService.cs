@@ -56,22 +56,25 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             vendors = webCrawlerDAO.GetAllVendors();
             modelNumbers = webCrawlerDAO.GetAllModelNumbers();
             vendorsProducts = webCrawlerDAO.GetAllVendorsProducts();
-            //allProxies = AsyncContext.Run(() => getAllProxiesAsync());
-            //currentProxy = allProxies[0];
-            currentProxy = new Proxy("208.80.28.208", 8080);
+            //
+            allProxies = AsyncContext.Run(() => getAllProxiesAsync());
+            currentProxy = allProxies[0];
+            //
+            //currentProxy = new Proxy("208.80.28.208", 8080);
 
             options = new LaunchOptions()
             {
                 Headless = true,
                 IgnoreHTTPSErrors = true,
-                //ExecutablePath = @"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", // added per danny
-                ExecutablePath = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+                //ExecutablePath = @"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", 
+                ExecutablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe",// added per danny
+                //ExecutablePath = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
                 Args = new[] {
-                        //$"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}", // ganna take a while = dannu
+                        $"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}", // ganna take a while = dannu
                         //"--proxy-server=23.251.138.105:8080",
                         //"--proxy-server=201.45.163.114:80",
-                        "--proxy-server=208.80.28.208:8080",
-                        //"--proxy-server=183.88.226.50:8080",
+                        //"--proxy-server=208.80.28.208:8080",
+                        ////"--proxy-server=183.88.226.50:8080",
                         //"--proxy-server=165.225.77.42:80",
                         //"--proxy-server=182.52.83.133:8080",
                         //"--proxy-server=51.81.82.175:80",
@@ -591,8 +594,8 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                     request.Headers.Add("Accept-Language", "en-US,en;q=0.9");
 
                     //mac
-                    request.UserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/7046A194A";
-                    //request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36";
+                    //request.UserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/7046A194A";
+                    request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36";
                     using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                     {
                         using (Stream stream = response.GetResponseStream())
