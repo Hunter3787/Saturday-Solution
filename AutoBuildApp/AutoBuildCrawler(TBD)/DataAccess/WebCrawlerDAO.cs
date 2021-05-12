@@ -25,34 +25,33 @@ namespace AutoBuildApp.DataAccess
                 try
                 {
                     connection.Open();
+
+                    using (SqlTransaction transaction = connection.BeginTransaction())
+                    {
+                        try
+                        {
+                            SqlDataAdapter adapter = new SqlDataAdapter();
+                            String sql = "select vendorName from vendorclub";
+                            adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
+
+                            using (SqlDataReader reader = adapter.InsertCommand.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    vendors.TryAdd((string)reader["vendorname"], 0);
+                                }
+                            }
+
+                            transaction.Commit();
+                        }
+                        catch (SqlException )
+                        {
+                            Console.WriteLine("wrong");
+                            transaction.Rollback();
+                        }
+                    }
                 }
                 catch (Exception) { }
-
-                
-                using (SqlTransaction transaction = connection.BeginTransaction())
-                {
-                    try
-                    {
-                        SqlDataAdapter adapter = new SqlDataAdapter();
-                        String sql = "select vendorName from vendorclub";
-                        adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
-
-                        using (SqlDataReader reader = adapter.InsertCommand.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                vendors.TryAdd((string)reader["vendorname"], 0);
-                            }
-                        }
-
-                        transaction.Commit();
-                    }
-                    catch (SqlException )
-                    {
-                        Console.WriteLine("wrong");
-                        transaction.Rollback();
-                    }
-                }
             }
             return vendors;
         }
@@ -62,7 +61,15 @@ namespace AutoBuildApp.DataAccess
             ConcurrentDictionary<string, byte> modelNumbers = new ConcurrentDictionary<string, byte>();
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                connection.Open();
+                try
+                {
+                    connection.Open();
+                }
+                catch (Exception)
+                {
+
+                }
+                
                 using (SqlTransaction transaction = connection.BeginTransaction())
                 {
                     try
@@ -95,7 +102,14 @@ namespace AutoBuildApp.DataAccess
             ConcurrentDictionary<string, ConcurrentDictionary<string, byte>> vendorsProducts = new ConcurrentDictionary<string, ConcurrentDictionary<string, byte>>();
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                connection.Open();
+                try
+                {
+                    connection.Open();
+                }
+                catch (Exception)
+                {
+                     
+                }
                 using (SqlTransaction transaction = connection.BeginTransaction())
                 {
                     try
