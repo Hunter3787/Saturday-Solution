@@ -108,6 +108,32 @@ namespace AutoBuildApp.Api.Controllers
             }
         }
 
+        [HttpGet("vendor")]
+        public IActionResult GetVendorPermission()
+        {
+            if (!AuthorizationCheck.IsAuthorized(_vendorRole))
+            {
+                return Ok(false);
+            }
+            else
+            {
+                return Ok(true);
+            }
+        }
+
+        [HttpGet("basic")]
+        public IActionResult GetBasicPermission()
+        {
+            if (!AuthorizationCheck.IsAuthorized(_basicRole))
+            {
+                return Ok(false);
+            }
+            else
+            {
+                return Ok(true);
+            }
+        }
+
         //[HttpPost("{Login}")]
         [HttpPost]
         public ActionResult<AuthUserDTO> AuthenticateUser(UserCredentials userCredentials)

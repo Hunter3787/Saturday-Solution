@@ -30,41 +30,44 @@ function authenticate() {
     body: JSON.stringify(UserCred)
   })
     .then(response => response.json())
-    .then(data => displayResponse(data))
-    .then(response => getItem())
-    .catch(error => console.error('Unable to Authenticate.', error));
+    //.then(data => displayResponse(data))
+    document.cookie = `JWT = data; max-age=${60*60*24*7}; secure; same-site={lax};`
+    //.then(response => getItem())
+    //.catch(error => console.error('Unable to Authenticate.', error));
+    let jwt = getCookie('JWT');
+    .then(jwt => displayResponse(jwt));
 }
 
-function displayResponse(id)
-{
-  console.log("we are here")
-  var getBody = document.getElementById("Response");
-  console.log(id);
-  var text =  document.createTextNode(JSON.stringify(id));
-  alert(id);
-  getBody.appendChild(text);
-}
+// function displayResponse(id)
+// {
+//   console.log("we are here")
+//   var getBody = document.getElementById("Response");
+//   console.log(id);
+//   let jwt = getCookie('JWT');
+//   //var text =  document.createTextNode(JSON.stringify(id));
+//   alert(id);
+//   getBody.appendChild(jwt);
+// }
 
-//let JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiLCJzdWIiOiJBdXRvYnVpbGQgVXNlciIsImF1ZCI6IlVTIiwiaWF0IjoxNjIwNDQzODA0LCJleHAiOjE2MjEwNDg2MDQsIm5iZiI6MTYyMTA0ODYwNCwiVXNlcm5hbWUiOiJGeXJlR3V5IiwiVXNlckNMYWltcyI6W3siUGVybWlzc2lvbiI6IkNyZWF0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlJldmlld3MifSx7IlBlcm1pc3Npb24iOiJEZWxldGUiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJTZWxmIn0seyJQZXJtaXNzaW9uIjoiRGVsZXRlIiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZlJldmlld3MifSx7IlBlcm1pc3Npb24iOiJFZGl0IiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZiJ9LHsiUGVybWlzc2lvbiI6IlJlYWRPbmx5IiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiQXV0b0J1aWxkIn0seyJQZXJtaXNzaW9uIjoiVXBkYXRlIiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZiJ9LHsiUGVybWlzc2lvbiI6IlVwZGF0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNlbGZSZXZpZXdzIn1dfQ.LS4ITSAgVV3y0DsTyVhE0uOo2_GC4w5LbOV547RGSME";
 
-function  getItem(){
-  const fetchRequest = {
-    method: 'GET',
-    mode:'cors',
-  headers: {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json',
-     'Authorization': 'bearer ' + JWT
-  } };
-  let customRequest = Object.assign( fetchRequest,{ method: 'GET' });
-   fetch(url, customRequest) // fetches the default URI
-      .then(response => response.json()) // Will receive a response from the default response.json.
-      .then(response => displayResponse(response)) // will call the display items function.
-      .then(response=> alert(response))
-      .then(console.log("reloaded"))
-      .catch(error => console.error('Unable to get items.', error)); // will catch an error and print the appropriate error message in console.
+// function  getItem(){
+//   const fetchRequest = {
+//     method: 'GET',
+//     mode:'cors',
+//   headers: {
+//     'Accept': 'application/json',
+//     'Content-Type': 'application/json',
+//      'Authorization': 'bearer ' + JWT
+//   } };
+//   let customRequest = Object.assign( fetchRequest,{ method: 'GET' });
+//    fetch(url, customRequest) // fetches the default URI
+//       .then(response => response.json()) // Will receive a response from the default response.json.
+//       .then(response => displayResponse(response)) // will call the display items function.
+//       .then(response=> alert(response))
+//       .then(console.log("reloaded"))
+//       .catch(error => console.error('Unable to get items.', error)); // will catch an error and print the appropriate error message in console.
  
-}
+// }
 
 // // remove all console stuff -sir
 // const url ='https://localhost:5001/login';
@@ -142,3 +145,9 @@ function myFunction() {
     x.type = "password";
   }
 } 
+
+function getCookie (name) {
+	let value = `; ${document.cookie}`;
+	let parts = value.split(`; ${name}=`);
+	if (parts.length === 2) return parts.pop().split(';').shift();
+}

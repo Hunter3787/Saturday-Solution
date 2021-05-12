@@ -41,7 +41,7 @@ namespace AutoBuildApp.Api.Controllers
             // pass in from front end form data
             var password = formCollection["password"];
             var passwordCheck = formCollection["passwordCheck"];
-            var activeEmail = formCollection["activeEmail"];
+            var activeUsername = formCollection["activeUsername"];
 
             // connection string is in DAO, pass through UMservice to UMmanager
             UserManagementService userManagementService = new UserManagementService(_userManagementDAO);
@@ -50,7 +50,7 @@ namespace AutoBuildApp.Api.Controllers
             // calls DeleteUser from UMmanager
             // decrypts password and password check passed from the front end with key
             return Ok(userManagementManager.UpdatePassword(userManagementManager.DecryptByAES(password, "12345678900000001234567890000000"),
-                userManagementManager.DecryptByAES(passwordCheck, "12345678900000001234567890000000"), activeEmail));
+                userManagementManager.DecryptByAES(passwordCheck, "12345678900000001234567890000000"), activeUsername));
         }
 
         [HttpPut("email")]
@@ -59,14 +59,14 @@ namespace AutoBuildApp.Api.Controllers
             _logger.LogInformation("Update email called.");
             // pass in from front end form data
             var inputEmail = formCollection["inputEmail"];
-            var activeEmail = formCollection["activeEmail"];
+            var activeUsername = formCollection["activeUsername"];
 
             // connection string is in DAO, pass through UMservice to UMmanager
             UserManagementService userManagementService = new UserManagementService(_userManagementDAO);
             UserManagementManager userManagementManager = new UserManagementManager(userManagementService);
             
             // calls updateemail from UMmanager
-            return Ok(userManagementManager.UpdateEmail(inputEmail, activeEmail));
+            return Ok(userManagementManager.UpdateEmail(inputEmail, activeUsername));
         }
 
         [HttpPut("username")]
@@ -75,14 +75,14 @@ namespace AutoBuildApp.Api.Controllers
             _logger.LogInformation("Update usernamed called.");
             // pass in from front end form data
             var username = formCollection["username"];
-            var activeEmail = formCollection["activeEmail"];
+            var activeUsername = formCollection["activeUsername"];
 
             // connection string is in DAO, pass through UMservice to UMmanager
             UserManagementService userManagementService = new UserManagementService(_userManagementDAO);
             UserManagementManager userManagementManager = new UserManagementManager(userManagementService);
 
             // calls updateusername from UMmanager
-            return Ok(userManagementManager.UpdateUsername(username, activeEmail));
+            return Ok(userManagementManager.UpdateUsername(username, activeUsername));
         }
 
 

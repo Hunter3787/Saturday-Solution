@@ -7,14 +7,14 @@ var updateUsername = document.getElementById("updateUsername")
 
     updateUsername.addEventListener('click', () => {
       var username = document.getElementById("add-username").value;
-      UpdateUsername(username, "crkobel@verizon.net");
+      UpdateUsername(username, "SERGE");
   })
 
-function UpdateUsername(username, activeEmail) {
+function UpdateUsername(username, activeUsername) {
     var formData = new FormData
     
     formData.append('username', username);
-    formData.append('activeEmail', activeEmail);
+    formData.append('activeUsername', activeUsername);
 
     fetch("https://localhost:5001/usermanagement/username", {
       method: 'PUT',
@@ -38,14 +38,14 @@ function UpdateUsername(username, activeEmail) {
 
     updateEmail.addEventListener('click', () => {
       var inputEmail = document.getElementById("add-email").value;
-      UpdateEmail(inputEmail, "crkobel@verizon.net");
+      UpdateEmail(inputEmail, "SERGE");
   })
 
-function UpdateEmail(inputEmail, activeEmail) {
+function UpdateEmail(inputEmail, activeUsername) {
     var formData = new FormData
     
     formData.append('inputEmail', inputEmail);
-    formData.append('activeEmail', activeEmail);
+    formData.append('activeUsername', activeUsername);
 
     fetch("https://localhost:5001/usermanagement/email", {
       method: 'PUT',
@@ -71,15 +71,15 @@ function UpdateEmail(inputEmail, activeEmail) {
       var encryptedPassword = Encrypt(document.getElementById("add-password").value);
       var encryptedPasswordCheck = Encrypt(document.getElementById("add-passwordCheck").value);
 
-      UpdatePassword(encryptedPassword, encryptedPasswordCheck, "crkobel@verizon.net");
+      UpdatePassword(encryptedPassword, encryptedPasswordCheck, "SERGE");
   })
 
-function UpdatePassword(password, passwordCheck, activeEmail) {
+function UpdatePassword(password, passwordCheck, activeUsername) {
     var formData = new FormData
     
     formData.append('password', password);
     formData.append('passwordCheck', passwordCheck);
-    formData.append('activeEmail', activeEmail);
+    formData.append('activeUsername', activeUsername);
 
     fetch("https://localhost:5001/usermanagement/password", {
       method: 'PUT',

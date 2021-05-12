@@ -89,7 +89,7 @@ namespace AutoBuildApp.Managers
         }
 
         // Updates the username of the active user
-        public string UpdateUsername(string username, string activeEmail)
+        public string UpdateUsername(string username, string activeUsername)
         {
             // checks that username is valid
             if (_inputValidityManager.ValidUserName(username))
@@ -99,7 +99,7 @@ namespace AutoBuildApp.Managers
                 {
                     // username is valid
                     // pass to DAO for storage
-                    return _userManagementService._userManagementDAO.UpdateUserNameDB(username, activeEmail);
+                    return _userManagementService._userManagementDAO.UpdateUserNameDB(username, activeUsername);
                 } 
                 else
                 {
