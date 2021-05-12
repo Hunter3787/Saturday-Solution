@@ -71,11 +71,12 @@ namespace AutoBuildApp.DataAccess
                         SqlDataAdapter adapter = new SqlDataAdapter();
 
                         string sql =
-                            "select * from products where modelNumber = @MODELNUMBER;" +
+                            "select p.productName, p.imageUrl, p.ProductType, db.dbo.GetAverageRatingForModelNumber(p.modelNumber) as 'average'," +
+                            "db.dbo.GetTotalReviewsForModelNumber(p.modelNumber) as 'totalReviews' from products p where modelNumber = @MODELNUMBER;" +
                             "select productSpecs, productSpecsValue from products p inner join Products_Specs ps on p.productID = ps.productID where modelNumber = @MODELNUMBER;" +
                             "select vendorName from vendorclub v inner join Vendor_Product_Junction vpj on v.vendorID = vpj.vendorID where productid = (select productid from products where modelNUmber = @MODELNUMBER)" +
                             "select * from Vendor_Product_Reviews_Junction vprj inner join vendorclub v on vprj.vendorID = v.vendorID where  productid = (select productID from products where modelNumber = @MODELNUMBER);" +
-                            "select * from Vendor_Product_Junction vpj inner join vendorclub v on vpj.vendorid = v.vendorid where productid = (select productId from products where modelnumber = @MODELNUMBER)";
+                            "select * from Vendor_Product_Junction vpj inner join vendorclub v on vpj.vendorid = v.vendorid where productid = (select productId from products where modelnumber = @MODELNUMBER);";
 
                         adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
                         adapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = modelNumber;
@@ -97,6 +98,8 @@ namespace AutoBuildApp.DataAccess
                                 product.ImageUrl = (string)reader["imageUrl"];
                                 product.ProductType = (string)reader["productType"];
                                 product.ModelNumber = modelNumber;
+                                product.AverageRating = Decimal.ToDouble((decimal)reader["average"]);
+                                product.TotalReviews = (int)reader["totalReviews"];
                             }
 
                             // Now get the product's specs
@@ -139,11 +142,11 @@ namespace AutoBuildApp.DataAccess
                                 // Add the review to the vendor's list of reviews
                                 vendorInformation[vendorName].Reviews.Add(review);
 
-                                // Add to total rating
-                                totalRating += Int32.Parse(review.StarRating);
+                                //// Add to total rating
+                                //totalRating += Int32.Parse(review.StarRating);
 
-                                // Increment total reviews
-                                product.TotalReviews++;
+                                //// Increment total reviews
+                                //product.TotalReviews++;
                             }
 
                             // Now get the vendor product information
@@ -161,11 +164,11 @@ namespace AutoBuildApp.DataAccess
                                 productVendorDetailsDTO.Price = Decimal.ToDouble(reader["productPrice"] == DBNull.Value ? 0 : (decimal)reader["productPrice"]);
                             }
 
-                            // Sets the average rating if the product has at least 1 review
-                            if (product.TotalReviews > 0)
-                            {
-                                product.AverageRating = (Convert.ToDouble(totalRating) / product.TotalReviews);
-                            }
+                            //// Sets the average rating if the product has at least 1 review
+                            //if (product.TotalReviews > 0)
+                            //{
+                            //    product.AverageRating = (Convert.ToDouble(totalRating) / product.TotalReviews);
+                            //}
                         }
 
                         transaction.Commit();

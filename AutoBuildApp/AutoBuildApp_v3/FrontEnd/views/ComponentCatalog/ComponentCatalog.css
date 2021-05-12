@@ -1,12 +1,49 @@
 .list-of-divs {
-    display:inline-block;
-    margin-left:400px;
+    margin-top:0px;
+    margin-left:300px;
+    /* max-width:400px; */
+    display: inline-block;
+    /* float:left; */
   }
-  
+  .product-table {
+      margin-left:80px;
+      float:left;
+      display:block;
+      position: relative;
+    /* margin-left:400px; */
+    /* display:block; */
+      /* display:flex; */
+      /* max-width:500px; */
+      /* position: absolute; */
+      /* float:left; */
+      /* margin-bottom: 50px; */
+  }
+
+  .new-product {
+    float:left;
+    text-align: center;
+    border: 1px solid black;
+    padding: 5px;
+    max-width: 400px;
+    margin:20px
+  }
+
+  .name-div {
+      float:left;
+      display:flex;
+    height: 65px;
+    overflow:auto;
+    word-wrap: break-word;
+    text-align: center;
+    margin-bottom: 25px;
+
+  }
+
   .inner-div {
     margin-left: 500px;
     margin-left: 280px;
-    display:block;
+
+    /* display:block; */
     position:relative;
   }
   
@@ -34,84 +71,14 @@
     margin-top: 50px;
   }
   
-  textarea {
-    font-family:"Arial";
-    font-size:14px;
-    resize: none;
-    padding: 5px 5px 5px 5px;
-    margin-top:8px
-  }
-  
-  .large-photo {
-    position: absolute;
-    border: 1px solid black;
-  }
-  
-  .display-none {
-    display:none;
-  }
-  
-  .div-table {
-    display: table;   
-    margin-bottom: 100px;      
-    border: 1px solid black;         
-  }
-    
-  .div-table-row-header {
-    display: flex;
-    width: auto;
-    clear: both;
-    position: relative;
-  }
-  
-  .div-table-row-image {
-    float: left; 
-    width: 200px;
-    height: 75px;
-    display: flex;
-    position: relative;
-    line-height: 60px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;  
-    border: 1px solid black;
-    padding: 5px 5px 5px 5px;
-  }
-  
-  img {
-    text-align: center;
-    vertical-align: middle;
-    margin-bottom: 8px;
-  }
-  
-  .div-table-row { 
-    float: left; 
-    width: 200px;
-    height: 75px;
-    display: block;
-    position: relative;
-    text-align: center;
-    word-wrap: break-word;
-    overflow: auto;
-    border: 1px solid black;
-    padding: 5px 5px 5px 5px;
-  }
-  
-  .div-table-row.center {
-    line-height: 75px;
-  }
-  
-  .model-number-dropdown {
-    width:150px;
-    text-align: center;
-  }
-  
-  #model-number-dropdown option{
-    width:100px;
-    text-align: center;
-    background-color: black;
-  }
+.checked {
+    color:gold;
+}
 
+  .stars {
+    font-size:25px;
+    display: inline-block;
+  }
 
   h4 {
       font-size: 20px;
@@ -120,4 +87,10 @@
   .title {
       text-align: center;
       font-size: 35px;
+      margin-top: 50px;
+      margin-left: 180px;
+  }
+
+  .pointer {
+      cursor:pointer;
   }
