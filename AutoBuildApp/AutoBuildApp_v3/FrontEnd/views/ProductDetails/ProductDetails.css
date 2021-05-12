@@ -111,3 +111,12 @@ text {
   a {
       font-size:20px
   }
+
+  .checked {
+    color:gold;
+}
+
+.stars {
+    font-size:35px;
+    display: inline-block;
+  }
