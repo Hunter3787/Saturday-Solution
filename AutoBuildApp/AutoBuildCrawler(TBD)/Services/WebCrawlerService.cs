@@ -53,25 +53,23 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             vendors = webCrawlerDAO.GetAllVendors();
             modelNumbers = webCrawlerDAO.GetAllModelNumbers();
             vendorsProducts = webCrawlerDAO.GetAllVendorsProducts();
-            //
-            allProxies = AsyncContext.Run(() => getAllProxiesAsync());
-            currentProxy = allProxies[0];
-            //
-            //currentProxy = new Proxy("208.80.28.208", 8080);
+            //allProxies = AsyncContext.Run(() => getAllProxiesAsync());
+            //currentProxy = allProxies[0];
+            currentProxy = new Proxy("208.80.28.208", 8080);
 
             options = new LaunchOptions()
             {
                 Headless = true,
                 IgnoreHTTPSErrors = true,
-                //ExecutablePath = @"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", 
-                ExecutablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe",// added per danny
+                //ExecutablePath = @"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", // MacOS Path
+                ExecutablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe",
                 //ExecutablePath = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
                 Args = new[] {
-                        $"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}", // ganna take a while = dannu
+                        //$"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}", // ganna take a while = dannu
                         //"--proxy-server=23.251.138.105:8080",
                         //"--proxy-server=201.45.163.114:80",
-                        //"--proxy-server=208.80.28.208:8080",
-                        ////"--proxy-server=183.88.226.50:8080",
+                        "--proxy-server=208.80.28.208:8080",
+                        //"--proxy-server=183.88.226.50:8080",
                         //"--proxy-server=165.225.77.42:80",
                         //"--proxy-server=182.52.83.133:8080",
                         //"--proxy-server=51.81.82.175:80",
@@ -296,10 +294,6 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         Console.Write("price\t");
                         string priceString = (price == null) || String.IsNullOrEmpty(price.ToString()) ? null : price.ToString();
 
-                        // Remove the $ and the ,
-                        priceString = priceString.Replace("$", "").Replace(",","");
-
-                        double priceDouble = Double.Parse(priceString);
                         // click ratings
                         //new egg
                         var numberOfReviewsBeforeReload = await page.EvaluateExpressionAsync(reviewerNameQuerySelector);
@@ -334,7 +328,6 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         //{
 
                             totalStarRating = await page.EvaluateExpressionAsync("document.querySelector('.rating-views .rating-views-num').innerText");
-
                         //}
                             Console.Write("totalStarRating\t");
 
@@ -344,23 +337,14 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         }
 
                         string totalStarRatingString = "0";
-                        double totalStarRatingDouble = 0;
-
                         if (totalStarRating != null) {
                             totalStarRatingString = totalStarRating.ToString()[0].ToString();
-                            totalStarRatingDouble = Double.Parse(totalStarRatingString);
                         }
 
-
                         string totalNumberOfReviewsString = "0";
-                        int totalNumberOfReviewsInt = 0;
-
                         if(totalNumberOfReviews != null)
                         {
                             totalNumberOfReviewsString = totalNumberOfReviews.ToString().Split(' ')[0];
-                            totalNumberOfReviewsString = totalNumberOfReviewsString.Replace("$", "").Replace(",", "");
-
-                            totalNumberOfReviewsInt = Int32.Parse(totalNumberOfReviewsString);
                         }
 
 
@@ -391,7 +375,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         string brand = specsVals.ElementAt(brandIndex).ToString();
                         companyName = companyName.ToLower();
                         Models.WebCrawler.Product product = new Models.WebCrawler.Product(imageUrl.ToString(), availability, companyName, url, modelNumber, title.ToString(), productType,
-                            brand, totalStarRatingDouble, totalNumberOfReviewsInt, priceDouble, specsDictionary, reviews);
+                            brand, totalStarRatingString, totalNumberOfReviewsString, priceString, specsDictionary, reviews);
 
                         // amazon
                         //var reviewsLink = await page.EvaluateExpressionAsync("document.querySelector('[data-hook=see-all-reviews-link-foot]').href");
@@ -591,8 +575,8 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                     request.Headers.Add("Accept-Language", "en-US,en;q=0.9");
 
                     //mac
-                    //request.UserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/7046A194A";
-                    request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36";
+                    request.UserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/7046A194A";
+                    //request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36";
                     using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                     {
                         using (Stream stream = response.GetResponseStream())

@@ -33,8 +33,6 @@ namespace AutoBuildApp.Manger.Tests
                 .connectionManager
                 .GetConnectionStringByName(ControllerGlobals.DOCKER_CONNECTION);
 
-            _testManager = new UserGarageManager(_connString);
-
             UserIdentity userIdentity = new UserIdentity
             {
                 Name = "Zeina",
@@ -45,10 +43,17 @@ namespace AutoBuildApp.Manger.Tests
 
             ClaimsFactory claimFactory = new ConcreteClaimsFactory();
             IClaims basicClaims = claimFactory.GetClaims(RoleEnumType.BasicRole);
-            ClaimsIdentity basicIdentity = new ClaimsIdentity(userIdentity, basicClaims.Claims(), userIdentity.AuthenticationType, userIdentity.Name, RoleEnumType.BasicRole);
+            ClaimsIdentity basicIdentity = new ClaimsIdentity(
+                userIdentity,
+                basicClaims.Claims(),
+                userIdentity.AuthenticationType,
+                userIdentity.Name,
+                RoleEnumType.BasicRole);
             _claimsPrincipal = new ClaimsPrincipal(basicIdentity);
-
+            Console.WriteLine(_claimsPrincipal.Identity.Name);
             Thread.CurrentPrincipal = _claimsPrincipal;
+
+            _testManager = new UserGarageManager(_connString);
         }
 
         [TestInitialize]

@@ -16,6 +16,7 @@
     <h1 class="title">Component Catalog</h1>
 
     <div class="list-of-divs">
+        <div class='product-table'></div>
     </div>
     <div class="side-nav">
         <h1>Filters</h1>
@@ -48,12 +49,24 @@
         <input type="radio" class="checkbox-filter" name="likes" id="name_desc">
         <label for="F1">Z to A</label><br>
 
-        <h4>Minimum Value
+        <h4>Minimum Price
             <input class='minimum-value-input' type="text" placeholder="Min">
         </h4>
-        <h4>Maximum Value
+        <h4>Maximum Price
             <input class='maximum-value-input' type="text" placeholder="Max">
         </h4>
+
+
+        <button style="text-align:center" onclick="getProductsByFilter()">Apply Filter</button>
+
+    </div>
+
+    <div class='stars'>
+        <span class="star">★</span>
+        <span class="star">★</span>
+        <span class="star">★</span>
+        <span class="star">★</span>
+        <span class="star">★</span>
     </div>
 
     <script src="ComponentCatalog.js" asp-append-version="true"></script>
