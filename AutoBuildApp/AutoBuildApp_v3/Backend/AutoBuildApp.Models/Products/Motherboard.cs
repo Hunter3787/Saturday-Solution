@@ -42,6 +42,7 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         public Motherboard() : base()
         {
+            ProductType = ProductType.Motherboard;
             SupportedMemory = new List<string>();
             Colors = new List<string>();
             M2Slots = new List<string>();

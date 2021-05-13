@@ -26,6 +26,7 @@ namespace AutoBuildApp.Models.Products
                 case ProductType.RAM:
                     return new RAM();
                 case ProductType.SSD:
+                    return new SolidStateDrive();
                 case ProductType.HDD:
                     return new HardDrive();
                 default:

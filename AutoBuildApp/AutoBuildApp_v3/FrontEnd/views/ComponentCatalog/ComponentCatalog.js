@@ -1,4 +1,4 @@
-const uri ='https://localhost:5001/componentcatalog';
+const uri ='http://localhost:8081/componentcatalog';
 
 const fetchRequest = {
     method: 'GET',

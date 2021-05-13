@@ -84,7 +84,7 @@ namespace AutoBuildApp.DataAccess
                                 ProductType = (string)reader[ProductTableColumns.PRODUCT_COLUMN_TYPE],
                                 // Name = (string)reader[ProductTableColumns.PRODUCT_COLUMN_NAME],
                                 Manufacturer = (string)reader[ProductTableColumns.PRODUCT_COLUMN_MANUFACTURER],
-                                Model = (string)reader[ProductTableColumns.PRODUCT_COLUMN_MODEL]
+                                ModelNumber = (string)reader[ProductTableColumns.PRODUCT_COLUMN_MODEL]
                             };
 
                             // Read from Products_Specs until no more results.
@@ -120,23 +120,114 @@ namespace AutoBuildApp.DataAccess
         {
             List<ProductEntity> entitiesList = new List<ProductEntity>();
 
-            using (var conn = new SqlConnection(_connectionString))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                conn.Open();
-
-                using (var command = new SqlCommand())
+                connection.Open();
+                using (SqlTransaction transaction = connection.BeginTransaction())
                 {
-                    command.Transaction = conn.BeginTransaction();
-                    command.Connection = conn;
-                    command.CommandTimeout = TimeoutLengths.TIMEOUT_SHORT;
-                    command.CommandType = CommandType.Text;
+                    try
+                    {
+                        SqlDataAdapter adapter = new SqlDataAdapter();
 
+                        string sp_GetAllProductsByVendor = "GetAllProductsWithMaxPriceFilter";
+                        adapter.InsertCommand = new SqlCommand(sp_GetAllProductsByVendor, connection, transaction);
+                        adapter.InsertCommand.CommandType = CommandType.StoredProcedure;
+                        adapter.InsertCommand.CommandText = sp_GetAllProductsByVendor;
 
+                        // Creates a dynamic data table to be passed into the stored procedure
+                        DataTable pair = new DataTable();
 
+                        // Create columns in the table
+                        DataColumn column = new DataColumn();
+                        column.ColumnName = "productType";
+                        column.DataType = typeof(string);
+                        pair.Columns.Add(column);
+
+                        column = new DataColumn();
+
+                        column.ColumnName = "maxPrice";
+                        column.DataType = typeof(double);
+                        pair.Columns.Add(column);
+
+                        // Create all the rows
+                        DataRow row;
+                        foreach (var filter in toFind)
+                        {
+                            row = pair.NewRow();
+                            row["productType"] = filter.ProductType;
+                            row["maxPrice"] = filter.Budget;
+                            pair.Rows.Add(row);
+                        }
+
+                        // Add the necessary parameters for the stored procedure
+                        var param = new SqlParameter[1];
+                        param[0] = adapter.InsertCommand.Parameters.AddWithValue("@Filterlist", pair);
+
+                        // Execute the stored procedure and read each row and create an AddProductDTO
+                        using (SqlDataReader reader = adapter.InsertCommand.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                ProductEntity productEntity = new ProductEntity();
+                                string modelNumber = (string)reader["modelNumber"];
+                                productEntity.ProductName = (string)reader["productName"];
+                                productEntity.ImageURL = (string)reader["imageUrl"];
+                                productEntity.ProductType = (string)reader["productType"];
+                                productEntity.Manufacturer = (string)reader["manufacturerName"];
+                                productEntity.ModelNumber = modelNumber;
+                                productEntity.Price = Decimal.ToDouble((decimal)reader["minimumPriceForModelNumber"]);
+
+                                                              
+                                entitiesList.Add(productEntity);
+                            }
+                        }
+                        string sql = "select * from products_specs where productID = (select productId from products where modelNumber = @MODELNUMBER)";
+                        SqlDataAdapter innerAdapter = new SqlDataAdapter();
+                        innerAdapter.InsertCommand = new SqlCommand(sql, connection, transaction);
+
+                        foreach (var product in entitiesList)
+                        {
+
+                            if (innerAdapter.InsertCommand.Parameters.Count == 0)
+                            {
+                                innerAdapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = product.ModelNumber;
+                            }
+                            else
+                            {
+                                innerAdapter.InsertCommand.Parameters["@MODELNUMBER"].Value = product.ModelNumber;
+                            }
+
+                            using (SqlDataReader reader = innerAdapter.InsertCommand.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    var key = (string)reader["productSpecs"];
+                                    var value = (string)reader["productSpecsValue"];
+
+                                    if(product.Specs == null)
+                                    {
+                                        product.Specs = new Dictionary<string, string>();
+                                    }
+
+                                    if (!product.Specs.ContainsKey(key))
+                                    {
+                                        product.Specs.Add(key, value);
+                                    }
+                                }
+                            }
+                        }
+
+                        transaction.Commit();
+
+                    }
+                    catch (SqlException ex)
+                    {
+                        transaction.Rollback();
+                    }
+
+                    return entitiesList;
                 }
             }
-
-            return entitiesList;
         }
 
         /// <summary>

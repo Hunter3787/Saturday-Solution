@@ -14,7 +14,7 @@ namespace AutoBuildApp.DataAccess.Entities
         public string ProductName { get; set; }
         public string Manufacturer { get; set; }
         public string ImageURL { get; set; }
-        public string Model { get; set; }
+        public string ModelNumber { get; set; }
         public double Price { get; set; }
 
         // Specifications table elements

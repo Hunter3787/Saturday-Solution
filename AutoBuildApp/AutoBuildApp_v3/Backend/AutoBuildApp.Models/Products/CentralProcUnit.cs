@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using AutoBuildApp.Models.Interfaces;
+using AutoBuildApp.Models.Enumerations;
+
 
 /**
  * Central Processing unit class that implments the IComponent interface.
@@ -34,6 +36,7 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         public CentralProcUnit() : base()
         {
+            ProductType = ProductType.CPU;
             L1Cache = new List<string>();
             L2Cache = new List<string>();
             L3Cache = new List<string>();
