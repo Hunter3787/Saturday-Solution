@@ -9,7 +9,21 @@
 </head>
 
 <body>
-    <h1 class="title">Build Recommender</h1>
+    <div class="custom-nav">
+        <span>
+            <img src="/assets/images/Logo/Logo.png" alt="logo"/>
+            <h1 class="nav-title" onclick="location.href='/views/MPBmain/MPB.html'">AutoBuild</h1>
+            <a class="custom-a" href="/views/MPBmain/MPB.html">Home</a>
+            <a class="custom-a" href="/views/Recommender/Recommender.html">PC Builder and Upgrader</a>
+            <a class="custom-a" href="">Component Catalog</a>
+            <button type="button" class="nav-button" onclick="location.href='/views/LoginPage/LoginPage.html'">Login</button>
+            <button type="button" class="nav-button" onclick="location.href='/views/RegistrationPage/RegistrationPage.html'">Register</button>
+        </span>
+    </div>
+
+    <div class="formheader">
+        <h1 class="formtitle">Build Recommender</h1>
+    </div>
 
     <div class="list-of-products">
         <div class='product-table'></div>
@@ -18,43 +32,47 @@
     <button style="text-align:center;" onclick="getBuild()">Apply Filter</button>
 
     <input class='budget' type="text">
-    <table class='build-table'>
-        <tr>
-            <th>Type</th>
-            <th>Product</th>
-            <th>Price</th>
-        </tr>
-        <tr class='gpu'>
-            <th>GPU</th>
-        </tr>
-        <tr class='cpu'>
-            <th>CPU</th>
-        </tr>
-        <tr class='motherboard'>
-            <th>Motherboard</th>
-        </tr>
-        <tr class='psu'>
-            <th>PSU</th>
-        </tr>
-        <tr class='ssd'>
-            <th>SSD</th>
-        </tr>
-        <tr class='ram'>
-            <th>RAM</th>
-        </tr>
-        <tr class='case'>
-            <th>Case</th>
-        </tr>
-        <tr>
-            <th>Total:</th>
-            <th></th>
-            <th class='total-price'></th>
-        </tr>
-    </table>
-
+    <div class="table-container">
+        <table class='build-table'>
+            <tr>
+                <th>Type</th>
+                <th>Product</th>
+                <th>Price</th>
+            </tr>
+            <tr class='gpu'>
+                <th>GPU</th>
+            </tr>
+            <tr class='cpu'>
+                <th>CPU</th>
+            </tr>
+            <tr class='motherboard'>
+                <th>Motherboard</th>
+            </tr>
+            <tr class='psu'>
+                <th>PSU</th>
+            </tr>
+            <tr class='ssd'>
+                <th>SSD</th>
+            </tr>
+            <tr class='ram'>
+                <th>RAM</th>
+            </tr>
+            <tr class='case'>
+                <th>Case</th>
+            </tr>
+            <tr>
+                <th>Total:</th>
+                <th></th>
+                <th class='total-price'></th>
+            </tr>
+        </table>
     </div>
-
     <script src="Recommender.js" asp-append-version="true"></script>
+
+    <footer>
+        <span>&copy; 2021</span>
+        <a class="custom-a" href="/views/Privacy-Policy/PrivacyPolicy.html">Privacy Policy</a>
+    </footer>
 
 </body>
 

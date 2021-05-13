@@ -7,52 +7,53 @@
     </head>
 
 
-<body>
+    <body>
 
-    <div class="custom-nav">
-        <span>
-            <img src="/assets/images/Logo/Logo.png" alt="logo"/>
-            <h1 class="nav-title" onclick="location.href='/views/MPBmain/MPB.html'">AutoBuild</h1>
-            <a class="custom-a" href="/views/MPBmain/MPB.html">Home</a>
-            <a class="custom-a" href="">PC Builder and Upgrader</a>
-            <a class="custom-a" href="">Component Catalog</a>
-            <button type="button" class="nav-button" onclick="location.href='/views/LoginPage/LoginPage.html'">Login</button>
-            <button type="button" class="nav-button" onclick="location.href='/views/RegistrationPage/RegistrationPage.html'">Register</button>
-        </span>
-    </div>
+        <div class="custom-nav">
+            <span>
+                <img src="/assets/images/Logo/Logo.png" alt="logo"/>
+                <h1 class="nav-title" onclick="location.href='/views/MPBmain/MPB.html'">AutoBuild</h1>
+                <a class="custom-a" href="/views/MPBmain/MPB.html">Home</a>
+                <a class="custom-a" href="/views/Recommender/Recommender.html">PC Builder and Upgrader</a>
+                <a class="custom-a" href="">Component Catalog</a>
+                <button type="button" class="nav-button" onclick="location.href='/views/LoginPage/LoginPage.html'">Login</button>
+                <button type="button" class="nav-button" onclick="location.href='/views/RegistrationPage/RegistrationPage.html'">Register</button>
+            </span>
+        </div>
 
-    <div class="formheader">
-        <h1 class="formtitle">Register</h1>
-    </div>
+        <div class="formheader">
+            <h1 class="formtitle">Register</h1>
+        </div>
 
-    <h3>Enter Credentials</h3>
-    <form action="javascript:void(0);" method="POST" id="Register">
-        <input type="text" id="add-username" placeholder="Username">
-        </br> </br>
-        <input type="text" id="add-firstname" placeholder="First name">
-        <input type="text" id="add-lastname" placeholder="Last name">
-        </br> </br>
-        <input type="text" id="add-email" placeholder="Email">
-        </br> </br>
-        <input type="password" id="add-password" autocomplete="on" placeholder="Password">
-        <p>Confirm password.</p>
-        <input type="password" id="add-passwordCheck" autocomplete="on" placeholder="Password Check">
+        <div class="registration-form">
+            <h3>Enter Credentials</h3>
+            <form action="javascript:void(0);" method="POST" id="Register">
+                <input type="text" id="add-username" placeholder="Username">
+                </br> </br>
+                <input type="text" id="add-firstname" placeholder="First name">
+                <input type="text" id="add-lastname" placeholder="Last name">
+                </br> </br>
+                <input type="text" id="add-email" placeholder="Email">
+                </br> </br>
+                <input type="password" id="add-password" autocomplete="on" placeholder="Password">
+                <p>Confirm password.</p>
+                <input type="password" id="add-passwordCheck" autocomplete="on" placeholder="Password Check">
 
-        </br></br>
-        <button type="button" id = "RegisterUser" >Register!</button>
+                </br></br>
+                <button type="button" id = "RegisterUser" >Register!</button>
 
-    </form>
+            </form>
+        </div>
+
+        </br>
+        <div id="button"><a href="http://127.0.0.1:5501/views/LoginPage/LoginPage.html">Log In</a></div>
+
+        <footer>
+            <span>&copy; 2021</span>
+            <a class="custom-a" href="/views/Privacy-Policy/PrivacyPolicy.html">Privacy Policy</a>
+        </footer>
+
         <script src="RegistrationPage.js" asp-append-version="true"></script>
-        <script type="text/javascript">
-        </script>
-</br>
-<div id="button"><a href="http://127.0.0.1:5501/views/LoginPage/LoginPage.html">Log In</a></div>
-
-
-<footer>
-    <span>&copy; 2021</span>
-    <a class="custom-a" href="/views/Privacy-Policy/PrivacyPolicy.html">Privacy Policy</a>
-</footer>
-
-</body>
+        <script type="text/javascript"></script>
+    </body>
 </html>

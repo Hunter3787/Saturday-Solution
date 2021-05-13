@@ -11,8 +11,7 @@ body {
     min-height: 100%;
     font-family: Arial;
     margin: 0;
-    background-color: whitesmoke; 
-    padding-bottom: 20px;
+    background-color: whitesmoke;
   }
 
 /******************************** Navigation Bar************************************/  
@@ -127,6 +126,10 @@ body {
 
   /********************************************************************/ 
 
+.registration-form {
+  min-height: 100%;
+  position: relative;
+}
 
 input[type='submit'], button, [aria-label] {
     cursor: pointer;
@@ -157,17 +160,19 @@ td {
     padding: 5px;
 }
 
+
   /******************************** Footer ************************************/  
 
   footer {
     padding: 10px;
     background-color: darkgrey;
-    position: absolute;
+    position: relative;
     left: 0;
     bottom: 0;
     height: 150px;
     width: 100%;
     overflow: hidden;
+    margin-top: 50px;
     margin-bottom: 0;
     z-index: 1;
     overflow-x: hidden;
@@ -185,4 +190,4 @@ td {
     color: #D35400;
   }
   
-  /********************************************************************/  
+  /********************************************************************/ 
