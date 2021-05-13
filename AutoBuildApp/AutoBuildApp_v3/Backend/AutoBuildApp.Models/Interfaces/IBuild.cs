@@ -14,6 +14,7 @@ namespace AutoBuildApp.Models.Interfaces
     /// </summary>
     public interface IBuild
     { 
+        SolidStateDrive SSD { get; set; }
         List<IHardDrive> HardDrives { get; set; }
         ComputerCase Case { get; set; }
         Motherboard Mobo { get; set; }

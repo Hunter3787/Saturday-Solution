@@ -30,6 +30,7 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         public PowerSupplyUnit() : base()
         {
+            ProductType = ProductType.PSU;
         }
     }
 }

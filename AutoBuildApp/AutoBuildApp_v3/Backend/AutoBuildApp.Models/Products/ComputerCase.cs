@@ -28,6 +28,7 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         public ComputerCase() : base()
         {
+            ProductType = ProductType.Case;
             MoboFormSupport = new List<MoboFormFactor>();
             Color = new List<string>();
             FrontPanel = new List<string>();

@@ -17,6 +17,7 @@ namespace AutoBuildApp.Models.Products
 
         public SolidStateDrive() : base()
         {
+            ProductType = ProductType.SSD;
             DriveType = HardDriveType.SSD;
         }
     }
