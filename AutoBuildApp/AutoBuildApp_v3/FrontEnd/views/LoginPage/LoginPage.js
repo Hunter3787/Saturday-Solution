@@ -30,24 +30,32 @@ function authenticate() {
     body: JSON.stringify(UserCred)
   })
     .then(response => response.json())
-    //.then(data => displayResponse(data))
-    document.cookie = `JWT = data; max-age=${60*60*24*7}; secure; same-site={lax};`
+    .then(data => displayResponse(data))
+    //document.cookie = `JWT = data; max-age=${60*60*24*7}; secure; same-site={lax};`
     //.then(response => getItem())
-    //.catch(error => console.error('Unable to Authenticate.', error));
-    let jwt = getCookie('JWT');
-    .then(jwt => displayResponse(jwt));
+    .catch(error => console.error('Unable to Authenticate.', error));
+    //let jwt = getCookie('JWT');
+    //.then(jwt => displayResponse(jwt));
+    setCookie("username", addNameTextbox.value.trim(), 7);
+    setCookie("JWT", data, 7);
+    console.log("----------------------------------");
+    console.log(getCookie("username"));
+    console.log(getCookie("JWT"));
+    // var userName = getCookie("username");
+    // console.log(userName);
 }
 
-// function displayResponse(id)
-// {
-//   console.log("we are here")
-//   var getBody = document.getElementById("Response");
-//   console.log(id);
-//   let jwt = getCookie('JWT');
-//   //var text =  document.createTextNode(JSON.stringify(id));
-//   alert(id);
-//   getBody.appendChild(jwt);
-// }
+function displayResponse(id)
+{
+  console.log("we are here")
+  console.log(getCookie("username"));
+  var getBody = document.getElementById("Response");
+  console.log(id);
+  //let jwt = getCookie('JWT');
+  var text =  document.createTextNode(JSON.stringify(id));
+  alert(id);
+  //getBody.appendChild(text);
+}
 
 
 // function  getItem(){
@@ -146,8 +154,23 @@ function myFunction() {
   }
 } 
 
-function getCookie (name) {
-	let value = `; ${document.cookie}`;
-	let parts = value.split(`; ${name}=`);
-	if (parts.length === 2) return parts.pop().split(';').shift();
+function getCookie(name) {
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(';');
+  for(var i=0;i < ca.length;i++) {
+      var c = ca[i];
+      while (c.charAt(0)==' ') c = c.substring(1,c.length);
+      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+  }
+  return null;
+}
+
+function setCookie(name,value,days) {
+  var expires = "";
+  if (days) {
+      var date = new Date();
+      date.setTime(date.getTime() + (days*24*60*60*1000));
+      expires = "; expires=" + date.toUTCString();
+  }
+  document.cookie = name + "=" + (value || "")  + expires + "; path=/";
 }
