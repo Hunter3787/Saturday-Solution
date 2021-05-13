@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using AutoBuildApp.DataAccess;
 using AutoBuildApp.Models;
 using AutoBuildApp.Models.Builds;
@@ -24,23 +25,23 @@ namespace AutoBuildApp.Services
 
         public CommonResponse AddBuild(Build build, string buildName, string user)
         {
-            _response = new CommonResponse();
+            CommonResponse response = new CommonResponse();
 
             try
             {
-                _dao.InsertBuild(build, buildName, user);
+                response = _dao.InsertBuild(build, buildName, user);
 
 
-                _response.IsSuccessful = true;
-                _response.ResponseString = ResponseStringGlobals.SUCCESSFUL_ADDITION;
+                //response.IsSuccessful = true;
+                //response.ResponseString = ResponseStringGlobals.SUCCESSFUL_ADDITION;
             }
             catch (TimeoutException)
             {
-                _response.IsSuccessful = false;
-                _response.ResponseString = ResponseStringGlobals.DATABASE_TIMEOUT;
+                response.IsSuccessful = false;
+                response.ResponseString = ResponseStringGlobals.DATABASE_TIMEOUT;
             }
 
-            return _response;
+            return response;
         }
 
         public CommonResponse CopyBuild()
@@ -61,23 +62,45 @@ namespace AutoBuildApp.Services
             return _response;
         }
 
-        public CommonResponse DeleteBuild()
+        public CommonResponse DeleteBuild(string buildName)
         {
-            _response = new CommonResponse();
+
+            CommonResponse response = new CommonResponse();
 
             try
             {
-                _response.IsSuccessful = true;
-                _response.ResponseString = ResponseStringGlobals.SUCCESSFUL_DELETION;
+                response = _dao.DeleteBuild(buildName, Thread.CurrentPrincipal.Identity.Name);
             }
             catch (TimeoutException)
             {
-                _response.IsSuccessful = false;
-                _response.ResponseString = ResponseStringGlobals.DATABASE_TIMEOUT;
+                response.IsSuccessful = false;
+                response.ResponseString = ResponseStringGlobals.DATABASE_TIMEOUT;
             }
 
-            return _response;
+            return response;
         }
+
+
+        public CommonResponse ModifyProductsInBuild(string buildName, string modleNumber, int quantity)
+        {
+
+            CommonResponse response = new CommonResponse();
+
+            try
+            {
+                response = _dao.ModifyProductQuantityFromBuild(buildName, modleNumber, quantity, Thread.CurrentPrincipal.Identity.Name);
+                return response;
+            }
+            catch (TimeoutException)
+            {
+                response.IsSuccessful = false;
+                response.ResponseString = ResponseStringGlobals.DATABASE_TIMEOUT;
+            }
+
+            return response;
+        }
+
+
 
         public Build GetBuild()
         {

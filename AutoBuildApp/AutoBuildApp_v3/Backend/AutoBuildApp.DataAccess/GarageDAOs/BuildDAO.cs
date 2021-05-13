@@ -1,7 +1,11 @@
-﻿using AutoBuildApp.Models.Builds;
+﻿using AutoBuildApp.Models;
+using AutoBuildApp.Models.Builds;
+using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Products;
+using AutoBuildApp.Security;
+using AutoBuildApp.Security.Enumerations;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -17,22 +21,461 @@ namespace AutoBuildApp.DataAccess
     public class BuildDAO
     {
         private readonly string _connectionString;
-
+        /// <summary>
+        /// the _approved roles define the set of roles
+        /// that are need to be able to 
+        /// access the BuildDOA class
+        /// </summary>
+        private readonly List<string> _approvedRoles = new List<string>()
+        {
+            RoleEnumType.BasicRole,
+            RoleEnumType.DelegateAdmin,
+            RoleEnumType.VendorRole,
+            RoleEnumType.SystemAdmin
+        };
+        /// <summary>
+        /// the build DAO constructor
+        /// </summary>
+        /// <param name="connectionString"></param>
         public BuildDAO(string connectionString)
         {
-            _connectionString = connectionString;
+            try
+            {
+                _connectionString = connectionString;
+            }
+            catch (ArgumentNullException)
+            {
+                if (connectionString == null)
+                {
+                    // can be changed per nick
+                    var expectedParamName = "NULL OBJECT PROVIDED";
+                    throw new ArgumentNullException(expectedParamName);
+                }
+            }
+
         }
 
-        public bool InsertBuild(Build build, string buildName, string user)
+        /// <summary>
+        /// this method creates a PCBuild for a user account 
+        /// in the database 
+        /// </summary>
+        /// <param name="build"></param>
+        /// <param name="buildName"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public CommonResponse InsertBuild(Build build, string buildName, string userName)
         {
-            
-            return false;
+            CommonResponse  response = new CommonResponse();
+            //step one, Call Authorization check:
+
+            // if (!AuthorizationCheck.IsAuthorized(_approvedRoles)) { return false; }
+
+            // step two:
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                using (SqlCommand command = new SqlCommand())
+                {
+                    try
+                    {
+                        command.Transaction = conn.BeginTransaction();
+
+                        #region SQL related
+                        command.Connection = conn; // sets the connection of the command equal to the connection that has already been starte in the outer using block.
+
+                        command.CommandTimeout = TimeSpan.FromSeconds(TimeoutLengths.TIMEOUT_SHORT).Seconds;
+                        // 1) Create a Command, and set its CommandType property to StoredProcedure.
+                        command.CommandType = CommandType.Text;
+                        // 2) Set the CommandText to the name of the stored procedure.
+                        command.CommandText = 
+                            $"INSERT INTO PcBuilds(userID, buildName, createdAt, createdby, position, imagePath)" +
+                            "VALUES((SELECT UI.userID FROM UserInfo UI WHERE username = @USERNAME)," +
+                            "@BUILDNAME," +
+                            "@DATETIME," +
+                            "@USERNAME," +
+                            "(SELECT MAX(position) + 1 FROM PcBuilds WHERE userID = " +
+                            "(SELECT UI.userID FROM UserInfo UI WHERE username = @USERNAME))," +
+                            "@IMAGEPATH);";
+
+                        // 3) will be defining the parameters to be passed:
+                        command.Parameters.AddWithValue("@BUILDNAME", buildName);
+                        command.Parameters.AddWithValue("@USERNAME", userName);
+                        command.Parameters.AddWithValue("@DATETIME", DateTime.Now);
+                        command.Parameters.AddWithValue("@IMAGEPATH", "EMPTY");
+
+                        #endregion SQL related
+                        // checking if there are rows
+                            var rowsAdded = command.ExecuteNonQuery();
+
+                            // If the row that was added is not one then true
+                            if (rowsAdded != 0)
+                            {
+                                response.ResponseString = ResponseStringGlobals.SUCCESSFUL_ADDITION;
+                                response.IsSuccessful = true;
+                                command.Transaction.Commit(); // sends the transaction to be commited at the database.
+                                return response;
+                            }
+
+                    }
+                    catch (SqlException e)
+                    {
+
+                        Console.WriteLine("SqlException.GetType: {0}", e.GetType());
+                        Console.WriteLine("SqlException.Source: {0}", e.Source);
+                        Console.WriteLine("SqlException.ErrorCode: {0}", e.ErrorCode);
+                        Console.WriteLine("SqlException.Message: {0}", e.Message);
+                        command.Transaction.Rollback();
+                        if (!conn.State.Equals(ConnectionState.Open))
+                        {
+                            response.ResponseString = ResponseStringGlobals.CONNECTION_FAILED;
+                            response.IsSuccessful = false;
+                            return response;
+                        }
+
+                    }
+                }
+            }
+
+            response.ResponseString = ResponseStringGlobals.FAILED_ADDITION;
+            response.IsSuccessful = false;
+            return response;
         }
 
-        public bool DeleteBuild(string buildName, string username)
+        public CommonResponse DeleteBuild(string buildName, string username)
         {
-            return false;
+            CommonResponse response = new CommonResponse();
+            //step one, Call Authorization check:
+
+            // if (!AuthorizationCheck.IsAuthorized(_approvedRoles)) { return false; }
+
+            // step two:
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                using (SqlCommand command = new SqlCommand())
+                {
+                    try
+                    {
+                        command.Transaction = conn.BeginTransaction();
+
+                        #region SQL related
+                        command.Connection = conn; // sets the connection of the command equal to the connection that has already been starte in the outer using block.
+
+                        command.CommandTimeout = TimeSpan.FromSeconds(TimeoutLengths.TIMEOUT_SHORT).Seconds;
+                        // 1) Create a Command, and set its CommandType property to StoredProcedure.
+                        command.CommandType = CommandType.Text;
+                        // 2) Set the CommandText to the name of the stored procedure.
+                        command.CommandText =
+                            $" DELETE FROM PcBuilds WHERE PcBuilds.buildName = @BUILDNAME; ";
+                        // 3) will be defining the parameters to be passed:
+                        command.Parameters.AddWithValue("@BUILDNAME", buildName);
+
+                        #endregion SQL related
+                        // checking if there are rows
+                        var rowsAffected = command.ExecuteNonQuery();
+                        Console.WriteLine($"rows affected: {rowsAffected} ");
+                        // If the row that was added is not one then true
+                        if (rowsAffected == 0)
+                        {
+                            response.ResponseString = ResponseStringGlobals.FAILED_DELETION;
+                            response.IsSuccessful = false;
+                            return response;
+                        }
+                        response.ResponseString = ResponseStringGlobals.SUCCESSFUL_DELETION;
+                        response.IsSuccessful = true;
+                        command.Transaction.Commit(); // sends the transaction to be commited at the database.
+                        return response;
+
+                    }
+                    catch (SqlException e)
+                    {
+
+                        Console.WriteLine("SqlException.GetType: {0}", e.GetType());
+                        Console.WriteLine("SqlException.Source: {0}", e.Source);
+                        Console.WriteLine("SqlException.ErrorCode: {0}", e.ErrorCode);
+                        Console.WriteLine("SqlException.Message: {0}", e.Message);
+                        command.Transaction.Rollback();
+                        if (!conn.State.Equals(ConnectionState.Open))
+                        {
+                            response.ResponseString = ResponseStringGlobals.CONNECTION_FAILED;
+                            response.IsSuccessful = false;
+                            return response;
+                        }
+
+                    }
+                }
+            }
+
+            response.ResponseString = ResponseStringGlobals.FAILED_DELETION;
+            response.IsSuccessful = false;
+            return response;
         }
+
+
+
+
+        public CommonResponse AddProductsToBuild(string buildName, string modleNumber, int quantity, string username)
+        {
+            CommonResponse response = new CommonResponse();
+            //step one, Call Authorization check:
+
+            // if (!AuthorizationCheck.IsAuthorized(_approvedRoles)) { return false; }
+
+            // step two:
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand command = new SqlCommand())
+                {
+                    try
+                    {
+                        command.Transaction = conn.BeginTransaction();
+
+                        #region SQL related
+                        command.Connection = conn; // sets the connection of the command equal to the connection that has already been starte in the outer using block.
+
+                        command.CommandTimeout = TimeSpan.FromSeconds(TimeoutLengths.TIMEOUT_SHORT).Seconds;
+                        // 1) Create a Command, and set its CommandType property to StoredProcedure.
+                        command.CommandType = CommandType.StoredProcedure;
+                        // 2) Set the CommandText to the name of the stored procedure.
+                        string SP_AddProductsToBuild = $"{nameof(AddProductsToBuild)}";
+                        command.CommandText = SP_AddProductsToBuild;
+                        // 3) will be defining the parameters to be passed:
+                        command.Parameters.AddWithValue("@BUILDNAME", buildName);
+
+                        command.Parameters.AddWithValue("@USERNAME",username );
+                        command.Parameters.AddWithValue("@MODELNUMBER", modleNumber);
+                        command.Parameters.AddWithValue("@QUANTITY", quantity);
+
+                        #endregion SQL related
+                        // checking if there are rows
+                        var rowsAffected = command.ExecuteNonQuery();
+                        Console.WriteLine($"rows affected: {rowsAffected} ");
+                        // If the row that was added is not one then true
+                        if (rowsAffected == 0)
+                        {
+                            response.ResponseString = ResponseStringGlobals.FAILED_ADDITION;
+                            response.IsSuccessful = false;
+                            return response;
+                        }
+                      response.ResponseString = ResponseStringGlobals.SUCCESSFUL_ADDITION;
+                        response.IsSuccessful = true;
+                        command.Transaction.Commit(); // sends the transaction to be commited at the database.
+                        return response;
+
+                    }
+                    catch (SqlException e)
+                    {
+
+                        Console.WriteLine("SqlException.GetType: {0}", e.GetType());
+                        Console.WriteLine("SqlException.Source: {0}", e.Source);
+                        Console.WriteLine("SqlException.ErrorCode: {0}", e.ErrorCode);
+                        Console.WriteLine("SqlException.Message: {0}", e.Message);
+                        command.Transaction.Rollback();
+                        if (!conn.State.Equals(ConnectionState.Open))
+                        {
+                            response.ResponseString = ResponseStringGlobals.CONNECTION_FAILED;
+                            response.IsSuccessful = false;
+                            return response;
+                        }
+
+                    }
+                }
+            }
+
+            response.ResponseString = ResponseStringGlobals.FAILED_ADDITION;
+            response.IsSuccessful = false;
+            return response;
+        }
+
+
+
+
+        public CommonResponse ModifyProductQuantityFromBuild(string buildName, string modleNumber, int quantity, string username)
+        {
+            CommonResponse response = new CommonResponse();
+            //step one, Call Authorization check:
+
+            // if (!AuthorizationCheck.IsAuthorized(_approvedRoles)) { return false; }
+
+            // step two:
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                using (SqlCommand command = new SqlCommand())
+                {
+                    try
+                    {
+                        command.Transaction = conn.BeginTransaction();
+
+                        #region SQL related
+                        command.Connection = conn; // sets the connection of the command equal to the connection that has already been starte in the outer using block.
+
+                        command.CommandTimeout = TimeSpan.FromSeconds(TimeoutLengths.TIMEOUT_SHORT).Seconds;
+                        // 1) Create a Command, and set its CommandType property to StoredProcedure.
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        string SP_ModifyProductQuantityFromBuild = $"{nameof(ModifyProductQuantityFromBuild)}";
+                        // 2) Set the CommandText to the name of the stored procedure.
+                        command.CommandText = SP_ModifyProductQuantityFromBuild;
+                        // 3) will be defining the parameters to be passed:
+                        command.Parameters.AddWithValue("@BUILDNAME", buildName);
+
+                        command.Parameters.AddWithValue("@USERNAME", username);
+                        command.Parameters.AddWithValue("@MODELNUMBER", modleNumber);
+                        command.Parameters.AddWithValue("@QUANTITY", quantity);
+
+                        #endregion SQL related
+                        // checking if there are rows
+                        var rowsAffected = command.ExecuteNonQuery();
+                        Console.WriteLine($"rows affected: {rowsAffected} ");
+                        // If the row that was added is not one then true
+                        if (rowsAffected == 0)
+                        {
+                            response.ResponseString = ResponseStringGlobals.FAILED_MODIFICATION;
+                            response.IsSuccessful = false;
+                            return response;
+                        }
+                        response.ResponseString = ResponseStringGlobals.SUCCESSFUL_MODIFICATION;
+                        response.IsSuccessful = true;
+                        command.Transaction.Commit(); // sends the transaction to be commited at the database.
+                        return response;
+
+                    }
+                    catch (SqlException e)
+                    {
+
+                        Console.WriteLine("SqlException.GetType: {0}", e.GetType());
+                        Console.WriteLine("SqlException.Source: {0}", e.Source);
+                        Console.WriteLine("SqlException.ErrorCode: {0}", e.ErrorCode);
+                        Console.WriteLine("SqlException.Message: {0}", e.Message);
+                        command.Transaction.Rollback();
+                        if (!conn.State.Equals(ConnectionState.Open))
+                        {
+                            response.ResponseString = ResponseStringGlobals.CONNECTION_FAILED;
+                            response.IsSuccessful = false;
+                            return response;
+                        }
+
+                    }
+                }
+            }
+
+            response.ResponseString = ResponseStringGlobals.FAILED_ADDITION;
+            response.IsSuccessful = false;
+            return response;
+        }
+
+
+        // copy build -> MPS request cope
+
+        // recommender adds full build -> list of model numbers for a  buildname, 
+
+
+
+        public CommonResponse SaveBuildRecommended
+            (IList<string> modelNumbers, string buildName, string username)
+        {
+            CommonResponse response = new CommonResponse();
+            //step one, Call Authorization check:
+
+            // if (!AuthorizationCheck.IsAuthorized(_approvedRoles)) { return false; }
+
+            // step two:
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                using (SqlCommand command = new SqlCommand())
+                {
+                    try
+                    {
+                        command.Transaction = conn.BeginTransaction();
+
+                        #region SQL related
+                        command.Connection = conn; // sets the connection of the command equal to the connection that has already been starte in the outer using block.
+
+                        command.CommandTimeout = TimeSpan.FromSeconds(TimeoutLengths.TIMEOUT_SHORT).Seconds;
+                        // 1) Create a Command, and set its CommandType property to StoredProcedure.
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        string SP_ModifyProductQuantityFromBuild = $"{nameof(SaveBuildRecommended)}";
+                        // 2) Set the CommandText to the name of the stored procedure.
+                        command.CommandText = SP_ModifyProductQuantityFromBuild;
+
+
+
+
+
+                        // Creates a dynamic data table to be passed into the stored procedure
+                        DataTable listOfModelNumbers = new DataTable();
+
+                        // Create columns in the table
+                        DataColumn column = new DataColumn();
+                        column.ColumnName = "modelNumber";
+                        column.DataType = typeof(string);
+                        listOfModelNumbers.Columns.Add(column);
+                        // Create all the rows
+                        DataRow row;
+                        foreach (var modelNumber in modelNumbers)
+                        {
+                            row = listOfModelNumbers.NewRow();
+                            row["modelNumber"] = modelNumber;
+                            listOfModelNumbers.Rows.Add(row);
+                        }
+
+
+
+                        // 3) will be defining the parameters to be passed:
+                        command.Parameters.AddWithValue("@BUILDNAME", buildName);
+                        command.Parameters.AddWithValue("@USERNAME", username);
+                        command.Parameters.AddWithValue("@MODELS", listOfModelNumbers);
+                        command.Parameters.AddWithValue("@BUILDNAME", buildName);
+
+                        #endregion SQL related
+                        // checking if there are rows
+                        var rowsAffected = command.ExecuteNonQuery();
+                        Console.WriteLine($"rows affected: {rowsAffected} ");
+                        // If the row that was added is not one then true
+                        if (rowsAffected == 0)
+                        {
+                            response.ResponseString = ResponseStringGlobals.FAILED_MODIFICATION;
+                            response.IsSuccessful = false;
+                            return response;
+                        }
+                        response.ResponseString = ResponseStringGlobals.SUCCESSFUL_MODIFICATION;
+                        response.IsSuccessful = true;
+                        command.Transaction.Commit(); // sends the transaction to be commited at the database.
+                        return response;
+
+                    }
+                    catch (SqlException e)
+                    {
+
+                        Console.WriteLine("SqlException.GetType: {0}", e.GetType());
+                        Console.WriteLine("SqlException.Source: {0}", e.Source);
+                        Console.WriteLine("SqlException.ErrorCode: {0}", e.ErrorCode);
+                        Console.WriteLine("SqlException.Message: {0}", e.Message);
+                        command.Transaction.Rollback();
+                        if (!conn.State.Equals(ConnectionState.Open))
+                        {
+                            response.ResponseString = ResponseStringGlobals.CONNECTION_FAILED;
+                            response.IsSuccessful = false;
+                            return response;
+                        }
+
+                    }
+                }
+            }
+
+            response.ResponseString = ResponseStringGlobals.FAILED_ADDITION;
+            response.IsSuccessful = false;
+            return response;
+        }
+
+
+
+
 
         public bool ModifyBuild(Build newBuild, Build oldBuild, string oldName, string username)
         {

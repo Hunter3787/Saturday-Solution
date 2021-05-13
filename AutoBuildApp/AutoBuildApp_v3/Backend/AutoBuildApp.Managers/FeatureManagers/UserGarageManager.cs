@@ -101,14 +101,25 @@ namespace AutoBuildApp.Managers
             return response;
         }
 
-        public CommonResponse DeleteBuild(string buildID)
-        {
-            NullGuard.IsNotNullOrEmpty(buildID);
+        //public CommonResponse DeleteBuild(string buildID)
+        //{
+        //    NullGuard.IsNotNullOrEmpty(buildID);
 
-            CommonResponse response = _buildService.DeleteBuild();
+        //    CommonResponse response = _buildService.DeleteBuild();
+
+        //    return response;
+        //}
+        public CommonResponse DeleteBuild(string buildName)
+        {
+            NullGuard.IsNotNullOrEmpty(buildName);
+
+            CommonResponse response = new CommonResponse();
+             response = _buildService.DeleteBuild(buildName);
 
             return response;
         }
+
+
 
         public List<Build> GetAllUserBuilds(string user, string sorting)
         {
@@ -141,6 +152,16 @@ namespace AutoBuildApp.Managers
             NullGuard.IsNotNull(build);
 
             CommonResponse response = _buildService.ModifyBuild();
+
+            return response;
+        }
+        public CommonResponse UpdateProductsInBuild(string buildName, string modleNumber, int quantity)
+        {
+            NullGuard.IsNotNull(buildName);
+            NullGuard.IsNotNull(modleNumber);
+            NullGuard.IsNotNull(quantity);
+
+            CommonResponse response = _buildService.ModifyProductsInBuild(buildName, modleNumber, quantity);
 
             return response;
         }

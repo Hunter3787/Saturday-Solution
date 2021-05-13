@@ -10,6 +10,7 @@ using AutoBuildApp.Security.Enumerations;
 using System.Threading;
 using System.Security.Claims;
 using AutoBuildApp.Security;
+using AutoBuildApp.Models.Builds;
 
 /**
 * User Garage controller that accepts incoming requests 
@@ -18,9 +19,10 @@ using AutoBuildApp.Security;
 */
 namespace AutoBuildApp.Api.Controllers
 {
+    [EnableCors("CorsPolicy")] // applying the cors policy so that the client can
+    // make a call the this controller 
     [ApiController]
-    [Route("[controller]")]
-    [EnableCors("CorsPolicy")]
+    [Route("[controller]")] // the route
     public class UserGarageController : ControllerBase
     {
         //private readonly LoggingProducerService _logger = LoggingProducerService.GetInstance;
@@ -28,7 +30,12 @@ namespace AutoBuildApp.Api.Controllers
         private readonly string _connString =
             ConnectionManager
             .connectionManager
-            .GetConnectionStringByName(ControllerGlobals.DOCKER_CONNECTION);
+            .GetConnectionStringByName(ControllerGlobals.LOCALHOST_CONNECTION);
+
+        public UserGarageController()
+        {
+            _manager = new UserGarageManager(connectionString: _connString);
+        }
         private readonly List<string> _approvedRoles = new List<string>()
         {
             RoleEnumType.BasicRole,
@@ -45,14 +52,25 @@ namespace AutoBuildApp.Api.Controllers
         public IActionResult GetBuilds()
         {
             // TODO
+           
             return Ok();
         }
 
-        [HttpPost("saveBuild")]
-        public IActionResult AddBuild()
+        [HttpPost("CreateBuild")]
+        public IActionResult AddBuild(string buildName)
         {
+            Build myBuild = new Build()
+            {
+                BuildName = buildName,
+            };
             // TODO
-            return Ok();
+            var response = _manager.AddBuild(myBuild, myBuild.BuildName);
+            Console.WriteLine($"Response : { response.ResponseString}");
+            if (!response.IsSuccessful)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, response.ResponseString);
+            }
+            return StatusCode(StatusCodes.Status200OK,response.ResponseString);
         }
 
         [HttpPost("copyBuild")]
