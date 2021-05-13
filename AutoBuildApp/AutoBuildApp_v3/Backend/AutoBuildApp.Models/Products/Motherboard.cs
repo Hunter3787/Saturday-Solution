@@ -12,7 +12,7 @@ namespace AutoBuildApp.Models.Products
     {
         #region "Field Declarations: get; set;"
         public string Socket { get; set; }
-        public MoboFormFactor MoboForm{ get; set; }
+        public string MoboForm{ get; set; }
         public string Chipset { get; set; }
         public string MaxMemory { get; set; }
         public MemoryType MaxMemoryType { get; set; }
@@ -42,6 +42,7 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         public Motherboard() : base()
         {
+            ProductType = ProductType.Motherboard;
             SupportedMemory = new List<string>();
             Colors = new List<string>();
             M2Slots = new List<string>();

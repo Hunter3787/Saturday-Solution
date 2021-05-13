@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using AutoBuildApp.Api.Controllers;
 using AutoBuildApp.Api.HelperFunctions;
 using AutoBuildApp.Models;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Products;
+using AutoBuildApp.Security.Enumerations;
+using AutoBuildApp.Security.FactoryModels;
+using AutoBuildApp.Security.Interfaces;
+using AutoBuildApp.Security.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AutoBuildApp.DataAccess.Test
@@ -24,6 +30,7 @@ namespace AutoBuildApp.DataAccess.Test
         private Component _intelCPU700KA;
         private Component _amdCPU3W0F;
         private Component _amdCPU1BOX;
+        private readonly ClaimsPrincipal _claimsPrincipal;
 
 
         public ShelfDAOTests()
@@ -31,6 +38,26 @@ namespace AutoBuildApp.DataAccess.Test
             _conString = ConnectionManager.
             connectionManager.
             GetConnectionStringByName(ControllerGlobals.DOCKER_CONNECTION);
+
+            UserIdentity userIdentity = new UserIdentity
+            {
+                Name = "Zeina",
+                IsAuthenticated = true,
+                AuthenticationType = "JWT",
+
+            };
+
+            ClaimsFactory claimFactory = new ConcreteClaimsFactory();
+            IClaims basicClaims = claimFactory.GetClaims(RoleEnumType.BasicRole);
+            ClaimsIdentity basicIdentity = new ClaimsIdentity(
+                userIdentity,
+                basicClaims.Claims(),
+                userIdentity.AuthenticationType,
+                userIdentity.Name,
+                RoleEnumType.BasicRole);
+            _claimsPrincipal = new ClaimsPrincipal(basicIdentity);
+            Console.WriteLine(_claimsPrincipal.Identity.Name);
+            Thread.CurrentPrincipal = _claimsPrincipal;
 
             _amdCPU3W0F = new Component()
             {
