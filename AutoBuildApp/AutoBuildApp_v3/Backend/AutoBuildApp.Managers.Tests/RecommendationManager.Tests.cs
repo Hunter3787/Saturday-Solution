@@ -98,7 +98,7 @@ namespace AutoBuildApp.Managers.Tests
                 Price = 148.03,
                 Quantity = 1,
                 Socket = "1155",
-                MoboForm = MoboFormFactor.ATX,
+                MoboForm = MoboFormFactor.ATX.ToString(),
                 Chipset = "IntelThing",
                 MaxMemory = "128 GB",
                 MaxMemoryType = MemoryType.DDR4,

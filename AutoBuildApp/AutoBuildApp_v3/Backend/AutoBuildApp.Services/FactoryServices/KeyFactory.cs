@@ -44,14 +44,15 @@ namespace AutoBuildApp.Services.FactoryServices
                 default:
                     return new Dictionary<ProductType, double>
                     {
-                        { ProductType.HDD, .1 },
-                        { ProductType.GPU, .35 },
+                        {ProductType.SSD, .09 },
+                        //{ ProductType.HDD, .09 },
+                        { ProductType.GPU, .30 },
                         { ProductType.CPU, .25 },
-                        { ProductType.Case, .05 },
-                        { ProductType.Cooler, .03 },
-                        { ProductType.RAM, .08 },
-                        { ProductType.PSU, .06 },
-                        { ProductType.Motherboard, .08 }
+                        { ProductType.Case, .08 },
+                        //{ ProductType.Cooler, .03 },
+                        { ProductType.RAM, .10 },
+                        { ProductType.PSU, .09 },
+                        { ProductType.Motherboard, .09 }
                     };
             }
         }

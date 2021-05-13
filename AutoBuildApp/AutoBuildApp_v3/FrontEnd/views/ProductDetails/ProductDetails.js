@@ -1,4 +1,4 @@
-const uri ='https://localhost:5001/productdetails';
+const uri ='http://localhost:8081/productdetails';
 var tokenDanny = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiLCJzdWIiOiJBdXRvYnVpbGQgVXNlciIsImF1ZCI6IlVTIiwiaWF0IjoxNjE4NDUzMzM2LCJleHAiOjE2Mjk2NzcyMzYsIm5iZiI6MTYyOTY3NzIzNiwiVXNlcm5hbWUiOiJkYW5ueSIsIlVzZXJDTGFpbXMiOlt7IlBlcm1pc3Npb24iOiJDUkVBVEUiLCJzY29wZU9mUGVybWlzc2lvbnMiOiJSRVZJRVdTIn0seyJQZXJtaXNzaW9uIjoiREVMRVRFIiwic2NvcGVPZlBlcm1pc3Npb25zIjoiU0VMRiJ9LHsiUGVybWlzc2lvbiI6IkRFTEVURSIsInNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNFTEZfUkVWSUVXUyJ9LHsiUGVybWlzc2lvbiI6IkVESVQiLCJzY29wZU9mUGVybWlzc2lvbnMiOiJTRUxGIn0seyJQZXJtaXNzaW9uIjoiUkVBRF9PTkxZIiwic2NvcGVPZlBlcm1pc3Npb25zIjoiQVVUT0JVSUxEIn0seyJQZXJtaXNzaW9uIjoiVVBEQVRFIiwic2NvcGVPZlBlcm1pc3Npb25zIjoiU0VMRiJ9LHsiUGVybWlzc2lvbiI6IlVQREFURSIsInNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNFTEZfUkVWSUVXUyJ9LHsiUGVybWlzc2lvbiI6IkNSRUFURSIsInNjb3BlT2ZQZXJtaXNzaW9ucyI6IlBST0RVQ1RTIn0seyJQZXJtaXNzaW9uIjoiVVBEQVRFIiwic2NvcGVPZlBlcm1pc3Npb25zIjoiVkVORE9SX1BST0RVQ1RTIn0seyJQZXJtaXNzaW9uIjoiREVMRVRFIiwic2NvcGVPZlBlcm1pc3Npb25zIjoiVkVORE9SX1BST0RVQ1RTIn1dfQ.242uVukArptSKQY6mQpxH_MRdhRO0uEhDdUA4U6qJc4';
 var tokenNewEgg = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiLCJzdWIiOiJBdXRvYnVpbGQgVXNlciIsImF1ZCI6IlVTIiwiaWF0IjoxNjE4NDUzMzM2LCJleHAiOjE2Mjk2NzcyMzYsIm5iZiI6MTYyOTY3NzIzNiwiVXNlcm5hbWUiOiJuZXcgZWdnIiwiVXNlckNMYWltcyI6W3siUGVybWlzc2lvbiI6IkNyZWF0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlJldmlld3MifSx7IlBlcm1pc3Npb24iOiJEZWxldGUiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJTZWxmIn0seyJQZXJtaXNzaW9uIjoiRGVsZXRlIiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZlJldmlld3MifSx7IlBlcm1pc3Npb24iOiJFZGl0IiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZiJ9LHsiUGVybWlzc2lvbiI6IlJlYWRPbmx5IiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiQXV0b0J1aWxkIn0seyJQZXJtaXNzaW9uIjoiVXBkYXRlIiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZiJ9LHsiUGVybWlzc2lvbiI6IlVwZGF0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNlbGZSZXZpZXdzIn0seyJQZXJtaXNzaW9uIjoiQ3JlYXRlIiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiUHJvZHVjdHMifSx7IlBlcm1pc3Npb24iOiJVcGRhdGUiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJWZW5kb3JQcm9kdWN0cyJ9LHsiUGVybWlzc2lvbiI6IkRlbGV0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlZlbmRvclByb2R1Y3RzIn1dfQ.MQyT1fFd2VZjFlxX0RiEhpLk4liae6xuPdpewqRDpZg';
 
@@ -14,7 +14,11 @@ const fetchRequest = {
     }
   };
 
-  window.onload = getProductDetails('GV-N207SWF3OC-8GD')
+  var modelNumber = sessionStorage.getItem('modelNumber');
+  if(modelNumber == null) {
+    window.location.assign("../ComponentCatalog/ComponentCatalog.html")
+  }
+  window.onload = getProductDetails(modelNumber);
 
   async function getProductDetails(modelNumber) {
       await fetch(uri + '/' + modelNumber)
@@ -35,18 +39,32 @@ const fetchRequest = {
 
     // Get the product image div and set it
     var imageDiv = document.querySelector('.product-image');
+    imageDiv.style = "margin-bottom:50px"
     var image = new Image(300, 300);
     image.src = data["imageUrl"];
     imageDiv.appendChild(image);
 
     // Get the average rating div and set it
-    var averageRating = document.querySelector('.average-rating');
-    averageRating.innerHTML = 'Average rating: ' + data["averageRating"];
+    var averageRatingAndTotalRatings = document.querySelector('.average-rating-and-total-reviews');
 
     // Get the total reviews div and set it
     var totalReviews = document.querySelector('.total-reviews');
-    totalReviews.innerHTML = 'Total Reviews: ' + data["totalReviews"];
+    
+    var stars = document.querySelector('.stars');
+    stars.style = "margin-right:10px"
+    var ratingRounded = Math.round(data["averageRating"]);
 
+    for(var i = 0; i < ratingRounded; i++) {
+        stars.children[i].classList.add('checked');
+    }
+
+    averageRatingAndTotalRatings.appendChild(stars);
+
+    var totalReviewsText = document.createElement('text');
+    totalReviewsText.style="font-size:30px"
+    totalReviewsText.innerHTML = '(' + data["totalReviews"] + ')';
+
+    averageRatingAndTotalRatings.appendChild(totalReviewsText);
     // Get the side nav bar
     var sideNavigationBar = document.querySelector('.side-nav');
 
@@ -183,7 +201,7 @@ const fetchRequest = {
             alert('successfully added email to email list');
         }
         else {
-            alert('error');
+            alert("You've already been added to this email list!");
         }
     })
   }

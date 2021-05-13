@@ -1,13 +1,10 @@
-﻿using AutoBuildApp.Models;
-using AutoBuildApp.DataAccess;
+﻿using AutoBuildApp.DataAccess;
 using HtmlAgilityPack;
 using Fizzler.Systems.HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Net.NetworkInformation;
-using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Threading;
