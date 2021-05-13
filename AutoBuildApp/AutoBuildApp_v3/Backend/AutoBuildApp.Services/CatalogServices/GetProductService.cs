@@ -139,7 +139,7 @@ namespace AutoBuildApp.Services
                 output.ModelNumber = toCreate.ModelNumber;
                 output.AddImage(toCreate.ImageURL);
 
-                //FillComponentSpecs(toCreate, output);                
+                FillComponentSpecs(toCreate, output);
             }
             catch (ArgumentException ex)
             {
@@ -167,6 +167,7 @@ namespace AutoBuildApp.Services
                     case ProductType.Case:
                         break;
                     case ProductType.Fan:
+                        // TODO: Not yet implemented. No data in DB.
                         break;
                     case ProductType.GPU:
                         break;
@@ -270,8 +271,6 @@ namespace AutoBuildApp.Services
                 // Log
             }
         }
-
-        private void Size
         #endregion
     }
 }

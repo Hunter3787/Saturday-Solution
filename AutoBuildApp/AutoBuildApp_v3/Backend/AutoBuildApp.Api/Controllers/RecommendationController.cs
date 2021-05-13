@@ -27,7 +27,7 @@ namespace AutoBuildApp.Api.Controllers
         private readonly string _connectionString =
             ConnectionManager
             .connectionManager
-            .GetConnectionStringByName(ControllerGlobals.LOCALHOST_CONNECTION);
+            .GetConnectionStringByName(ControllerGlobals.ADMIN_CREDENTIALS_CONNECTION);
 
         //private readonly string _connectionString = "Data Source=satudaysolution-rds.cc5jk01zeyle.us-west-1.rds.amazonaws.com, 1433; Initial Catalog=DB; Integrated Security=True; Trusted_Connection=False; Uid=admin; Pwd=SaturdaySolution;";
 

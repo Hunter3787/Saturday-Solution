@@ -12,7 +12,6 @@ namespace AutoBuildApp.Models.Products
 
         public HardDrive() : base()
         {
-            ProductType = ProductType.HDD;
         }
     }
 }
