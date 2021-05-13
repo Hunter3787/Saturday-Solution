@@ -9,6 +9,24 @@
 </head>
 
 <body>
+
+    <div class="custom-nav">
+        <span>
+            <img src="/assets/images/Logo/Logo.png" alt="logo"/>
+            <h1 class="nav-title" onclick="location.href='/views/MPBmain/MPB.html'">AutoBuild</h1>
+            <a class="custom-a" href="/views/MPBmain/MPB.html">Home</a>
+            <a class="custom-a" href="/views/Recommender/Recommender.html">PC Builder and Upgrader</a>
+            <a class="custom-a" href="/views/ComponentCatalog/ComponentCatalog.html">Component Catalog</a>
+            <a class="custom-a" href="/views/VendorInventoryManagement/VendorInventoryManagement.html">Vendor Management</a>
+            <button type="button" class="nav-button" onclick="location.href='/views/LoginPage/LoginPage.html'">Login</button>
+            <button type="button" class="nav-button" onclick="location.href='/views/RegistrationPage/RegistrationPage.html'">Register</button>
+        </span>
+    </div>
+
+    <div class="formheader">
+        <h1 class="formtitle">Component Catalog</h1>
+    </div>
+
     <select class="model-number-dropdown">
         <option>Model Number</option>
     </select>
@@ -68,6 +86,11 @@
         <span class="star">★</span>
         <span class="star">★</span>
     </div>
+
+    <footer>
+        <span>&copy; 2021</span>
+        <a class="custom-a" href="/views/Privacy-Policy/PrivacyPolicy.html">Privacy Policy</a>
+    </footer>
 
     <script src="ComponentCatalog.js" asp-append-version="true"></script>
 
