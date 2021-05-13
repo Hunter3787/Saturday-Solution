@@ -1,7 +1,8 @@
-﻿using System;
-using AutoBuildApp.Models.Enumerations;
-using AutoBuildApp.Models.Interfaces;
+﻿using AutoBuildApp.Models.Interfaces;
 
+/**
+ * @Author Nick Marshall-Eminger
+ */
 namespace AutoBuildApp.Models.Products
 {
     public class HardDrive : Component, IComponent, IHardDrive

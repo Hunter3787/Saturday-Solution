@@ -20,6 +20,26 @@ namespace AutoBuildApp.Services
     {
         private ProductDAO _productDao;
         private ProductFactory _productFactory;
+        private readonly string[] suffix = {"bytes", "KB", "MB", "GB", "TB", "PB"};
+        private string _efficiency = "Efficiency";
+        private string _formFactor = "Form Factor";
+        private string _cpuSocketType = "CPU Socket Type";
+        private string _maxMemorySupport = "Maximum Memory Supported";
+        private string _chipset = "Chipset";
+        private string _wattage = "Maximum Power";
+        private string _modularity = "Modular";
+        private string _capacity = "Capacity";
+        private string _casLatency = "CAS Latency";
+        private string _heatSpreader = "Heat Spreader";
+        private string _errCorrection = "ECC";
+        private string _voltage = "Voltage";
+        private string _timing = "Timing";
+        private string _speed = "Speed";
+        private string _type = "Type";
+        private string _cache = "Cache";
+        
+
+
 
         /// <summary>
         /// Constructor that takes an injection of a data access object.
@@ -153,24 +173,91 @@ namespace AutoBuildApp.Services
                     case ProductType.CPU:
                         break;
                     case ProductType.HDD:
-                        break;
-                    case ProductType.SSD:
-                        break;
-                    case ProductType.RAM:
-                        break;
-                    case ProductType.PSU:
-                        ((PowerSupplyUnit)component).Wattage = int.Parse(specDictionary["Maximum Power"]);
 
                         break;
+                    case ProductType.SSD:
+                        if (specDictionary.ContainsKey(_capacity))
+                        {
+
+                        }
+                        if (specDictionary.ContainsKey(_cache))
+                        {
+
+                        }
+                        break;
+                    case ProductType.RAM:
+                        if (specDictionary.ContainsKey(_capacity))
+                        {
+                            var tempString = specDictionary[_capacity].Split();
+
+
+                        }
+                        if (specDictionary.ContainsKey(_casLatency))
+                        {
+
+                        }
+                        if (specDictionary.ContainsKey(_errCorrection))
+                        {
+
+                        }
+                        if (specDictionary.ContainsKey(_heatSpreader))
+                        {
+
+                        }
+                        if (specDictionary.ContainsKey(_voltage))
+                        {
+
+                        }
+                        if (specDictionary.ContainsKey(_speed))
+                        {
+
+                        }
+                        if (specDictionary.ContainsKey(_timing))
+                        {
+
+                        }
+                        if (specDictionary.ContainsKey(_type))
+                        {
+
+                        }
+
+                        break;
+                    case ProductType.PSU:
+                        if (specDictionary.ContainsKey(_wattage))
+                        {
+                            ((PowerSupplyUnit)component).Wattage = int.Parse(specDictionary[_wattage]);
+                        }
+                        if (specDictionary.ContainsKey(_efficiency))
+                        {
+                            ((PowerSupplyUnit)component).EfficiencyRating = specDictionary[_efficiency];
+                        }
+                        //if (specDictionary.ContainsKey(_modularity))
+                        //{
+                        //    ((PowerSupplyUnit)component).PsuModulartiy = (PSUModularity)Enum.Parse(typeof(PSUModularity), specDictionary[_modularity]);
+                        //}
+                        break;
                     case ProductType.Motherboard:
-                        ((Motherboard)component).MoboForm = specDictionary["Form Factor"];
-                        ((Motherboard)component).Socket = specDictionary["CPU Socket Type"];
-                        ((Motherboard)component).MaxMemory = specDictionary["Maximum Memory Supported"];
+                        if (specDictionary.ContainsKey(_formFactor))
+                        {
+                            ((Motherboard)component).MoboForm = specDictionary[_formFactor];
+                        }
+                        if (specDictionary.ContainsKey(_cpuSocketType))
+                        {
+                            ((Motherboard)component).Socket = specDictionary[_cpuSocketType];
+                        }
+                        if (specDictionary.ContainsKey(_maxMemorySupport))
+                        {
+                            ((Motherboard)component).MaxMemory = specDictionary[_maxMemorySupport];
+                        }
+                        if (specDictionary.ContainsKey(_chipset))
+                        {
+                            ((Motherboard)component).Chipset = specDictionary[_chipset];
+                        }
                         //MemoryType memType = (MemoryType)Enum.Parse(typeof(MemoryType), specDictionary["Memory Standard"]);
                         //((Motherboard)component).MaxMemoryType = ;
-                        ((Motherboard)component).Chipset = specDictionary["Chipset"];
                         break;
                     case ProductType.Cooler:
+                        // TODO: Not yet implemented. No data in DB.
                         break;
                     default:
                         break;
@@ -183,6 +270,8 @@ namespace AutoBuildApp.Services
                 // Log
             }
         }
+
+        private void Size
         #endregion
     }
 }

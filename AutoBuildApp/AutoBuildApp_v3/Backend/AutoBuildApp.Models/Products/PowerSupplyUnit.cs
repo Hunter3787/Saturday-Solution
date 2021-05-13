@@ -18,7 +18,7 @@ namespace AutoBuildApp.Models.Products
         public int Length { get; set; }
         public string EfficiencyRating { get; set; }
         public bool Fanless { get; set; }
-        public PSUModularity PsuType { get; set; }
+        public PSUModularity PsuModulartiy { get; set; }
         public int EPSConnectors { get; set; }
         public int SataConnectors { get; set; }
         public int MolexConnectors { get; set; }

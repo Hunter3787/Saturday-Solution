@@ -135,7 +135,7 @@ namespace AutoBuildApp.Services.RecommendationServices.Tests
                 Length = 154,
                 EfficiencyRating = "Gold 80+",
                 Fanless = false,
-                PsuType = PSUModularity.FullyModular,
+                PsuModulartiy = PSUModularity.FullyModular,
                 EPSConnectors = 4,
                 SataConnectors = 6,
                 MolexConnectors = 4,

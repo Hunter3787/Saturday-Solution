@@ -14,7 +14,7 @@ namespace AutoBuildApp.Models.Products
     {
         #region "Field Declarations: get; set;"
         public int NumOfModules { get; set; }
-        public int ModuleSize { get; set; }
+        public int ModuleCapacity { get; set; }
         public string FormFactor { get; set; }
         public List<string> Color { get; set; }
         public string FirstWordLat { get; set; }
