@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Component Catalog</title>
+    <link rel="stylesheet" href="Recommender.css" />
+
+</head>
+
+<body>
+    <h1 class="title">Build Recommender</h1>
+
+    <div class="list-of-products">
+        <div class='product-table'></div>
+    </div>
+
+    <button style="text-align:center;" onclick="getBuild()">Apply Filter</button>
+
+    <input class='budget' type="text">
+    <table class='build-table'>
+        <tr>
+            <th>Type</th>
+            <th>Product</th>
+            <th>Price</th>
+        </tr>
+        <tr class='gpu'>
+            <th>GPU</th>
+        </tr>
+        <tr class='cpu'>
+            <th>CPU</th>
+        </tr>
+        <tr class='motherboard'>
+            <th>Motherboard</th>
+        </tr>
+        <tr class='psu'>
+            <th>PSU</th>
+        </tr>
+        <tr class='ssd'>
+            <th>SSD</th>
+        </tr>
+        <tr class='ram'>
+            <th>RAM</th>
+        </tr>
+        <tr class='case'>
+            <th>Case</th>
+        </tr>
+        <tr>
+            <th>Total:</th>
+            <th></th>
+            <th class='total-price'></th>
+        </tr>
+    </table>
+
+    </div>
+
+    <script src="Recommender.js" asp-append-version="true"></script>
+
+</body>
+
+</html>

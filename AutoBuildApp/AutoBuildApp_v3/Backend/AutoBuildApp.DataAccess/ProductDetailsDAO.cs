@@ -58,9 +58,6 @@ namespace AutoBuildApp.DataAccess
             Dictionary<string, string> productSpecs = new Dictionary<string, string>();
             product.Specs = productSpecs;
 
-            // Total ratings for a product
-            int totalRating = 0;
-
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -141,12 +138,6 @@ namespace AutoBuildApp.DataAccess
 
                                 // Add the review to the vendor's list of reviews
                                 vendorInformation[vendorName].Reviews.Add(review);
-
-                                //// Add to total rating
-                                //totalRating += Int32.Parse(review.StarRating);
-
-                                //// Increment total reviews
-                                //product.TotalReviews++;
                             }
 
                             // Now get the vendor product information
@@ -164,11 +155,6 @@ namespace AutoBuildApp.DataAccess
                                 productVendorDetailsDTO.Price = Decimal.ToDouble(reader["productPrice"] == DBNull.Value ? 0 : (decimal)reader["productPrice"]);
                             }
 
-                            //// Sets the average rating if the product has at least 1 review
-                            //if (product.TotalReviews > 0)
-                            //{
-                            //    product.AverageRating = (Convert.ToDouble(totalRating) / product.TotalReviews);
-                            //}
                         }
 
                         transaction.Commit();

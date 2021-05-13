@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using AutoBuildApp.Models.Interfaces;
-
+using AutoBuildApp.Models.Enumerations;
 /**
  * Random Access Memory class that invokes the IComonent interface.
  * @Author Nick Marshall-Eminger
@@ -28,6 +28,7 @@ namespace AutoBuildApp.Models.Products
 
         public RAM() : base()
         {
+            ProductType = ProductType.RAM;
             Color = new List<string>();
             Timing = new List<int>();
         }

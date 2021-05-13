@@ -136,12 +136,12 @@ namespace AutoBuildApp.Services
                 output.ManufacturerName = toCreate.Manufacturer;
                 output.ProductName = toCreate.ProductName;
                 output.Price = toCreate.Price;
-                output.ModelNumber = toCreate.Model;
+                output.ModelNumber = toCreate.ModelNumber;
                 output.AddImage(toCreate.ImageURL);
 
-                FillComponentSpecs(toCreate, output);                
+                //FillComponentSpecs(toCreate, output);                
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
                 // Log
                 output = null;
