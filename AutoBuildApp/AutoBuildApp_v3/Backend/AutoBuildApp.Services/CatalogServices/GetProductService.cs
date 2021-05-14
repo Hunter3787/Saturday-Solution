@@ -155,7 +155,7 @@ namespace AutoBuildApp.Services
                 output.ModelNumber = toCreate.ModelNumber;
                 output.AddImage(toCreate.ImageURL);
 
-                FillComponentSpecs(toCreate, output);
+                //FillComponentSpecs(toCreate, output);
             }
             catch (ArgumentException ex)
             {
@@ -195,71 +195,71 @@ namespace AutoBuildApp.Services
                     #endregion
                     #region Case = Central Processing Unit
                     case ProductType.CPU:
-                        if (specDictionary.ContainsKey(_coreCount))
-                        {
-                            var tempString = specDictionary[_coreCount].ToLower();
-                            var coreCount = 0;
+                        //if (specDictionary.ContainsKey(_coreCount))
+                        //{
+                        //    var tempString = specDictionary[_coreCount].ToLower();
+                        //    var coreCount = 0;
 
-                            if (tempString.Contains("quad"))
-                            {
-                                coreCount = 4;
-                            }
-                            if (t)
+                        //    if (tempString.Contains("quad"))
+                        //    {
+                        //        coreCount = 4;
+                        //    }
+                        //    if (t)
 
-                            ((CentralProcUnit)component).CoreCount = coreCount;
-                        }
+                        //    ((CentralProcUnit)component).CoreCount = coreCount;
+                        //}
 
-                        if (specDictionary.ContainsKey[])
-                        {
+                        //if (specDictionary.ContainsKey[])
+                        //{
                             
-                        }
+                        //}
 
 
-                        if (specDictionary.ContainsKey[])
-                        {
+                        //if (specDictionary.ContainsKey[])
+                        //{
 
-                        }
+                        //}
 
-                        if (specDictionary.ContainsKey[])
-                        {
+                        //if (specDictionary.ContainsKey[])
+                        //{
 
-                        }
+                        //}
 
-                        if (specDictionary.ContainsKey[])
-                        {
+                        //if (specDictionary.ContainsKey[])
+                        //{
 
-                        }
+                        //}
 
-                        if (specDictionary.ContainsKey[])
-                        {
+                        //if (specDictionary.ContainsKey[])
+                        //{
 
-                        }
+                        //}
 
-                        if (specDictionary.ContainsKey[])
-                        {
+                        //if (specDictionary.ContainsKey[])
+                        //{
 
-                        }
+                        //}
 
-                        if (specDictionary.ContainsKey[])
-                        {
+                        //if (specDictionary.ContainsKey[])
+                        //{
 
-                        }
+                        //}
 
-                        if (specDictionary.ContainsKey[])
-                        {
+                        //if (specDictionary.ContainsKey[])
+                        //{
 
-                        }
+                        //}
 
 
-                            ((CentralProcUnit)component).CoreClock;
-                            ((CentralProcUnit)component).BoostClock;
-                            ((CentralProcUnit)component).CoreCount;
-                            ((CentralProcUnit)component).L1Cache;
-                            ((CentralProcUnit)component).L2Cache;
-                            ((CentralProcUnit)component).L3Cache;
-                            ((CentralProcUnit)component).PowerDraw;
-                            ((CentralProcUnit)component).Socket;
-                            ((CentralProcUnit)component).MicrorArchitecture;
+                        //    ((CentralProcUnit)component).CoreClock;
+                        //    ((CentralProcUnit)component).BoostClock;
+                        //    ((CentralProcUnit)component).CoreCount;
+                        //    ((CentralProcUnit)component).L1Cache;
+                        //    ((CentralProcUnit)component).L2Cache;
+                        //    ((CentralProcUnit)component).L3Cache;
+                        //    ((CentralProcUnit)component).PowerDraw;
+                        //    ((CentralProcUnit)component).Socket;
+                        //    ((CentralProcUnit)component).MicrorArchitecture;
                         
                         break;
                     #endregion

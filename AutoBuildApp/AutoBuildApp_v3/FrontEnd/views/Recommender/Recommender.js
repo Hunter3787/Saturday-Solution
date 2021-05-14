@@ -137,8 +137,8 @@ function displayBuild(data) {
     ssd.appendChild(ssdTD);
 
     var ssdPriceTD = document.createElement('td');
-    ssdPriceTD.innerHTML = "$" + data[0]["ssd"]["price"].toFixed(2);
-    totalPrice += data[0]["ssd"]["price"];
+    ssdPriceTD.innerHTML = "$" + data[0]["hardDrives"][0]["price"].toFixed(2);
+    totalPrice += data[0]["hardDrives"][0]["price"];
     ssd.appendChild(ssdPriceTD);
 
     var ssdDiv = document.createElement('div');
@@ -146,10 +146,10 @@ function displayBuild(data) {
     ssdDiv.style ="width:300px;padding:25px";
 
     var ssdTitle = document.createElement('text');
-    ssdTitle.textContent = data[0]["ssd"]["productName"];
+    ssdTitle.textContent = data[0]["hardDrives"][0]["productName"];
 
     var ssdImage = new Image(150,150);
-    ssdImage.src = data[0]["ssd"]["productImageStrings"][0]
+    ssdImage.src = data[0]["hardDrives"][0]["productImageStrings"][0]
 
     ssdDiv.appendChild(ssdImage);
     ssdDiv.appendChild(document.createElement('br'))

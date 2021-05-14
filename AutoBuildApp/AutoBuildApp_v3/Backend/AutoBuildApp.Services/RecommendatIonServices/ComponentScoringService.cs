@@ -106,9 +106,9 @@ namespace AutoBuildApp.Services.RecommendationServices
             } 
 
             // Unresolved magic values.
-            if (frameSync != null || frameSync.ToLower().Contains("g-sync")
+            if (frameSync != null && (frameSync.ToLower().Contains("g-sync")
                 || frameSync.ToLower().Contains("freesync")
-                || frameSync.ToLower().Contains("gsync"))
+                || frameSync.ToLower().Contains("gsync")))
             {
                 frameSyncScore += RecWeightGlobals.BONUS_VALUE;
             }
