@@ -59,7 +59,7 @@ namespace AutoBuildApp.Services.RecommendationServices
                 case Motherboard mobo:
                     score = Score(mobo, type);
                     break;
-                case IHardDrive hardDrive:
+                case HardDrive hardDrive:
                     score = Score(hardDrive, type);
                     break;
                 default:
@@ -79,28 +79,45 @@ namespace AutoBuildApp.Services.RecommendationServices
         /// <returns></returns>
         private int Score(GraphicsProcUnit input, BuildType type)
         {
-            if (input.Price == 0 || input.Memory == null || input.CoreClock == null ||
-                input.BoostClock == null || input.EffectiveMemClock == null ||
-                    input.PowerDraw == 0)
-                return -1;
             var price = input.Price;
-            var mem = ParseInt(input.Memory);
-            var coreClock = ParseInt(input.CoreClock);
-            var boostClock = ParseInt(input.BoostClock);
-            var effectiveMem = ParseInt(input.EffectiveMemClock);
+            var mem = 0;
+            var coreClock = 0;
+            var boostClock = 0;
+            var effectiveMem = 0;
             var powerDraw = input.PowerDraw;
             var frameSync = input.FrameSync;
             var frameSyncScore = 0;
+            
+            if (string.IsNullOrEmpty(input.Memory))
+            {
+                mem = ParseInt(input.Memory);
+            }
+            if (!string.IsNullOrEmpty(input.CoreClock))
+            {
+                coreClock = ParseInt(input.CoreClock);
+            }
+            if (input.BoostClock != null)
+            {
+                boostClock = ParseInt(input.BoostClock);
+            }
+            if (!string.IsNullOrEmpty(input.EffectiveMemClock))
+            {
+                effectiveMem = ParseInt(input.EffectiveMemClock);
+            } 
 
             // Unresolved magic values.
-            if (frameSync != null || frameSync.ToLower().Contains("g-sync")
+            if (frameSync != null && (frameSync.ToLower().Contains("g-sync")
                 || frameSync.ToLower().Contains("freesync")
-                || frameSync.ToLower().Contains("gsync"))
+                || frameSync.ToLower().Contains("gsync")))
+            {
                 frameSyncScore += RecWeightGlobals.BONUS_VALUE;
-
+            }
+                
             // Bonus score to gigabyte memory value.
             if (input.Memory.ToLower().Contains("gb"))
+            {
                 mem *= RecWeightGlobals.BONUS_VALUE;
+            }
 
             double scoreTotal = 0;
 
@@ -141,16 +158,22 @@ namespace AutoBuildApp.Services.RecommendationServices
 
         private int Score(CentralProcUnit input, BuildType type)
         {
-            if (input.Price == 0 || input.CoreCount == 0 || input.CoreClock == null ||
-                input.BoostClock == null || input.PowerDraw == 0)
-                return -1;
-
             var price = input.Price;
             var coreCount = input.CoreCount;
-            var coreClock = ParseInt(input.CoreClock);
-            var boostClock = ParseInt(input.BoostClock);
+            var coreClock = 0;
+            var boostClock = 0;
             var powerDraw = input.PowerDraw;
             var errCorrection = 0;
+
+            if (!string.IsNullOrEmpty(input.CoreClock))
+            {
+                coreClock = ParseInt(input.CoreClock);
+            }
+            if (!string.IsNullOrEmpty(input.BoostClock))
+            {
+                boostClock = ParseInt(input.BoostClock);
+            }
+
 
             if (input.ErrCorrectionCodeSupport)
                 errCorrection += RecWeightGlobals.BONUS_VALUE;
@@ -187,12 +210,15 @@ namespace AutoBuildApp.Services.RecommendationServices
 
         private int Score(PowerSupplyUnit input, BuildType type)
         {
-            if (input.Price == 0 || input.Wattage == 0 || input.EfficiencyRating == null)
-                return -1;
             var price = input.Price;
             var wattage = input.Wattage;
             var efficancyBonus = 0;
-            var efRating = input.EfficiencyRating.ToLower().Trim();
+            var efRating = "";
+
+            if (!string.IsNullOrEmpty(input.EfficiencyRating))
+            {
+                efRating = input.EfficiencyRating.ToLower().Trim();
+            }
 
             if (efRating == "80+ Bronze")
                 efficancyBonus = RecWeightGlobals.BONUS_VALUE;
@@ -231,15 +257,20 @@ namespace AutoBuildApp.Services.RecommendationServices
 
         private int Score(RAM input, BuildType type)
         {
-            if (input.Price == 0 || input.NumOfModules == 0 || input.ModuleCapacity == 0
-                || input.FirstWordLat == null || input.CASLat == null)
-                return -1;
-
             var price = input.Price;
-            var firstWord = ParseDouble(input.FirstWordLat);
+            var firstWord = 0.0;
             var numOfModules = input.NumOfModules;
             var moduleSize = input.ModuleCapacity;
-            var casLat = ParseInt(input.CASLat);
+            var casLat = 0;
+
+            if (!string.IsNullOrEmpty(input.FirstWordLat))
+            {
+                firstWord = ParseDouble(input.FirstWordLat);
+            }
+
+            if (string.IsNullOrEmpty(input.CASLat)){
+                casLat = ParseInt(input.CASLat);
+            }
 
             double scoreTotal = 0;
 
@@ -269,14 +300,16 @@ namespace AutoBuildApp.Services.RecommendationServices
 
         private int Score(ComputerCase input, BuildType type)
         {
-            if (input.Price == 0)
-                return -1;
             var price = input.Price;
             var expansion = input.ExpansionSlots;
             var psuShroud = input.PsuShroud;
             var frontPanel = 0;
+
             if (input.FrontPanel != null)
+            {
                 frontPanel = input.FrontPanel.Count;
+            }
+                
 
             double scoreTotal = 0;
 
@@ -309,14 +342,20 @@ namespace AutoBuildApp.Services.RecommendationServices
 
         private int Score(ICooler input, BuildType type)
         {
-            if (input.Price == 0 || input.FanRPM == null || input.NoiseVolume == null)
-                return -1;
-
             var price = input.Price;
-            var speed = ParseInt(input.FanRPM);
-            var noise = ParseInt(input.NoiseVolume);
-
+            var speed = 0;
+            var noise = 0;
             double scoreTotal = 0;
+
+            if (!string.IsNullOrEmpty(input.FanRPM))
+            {
+                speed = ParseInt(input.FanRPM);
+            }
+            if (!string.IsNullOrEmpty(input.NoiseVolume))
+            {
+                noise = ParseInt(input.NoiseVolume);
+            }
+
 
             switch (type)
             {
@@ -366,16 +405,22 @@ namespace AutoBuildApp.Services.RecommendationServices
         //    return (int)Math.Round(scoreTotal, MidpointRounding.AwayFromZero);
         //}
 
-        private int Score(IHardDrive input, BuildType type)
+        private int Score(HardDrive input, BuildType type)
         {
-            if (input.Price == 0 || input.Capacity == null)
-                return -1;
-
             var price = input.Price;
-            var capacity = ParseInt(input.Capacity);
-            var cache = ParseInt(input.Cache);
-
+            var capacity = 0;
+            var cache = 0;
             double scoreTotal = 0;
+
+            if (!string.IsNullOrEmpty(input.Cache))
+            {
+                cache = ParseInt(input.Cache);
+            }
+
+            if (!string.IsNullOrEmpty(input.Capacity))
+            {
+                capacity = ParseInt(input.Capacity);
+            }
 
             switch (type)
             {
@@ -403,15 +448,15 @@ namespace AutoBuildApp.Services.RecommendationServices
 
         private int Score(Motherboard input, BuildType type)
         {
-            if(input.Price == 0 || input.Socket == null || input.MaxMemory == null ||
-                input.SupportedMemory == null)
-                return -1;
-
             var price = input.Price;
             var maxMemSupport = input.MaxMemoryType;
-            var maxMem = ParseInt(input.MaxMemory);
-
+            var maxMem = 0;
             double scoreTotal = 0;
+
+            if (!string.IsNullOrEmpty(input.MaxMemory))
+            {
+                maxMem = ParseInt(input.MaxMemory);
+            }
 
             switch (type)
             {

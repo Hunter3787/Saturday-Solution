@@ -185,37 +185,37 @@ namespace AutoBuildApp.DataAccess
                         SqlDataAdapter innerAdapter = new SqlDataAdapter();
                         innerAdapter.InsertCommand = new SqlCommand(sql, connection, transaction);
 
-                        foreach (var product in entitiesList)
-                        {
+                        //foreach (var product in entitiesList)
+                        //{
 
-                            if (innerAdapter.InsertCommand.Parameters.Count == 0)
-                            {
-                                innerAdapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = product.ModelNumber;
-                            }
-                            else
-                            {
-                                innerAdapter.InsertCommand.Parameters["@MODELNUMBER"].Value = product.ModelNumber;
-                            }
+                        //    if (innerAdapter.InsertCommand.Parameters.Count == 0)
+                        //    {
+                        //        innerAdapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = product.ModelNumber;
+                        //    }
+                        //    else
+                        //    {
+                        //        innerAdapter.InsertCommand.Parameters["@MODELNUMBER"].Value = product.ModelNumber;
+                        //    }
 
-                            using (SqlDataReader reader = innerAdapter.InsertCommand.ExecuteReader())
-                            {
-                                while (reader.Read())
-                                {
-                                    var key = (string)reader["productSpecs"];
-                                    var value = (string)reader["productSpecsValue"];
+                        //    using (SqlDataReader reader = innerAdapter.InsertCommand.ExecuteReader())
+                        //    {
+                        //        while (reader.Read())
+                        //        {
+                        //            var key = (string)reader["productSpecs"];
+                        //            var value = (string)reader["productSpecsValue"];
 
-                                    if(product.Specs == null)
-                                    {
-                                        product.Specs = new Dictionary<string, string>();
-                                    }
+                        //            if(product.Specs == null)
+                        //            {
+                        //                product.Specs = new Dictionary<string, string>();
+                        //            }
 
-                                    if (!product.Specs.ContainsKey(key))
-                                    {
-                                        product.Specs.Add(key, value);
-                                    }
-                                }
-                            }
-                        }
+                        //            if (!product.Specs.ContainsKey(key))
+                        //            {
+                        //                product.Specs.Add(key, value);
+                        //            }
+                        //        }
+                        //    }
+                        //}
 
                         transaction.Commit();
 

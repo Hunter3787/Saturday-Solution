@@ -132,8 +132,12 @@ namespace AutoBuildApp.Managers
             }
             #endregion
 
+            prototype.AddHardDrive(new HardDrive() { ProductType = ProductType.SSD });
+
             var componentList = parser.CreateComponentList(prototype);
             componentList.RemoveAt(7);
+            
+            
             //componentList.Add(new HardDrive());
             var portionedList = portioner.PortionOutBudget(
                 componentList,
@@ -141,7 +145,7 @@ namespace AutoBuildApp.Managers
                 adjustedBudget);
 
             products = getter.GetComponentDictionary(portionedList);
-            ScoreProductDictionary(products, scores, requestedType);
+            //ScoreProductDictionary(products, scores, requestedType);
 
             SortByPriceDesc(products);
             // Business rule to create 5 builds and return them all.
@@ -157,7 +161,7 @@ namespace AutoBuildApp.Managers
                 build.Case = (ComputerCase)products[ProductType.Case][0];
                 build.Gpu = (GraphicsProcUnit)products[ProductType.GPU][0];
                 build.Psu = (PowerSupplyUnit)products[ProductType.PSU][0];
-                build.SSD = (SolidStateDrive)products[ProductType.SSD][0];
+                build.AddHardDrive((SolidStateDrive)products[ProductType.SSD][0]);
                 //build.AddHardDrive((HardDrive)products[ProductType.HDD][0]);
                 //build.HardDrives.Add((HardDrive)products[ProductType.HDD][0]);
 
