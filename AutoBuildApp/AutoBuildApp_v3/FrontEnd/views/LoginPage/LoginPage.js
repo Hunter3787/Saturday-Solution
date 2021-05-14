@@ -20,7 +20,8 @@ function authenticate() {
   Object.keys(UserCred).forEach(key => {
     url.searchParams.append(key, UserCred[key])
   })
-
+  eraseCookieFromAllPaths("Username");
+  setCookie("Username", UserCred.Username, 7);
   fetch(url, {
     method: 'POST',
     headers: {

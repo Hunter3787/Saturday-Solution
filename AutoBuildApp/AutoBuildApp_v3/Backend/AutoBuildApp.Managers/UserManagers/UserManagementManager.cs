@@ -237,6 +237,14 @@ namespace AutoBuildApp.Managers
             }
         }
 
+        // deletes the active user and removes them from the database
+        public string DeleteSelf(string username)
+        {
+            // calls the DAO to remove from database
+            _logger.LogInformation("User deleted.");
+            return _userManagementService._userManagementDAO.DeleteUserDB(username);
+        }
+
         // checks a user's role
         public string RoleCheck(string username)
         {

@@ -178,5 +178,20 @@ namespace AutoBuildApp.Api.Controllers
             // calls DeleteUser from UMmanager
             return Ok(userManagementManager.DeleteUser(username));
         }
+
+        [HttpDelete("self")]
+        public IActionResult DeleteSelf(IFormCollection formCollection)
+        {
+            _logger.LogInformation("Delete user called.");
+            // pass in from front end form data
+            var username = formCollection["username"];
+
+            // connection string is in DAO, pass through UMservice to UMmanager
+            UserManagementService userManagementService = new UserManagementService(_userManagementDAO);
+            UserManagementManager userManagementManager = new UserManagementManager(userManagementService);
+
+            // calls DeleteUser from UMmanager
+            return Ok(userManagementManager.DeleteSelf(username));
+        }
     }
 }
