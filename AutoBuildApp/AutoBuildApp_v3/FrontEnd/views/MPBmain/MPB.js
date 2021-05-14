@@ -383,3 +383,31 @@ function hideButtons() {
     x.style.display = "none";
   }
 }
+
+var loginPage = document.getElementById("loginPage")
+
+loginPage.addEventListener('click', async () => {
+    if (jwt_token == "" || jwt_token == "Invalid username or password" || jwt_token == "Account is locked") {
+        changePageLogin();
+    } else {
+        alert("You are already logged in")
+    }
+})
+
+var registerPage = document.getElementById("registrationPage")
+
+registerPage.addEventListener('click', async () => {
+    if (jwt_token == "" || jwt_token == "Invalid username or password" || jwt_token == "Account is locked") {
+        changePageRegister();
+    } else {
+        alert("Please logout before registering a new account")
+    }
+})
+
+function changePageLogin(){
+    window.location.href = "http://127.0.0.1:5501/views/LoginPage/LoginPage.html";
+}
+
+function changePageRegister() {
+    window.location.href = "http://127.0.0.1:5501/views/RegistrationPage/RegistrationPage.html";
+}
