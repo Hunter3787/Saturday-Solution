@@ -33,6 +33,7 @@ function getBuild() {
 
 
 function displayBuild(data) {
+    clearTable();
     // document.querySelector('.build-table').innerHTML = '';
     console.log(data);
 
@@ -132,7 +133,7 @@ function displayBuild(data) {
     psuDiv.appendChild(psuTitle);
  
     //
-    var ssd = document.querySelector('.ssd');
+    var ssd = document.querySelector('.hard-drive');
     var ssdTD = document.createElement('td');
     ssd.appendChild(ssdTD);
 
@@ -205,3 +206,4 @@ function displayBuild(data) {
 
     document.querySelector('.total-price').innerHTML = "$" + totalPrice.toFixed(2);
 }
+
