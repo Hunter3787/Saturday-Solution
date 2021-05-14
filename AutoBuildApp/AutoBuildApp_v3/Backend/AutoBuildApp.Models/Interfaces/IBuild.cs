@@ -13,9 +13,8 @@ namespace AutoBuildApp.Models.Interfaces
     /// Generic build type interface. 
     /// </summary>
     public interface IBuild
-    { 
-        SolidStateDrive SSD { get; set; }
-        List<IHardDrive> HardDrives { get; set; }
+    {        
+        List<HardDrive> HardDrives { get; set; }
         ComputerCase Case { get; set; }
         Motherboard Mobo { get; set; }
         PowerSupplyUnit Psu { get; set; }
@@ -30,13 +29,13 @@ namespace AutoBuildApp.Models.Interfaces
         /// </summary>
         /// <param name="add"></param>
         /// <returns>Bool</returns>
-        bool AddHardDrive(IHardDrive add);
+        bool AddHardDrive(HardDrive add);
         /// <summary>
         /// Remove a hard drive component from the hard drive list.
         /// </summary>
         /// <param name="remove"></param>
         /// <returns></returns>
-        bool RemoveHardDrive(IHardDrive remove);
+        bool RemoveHardDrive(HardDrive remove);
         /// <summary>
         /// Add an IComponent to the peripeheral list.
         /// </summary>

@@ -17,6 +17,7 @@ namespace AutoBuildApp.Models.Products
         public int ModuleCapacity { get; set; }
         public string FormFactor { get; set; }
         public List<string> Color { get; set; }
+        public string Speed { get; set; }
         public string FirstWordLat { get; set; }
         public string CASLat { get; set; }
         public double Voltage { get; set; }
