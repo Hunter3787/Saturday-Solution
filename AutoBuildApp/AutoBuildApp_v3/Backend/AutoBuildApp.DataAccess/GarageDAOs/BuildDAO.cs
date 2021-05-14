@@ -239,7 +239,7 @@ namespace AutoBuildApp.DataAccess
 
                 case ProductType.SSD:
                 case ProductType.HDD:
-                    build.HardDrives.Add((IHardDrive)part);
+                    build.HardDrives.Add((HardDrive)part);
                     break;
 
                 default:

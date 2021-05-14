@@ -9,11 +9,19 @@ const fetchRequest = {
     }
   };
 
+
+var form = document.getElementById("build-budget-form");
+form.addEventListener("submit", () => getBuild())
+
 // window.onload = getProductsByFilter();
 
 function getBuild() {
 
-    var budget = document.querySelector('.budget');
+    var budget = document.getElementById("budget");
+
+
+    console.log(budget.value)
+
     const item = {
         "Budget":parseInt(budget.value)
     }
@@ -34,7 +42,29 @@ function getBuild() {
 
 function displayBuild(data) {
     // document.querySelector('.build-table').innerHTML = '';
-    console.log(data);
+
+    console.log(data)
+
+    var main = document.querySelector('items-container').innerHTML = '';
+
+
+    // <div class="items-container">
+    //     <div class="item">
+    //         <div class="item-type">
+    //             <h4>GPU</h4>
+    //         </div>
+    //         <div class="item-image">
+    //             <img src="Logo.png" alt="" srcset="">
+    //         </div>
+    //         <div class="item-title">
+    //             <h4>GPVHOSO RX 560 4G Video Card PC Gaming Graphics Card AMD Radeon GPU GA Fan Edition, Low Profile 4G/128bit/GDDR5 PCI-Express 3.0x8 DirectX 12,DVI-D HDMI DP Desktop Graphics Card</h4>    
+    //         </div>
+    //         <div class="item-price">
+    //             <h4>$1000</h4>
+    //         </div>
+    //     </div>
+    // </div>
+
 
     var totalPrice = 0;
     var gpu = document.querySelector('.gpu');
@@ -137,8 +167,8 @@ function displayBuild(data) {
     ssd.appendChild(ssdTD);
 
     var ssdPriceTD = document.createElement('td');
-    ssdPriceTD.innerHTML = "$" + data[0]["ssd"]["price"].toFixed(2);
-    totalPrice += data[0]["ssd"]["price"];
+    ssdPriceTD.innerHTML = "$" + data[0]["hardDrives"][0]["price"].toFixed(2);
+    totalPrice += data[0]["hardDrives"][0]["price"];
     ssd.appendChild(ssdPriceTD);
 
     var ssdDiv = document.createElement('div');
@@ -146,10 +176,10 @@ function displayBuild(data) {
     ssdDiv.style ="width:300px;padding:25px";
 
     var ssdTitle = document.createElement('text');
-    ssdTitle.textContent = data[0]["ssd"]["productName"];
+    ssdTitle.textContent = data[0]["hardDrives"][0]["productName"];
 
     var ssdImage = new Image(150,150);
-    ssdImage.src = data[0]["ssd"]["productImageStrings"][0]
+    ssdImage.src = data[0]["hardDrives"][0]["productImageStrings"][0]
 
     ssdDiv.appendChild(ssdImage);
     ssdDiv.appendChild(document.createElement('br'))

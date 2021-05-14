@@ -31,7 +31,7 @@ namespace AutoBuildApp.Api.Controllers
     public class MostPopularBuildsController : ControllerBase
     {
         // Gets the connection string of the Database
-        private static readonly string _connectionString = ConnectionManager.connectionManager.GetConnectionStringByName(ControllerGlobals.LOCALHOST_CONNECTION);
+        private static readonly string _connectionString = ConnectionManager.connectionManager.GetConnectionStringByName(ControllerGlobals.ADMIN_CREDENTIALS_CONNECTION);
 
         // The DAO that will be used for builds.
         private readonly MostPopularBuildsDAO _mostPopularBuildsDAO;

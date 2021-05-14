@@ -92,18 +92,18 @@ function getFilterString()
   return queryString + params.toString();
 }
 
-// creates a function called process that will call the get items function.
-function process(){
-  getItems();
-}
+// // creates a function called process that will call the get items function.
+// function process(){
+//   getItems();
+// }
 
-// Sets a loop timer of 3 seconds to call the process function -> getItems();
-function looping(){
-  setTimeout(process, 3000);
-}
+// // Sets a loop timer of 3 seconds to call the process function -> getItems();
+// function looping(){
+//   setTimeout(process, 3000);
+// }
 
-// creates a timer interval of 3 seconds to keep track of the current times, so no concurrency occurs.
-var refreshData = setInterval(looping, 3000);
+// // creates a timer interval of 3 seconds to keep track of the current times, so no concurrency occurs.
+// var refreshData = setInterval(looping, 3000);
 
 // This function will call a fetch request.
 async function getItems() {
