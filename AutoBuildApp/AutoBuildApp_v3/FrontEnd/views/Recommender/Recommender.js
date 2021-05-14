@@ -33,9 +33,6 @@ function getBuild() {
 
 
 function displayBuild(data) {
-    clearTable();
-    // document.querySelector('.build-table').innerHTML = '';
-    console.log(data);
 
     var totalPrice = 0;
     var gpu = document.querySelector('.gpu');
