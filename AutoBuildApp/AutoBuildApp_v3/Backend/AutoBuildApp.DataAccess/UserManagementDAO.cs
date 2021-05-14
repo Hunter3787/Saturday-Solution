@@ -93,7 +93,7 @@ namespace AutoBuildApp.DataAccess
         }
 
         // updates the password in DB
-        public string UpdatePasswordDB(string password, string activeEmail)
+        public string UpdatePasswordDB(string password, string activeUsername)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -115,7 +115,7 @@ namespace AutoBuildApp.DataAccess
                     //Add any required parameters to the Command.Parameters collection.
                     var param = new SqlParameter[3];
                     // sets values for the sql statement
-                    param[0] = new SqlParameter("@USEREMAIL", activeEmail);
+                    param[0] = new SqlParameter("@ACTIVEUSERNAME", activeUsername);
                     param[1] = new SqlParameter("@PASSHASH", password);
                     param[2] = new SqlParameter("@MODIFYDATE", DateTimeOffset.Now);
                     // add the commands the parameters for the stored procedure
@@ -137,7 +137,7 @@ namespace AutoBuildApp.DataAccess
         }
 
         // updates the email in DB
-        public string UpdateEmailDB(string inputEmail, string activeEmail)
+        public string UpdateEmailDB(string inputEmail, string activeUsername)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -159,7 +159,7 @@ namespace AutoBuildApp.DataAccess
                     //Add any required parameters to the Command.Parameters collection.
                     var param = new SqlParameter[3];
                     // sets values for the sql statement
-                    param[0] = new SqlParameter("@ACTIVEEMAIL", activeEmail);
+                    param[0] = new SqlParameter("@ACTIVEUSERNAME", activeUsername);
                     param[1] = new SqlParameter("@INPUTEMAIL", inputEmail);
                     param[2] = new SqlParameter("@MODIFYDATE", DateTimeOffset.Now);
                     // add the commands the parameters for the stored procedure
@@ -181,7 +181,7 @@ namespace AutoBuildApp.DataAccess
         }
 
         // updates the username in DB
-        public string UpdateUserNameDB(string username, string activeEmail)
+        public string UpdateUserNameDB(string username, string activeUsername)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -203,7 +203,7 @@ namespace AutoBuildApp.DataAccess
                     //Add any required parameters to the Command.Parameters collection.
                     var param = new SqlParameter[3];
                     // sets values for the sql statement
-                    param[0] = new SqlParameter("@USEREMAIL", activeEmail);
+                    param[0] = new SqlParameter("@ACTIVEUSERNAME", activeUsername);
                     param[1] = new SqlParameter("@USERNAME", username);
                     param[2] = new SqlParameter("@MODIFYDATE", DateTimeOffset.Now);
                     // add the commands the parameters for the stored procedure
