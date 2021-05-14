@@ -11,6 +11,8 @@ using System;
 using AutoBuildApp.Models.Builds;
 using AutoBuildApp.Models.Products;
 using AutoBuildApp.Logging;
+using AutoBuildApp.DataAccess.Entities;
+using AutoBuildApp.DomainModels;
 
 /**
 * User Garage Manager class that directs 
@@ -101,14 +103,25 @@ namespace AutoBuildApp.Managers
             return response;
         }
 
-        public CommonResponse DeleteBuild(string buildID)
-        {
-            NullGuard.IsNotNullOrEmpty(buildID);
+        //public CommonResponse DeleteBuild(string buildID)
+        //{
+        //    NullGuard.IsNotNullOrEmpty(buildID);
 
-            CommonResponse response = _buildService.DeleteBuild();
+        //    CommonResponse response = _buildService.DeleteBuild();
+
+        //    return response;
+        //}
+        public CommonResponse DeleteBuild(string buildName)
+        {
+            NullGuard.IsNotNullOrEmpty(buildName);
+
+            CommonResponse response = new CommonResponse();
+             response = _buildService.DeleteBuild(buildName);
 
             return response;
         }
+
+
 
         public List<Build> GetAllUserBuilds(string user, string sorting)
         {
@@ -122,25 +135,59 @@ namespace AutoBuildApp.Managers
                 order = UserGarageGlobals.DEFAULT_SORT;
             }
 
-            outputList = _buildService.GetAllUserBuilds(user, order);
+            outputList = _buildService.GetAllUserBuilds( order);
 
             return outputList;
         }
 
-        public CommonResponse PublishBuild(string buildID)
+        public CommonResponse PublishBuild(BuildPost BuildPost)
         {
-            NullGuard.IsNotNullOrEmpty(buildID);
+            // let us cast into enitity
 
-            CommonResponse response = _buildService.PublishBuild();
+
+            CommonResponse response = _buildService.PublishBuild(BuildPost);
 
             return response;
         }
+
+
+        public CommonResponse AddRecomendedBuild
+            (IList<string> modelNumbers, string buildName)
+        {
+            CommonResponse response = new CommonResponse();
+            try
+            {
+
+                NullGuard.IsNotNullOrEmpty(buildName);
+                response = _buildService.AddRecomendedBuild(modelNumbers, buildName);
+
+                return response;
+            }
+            catch(ArgumentNullException ex)
+            {
+                response.ResponseString = ResponseStringGlobals.INVALID_INPUT;
+                return response;
+            }
+        }
+
+
+
 
         public CommonResponse ModifyBuild(Build build, string oldName, string newName)
         {
             NullGuard.IsNotNull(build);
 
             CommonResponse response = _buildService.ModifyBuild();
+
+            return response;
+        }
+        public CommonResponse UpdateProductsInBuild(string buildName, string modleNumber, int quantity)
+        {
+            NullGuard.IsNotNull(buildName);
+            NullGuard.IsNotNull(modleNumber);
+            NullGuard.IsNotNull(quantity);
+
+            CommonResponse response = _buildService.ModifyProductsInBuild(buildName, modleNumber, quantity);
 
             return response;
         }

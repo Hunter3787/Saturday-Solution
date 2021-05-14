@@ -10,6 +10,8 @@ using AutoBuildApp.Security.Enumerations;
 using System.Threading;
 using System.Security.Claims;
 using AutoBuildApp.Security;
+using AutoBuildApp.Models.Builds;
+using AutoBuildApp.DomainModels;
 
 /**
 * User Garage controller that accepts incoming requests 
@@ -18,9 +20,10 @@ using AutoBuildApp.Security;
 */
 namespace AutoBuildApp.Api.Controllers
 {
+    [EnableCors("CorsPolicy")] // applying the cors policy so that the client can
+    // make a call the this controller 
     [ApiController]
-    [Route("[controller]")]
-    [EnableCors("CorsPolicy")]
+    [Route("[controller]")] // the route
     public class UserGarageController : ControllerBase
     {
         //private readonly LoggingProducerService _logger = LoggingProducerService.GetInstance;
@@ -28,7 +31,12 @@ namespace AutoBuildApp.Api.Controllers
         private readonly string _connString =
             ConnectionManager
             .connectionManager
-            .GetConnectionStringByName(ControllerGlobals.DOCKER_CONNECTION);
+            .GetConnectionStringByName(ControllerGlobals.LOCALHOST_CONNECTION);
+
+        public UserGarageController()
+        {
+            _manager = new UserGarageManager(connectionString: _connString);
+        }
         private readonly List<string> _approvedRoles = new List<string>()
         {
             RoleEnumType.BasicRole,
@@ -45,14 +53,48 @@ namespace AutoBuildApp.Api.Controllers
         public IActionResult GetBuilds()
         {
             // TODO
+           
             return Ok();
         }
 
-        [HttpPost("saveBuild")]
-        public IActionResult AddBuild()
+        [HttpGet("getListBuilds")]
+        public IActionResult GetBuildList()
         {
             // TODO
-            return Ok();
+           
+            // TODO
+            var response = _manager.GetAllUserBuilds(Thread.CurrentPrincipal.Identity.Name,null);
+           if(response is null)
+            {
+
+                return StatusCode(StatusCodes.Status400BadRequest, "No Builds For User");
+
+            }
+            return StatusCode(StatusCodes.Status200OK, response);
+
+        }
+
+
+        [HttpPost("CreateBuild")]
+        public IActionResult AddBuild(string buildName)
+        {
+            if(string.IsNullOrEmpty(buildName))
+            {
+
+                return StatusCode(StatusCodes.Status400BadRequest, "Invalid Request");
+            }
+            Build myBuild = new Build()
+            {
+                BuildName = buildName,
+            };
+            // TODO
+            var response = _manager.AddBuild(myBuild, myBuild.BuildName);
+            Console.WriteLine($"Response : { response.ResponseString}");
+            if (!response.IsSuccessful)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, response.ResponseString);
+            }
+            return StatusCode(StatusCodes.Status200OK,response.ResponseString);
         }
 
         [HttpPost("copyBuild")]
@@ -69,18 +111,67 @@ namespace AutoBuildApp.Api.Controllers
             return Ok();
         }
 
-        [HttpDelete("deleteBuild")]
-        public IActionResult DeleteBuild()
+        [HttpPost("SaveRecommendedBuild")]
+        public IActionResult SaveBuild
+            (IList<string> modelNumbers, string buildName)
         {
-            // TODO
-            return Ok();
+            try
+            {
+                // TODO
+                var response = _manager.AddRecomendedBuild(modelNumbers, buildName);
+                Console.WriteLine($"Response : { response.ResponseString}");
+                if (!response.IsSuccessful)
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, response.ResponseString);
+                }
+                return StatusCode(StatusCodes.Status200OK, response.ResponseString);
+
+
+            }
+            catch(ArgumentNullException)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest,"Invalid Request");
+
+            }
+        }
+
+        [HttpDelete("deleteBuild")]
+        public IActionResult DeleteBuild(string buildName)
+        {
+            _manager = new UserGarageManager(_connString);
+            try
+            {
+                IsAuthorized();
+                var principle = (ClaimsPrincipal)Thread.CurrentPrincipal;
+                Console.WriteLine(principle.Claims);
+                //_logger.LogInformation(_singleShelfFetch);
+                var output = _manager.DeleteBuild(buildName);
+                return StatusCode(StatusCodes.Status200OK,output.ResponseString);
+
+            }
+            catch (ArgumentNullException)
+            {
+                //_logger.LogWarning(_badRequest);
+                return StatusCode(StatusCodes.Status400BadRequest, "Bad Request");
+            }
         }
 
         [HttpPost("publishBuild")]
-        public IActionResult PublishBuild()
+        public IActionResult PublishBuild(BuildPost BuildPost)
         {
-            // TODO
-            return Ok();
+            _manager = new UserGarageManager(_connString);
+            try
+            {
+                //_logger.LogInformation(_singleShelfFetch);
+                var output = _manager.PublishBuild(BuildPost);
+                return StatusCode(StatusCodes.Status200OK, output.ResponseString);
+
+            }
+            catch (ArgumentNullException)
+            {
+                //_logger.LogWarning(_badRequest);
+                return StatusCode(StatusCodes.Status400BadRequest, "Bad Request");
+            }
         }
 
         [HttpGet("getShelf")]
