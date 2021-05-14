@@ -9,8 +9,7 @@ namespace AutoBuildApp.Models.Builds
     public class Build : IBuild, IEquatable<Build>
     {
         public string BuildName;
-        public SolidStateDrive SSD { get; set; }
-        public List<IHardDrive> HardDrives { get; set; }
+        public List<HardDrive> HardDrives { get; set; }
         public ComputerCase Case { get; set; }
         public Motherboard Mobo { get; set; }
         public PowerSupplyUnit Psu { get; set; }
@@ -22,9 +21,8 @@ namespace AutoBuildApp.Models.Builds
         public List<string> ImageStrings { get; set; }
 
         public Build()
-        {
-            SSD = new SolidStateDrive();
-            HardDrives = new List<IHardDrive>();
+        {            
+            HardDrives = new List<HardDrive>();
             Case = new ComputerCase();
             Mobo = new Motherboard();
             Psu = new PowerSupplyUnit();
@@ -36,14 +34,14 @@ namespace AutoBuildApp.Models.Builds
             ImageStrings = new List<string>();
         }
 
-        #region "IHardDrive List Add/Remove/Delete methods"
+        #region "HardDrive List Add/Remove/Delete methods"
         /// <summary>
         /// Add hard drive to the list, if hard drive is already present
         /// increment the quantity.
         /// </summary>
         /// <param name="add"></param>
         /// <returns></returns>
-        public bool AddHardDrive(IHardDrive add)
+        public bool AddHardDrive(HardDrive add)
         {
             if (add == null)
             {
@@ -52,7 +50,7 @@ namespace AutoBuildApp.Models.Builds
 
             if (HardDrives == null)
             {
-                HardDrives = new List<IHardDrive>();
+                HardDrives = new List<HardDrive>();
             }
 
             if (HardDrives.Contains(add))
@@ -69,12 +67,12 @@ namespace AutoBuildApp.Models.Builds
         }
 
         /// <summary>
-        /// Remove IHardDrive elemnt from the hard drive list,
+        /// Remove HardDrive elemnt from the hard drive list,
         /// else decrement the count.
         /// </summary>
         /// <param name="remove"></param>
         /// <returns></returns>
-        public bool RemoveHardDrive(IHardDrive remove)
+        public bool RemoveHardDrive(HardDrive remove)
         {
             if (remove == null
                 || HardDrives == null
@@ -103,7 +101,7 @@ namespace AutoBuildApp.Models.Builds
         /// </summary>
         /// <param name="delete"></param>
         /// <returns></returns>
-        public bool DeleteHardDrive(IHardDrive delete)
+        public bool DeleteHardDrive(HardDrive delete)
         {
             if (delete == null
                 || HardDrives == null
@@ -149,7 +147,7 @@ namespace AutoBuildApp.Models.Builds
         }
 
         /// <summary>
-        /// Remove IHardDrive elemnt from the hard drive list,
+        /// Remove HardDrive elemnt from the hard drive list,
         /// else decrement the count.
         /// </summary>
         /// <param name="remove"></param>
@@ -252,7 +250,7 @@ namespace AutoBuildApp.Models.Builds
 
             if (HardDrives != null)
             {
-                foreach (IHardDrive hdd in HardDrives)
+                foreach (HardDrive hdd in HardDrives)
                 {
                     total += hdd.GetTotalcost();
                 }

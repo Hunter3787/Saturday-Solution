@@ -28,7 +28,7 @@ namespace AutoBuildApp.Models.Products
         public int DisplayPortPorts { get; set; }
         public int MiniDisplayPortPorts { get; set; }
         public int ExpansionSlotWidth { get; set; }
-        public int Cooling { get; set; }
+        public string Cooling { get; set; }
         public string ExternalPower { get; set; }
         #endregion
 
