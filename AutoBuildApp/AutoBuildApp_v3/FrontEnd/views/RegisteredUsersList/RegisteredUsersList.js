@@ -1,11 +1,11 @@
-const uri = 'https://localhost:5001/usermanagement';
+const uri = 'http://localhost:8081/usermanagement';
 var users = [];
 
 
-let JWT_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiLCJzdWIiOiJBdXRvYnVpbGQgVXNlciIsImF1ZCI6IlVTIiwiaWF0IjoxNjIwNDYyMDc0LCJleHAiOjE2MjEwNjY4NzQsIm5iZiI6MTYyMTA2Njg3NCwiVXNlcm5hbWUiOiJraW5nUGVuaTM5MyIsIlVzZXJDTGFpbXMiOlt7IlBlcm1pc3Npb24iOiJBbGwiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJBbGwifV19.kno-KBPpzf-s446l5b4lONfBZQH8wdeCsVRy0BoONuY';
+//let jwt_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiLCJzdWIiOiJBdXRvYnVpbGQgVXNlciIsImF1ZCI6IlVTIiwiaWF0IjoxNjIwNDYyMDc0LCJleHAiOjE2MjEwNjY4NzQsIm5iZiI6MTYyMTA2Njg3NCwiVXNlcm5hbWUiOiJraW5nUGVuaTM5MyIsIlVzZXJDTGFpbXMiOlt7IlBlcm1pc3Npb24iOiJBbGwiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJBbGwifV19.kno-KBPpzf-s446l5b4lONfBZQH8wdeCsVRy0BoONuY';
 
-//let JWT_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiLCJzdWIiOiJBdXRvYnVpbGQgVXNlciIsImF1ZCI6IlVTIiwiaWF0IjoxNjIwNDYyMjAxLCJleHAiOjE2MjEwNjcwMDEsIm5iZiI6MTYyMTA2NzAwMSwiVXNlcm5hbWUiOiJjcmtvYmVsIiwiVXNlckNMYWltcyI6W3siUGVybWlzc2lvbiI6IkNyZWF0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlJldmlld3MifSx7IlBlcm1pc3Npb24iOiJEZWxldGUiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJTZWxmIn0seyJQZXJtaXNzaW9uIjoiRGVsZXRlIiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZlJldmlld3MifSx7IlBlcm1pc3Npb24iOiJFZGl0IiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZiJ9LHsiUGVybWlzc2lvbiI6IlJlYWRPbmx5IiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiQXV0b0J1aWxkIn0seyJQZXJtaXNzaW9uIjoiVXBkYXRlIiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZiJ9LHsiUGVybWlzc2lvbiI6IlVwZGF0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNlbGZSZXZpZXdzIn1dfQ.rXRopsDv6V5SKmfWUHmjXJHUgaA2ojWfL5TyaHmepB8';
-
+//let jwt_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiLCJzdWIiOiJBdXRvYnVpbGQgVXNlciIsImF1ZCI6IlVTIiwiaWF0IjoxNjIwNDYyMjAxLCJleHAiOjE2MjEwNjcwMDEsIm5iZiI6MTYyMTA2NzAwMSwiVXNlcm5hbWUiOiJjcmtvYmVsIiwiVXNlckNMYWltcyI6W3siUGVybWlzc2lvbiI6IkNyZWF0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlJldmlld3MifSx7IlBlcm1pc3Npb24iOiJEZWxldGUiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJTZWxmIn0seyJQZXJtaXNzaW9uIjoiRGVsZXRlIiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZlJldmlld3MifSx7IlBlcm1pc3Npb24iOiJFZGl0IiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZiJ9LHsiUGVybWlzc2lvbiI6IlJlYWRPbmx5IiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiQXV0b0J1aWxkIn0seyJQZXJtaXNzaW9uIjoiVXBkYXRlIiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZiJ9LHsiUGVybWlzc2lvbiI6IlVwZGF0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNlbGZSZXZpZXdzIn1dfQ.rXRopsDv6V5SKmfWUHmjXJHUgaA2ojWfL5TyaHmepB8';
+let jwt_token = getCookie("JWT");
 
 const fetchRequest = {
     method: 'GET',
@@ -13,7 +13,7 @@ const fetchRequest = {
     headers: {
         'Accept' : 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': 'bearer ' + JWT_token
+        'Authorization': 'bearer ' + jwt_token
     }
 };
 
@@ -328,12 +328,12 @@ formData.append('username', username);
 formData.append('lockstate', lockState);
 // console.log(lockstate);
 // console.log(username);
-await fetch("https://localhost:5001/usermanagement/lock", {
+await fetch("http://localhost:8081/usermanagement/lock", {
 method: 'PUT',
 mode: 'cors',
 headers: {
 'Accept': 'application/json',
-'Authorization': 'bearer ' + JWT_token
+'Authorization': 'bearer ' + jwt_token
 },
 //body: JSON.stringify(item)
 body: formData
@@ -347,12 +347,12 @@ async function savePermission(username, permission) {
     formData.append('permission', permission);
     console.log(permission);
 
-    await fetch("https://localhost:5001/usermanagement/permission", {
+    await fetch("http://localhost:8081/usermanagement/permission", {
 method: 'PUT',
 mode: 'cors',
 headers: {
 'Accept': 'application/json',
-'Authorization': 'bearer ' + JWT_token
+'Authorization': 'bearer ' + jwt_token
 },
 //body: JSON.stringify(item)
 body: formData
@@ -374,12 +374,12 @@ async function deleteUser(username) {
     return;
   }
 
-    await fetch("https://localhost:5001/usermanagement/user", {
+    await fetch("http://localhost:8081/usermanagement/user", {
 method: 'DELETE',
 mode: 'cors',
 headers: {
 'Accept': 'application/json',
-'Authorization': 'bearer ' + JWT_token
+'Authorization': 'bearer ' + jwt_token
 },
 //body: JSON.stringify(item)
 body: formData
@@ -395,3 +395,58 @@ function displayResponse(id)
 {
     alert(id);
 }
+
+function getCookie(cname) {
+    var jwt = "";
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        jwt =  c.substring(name.length, c.length);
+        jwt = jwt.replace(/"/g,"");
+        return jwt;
+      }
+    }
+    return "";
+  }
+
+  var profilePage = document.getElementById("profilePage")
+
+  profilePage.addEventListener('click', async () => {
+    jwt_token = jwt_token.replace(/"/g,"");
+    if (await checkAdminPrivilege() == true) {
+      changePageAdmin();
+    } else {
+      changePageNotAdmin();
+    }
+})
+
+async function checkAdminPrivilege() {
+var result = false;
+var url = "http://localhost:8081/authentication/admin"
+await fetch(url, {
+  method: 'POST',
+  mode: 'cors',
+  headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+    'Authorization': 'bearer ' + jwt_token
+  },
+})
+.then(response => response.json())
+  .then(data => result = data);
+  return result;
+}
+
+function changePageAdmin() {
+    window.location.href = "http://127.0.0.1:5501/views/UMUser(Admin)/UMUser(Admin).html"
+    }
+    
+    function changePageNotAdmin() {
+    window.location.href = "http://127.0.0.1:5501/views/UMUser/UMUser.html"
+    }

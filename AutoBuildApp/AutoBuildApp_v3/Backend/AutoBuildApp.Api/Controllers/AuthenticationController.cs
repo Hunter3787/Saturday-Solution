@@ -95,7 +95,7 @@ namespace AutoBuildApp.Api.Controllers
                 $"Checking name per nick: { _threadPrinciple.Identity.Name}!!!!!!");
         }
 
-        [HttpGet("admin")]
+        [HttpPost("admin")]
         public IActionResult GetAdminPermission()
         {
             if (!AuthorizationCheck.IsAuthorized(_adminRoles))

@@ -8,7 +8,20 @@
 
 </head>
 
-<body>
+<body onload="hideButtons()">
+    <div class="custom-nav">
+        <span>
+            <img src="/assets/images/Logo/Logo.png" alt="logo"/>
+            <h1 class="nav-title">AutoBuild</h1>
+            <a class="custom-a" href="http://127.0.0.1:5501/views/Recommender/Recommender.html">Home</a>
+            <a class="custom-a" href="http://127.0.0.1:5501/views/MPBmain/MPB.html">MPB</a>
+            <a class="custom-a" href="http://127.0.0.1:5501/views/ComponentCatalog/ComponentCatalog.html">Component Catalog</a>
+            <a class="custom-a" href="">Etc.</a>
+            <button type="button" id = "loginPage" class="nav-button" onclick="location.href='http://127.0.0.1:5501/views/LoginPage/LoginPage.html'">Login</button>
+            <button type="button" id = "registrationPage" class="nav-button" onclick="location.href='http://127.0.0.1:5501/views/RegistrationPage/RegistrationPage.html'">Register</button>
+            <button type="button" id = "profilePage" >Profile Page</button>
+        </span>
+    </div>
     <h1 class="title">Build Recommender</h1>
 
     <div class="list-of-products">
@@ -54,6 +67,7 @@
 
     </div>
 
+    
     <script src="Recommender.js" asp-append-version="true"></script>
 
 </body>

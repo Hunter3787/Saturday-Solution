@@ -111,6 +111,14 @@ namespace AutoBuildApp.Api.Controllers
         [HttpPut("permission")]
         public IActionResult UpdatePermission(IFormCollection formCollection)
         {
+            if (!AuthorizationCheck.IsAuthorized(_adminRoles))
+            {
+                _logger.LogWarning("Unauthorized Access!!!");
+
+                _logger.LogWarning("StatusCodes.Status403Forbidden");
+
+                return new StatusCodeResult(StatusCodes.Status403Forbidden);
+            }
             _logger.LogInformation("Change permissions called.");
             // pass in from front end form data
             var username = formCollection["username"];
@@ -127,6 +135,14 @@ namespace AutoBuildApp.Api.Controllers
         [HttpPut("lock")]
         public IActionResult UpdateLockState(IFormCollection formCollection)
         {
+            if (!AuthorizationCheck.IsAuthorized(_adminRoles))
+            {
+                _logger.LogWarning("Unauthorized Access!!!");
+
+                _logger.LogWarning("StatusCodes.Status403Forbidden");
+
+                return new StatusCodeResult(StatusCodes.Status403Forbidden);
+            }
             _logger.LogInformation("Lock user called.");
             // pass in from front end form data
             var username = formCollection["username"];
@@ -143,6 +159,14 @@ namespace AutoBuildApp.Api.Controllers
         [HttpDelete("user")]
         public IActionResult DeleteUser(IFormCollection formCollection)
         {
+            if (!AuthorizationCheck.IsAuthorized(_adminRoles))
+            {
+                _logger.LogWarning("Unauthorized Access!!!");
+
+                _logger.LogWarning("StatusCodes.Status403Forbidden");
+
+                return new StatusCodeResult(StatusCodes.Status403Forbidden);
+            }
             _logger.LogInformation("Delete user called.");
             // pass in from front end form data
             var username = formCollection["username"];

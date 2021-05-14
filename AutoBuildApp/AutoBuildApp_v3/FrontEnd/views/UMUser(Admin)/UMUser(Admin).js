@@ -16,7 +16,7 @@ function UpdateUsername(username, activeUsername) {
     formData.append('username', username);
     formData.append('activeUsername', activeUsername);
 
-    fetch("https://localhost:5001/usermanagement/username", {
+    fetch("http://localhost:8081/usermanagement/username", {
       method: 'PUT',
       mode: 'cors',
       headers: {
@@ -47,7 +47,7 @@ function UpdateEmail(inputEmail, activeUsername) {
     formData.append('inputEmail', inputEmail);
     formData.append('activeUsername', activeUsername);
 
-    fetch("https://localhost:5001/usermanagement/email", {
+    fetch("http://localhost:8081/usermanagement/email", {
       method: 'PUT',
       mode: 'cors',
       headers: {
@@ -81,7 +81,7 @@ function UpdatePassword(password, passwordCheck, activeUsername) {
     formData.append('passwordCheck', passwordCheck);
     formData.append('activeUsername', activeUsername);
 
-    fetch("https://localhost:5001/usermanagement/password", {
+    fetch("http://localhost:8081/usermanagement/password", {
       method: 'PUT',
       mode: 'cors',
       headers: {
@@ -124,3 +124,31 @@ encrypted = CryptoJS.AES.encrypt(srcs, key, {
 
 return encrypted.ciphertext.toString();
 }
+
+var logoutUser = document.getElementById("Logout")
+
+    logoutUser.addEventListener('click', () => {
+      eraseCookieFromAllPaths("JWT");
+      alert("Logged out");
+      changePageHome();
+  })
+
+  function eraseCookieFromAllPaths(name) {
+    // This function will attempt to remove a cookie from all paths.
+    var pathBits = location.pathname.split('/');
+    var pathCurrent = ' path=';
+  
+    // do a simple pathless delete first.
+    document.cookie = name + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT;';
+  
+    for (var i = 0; i < pathBits.length; i++) {
+        pathCurrent += ((pathCurrent.substr(-1) != '/') ? '/' : '') + pathBits[i];
+        document.cookie = name + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT;' + pathCurrent + ';';
+    }
+  }
+
+  function changePageHome() {
+    window.location.href = "http://127.0.0.1:5501/views/Recommender/Recommender.html"
+  }
+
+  
