@@ -28,6 +28,23 @@ namespace AutoBuildApp.Services
             "3600", "3466(OC)", "3400(OC)", "3333(OC)", "3200", "3000", "2933",
             "2800", "2666", "2400", "2133", "1866", "1600"
         };
+        private readonly List<string> _cpuSockets = new List<string>
+        {
+            "AM4", "sWRX8", "sTR4", "AM3+", "AM3", "LGA 2066", "LGA 2011-v3",
+            "LGA 1200", "LGA 1155", "LGA 1151", "LGA 1150"
+        };
+        private readonly List<string> _gpuMemoryType = new List<string>
+        {
+            "DDR3", "DDR4", "DDR5", "GDDR5", "GDDR5X", "GDDR6"
+        };
+        private readonly List<string> _motherBoardTypes = new List<string>
+        {
+            "Mini-ITX", "Mini-DTX", "Mini DTX", "Mini iTX", "Micro ATX",
+            "Micro-ATX", "ITX", "ATX", "Micro ATX", "Micro-ATX", "Mini-ATX",
+            "Mini ATX"
+        };
+        private readonly string _caseDimensions = "Dimensions (H x W x D)";
+        private readonly string _motherboardCompatability = "Motherboard Compatability";
         private readonly string _efficiency = "Efficiency";
         private readonly string _formFactor = "Form Factor";
         private readonly string _cpuSocketType = "CPU Socket Type";
@@ -51,9 +68,15 @@ namespace AutoBuildApp.Services
         private readonly string _L2cache = "L2 Cache";
         private readonly string _L3cache = "L3 Cache";
         private readonly string _coreClock = "Operating Frequency";
-        private readonly string _boostClock = "Max Turbo Frequency";
+        private readonly string _turboFrequency = "Max Turbo Frequency";
         private readonly string _powerDraw = "Thermal Design Power";
         private readonly string _microarchitecture = "Core Name";
+        private readonly string _boostClock = "Boost Clock";
+        private readonly string _memoryType = "Memory Type";
+        private readonly string _gpuMemSize = "Memory Size";
+        private readonly string _gpuLength = "Max GPU Length";
+        private readonly string _effectiveMemory = "Effective Memory Clock";
+        private readonly string _gpuCooler = "Cooler";
 
 
 
@@ -157,7 +180,7 @@ namespace AutoBuildApp.Services
 
                 //FillComponentSpecs(toCreate, output);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 // Log
                 output = null;
@@ -182,6 +205,45 @@ namespace AutoBuildApp.Services
                 {
                     #region Case = Computer Case
                     case ProductType.Case:
+                        if (specDictionary.ContainsKey(_caseDimensions))
+                        {
+                            var tempString = specDictionary[_caseDimensions];
+                            var splitArray = tempString.Split('x');
+                            try
+                            {
+                                var height = double.Parse(splitArray[0].Remove(splitArray[0].Length - 1));
+                                var width = double.Parse(splitArray[1].Remove(splitArray[1].Length - 1));
+                                var depth = double.Parse(splitArray[2].Remove(splitArray[2].Length - 1));
+                                List<double> dimensionsList = new List<double> { height, width, depth };
+                                
+                                ((ComputerCase)component).Dimensions = dimensionsList;
+                            }
+                            catch (FormatException)
+                            {
+                                // Log
+                            }
+                        }
+
+                        if (specDictionary.ContainsKey(_gpuLength))
+                        {
+                            var tempString = specDictionary[_gpuLength].Split(' ');
+
+                            ((ComputerCase)component).MaxGPULength = int.Parse(tempString[0]);
+                        }
+
+                        if (specDictionary.ContainsKey(_motherboardCompatability))
+                        {
+                            var tempString = specDictionary[_motherboardCompatability];
+
+
+                            foreach (string toCheck in _motherBoardTypes)
+                            {
+                                if (tempString.Contains(toCheck))
+                                {
+                                    ((ComputerCase)component).AddFormFactorSupport(toCheck);
+                                }
+                            }
+                        }
                         break;
                     #endregion
                     #region Case = Fan
@@ -191,76 +253,129 @@ namespace AutoBuildApp.Services
                     #endregion
                     #region Case = Graphical Processing Unit
                     case ProductType.GPU:
+                        if (specDictionary.ContainsKey(_boostClock))
+                        {
+                            ((GraphicsProcUnit)component).BoostClock = specDictionary[_boostClock];
+                        }
+
+                        if (specDictionary.ContainsKey(_memoryType))
+                        {
+                            var tempString = specDictionary[_memoryType];
+                            var toAdd = "";
+
+                            foreach(string memType in _gpuMemoryType)
+                            {
+                                if (tempString.Contains(memType))
+                                {
+                                    toAdd = memType;
+                                }
+                            }
+
+                            ((GraphicsProcUnit)component).MemoryType = toAdd;
+                        }
+
+                        if (specDictionary.ContainsKey(_gpuMemSize))
+                        {
+                            ((GraphicsProcUnit)component).Memory = specDictionary[_gpuMemSize];
+                        }
+
+                        if (specDictionary.ContainsKey(_gpuLength))
+                        {
+                            var tempString = specDictionary[_gpuLength].Split(' ');
+
+                            ((GraphicsProcUnit)component).Length = int.Parse(tempString[0]);
+                        }
+
+                        if (specDictionary.ContainsKey(_effectiveMemory))
+                        {
+                            ((GraphicsProcUnit)component).EffectiveMemClock = specDictionary[_effectiveMemory];
+                        }
+
+                        if (specDictionary.ContainsKey(_gpuCooler))
+                        {
+                            ((GraphicsProcUnit)component).Cooling = specDictionary[_gpuCooler];
+                        }
+
                         break;
                     #endregion
                     #region Case = Central Processing Unit
                     case ProductType.CPU:
-                        //if (specDictionary.ContainsKey(_coreCount))
-                        //{
-                        //    var tempString = specDictionary[_coreCount].ToLower();
-                        //    var coreCount = 0;
+                        if (specDictionary.ContainsKey(_coreCount))
+                        {
+                            var tempString = specDictionary[_coreCount].ToLower();
+                            var coreCount = 0;
 
-                        //    if (tempString.Contains("quad"))
-                        //    {
-                        //        coreCount = 4;
-                        //    }
-                        //    if (t)
+                            if (tempString.Contains("quad"))
+                            {
+                                coreCount = 4;
+                            }
+                            else if (tempString.Contains("dual"))
+                            {
+                                coreCount = 2;
+                            }
+                            else
+                            {
+                                var splitString = tempString.Split('-');
+                                coreCount = int.Parse(splitString[0]);
+                            }
 
-                        //    ((CentralProcUnit)component).CoreCount = coreCount;
-                        //}
+                            ((CentralProcUnit)component).CoreCount = coreCount;
+                        }
 
-                        //if (specDictionary.ContainsKey[])
-                        //{
-                            
-                        //}
+                        if (specDictionary.ContainsKey(_cpuSocketType))
+                        {
+                            var tempString = specDictionary[_cpuSocketType];
+                            var socketToAdd = "";
 
+                            foreach (string socket in _cpuSockets)
+                            {
+                                if (tempString.Contains(socket))
+                                {
+                                    socketToAdd = socket;
+                                }
+                            }
 
-                        //if (specDictionary.ContainsKey[])
-                        //{
-
-                        //}
-
-                        //if (specDictionary.ContainsKey[])
-                        //{
-
-                        //}
-
-                        //if (specDictionary.ContainsKey[])
-                        //{
-
-                        //}
-
-                        //if (specDictionary.ContainsKey[])
-                        //{
-
-                        //}
-
-                        //if (specDictionary.ContainsKey[])
-                        //{
-
-                        //}
-
-                        //if (specDictionary.ContainsKey[])
-                        //{
-
-                        //}
-
-                        //if (specDictionary.ContainsKey[])
-                        //{
-
-                        //}
+                            ((CentralProcUnit)component).Socket = socketToAdd;
+                        }
 
 
-                        //    ((CentralProcUnit)component).CoreClock;
-                        //    ((CentralProcUnit)component).BoostClock;
-                        //    ((CentralProcUnit)component).CoreCount;
-                        //    ((CentralProcUnit)component).L1Cache;
-                        //    ((CentralProcUnit)component).L2Cache;
-                        //    ((CentralProcUnit)component).L3Cache;
-                        //    ((CentralProcUnit)component).PowerDraw;
-                        //    ((CentralProcUnit)component).Socket;
-                        //    ((CentralProcUnit)component).MicrorArchitecture;
-                        
+                        if (specDictionary.ContainsKey(_coreClock))
+                        {
+                            ((CentralProcUnit)component).CoreClock = specDictionary[_coreClock];
+                        }
+
+                        if (specDictionary.ContainsKey(_boostClock))
+                        {
+                            ((CentralProcUnit)component).BoostClock = specDictionary[_boostClock];
+                        }
+
+                        if (specDictionary.ContainsKey(_L1cache))
+                        {
+                            ((CentralProcUnit)component).L1Cache.Add(specDictionary[_L1cache]);
+                        }
+
+                        if (specDictionary.ContainsKey(_L2cache))
+                        {
+                            ((CentralProcUnit)component).L2Cache.Add(specDictionary[_L2cache]);
+                        }
+
+                        if (specDictionary.ContainsKey(_L3cache))
+                        {
+                            ((CentralProcUnit)component).L3Cache.Add(specDictionary[_L3cache]);
+                        }
+
+                        if (specDictionary.ContainsKey(_powerDraw))
+                        {
+                            var tempString = specDictionary[_powerDraw];
+                            var toParse = tempString.Remove(tempString.Length - 1);
+
+                            ((CentralProcUnit)component).PowerDraw = double.Parse(toParse);
+                        }
+
+                        if (specDictionary.ContainsKey(_microarchitecture))
+                        {
+                            ((CentralProcUnit)component).MicrorArchitecture = specDictionary[_microarchitecture];
+                        }
                         break;
                     #endregion
                     #region Case = Spinning Hard Drive
@@ -422,7 +537,6 @@ namespace AutoBuildApp.Services
                         {
                             var memTypeString = specDictionary[_memoryStandard];
                             MemoryType memType;
-                            var supportedRam = memTypeString.Split();
 
                             if (memTypeString.Contains(MemoryType.DDR.ToString()))
                             {
@@ -447,9 +561,9 @@ namespace AutoBuildApp.Services
 
                             ((Motherboard)component).MaxMemoryType = memType;
 
-                            foreach (string toCheck in supportedRam)
+                            foreach (string toCheck in _supportedMemoryArray)
                             {
-                                if (_supportedMemoryArray.Contains(toCheck))
+                                if (memTypeString.Contains(toCheck))
                                 {
                                     ((Motherboard)component).AddSupportedMemory(toCheck);
                                 }
