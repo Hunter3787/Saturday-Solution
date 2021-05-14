@@ -162,7 +162,8 @@ namespace AutoBuildApp.DataAccess
                         // Add the necessary parameters for the stored procedure
                         var param = new SqlParameter[1];
                         param[0] = adapter.InsertCommand.Parameters.AddWithValue("@Filterlist", pair);
-
+                        var watch = new System.Diagnostics.Stopwatch();
+                        watch.Start();
                         // Execute the stored procedure and read each row and create an AddProductDTO
                         using (SqlDataReader reader = adapter.InsertCommand.ExecuteReader())
                         {
@@ -176,47 +177,27 @@ namespace AutoBuildApp.DataAccess
                                 productEntity.Manufacturer = (string)reader["manufacturerName"];
                                 productEntity.ModelNumber = modelNumber;
                                 productEntity.Price = Decimal.ToDouble((decimal)reader["minimumPriceForModelNumber"]);
+                                productEntity.Specs = new Dictionary<string, string>();
 
-                                                              
+                                string specs = (string)reader["specs"];
+                                string[] keysAndValues = specs.Split('?');
+                                foreach(var keyValuePair in keysAndValues)
+                                {
+                                    string[] splitPair = keyValuePair.Split(':');
+                                    if (splitPair.Length == 2)
+                                    {
+                                        string key = splitPair[0];
+                                        string value = splitPair[1];
+                                        productEntity.Specs.Add(key, value);
+                                    }
+                                }
+                                
                                 entitiesList.Add(productEntity);
                             }
                         }
-                        string sql = "select * from products_specs where productID = (select productId from products where modelNumber = @MODELNUMBER)";
-                        SqlDataAdapter innerAdapter = new SqlDataAdapter();
-                        innerAdapter.InsertCommand = new SqlCommand(sql, connection, transaction);
 
-                        //foreach (var product in entitiesList)
-                        //{
-
-                        //    if (innerAdapter.InsertCommand.Parameters.Count == 0)
-                        //    {
-                        //        innerAdapter.InsertCommand.Parameters.Add("@MODELNUMBER", SqlDbType.VarChar).Value = product.ModelNumber;
-                        //    }
-                        //    else
-                        //    {
-                        //        innerAdapter.InsertCommand.Parameters["@MODELNUMBER"].Value = product.ModelNumber;
-                        //    }
-
-                        //    using (SqlDataReader reader = innerAdapter.InsertCommand.ExecuteReader())
-                        //    {
-                        //        while (reader.Read())
-                        //        {
-                        //            var key = (string)reader["productSpecs"];
-                        //            var value = (string)reader["productSpecsValue"];
-
-                        //            if(product.Specs == null)
-                        //            {
-                        //                product.Specs = new Dictionary<string, string>();
-                        //            }
-
-                        //            if (!product.Specs.ContainsKey(key))
-                        //            {
-                        //                product.Specs.Add(key, value);
-                        //            }
-                        //        }
-                        //    }
-                        //}
-
+                        watch.Stop();
+                        Console.WriteLine("time it took : " + watch.ElapsedMilliseconds / 1000.0 + " seconds");
                         transaction.Commit();
 
                     }
