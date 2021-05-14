@@ -231,14 +231,14 @@ namespace AutoBuildApp.Services.RecommendationServices
 
         private int Score(RAM input, BuildType type)
         {
-            if (input.Price == 0 || input.NumOfModules == 0 || input.ModuleSize == 0
+            if (input.Price == 0 || input.NumOfModules == 0 || input.ModuleCapacity == 0
                 || input.FirstWordLat == null || input.CASLat == null)
                 return -1;
 
             var price = input.Price;
             var firstWord = ParseDouble(input.FirstWordLat);
             var numOfModules = input.NumOfModules;
-            var moduleSize = input.ModuleSize;
+            var moduleSize = input.ModuleCapacity;
             var casLat = ParseInt(input.CASLat);
 
             double scoreTotal = 0;
