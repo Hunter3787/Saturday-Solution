@@ -74,8 +74,8 @@ namespace AutoBuildApp.Services.RecommendationServices.Tests
                 Quantity = 1,
                 Price = 85.99,
                 MoboFormSupport =
-                new List<MoboFormFactor>() {
-                MoboFormFactor.ATX, MoboFormFactor.MiniATX },
+                new List<string>() {
+                    MoboFormFactor.ATX.ToString(), MoboFormFactor.MiniATX.ToString() },
                 TowerType = TowerType.FullTower,
                 ExpansionSlots = 3,
                 PsuShroud = false,
@@ -135,7 +135,7 @@ namespace AutoBuildApp.Services.RecommendationServices.Tests
                 Length = 154,
                 EfficiencyRating = "Gold 80+",
                 Fanless = false,
-                PsuType = PSUModularity.FullyModular,
+                PsuModulartiy = PSUModularity.FullyModular,
                 EPSConnectors = 4,
                 SataConnectors = 6,
                 MolexConnectors = 4,
@@ -166,7 +166,7 @@ namespace AutoBuildApp.Services.RecommendationServices.Tests
                 DisplayPortPorts = 3,
                 MiniDisplayPortPorts = 0,
                 ExpansionSlotWidth = 2,
-                Cooling = 2,
+                Cooling = "2",
                 ExternalPower = "1 PCIe 12-pin"
             };
             _processor = new CentralProcUnit

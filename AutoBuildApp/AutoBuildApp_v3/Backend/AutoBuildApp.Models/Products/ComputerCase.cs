@@ -10,7 +10,7 @@ namespace AutoBuildApp.Models.Products
     public class ComputerCase : Component
     {
         #region "Field Declarations: get; set;"
-        public List<MoboFormFactor> MoboFormSupport { get; set; }
+        public List<string> MoboFormSupport { get; set; }
         public TowerType TowerType { get; set; }
         public int ExpansionSlots { get; set; }
         public bool PsuShroud { get; set; }
@@ -29,7 +29,7 @@ namespace AutoBuildApp.Models.Products
         public ComputerCase() : base()
         {
             ProductType = ProductType.Case;
-            MoboFormSupport = new List<MoboFormFactor>();
+            MoboFormSupport = new List<string>();
             Color = new List<string>();
             FrontPanel = new List<string>();
             Dimensions = new List<double>();
@@ -39,11 +39,11 @@ namespace AutoBuildApp.Models.Products
         /// <summary>
         /// Add a form factor to the supported form factor list.
         /// </summary>
-        /// <param name="input">MoboFormFactor of Type Enumeration</param>
+        /// <param name="input">string of Type Enumeration</param>
         /// <returns>Boolean</returns>
-        public bool AddFormFactorSupport(MoboFormFactor input)
+        public bool AddFormFactorSupport(string input)
         {
-            if (MoboFormSupport == null || MoboFormSupport.Contains(input))
+            if (input == null || MoboFormSupport.Contains(input))
             {
                 return false;
             }
@@ -58,7 +58,7 @@ namespace AutoBuildApp.Models.Products
         /// </summary>
         /// <param name="toRemove"></param>
         /// <returns>Boolean</returns>
-        public bool RemoveFormFactorSupport(MoboFormFactor toRemove)
+        public bool RemoveFormFactorSupport(string toRemove)
         {
             if (MoboFormSupport == null || !MoboFormSupport.Contains(toRemove))
             {

@@ -1,5 +1,8 @@
 const uri ='http://localhost:8081/Recommendation/BuildRecommend';
 
+let jwt_token = getCookie('JWT').toString();
+
+
 const fetchRequest = {
     method: 'POST',
     mode: 'cors',
@@ -33,8 +36,6 @@ function getBuild() {
 
 
 function displayBuild(data) {
-    // document.querySelector('.build-table').innerHTML = '';
-    console.log(data);
 
     var totalPrice = 0;
     var gpu = document.querySelector('.gpu');
@@ -132,13 +133,13 @@ function displayBuild(data) {
     psuDiv.appendChild(psuTitle);
  
     //
-    var ssd = document.querySelector('.ssd');
+    var ssd = document.querySelector('.hard-drive');
     var ssdTD = document.createElement('td');
     ssd.appendChild(ssdTD);
 
     var ssdPriceTD = document.createElement('td');
-    ssdPriceTD.innerHTML = "$" + data[0]["ssd"]["price"].toFixed(2);
-    totalPrice += data[0]["ssd"]["price"];
+    ssdPriceTD.innerHTML = "$" + data[0]["hardDrives"][0]["price"].toFixed(2);
+    totalPrice += data[0]["hardDrives"][0]["price"];
     ssd.appendChild(ssdPriceTD);
 
     var ssdDiv = document.createElement('div');
@@ -146,10 +147,10 @@ function displayBuild(data) {
     ssdDiv.style ="width:300px;padding:25px";
 
     var ssdTitle = document.createElement('text');
-    ssdTitle.textContent = data[0]["ssd"]["productName"];
+    ssdTitle.textContent = data[0]["hardDrives"][0]["productName"];
 
     var ssdImage = new Image(150,150);
-    ssdImage.src = data[0]["ssd"]["productImageStrings"][0]
+    ssdImage.src = data[0]["hardDrives"][0]["productImageStrings"][0]
 
     ssdDiv.appendChild(ssdImage);
     ssdDiv.appendChild(document.createElement('br'))
@@ -204,4 +205,75 @@ function displayBuild(data) {
     _caseDiv.appendChild(_caseTitle);
 
     document.querySelector('.total-price').innerHTML = "$" + totalPrice.toFixed(2);
+}
+
+var profilePage = document.getElementById("profilePage")
+
+profilePage.addEventListener('click', async () => {
+    if (jwt_token == "" || jwt_token == "Invalid username or password" || jwt_token == "Account is locked") {
+      alert("You are not logged in");
+    } else {
+      if (await checkAdminPrivilege() == true) {
+        changePageAdmin();
+      } else {
+        changePageNotAdmin();
+      }
+    }
+})
+
+async function checkAdminPrivilege() {
+  var result = false;
+  var url = "http://localhost:8081/authentication/admin"
+  await fetch(url, {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'bearer ' + jwt_token
+    },
+  })
+  .then(response => response.json())
+    .then(data => result = data);
+    return result;
+}
+
+function getCookie(cname) {
+    var jwt = "";
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        jwt =  c.substring(name.length, c.length);
+        jwt = jwt.replace(/"/g,"");
+        return jwt;
+      }
+    }
+    return "";
+  }
+
+function changePageAdmin() {
+  window.location.href = "http://127.0.0.1:5501/views/UMUser(Admin)/UMUser(Admin).html"
+}
+
+function changePageNotAdmin() {
+  window.location.href = "http://127.0.0.1:5501/views/UMUser/UMUser.html"
+}
+
+
+function hideButtons() {
+  var x = document.getElementById("profilePage");
+  var y = document.getElementById("loginPage");
+  var z = document.getElementById("registrationPage");
+  if (jwt_token != "") {
+    y.style.display = "none";
+    z.style.display = "none";
+  } else {
+    x.style.display = "none";
+  }
 }

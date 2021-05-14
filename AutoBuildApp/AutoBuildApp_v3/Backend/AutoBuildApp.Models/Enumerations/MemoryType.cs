@@ -6,6 +6,7 @@ namespace AutoBuildApp.Models.Enumerations
 {
     public enum MemoryType
     {
+        None,
         DDR,
         DDR2,
         DDR3,

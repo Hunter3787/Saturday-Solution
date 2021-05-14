@@ -4,15 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Login Page</title>
-    <link rel="stylesheet" href="site.css" />  
+    <link rel="stylesheet" href="LoginPage.css" />  
 </head>
 <body>
-    
+    <div class="custom-nav">
+        <span>
+            <img src="/assets/images/Logo/Logo.png" alt="logo"/>
+            <h1 class="nav-title">AutoBuild</h1>
+            <a class="custom-a" href="http://127.0.0.1:5501/views/Recommender/Recommender.html">Home</a>
+            <a class="custom-a" href="http://127.0.0.1:5501/views/MPBmain/MPB.html">MPB</a>
+            <a class="custom-a" href="http://127.0.0.1:5501/views/ComponentCatalog/ComponentCatalog.html">Component Catalog</a>
+            <a class="custom-a" href="">Etc.</a>
+            <button type="button" class="nav-button" onclick="location.href='http://127.0.0.1:5501/views/LoginPage/LoginPage.html'">Login</button>
+            <button type="button" class="nav-button" onclick="location.href='http://127.0.0.1:5501/views/RegistrationPage/RegistrationPage.html'">Register</button>
+        </span>
+    </div>
     <nav>
         <h2>LoginPage</h2>
     </nav>
-        <br />
-        <br />
         <form action="javascript:void(0);" id="loginForm">
         <input type="text" id="add-username" placeholder="UserName">
         

@@ -41,7 +41,7 @@ namespace AutoBuildApp.Services.Tests
                 DisplayPortPorts = 3,
                 MiniDisplayPortPorts = 0,
                 ExpansionSlotWidth = 2,
-                Cooling = 2,
+                Cooling = "2",
                 ExternalPower = "1 PCIe 12-pin"
 
             };

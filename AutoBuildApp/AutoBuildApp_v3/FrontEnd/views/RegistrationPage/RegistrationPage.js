@@ -1,4 +1,4 @@
-const uri ='https://localhost:5001/registration';
+const uri ='http://localhost:8081/registration';
 let todos = [];
 var JWT_Token = ' ';
 const token = 'YOUR_TOKEN_HERE';
@@ -7,7 +7,7 @@ var registerButton = document.getElementById("RegisterUser")
     registerButton.addEventListener("click", register)
 
 function register() {
-    console.log("hey");
+    console.log(getCookie("JWT"));
     const addNameTextbox = document.getElementById('add-username');
     const addFirstTextbox = document.getElementById('add-firstname');
     const addLastTextbox = document.getElementById('add-lastname');
@@ -15,7 +15,7 @@ function register() {
     const addHashTextbox = document.getElementById('add-password');
     const addHash2Textbox = document.getElementById('add-passwordCheck');
     
-    var url = new URL("https://localhost:5001/registration"),
+    var url = new URL("http://localhost:8081/registration"),
     UserCred = {
       Username : addNameTextbox.value.trim(),
       Firstname : addFirstTextbox.value.trim(), 
@@ -51,4 +51,15 @@ function register() {
 
 function changePage() {
   window.location.href = "LoginPage.html"
+}
+
+function getCookie(name) {
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(';');
+  for(var i=0;i < ca.length;i++) {
+      var c = ca[i];
+      while (c.charAt(0)==' ') c = c.substring(1,c.length);
+      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+  }
+  return null;
 }
