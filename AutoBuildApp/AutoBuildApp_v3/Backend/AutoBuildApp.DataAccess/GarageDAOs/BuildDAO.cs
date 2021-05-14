@@ -1,4 +1,5 @@
-﻿using AutoBuildApp.Models;
+﻿using AutoBuildApp.DataAccess.Entities;
+using AutoBuildApp.Models;
 using AutoBuildApp.Models.Builds;
 using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.Models.Enumerations;
@@ -212,8 +213,6 @@ namespace AutoBuildApp.DataAccess
         }
 
 
-
-
         public CommonResponse AddProductsToBuild(string buildName, string modleNumber, int quantity, string username)
         {
             CommonResponse response = new CommonResponse();
@@ -288,8 +287,6 @@ namespace AutoBuildApp.DataAccess
             response.IsSuccessful = false;
             return response;
         }
-
-
 
 
         public CommonResponse ModifyProductQuantityFromBuild(string buildName, string modleNumber, int quantity, string username)
@@ -372,8 +369,6 @@ namespace AutoBuildApp.DataAccess
 
         // recommender adds full build -> list of model numbers for a  buildname, 
 
-
-
         public CommonResponse SaveBuildRecommended
             (IList<string> modelNumbers, string buildName, string username)
         {
@@ -430,7 +425,6 @@ namespace AutoBuildApp.DataAccess
                         command.Parameters.AddWithValue("@BUILDNAME", buildName);
                         command.Parameters.AddWithValue("@USERNAME", username);
                         command.Parameters.AddWithValue("@MODELS", listOfModelNumbers);
-                        command.Parameters.AddWithValue("@BUILDNAME", buildName);
 
                         #endregion SQL related
                         // checking if there are rows
@@ -443,7 +437,7 @@ namespace AutoBuildApp.DataAccess
                             response.IsSuccessful = false;
                             return response;
                         }
-                        response.ResponseString = ResponseStringGlobals.SUCCESSFUL_MODIFICATION;
+                        response.ResponseString = ResponseStringGlobals.SUCCESSFUL_ADDITION;
                         response.IsSuccessful = true;
                         command.Transaction.Commit(); // sends the transaction to be commited at the database.
                         return response;
@@ -474,10 +468,12 @@ namespace AutoBuildApp.DataAccess
         }
 
 
-
-
-
         public bool ModifyBuild(Build newBuild, Build oldBuild, string oldName, string username)
+        {
+            return false;
+        }
+
+        public bool ModifyBuild(Build newBuild, string username)
         {
             return false;
         }
@@ -490,7 +486,86 @@ namespace AutoBuildApp.DataAccess
         /// <param name="buildName"></param>
         /// <param name="username"></param>
         /// <returns></returns>
-        public SystemCodeWithObject<bool> PublishBuild(string title, string buildName, string username)
+        public SystemCodeWithObject<bool> PublishBuild
+            (BuildPostEntity BuildPostEntity, string username)
+        {
+            SystemCodeWithObject<bool> output = new SystemCodeWithObject<bool>()
+            {
+                GenericObject = false
+            };
+            try
+            {
+                IsNotNullOrEmpty(username);
+            }
+            catch (ArgumentNullException)
+            {
+                output.Code = AutoBuildSystemCodes.ArguementNull;
+                return output;
+            }
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand command = new SqlCommand())
+                {
+                    try
+                    {
+                        command.Transaction = conn.BeginTransaction();
+
+                        #region SQL related
+                        command.Connection = conn; // sets the connection of the command equal to the connection that has already been starte in the outer using block.
+
+                        command.CommandTimeout = TimeSpan.FromSeconds(TimeoutLengths.TIMEOUT_SHORT).Seconds;
+                        // 1) Create a Command, and set its CommandType property to StoredProcedure.
+                        command.CommandType = CommandType.StoredProcedure;
+                        // 2) Set the CommandText to the name of the stored procedure.
+                        string SP_PublishBuild = $"{nameof(PublishBuild)}";
+                        command.CommandText = SP_PublishBuild;
+                        // 3) will be defining the parameters to be passed:
+                        command.Parameters.AddWithValue("@TITLE", BuildPostEntity.Title);
+                        command.Parameters.AddWithValue("@BUILDNAME", BuildPostEntity.Title);
+                        command.Parameters.AddWithValue("@USERNAME", username);
+                        command.Parameters.AddWithValue("@DATETIME", BuildPostEntity.DateTime);
+                        command.Parameters.AddWithValue("@DESCRIPTION", BuildPostEntity.Description);
+                        command.Parameters.AddWithValue("@IMAGEPATH", BuildPostEntity.BuildImagePath);
+                        #endregion SQL related
+                        // checking if there are rows;
+                        var rowsAdded = command.ExecuteNonQuery();
+                        if (rowsAdded > 0)
+                        {
+                            command.Transaction.Commit();
+                            output.GenericObject = true;
+                            output.Code = AutoBuildSystemCodes.Success;
+                        }
+                    }
+                    catch (ArgumentException)
+                    {
+                        output.Code = AutoBuildSystemCodes.FailedParse;
+                        return output;
+                    }
+                    catch (SqlException ex)
+                    {
+                        output.Code = SqlExceptionHandler.GetCode(ex.Number);
+                        return output;
+                    }
+                }
+            }
+            return output;
+        }
+
+
+
+
+        /// <summary>
+        /// Copy build from one table to another to effectively
+        /// create a non-user related build.
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="buildName"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public SystemCodeWithObject<bool> PublishBuild2(string title, string buildName, string username)
         {
             SystemCodeWithObject<bool> output = new SystemCodeWithObject<bool>()
             {
@@ -609,9 +684,146 @@ namespace AutoBuildApp.DataAccess
 
         public List<Build> GetListOfBuilds(string username)
         {
-            List<Build> outputList = new List<Build>();
+            List<Build> builds = new List<Build>();
+            // step two:
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                using (SqlCommand command = new SqlCommand())
+                {
+                    try
+                    {
+                        Build build = new Build();
+                        command.Transaction = conn.BeginTransaction();
 
-            return outputList;
+                        #region SQL related
+                        command.Connection = conn; // sets the connection of the command equal to the connection that has already been starte in the outer using block.
+
+                        command.CommandTimeout = TimeSpan.FromSeconds(TimeoutLengths.TIMEOUT_SHORT).Seconds;
+                        // 1) Create a Command, and set its CommandType property to StoredProcedure.
+                        command.CommandType = CommandType.Text;
+
+                        string GetAllBuilds = $"SELECT " +
+                            $"PC.buildName," +
+                            $"PC.imagePath," +
+                            $"SP.quantity," +
+                            $"P.productType," +
+                            $"P.modelNumber," +
+                            $"P.productName FROM PcBuilds PC INNER JOIN  " +
+                            $"Save_Product_Build SP ON PC.buildID = SP.buildID " +
+                            $"INNER JOIN Products P ON SP.productID = P.productID " +
+                            $"where PC.userID = (select ui.userID from UserInfo ui where ui.username = @USERNAME)";
+                        // 2) Set the CommandText to the name of the stored procedure.
+                        command.CommandText = GetAllBuilds;
+                        // 3) will be defining the parameters to be passed:
+                        command.Parameters.AddWithValue("@USERNAME", username);
+
+                        #endregion SQL related
+                        // checking if there are rows
+                        using (var reader = command.ExecuteReader())
+                        {
+
+                            //READ AND STORE All THE ORDINALS YOU NEED
+                            int buildName = reader.GetOrdinal("buildName");
+                            int imagePath = reader.GetOrdinal("imagePath");
+                            int quantity = reader.GetOrdinal("quantity");
+                            int productType = reader.GetOrdinal("productType");
+                            int modelNumber = reader.GetOrdinal("modelNumber");
+                            int productName = reader.GetOrdinal("productName");
+                            Console.WriteLine($"rows affected: {reader.HasRows} ");
+                            // If the row that was added is not one then true
+                            if (!reader.HasRows)
+                            {
+                                return null;
+                            }
+
+                            while (reader.Read())
+                            {
+
+                                switch ((string)reader[productType]) // switch between the productTypes
+                                {
+                                    case "CPU":
+                                        build.Cpu.ProductImageStrings.Add( (string)reader[imagePath]);
+                                        build.Cpu.Quantity = (int)reader[quantity];
+                                        build.Cpu.ProductName = (string)reader[buildName];
+                                        build.Cpu.ModelNumber = (string)reader[modelNumber];
+
+                                        break;
+                                    case "Motherboard":
+
+                                        build.Mobo.ProductImageStrings.Add((string)reader[imagePath]);
+                                        build.Mobo.Quantity = (int)reader[quantity];
+                                        build.Mobo.ProductName = (string)reader[buildName];
+                                        build.Mobo.ModelNumber = (string)reader[modelNumber];
+                                        break;
+                                    case "PSU":
+
+                                        build.Psu.ProductImageStrings.Add((string)reader[imagePath]);
+                                        build.Psu.Quantity = (int)reader[quantity];
+                                        build.Psu.ProductName = (string)reader[buildName];
+                                        build.Psu.ModelNumber = (string)reader[modelNumber];
+                                        break;
+                                    case "Case":
+
+                                        build.Case.ProductImageStrings.Add((string)reader[imagePath]);
+                                        build.Case.Quantity = (int)reader[quantity];
+                                        build.Case.ProductName = (string)reader[buildName];
+                                        build.Case.ModelNumber = (string)reader[modelNumber];
+                                        break;
+                                    case "HDD":
+                                        IHardDrive HDD = new HardDrive();
+                                        HDD.ProductImageStrings.Add((string)reader[imagePath]);
+                                        HDD.Quantity = (int)reader[quantity];
+                                        HDD.ProductName = (string)reader[buildName];
+                                        HDD.ModelNumber = (string)reader[modelNumber];
+                                        build.AddHardDrive(HDD);
+                                        break;
+                                    case "GPU":
+
+                                        build.Gpu.ProductImageStrings.Add((string)reader[imagePath]);
+                                        build.Gpu.Quantity = (int)reader[quantity];
+                                        build.Gpu.ProductName = (string)reader[buildName];
+                                        build.Gpu.ModelNumber = (string)reader[modelNumber];
+
+                                        break;
+                                    case "RAM":
+
+                                        build.Ram.ProductImageStrings.Add((string)reader[imagePath]);
+                                        build.Ram.Quantity = (int)reader[quantity];
+                                        build.Ram.ProductName = (string)reader[buildName];
+                                        build.Ram.ModelNumber = (string)reader[modelNumber];
+                                        break;
+                                    default:
+                                        break;
+                                }
+
+                                builds.Add(build);
+                            }
+
+                        }
+                            
+                        command.Transaction.Commit(); // sends the transaction to be commited at the database.
+                        return builds;
+
+                    }
+                    catch (SqlException e)
+                    {
+
+                        Console.WriteLine("SqlException.GetType: {0}", e.GetType());
+                        Console.WriteLine("SqlException.Source: {0}", e.Source);
+                        Console.WriteLine("SqlException.ErrorCode: {0}", e.ErrorCode);
+                        Console.WriteLine("SqlException.Message: {0}", e.Message);
+                        command.Transaction.Rollback();
+                        if (!conn.State.Equals(ConnectionState.Open))
+                        {
+                            return null;
+                        }
+
+                    }
+                }
+            }
+
+            return null;
         }
 
         #region Private Methods

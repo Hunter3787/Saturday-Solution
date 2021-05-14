@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Threading;
 using AutoBuildApp.DataAccess;
+using AutoBuildApp.DataAccess.Entities;
+using AutoBuildApp.DomainModels;
 using AutoBuildApp.Models;
 using AutoBuildApp.Models.Builds;
 using AutoBuildApp.Models.DataTransferObjects;
+using AutoBuildApp.Models.Enumerations;
 
 /**
 * Build Management Service is a service that calls a 
@@ -30,10 +33,6 @@ namespace AutoBuildApp.Services
             try
             {
                 response = _dao.InsertBuild(build, buildName, user);
-
-
-                //response.IsSuccessful = true;
-                //response.ResponseString = ResponseStringGlobals.SUCCESSFUL_ADDITION;
             }
             catch (TimeoutException)
             {
@@ -102,21 +101,100 @@ namespace AutoBuildApp.Services
 
 
 
+        public CommonResponse AddRecomendedBuild
+            (IList<string> modelNumbers, string buildName)
+        {
+
+            CommonResponse response = new CommonResponse();
+
+            try
+            {
+                response = _dao.SaveBuildRecommended(modelNumbers, buildName, Thread.CurrentPrincipal.Identity.Name);
+                return response;
+            }
+            catch (TimeoutException)
+            {
+                response.IsSuccessful = false;
+                response.ResponseString = ResponseStringGlobals.DATABASE_TIMEOUT;
+            }
+            catch( ArgumentNullException)
+            {
+                response.IsSuccessful = false;
+                response.ResponseString = ResponseStringGlobals.INVALID_INPUT;
+
+            }
+
+            return response;
+        }
+
+
+
         public Build GetBuild()
         {
             return null;
         }
 
-        public List<Build> GetAllUserBuilds(string user, string sortOrder)
+        public List<Build> GetAllUserBuilds(string sortOrder)
         {
 
-            return null;
+            try
+            {
+                var buildLists = _dao.GetListOfBuilds(Thread.CurrentPrincipal.Identity.Name);
+                return buildLists;
+            }
+            catch (TimeoutException)
+            {
+                return null; 
+            }
+            catch (ArgumentNullException)
+            {
+                return null;
+            }
+            catch(NullReferenceException)
+            {
+                return null;
+            }
         }
 
-        public CommonResponse PublishBuild()
+        public CommonResponse PublishBuild(BuildPost BuildPost)
         {
-            _response = new CommonResponse();
 
+            BuildPostEntity BuildPostEntity = new BuildPostEntity()
+            {
+                Title = BuildPost.Title,
+                Description = BuildPost.Description,
+                BuildImagePath = BuildPost.BuildImagePath,
+                DateTime = BuildPost.DateTime
+            };
+            CommonResponse response = new CommonResponse();
+            try
+            {
+                var result = _dao.PublishBuild(BuildPostEntity, Thread.CurrentPrincipal.Identity.Name);
+                
+                if (result.Code == AutoBuildSystemCodes.Success)
+                {
+                    response.ResponseString = ResponseStringGlobals.SUCCESSFUL_ADDITION;
+                    response.IsSuccessful = true;
+                }
+                if (result.Code == AutoBuildSystemCodes.FailedParse)
+                {
+                    response.ResponseString = ResponseStringGlobals.FAILED_ADDITION;
+                    response.IsSuccessful = false;
+                }
+
+                return response;
+            }
+            catch (TimeoutException)
+            {
+                response.IsSuccessful = false;
+                response.ResponseString = ResponseStringGlobals.DATABASE_TIMEOUT;
+            }
+            catch (ArgumentNullException)
+            {
+                response.IsSuccessful = false;
+                response.ResponseString = ResponseStringGlobals.INVALID_INPUT;
+
+            }
             return _response;
         }
 

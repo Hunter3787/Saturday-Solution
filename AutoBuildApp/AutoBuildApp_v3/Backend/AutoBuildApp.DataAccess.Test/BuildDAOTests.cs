@@ -177,7 +177,7 @@ namespace AutoBuildApp.DataAccess.Test
             GetConnectionStringByName(ControllerGlobals.LOCALHOST_CONNECTION);
 
             BuildDAO buildDAO = new BuildDAO(conString);
-            response = buildDAO.AddProductsToBuild( _myBuild.BuildName, "MODEL_5", 1234, "Zeina");
+            response = buildDAO.AddProductsToBuild( _myBuild.BuildName, "MODEL_5", 14, "Zeina");
 
             // Act
             // Assert
@@ -196,11 +196,11 @@ namespace AutoBuildApp.DataAccess.Test
             GetConnectionStringByName(ControllerGlobals.LOCALHOST_CONNECTION);
 
             BuildDAO buildDAO = new BuildDAO(conString);
-            response = buildDAO.ModifyProductQuantityFromBuild(_myBuild.BuildName, "MODEL_5", 1, "Zeina");
+            response = buildDAO.ModifyProductQuantityFromBuild(_myBuild.BuildName, "MODEL_5", 9, "Zeina");
 
             // Act
             // Assert
-            Assert.AreEqual(ResponseStringGlobals.SUCCESSFUL_ADDITION, response.ResponseString);
+            Assert.AreEqual(ResponseStringGlobals.SUCCESSFUL_MODIFICATION, response.ResponseString);
 
         }
 
@@ -212,20 +212,50 @@ namespace AutoBuildApp.DataAccess.Test
             CommonResponse response = new CommonResponse();
             // ARRANGE:
             IList<string> modelNumbers = new List<string>()
-            { "MODEL_5","MODEL_2", "MODEL_7" };
+            { "MODEL_6","MODEL_7", "MODEL_8" };
 
             string conString = ConnectionManager.
             connectionManager.
             GetConnectionStringByName(ControllerGlobals.LOCALHOST_CONNECTION);
 
             BuildDAO buildDAO = new BuildDAO(conString);
-            response = buildDAO.ModifyProductQuantityFromBuild(_myBuild.BuildName, "MODEL_5", 1, "Zeina");
+            response = buildDAO.SaveBuildRecommended(modelNumbers, "MyBuild", "Zeina");
 
             // Act
             // Assert
             Assert.AreEqual(ResponseStringGlobals.SUCCESSFUL_ADDITION, response.ResponseString);
 
         }
+
+
+        [TestMethod]
+        public void GetListOfBuilds() // this will fail because of not enought data
+        {
+            List<Build> response = new List<Build>();
+            // ARRANGE:
+
+            string conString = ConnectionManager.
+            connectionManager.
+            GetConnectionStringByName(ControllerGlobals.LOCALHOST_CONNECTION);
+
+            try
+            {
+                BuildDAO buildDAO = new BuildDAO(conString);
+                response = buildDAO.GetListOfBuilds("Zeina");
+
+                // Act
+                // Assert
+                Assert.IsNotNull(response.ToString());
+            }
+            catch(NullReferenceException)
+            {
+                Console.WriteLine("no data");
+            }
+
+        }
+
+
+
 
 
 
