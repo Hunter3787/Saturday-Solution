@@ -54,8 +54,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logging", "Logging\Logging.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoBuildApp.CrossCutting.Tests", "AutoBuildApp.CrossCutting.Tests\AutoBuildApp.CrossCutting.Tests.csproj", "{9FECC2D3-E3A0-4457-8D7A-299CBF077E10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoBuildCrawler", "AutoBuildCrawler\AutoBuildCrawler.csproj", "{BEE32FC5-ADEE-4020-B80B-FF4CD4B08389}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -126,10 +124,6 @@ Global
 		{9FECC2D3-E3A0-4457-8D7A-299CBF077E10}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9FECC2D3-E3A0-4457-8D7A-299CBF077E10}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9FECC2D3-E3A0-4457-8D7A-299CBF077E10}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BEE32FC5-ADEE-4020-B80B-FF4CD4B08389}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BEE32FC5-ADEE-4020-B80B-FF4CD4B08389}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BEE32FC5-ADEE-4020-B80B-FF4CD4B08389}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BEE32FC5-ADEE-4020-B80B-FF4CD4B08389}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -153,7 +147,6 @@ Global
 		{CD47C394-039A-400E-93E5-3C7A2F4DDF84} = {98226589-714B-4BAA-8B69-B54BD0FE5CA1}
 		{B2B45FD3-6CBC-4ACA-86EC-2C2552A81622} = {EB9C2905-4E18-4C51-AB39-9108845D0D5A}
 		{9FECC2D3-E3A0-4457-8D7A-299CBF077E10} = {EB9C2905-4E18-4C51-AB39-9108845D0D5A}
-		{BEE32FC5-ADEE-4020-B80B-FF4CD4B08389} = {98226589-714B-4BAA-8B69-B54BD0FE5CA1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B8B2E261-6A44-42F8-9F54-8F8E133DFC4D}
