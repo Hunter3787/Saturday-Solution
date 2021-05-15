@@ -8,7 +8,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="GarageStyles.css">
     </head>
-    <body>
+    <body onload="hideButtons()">
         <div class="custom-nav">
             <span>
                 <img src="/assets/images/Logo/Logo.png" alt="logo"/>
@@ -16,8 +16,8 @@
                 <a class="custom-a" href="/views/MPBmain/MPB.html">Home</a>
                 <a class="custom-a" href="/views/Recommender/Recommender.html">PC Builder and Upgrader</a>
                 <a class="custom-a" href="/views/ComponentCatalog/ComponentCatalog.html">Component Catalog</a>
-                <button type="button" class="nav-button" onclick="location.href='/views/LoginPage/LoginPage.html'">Login</button>
-                <button type="button" class="nav-button" onclick="location.href='/views/RegistrationPage/RegistrationPage.html'">Register</button>
+                <button type="button" id = "loginPage" class="nav-button" onclick="location.href='/views/LoginPage/LoginPage.html'">Login</button>
+                <button type="button" id = "registrationPage" class="nav-button" onclick="location.href='/views/RegistrationPage/RegistrationPage.html'">Register</button>
                 <button type="button" id = "profilePage" class="nav-button" >Profile Page</button>
             </span>
         </div>

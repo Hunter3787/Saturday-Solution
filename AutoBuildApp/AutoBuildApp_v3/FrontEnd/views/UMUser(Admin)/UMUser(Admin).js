@@ -218,10 +218,32 @@ var logoutUser = document.getElementById("Logout")
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
   }
 
-  function hideButtons() {
+  async function hideButtons() {
     var x = document.getElementById("profilePage");
     var y = document.getElementById("loginPage");
     var z = document.getElementById("registrationPage");
+    var vendorRef = document.getElementById("vendor-only");
+
+    var result = false;
+    var url = "http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/authentication/vendor"
+    await fetch(url, {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'bearer ' + jwt_token
+      },
+    })
+    .then(response => response.json())
+    .then(data => result = data);
+
+    console.log(result)
+
+    if (result === false){
+      vendorRef.hidden = true;
+    }
+
     console.log("hello")
     if (jwt_token != "") {
       y.style.display = "none";
