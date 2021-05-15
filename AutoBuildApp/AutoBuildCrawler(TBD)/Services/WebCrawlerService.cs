@@ -627,7 +627,8 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             {
                 Headless = true,
                 IgnoreHTTPSErrors = true,
-                ExecutablePath = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+                //ExecutablePath = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+                ExecutablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe",
                 Args = new[] {
                         //$"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}",
                         "--proxy-server=208.80.28.208:8080",
