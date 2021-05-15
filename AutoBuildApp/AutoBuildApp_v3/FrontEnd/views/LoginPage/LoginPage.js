@@ -96,5 +96,5 @@ function eraseCookieFromAllPaths(name) {
 }
 
 function changePageHome() {
-  window.location.href = "http://127.0.0.1:5501/views/MPBMain/MPB.html"
+  window.location.href = "http://127.0.0.1:5501/views/Recommender/Recommender.html"
 }

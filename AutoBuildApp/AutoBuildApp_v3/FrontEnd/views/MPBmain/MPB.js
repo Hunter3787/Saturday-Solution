@@ -11,10 +11,6 @@ const fetchRequest = {
     }
 };
 
-window.onload = function() {
-  getItems();
-};
-
 // Adds an event listener for the key up event for a search filter.
 let searchFilter = document.getElementById('sbn');
 searchFilter.addEventListener("keyup", () => findByName(searchFilter));
@@ -365,17 +361,18 @@ function getCookie(cname) {
   }
 
 function changePageAdmin() {
-  window.location.href = "http://127.0.0.1:5501/views/UMUser(Admin)/UMUser(Admin).html"
+  window.location.href = "/views/UMUser(Admin)/UMUser(Admin).html"
 }
 
 function changePageNotAdmin() {
-  window.location.href = "http://127.0.0.1:5501/views/UMUser/UMUser.html"
+  window.location.href = "/views/UMUser/UMUser.html"
 }
 
 function hideButtons() {
   var x = document.getElementById("profilePage");
   var y = document.getElementById("loginPage");
   var z = document.getElementById("registrationPage");
+  console.log("hello")
   if (jwt_token != "") {
     y.style.display = "none";
     z.style.display = "none";
@@ -383,3 +380,5 @@ function hideButtons() {
     x.style.display = "none";
   }
 }
+
+getItems();

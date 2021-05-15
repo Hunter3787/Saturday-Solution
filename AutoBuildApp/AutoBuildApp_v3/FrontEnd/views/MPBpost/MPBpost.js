@@ -15,10 +15,6 @@ const fetchRequestAdd = {
     mode: 'cors',
 };
 
-window.onload = function() {
-    getItem();
-};
-
 function process(){
     getItem();
 }
@@ -524,3 +520,5 @@ function hideButtons() {
     x.style.display = "none";
   }
 }
+
+getItem();

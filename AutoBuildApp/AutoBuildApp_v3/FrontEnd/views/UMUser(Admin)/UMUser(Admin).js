@@ -1,5 +1,5 @@
 
-let token = ' '
+let jwt_token = getCookie("JWT");
 let activeUsernameCookie = getCookie("Username");
 
 
@@ -22,7 +22,7 @@ function UpdateUsername(username, activeUsername) {
       mode: 'cors',
       headers: {
         'Accept': 'application/json',
-        'Authorization': 'bearer ' + token
+        'Authorization': 'bearer ' + jwt_token
       },
       body: formData
     })
@@ -53,7 +53,7 @@ function UpdateEmail(inputEmail, activeUsername) {
       mode: 'cors',
       headers: {
         'Accept': 'application/json',
-        'Authorization': 'bearer ' + token
+        'Authorization': 'bearer ' + jwt_token
       },
       body: formData
     })
@@ -87,7 +87,7 @@ function UpdatePassword(password, passwordCheck, activeUsername) {
       mode: 'cors',
       headers: {
         'Accept': 'application/json',
-        'Authorization': 'bearer ' + token
+        'Authorization': 'bearer ' + jwt_token
       },
       body: formData
     })
@@ -127,7 +127,7 @@ method: 'DELETE',
 mode: 'cors',
 headers: {
 'Accept': 'application/json',
-'Authorization': 'bearer ' + token
+'Authorization': 'bearer ' + jwt_token
 },
 //body: JSON.stringify(item)
 body: formData
@@ -216,4 +216,17 @@ var logoutUser = document.getElementById("Logout")
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
     var expires = "expires="+d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
+
+  function hideButtons() {
+    var x = document.getElementById("profilePage");
+    var y = document.getElementById("loginPage");
+    var z = document.getElementById("registrationPage");
+    console.log("hello")
+    if (jwt_token != "") {
+      y.style.display = "none";
+      z.style.display = "none";
+    } else {
+      x.style.display = "none";
+    }
   }

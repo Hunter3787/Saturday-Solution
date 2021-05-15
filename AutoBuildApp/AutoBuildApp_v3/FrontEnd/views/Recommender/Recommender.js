@@ -2,6 +2,7 @@ const uri ='http://localhost:8081/Recommendation/BuildRecommend';
 
 let jwt_token = getCookie('JWT').toString();
 
+let modelNumbers = [];
 
 const fetchRequest = {
     method: 'POST',
@@ -9,6 +10,7 @@ const fetchRequest = {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
+      'Authorization': 'bearer ' + jwt_token
     }
   };
 
@@ -105,6 +107,8 @@ function displayBuild(data) {
     gpuPrice.appendChild(gpuPriceText);
     gpu.appendChild(gpuPrice);
 
+    modelNumbers.push(data[0]["gpu"]["modelNumber"])
+
     main.appendChild(gpu);
 
     // CPU
@@ -140,6 +144,8 @@ function displayBuild(data) {
     cpuPrice.appendChild(cpuPriceText);
     cpu.appendChild(cpuPrice);
 
+    modelNumbers.push(data[0]["cpu"]["modelNumber"])
+
     main.appendChild(cpu);
 
     // Motherboard
@@ -174,6 +180,8 @@ function displayBuild(data) {
     totalPrice += data[0]["mobo"]["price"];
     motherboardPrice.appendChild(motherboardPriceText);
     motherboard.appendChild(motherboardPrice);
+
+    modelNumbers.push(data[0]["mobo"]["modelNumber"])
     
     main.appendChild(motherboard);
 
@@ -209,6 +217,8 @@ function displayBuild(data) {
     totalPrice += data[0]["psu"]["price"];
     psuPrice.appendChild(psuPriceText);
     psu.appendChild(psuPrice);
+
+    modelNumbers.push(data[0]["psu"]["modelNumber"])
     
     main.appendChild(psu);
 
@@ -244,6 +254,8 @@ function displayBuild(data) {
     totalPrice += data[0]["hardDrives"][0]["price"];
     ssdPrice.appendChild(ssdPriceText);
     ssd.appendChild(ssdPrice);
+
+    modelNumbers.push(data[0]["hardDrives"][0]["modelNumber"])
     
     main.appendChild(ssd);
 
@@ -279,6 +291,8 @@ function displayBuild(data) {
     totalPrice += data[0]["ram"]["price"];
     ramPrice.appendChild(ramPriceText);
     ram.appendChild(ramPrice);
+
+    modelNumbers.push(data[0]["ram"]["modelNumber"])
     
     main.appendChild(ram);
 
@@ -314,6 +328,8 @@ function displayBuild(data) {
     totalPrice += data[0]["case"]["price"];
     pcCasePrice.appendChild(pcCasePriceText);
     pcCase.appendChild(pcCasePrice);
+
+    modelNumbers.push(data[0]["case"]["modelNumber"])
     
     main.appendChild(pcCase);
 
@@ -379,22 +395,30 @@ function getCookie(cname) {
   }
 
 function changePageAdmin() {
-  window.location.href = "http://127.0.0.1:5501/views/UMUser(Admin)/UMUser(Admin).html"
+  window.location.href = "/views/UMUser(Admin)/UMUser(Admin).html"
 }
 
 function changePageNotAdmin() {
-  window.location.href = "http://127.0.0.1:5501/views/UMUser/UMUser.html"
+  window.location.href = "/views/UMUser/UMUser.html"
 }
-
 
 function hideButtons() {
   var x = document.getElementById("profilePage");
   var y = document.getElementById("loginPage");
   var z = document.getElementById("registrationPage");
+  var form = document.getElementById("build-save-form");
   if (jwt_token != "") {
     y.style.display = "none";
     z.style.display = "none";
   } else {
     x.style.display = "none";
+    form.style.display = "none";
   }
+}
+
+var saveBuildForm = document.getElementById('build-save-form');
+saveBuildForm.addEventListener('submit', () => saveBuild());
+
+function saveBuild() {
+  console.log(modelNumbers)
 }

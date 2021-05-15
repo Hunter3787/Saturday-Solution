@@ -4,6 +4,8 @@ var tokenNewEgg = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQi
 
 var currentToken = tokenNewEgg;
 
+let jwt_token = getCookie("JWT");
+
 const fetchRequest = {
     method: 'GET',
     mode: 'cors',
@@ -204,4 +206,16 @@ const fetchRequest = {
             alert("You've already been added to this email list!");
         }
     })
+  }
+
+  function hideButtons() {
+    var x = document.getElementById("profilePage");
+    var y = document.getElementById("loginPage");
+    var z = document.getElementById("registrationPage");
+    if (jwt_token != "") {
+      y.style.display = "none";
+      z.style.display = "none";
+    } else {
+      x.style.display = "none";
+    }
   }
