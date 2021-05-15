@@ -1,33 +1,22 @@
-input[type='submit'], button, [aria-label] {
-    cursor: pointer;
+* {
+    box-sizing: border-box;
 }
 
-#editForm {
-    display: none;
+html {
+    position: relative;
+    min-height: 100%;
 }
 
-p{
-    word-wrap: break-word;
-    color: blueviolet;
+body {
+    min-height: 100%;
+    font-family: Arial;
+    margin: 0;
+    background-color: whitesmoke;
+  }
 
-}
-table {
-    font-family: Arial, sans-serif;
-    border: 1px solid;
-    border-collapse: collapse;
-}
+/******************************** Navigation Bar************************************/  
 
-th {
-    background-color: #f8f8f8;
-    padding: 5px;
-}
-
-td {
-    border: 1px solid;
-    padding: 5px;
-}
-
-.custom-nav {
+  .custom-nav {
     padding: 10px;
     text-align: left;
     background: #34495E;
@@ -48,6 +37,10 @@ td {
     display: inline-block;
   }
 
+  .custom-nav .nav-title:hover {
+    cursor: pointer;
+  }
+
   .custom-nav .custom-a {
     color: whitesmoke;
     padding-right: 10px;
@@ -58,7 +51,6 @@ td {
     padding-right: 10px;
     color: #D35400;
   }
-
 
   .custom-nav .nav-button {
     padding: 10px;
@@ -92,3 +84,110 @@ td {
     color: black;
     box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
   }
+
+  /* @media screen and (max-width: 600px) {
+    .custom-nav a:not(:first-child) {display: none;}
+    .custom-nav a.icon {
+      float: right;
+      display: block;
+    }
+  }
+  
+  @media screen and (max-width: 600px) {
+    .custom-nav.responsive {position: relative;}
+    .custom-nav.responsive .icon {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+    .custom-nav.responsive a {
+      float: none;
+      display: block;
+      text-align: left;
+    }
+  } */
+
+  /********************************************************************/  
+
+  /******************************** Header ************************************/  
+
+  .formheader {
+    padding: 10px;
+    text-align: center;
+    background: #9B59B6;
+    color: white;
+    overflow: auto hidden;
+    height: 100px;
+  }
+
+  .formheader .formtitle {
+    color: whitesmoke;
+  }
+
+  /********************************************************************/ 
+
+.registration-form {
+  min-height: 100%;
+  position: relative;
+}
+
+input[type='submit'], button, [aria-label] {
+    cursor: pointer;
+}
+
+#editForm {
+    display: none;
+}
+
+p{
+    word-wrap: break-word;
+    color: blueviolet;
+
+}
+table {
+    font-family: Arial, sans-serif;
+    border: 1px solid;
+    border-collapse: collapse;
+}
+
+th {
+    background-color: #f8f8f8;
+    padding: 5px;
+}
+
+td {
+    border: 1px solid;
+    padding: 5px;
+}
+
+
+  /******************************** Footer ************************************/  
+
+  footer {
+    padding: 10px;
+    background-color: darkgrey;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    height: 150px;
+    width: 100%;
+    overflow: hidden;
+    margin-top: 50px;
+    margin-bottom: 0;
+    z-index: 1;
+    overflow-x: hidden;
+    text-align: center;
+    padding-bottom: 20px;
+  }
+  
+  footer .custom-a {
+    padding-right: 10px;
+  }
+  
+  footer .custom-a:hover {
+    color: whitesmoke;
+    padding-right: 10px;
+    color: #D35400;
+  }
+  
+  /********************************************************************/ 

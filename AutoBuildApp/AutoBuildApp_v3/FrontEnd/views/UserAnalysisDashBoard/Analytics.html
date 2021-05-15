@@ -16,16 +16,25 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     
 </head>
-<body>
-    
-    <nav>
-        <h2>Analytics</h2>
-    </nav>
-
-        
-    <div id = "GetAnalytics">
-    BAR DATA
+<body onload="hideButtons()">
+    <div class="custom-nav">
+        <span>
+            <img src="/assets/images/Logo/Logo.png" alt="logo"/>
+            <h1 class="nav-title" onclick="location.href='/views/MPBmain/MPB.html'">AutoBuild</h1>
+            <a class="custom-a" href="/views/MPBmain/MPB.html">Home</a>
+            <a class="custom-a" href="/views/Recommender/Recommender.html">PC Builder and Upgrader</a>
+            <a class="custom-a" href="/views/ComponentCatalog/ComponentCatalog.html">Component Catalog</a>
+            <button type="button" id = "loginPage" class="nav-button" onclick="location.href='/views/LoginPage/LoginPage.html'">Login</button>
+            <button type="button" id = "registrationPage" class="nav-button" onclick="location.href='/views/RegistrationPage/RegistrationPage.html'">Register</button>
+            <button type="button" id = "profilePage" class="nav-button" >Profile Page</button>
+        </span>
     </div>
+
+    <div class="formheader">
+        <h1 class="formtitle">Analytics</h1>
+    </div>
+
+    
 
 <div id="Analytics">      
     <!-- Plotly chart will be drawn inside this DIV -->
@@ -261,10 +270,12 @@
 
     </div>
 
+    <footer>
+        <span>&copy; 2021</span>
+        <a class="custom-a" href="/views/Privacy-Policy/PrivacyPolicy.html">Privacy Policy</a>
+    </footer>
 
 </body>
-
-<script type="text/javascript" src="UADLayout.js"></script>
 
 <script type="text/javascript" src="Analytics.js"></script>
 </html>

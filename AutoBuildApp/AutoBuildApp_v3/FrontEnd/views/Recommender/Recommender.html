@@ -12,63 +12,72 @@
     <div class="custom-nav">
         <span>
             <img src="/assets/images/Logo/Logo.png" alt="logo"/>
-            <h1 class="nav-title">AutoBuild</h1>
-            <a class="custom-a" href="http://127.0.0.1:5501/views/Recommender/Recommender.html">Home</a>
-            <a class="custom-a" href="http://127.0.0.1:5501/views/MPBmain/MPB.html">MPB</a>
-            <a class="custom-a" href="http://127.0.0.1:5501/views/ComponentCatalog/ComponentCatalog.html">Component Catalog</a>
-            <a class="custom-a" href="">Etc.</a>
-            <button type="button" id = "loginPage" class="nav-button" onclick="location.href='http://127.0.0.1:5501/views/LoginPage/LoginPage.html'">Login</button>
-            <button type="button" id = "registrationPage" class="nav-button" onclick="location.href='http://127.0.0.1:5501/views/RegistrationPage/RegistrationPage.html'">Register</button>
-            <button type="button" id = "profilePage" >Profile Page</button>
+            <h1 class="nav-title" onclick="location.href='/views/MPBmain/MPB.html'">AutoBuild</h1>
+            <a class="custom-a" href="/views/MPBmain/MPB.html">Home</a>
+            <a class="custom-a" href="/views/Recommender/Recommender.html">PC Builder and Upgrader</a>
+            <a class="custom-a" href="/views/ComponentCatalog/ComponentCatalog.html">Component Catalog</a>
+            <button type="button" id = "loginPage" class="nav-button" onclick="location.href='/views/LoginPage/LoginPage.html'">Login</button>
+            <button type="button" id = "registrationPage" class="nav-button" onclick="location.href='/views/RegistrationPage/RegistrationPage.html'">Register</button>
+            <button type="button" id = "profilePage" class="nav-button" >Profile Page</button>
         </span>
     </div>
-    <h1 class="title">Build Recommender</h1>
 
-    <div class="list-of-products">
-        <div class='product-table'></div>
+    <div class="formheader">
+        <h1 class="formtitle">Build Recommender</h1>
     </div>
 
-    <div class='input'>
-        <button style="text-align:center;" onclick="getBuild()">Find Me A Build!</button>
-        <input class='budget' type="text">
+    <div class="formdetails">
+        <form action="javascript:void(0);" id="build-budget-form">
+
+            <div class="field">
+                <label class="field-label">Enter Budget:</label>
+                <div class="title-input">
+                    <input type="number" class="text-field" id="budget" placeholder="e.g. 1000" required>
+                </div>
+            </div>
+
+            <input type="submit" class="submit-btn" value="Create Build">
+        </form>
     </div>
-    <table class='build-table'>
-        <tr>
-            <th>Type</th>
-            <th>Product</th>
-            <th>Price</th>
-        </tr>
-        <tr class='gpu'>
-            <th>GPU</th>
-        </tr>
-        <tr class='cpu'>
-            <th>CPU</th>
-        </tr>
-        <tr class='motherboard'>
-            <th>Motherboard</th>
-        </tr>
-        <tr class='psu'>
-            <th>PSU</th>
-        </tr>
-        <tr class='hard-drive'>
-            <th>Hard Drive</th>
-        </tr>
-        <tr class='ram'>
-            <th>RAM</th>
-        </tr>
-        <tr class='case'>
-            <th>Case</th>
-        </tr>
-        <tr>
-            <th>Total:</th>
-            <th></th>
-            <th class='total-price'></th>
-        </tr>
-    </table>
+
+    <div class="item">
+        <div class="item-type">
+            <h4>Type</h4>
+        </div>
+        <div class="item-image">
+            <h4>Image</h4>
+        </div>
+        <div class="item-title">
+            <h4>Product</h4>
+        </div>
+        <div class="item-price">
+            <h4>Price</h4>
+        </div>
+    </div>
+
+    <div class="items-container" id="items-container">
 
     </div>
 
-    
+    <div class="formdetails">
+        <form action="javascript:void(0);" id="build-save-form">
+
+            <div class="field">
+                <label class="field-label">Enter Build Name:</label>
+                <div class="title-input">
+                    <input type="text" class="text-field" id="build-name" placeholder="e.g. Dominator" required>
+                </div>
+            </div>
+
+            <input type="submit" class="submit-btn" value="Save Build">
+        </form>
+    </div>
+
+    <footer>
+        <span>&copy; 2021</span>
+        <a class="custom-a" href="/views/Privacy-Policy/PrivacyPolicy.html">Privacy Policy</a>
+    </footer>
+
     <script src="Recommender.js" asp-append-version="true"></script>
 
 </body>

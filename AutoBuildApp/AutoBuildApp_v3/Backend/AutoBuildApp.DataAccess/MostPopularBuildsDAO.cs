@@ -42,7 +42,10 @@ namespace AutoBuildApp.DataAccess
 
             _allowedRolesForPosting = new List<string>()
             {
-                RoleEnumType.BasicRole
+                RoleEnumType.BasicRole,
+                RoleEnumType.DelegateAdmin,
+                RoleEnumType.SystemAdmin,
+                RoleEnumType.VendorRole
             };
 
             _connectionString = connectionString;
@@ -195,11 +198,7 @@ namespace AutoBuildApp.DataAccess
         /// <returns>retruns an entity object.</returns>
         public BuildPostEntity GetBuildPostRecord(string buildId)
         {
-            // Authorization check
-            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
-            {
-                return null;
-            }
+
 
             // uses var connection and will automatically close once the using block has reached the end.
             using (var conn = new SqlConnection(_connectionString))
@@ -263,11 +262,7 @@ namespace AutoBuildApp.DataAccess
         /// <returns>returns a list of entities.</returns>
         public List<BuildPostEntity> GetAllBuildPostRecordsByQuery(string orderLikes, string buildType)
         {
-            // Authorization check
-            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
-            {
-                return null;
-            }
+
 
             // Initialize the query string.
             string orderBy = "ORDER BY LikeIncrementor DESC";

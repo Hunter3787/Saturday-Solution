@@ -1,4 +1,4 @@
-let token = ' ';
+let jwt_token = getCookie("JWT");
 let activeUsernameCookie = getCookie("Username");
 
 var updateUsername = document.getElementById("updateUsername")
@@ -14,12 +14,12 @@ function UpdateUsername(username, activeUsername) {
     formData.append('activeUsername', activeUsername);
     setCookie("Username", username, 7);
     activeUsernameCookie = getCookie("Username");
-    fetch("http://localhost:8081/usermanagement/username", {
+    fetch("http://http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/usermanagement/username", {
       method: 'PUT',
       mode: 'cors',
       headers: {
         'Accept': 'application/json',
-        'Authorization': 'bearer ' + token
+        'Authorization': 'bearer ' + jwt_token
       },
       body: formData
     })
@@ -44,12 +44,12 @@ function UpdateEmail(inputEmail, activeUsername) {
     
     formData.append('inputEmail', inputEmail);
     formData.append('activeUsername', activeUsername);
-    fetch("http://localhost:8081/usermanagement/email", {
+    fetch("http://http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/usermanagement/email", {
       method: 'PUT',
       mode: 'cors',
       headers: {
         'Accept': 'application/json',
-        'Authorization': 'bearer ' + token
+        'Authorization': 'bearer ' + jwt_token
       },
       body: formData
     })
@@ -78,12 +78,12 @@ function UpdatePassword(password, passwordCheck, activeUsername) {
     formData.append('passwordCheck', passwordCheck);
     formData.append('activeUsername', activeUsername);
 
-    fetch("http://localhost:8081/usermanagement/password", {
+    fetch("http://http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/usermanagement/password", {
       method: 'PUT',
       mode: 'cors',
       headers: {
         'Accept': 'application/json',
-        'Authorization': 'bearer ' + token
+        'Authorization': 'bearer ' + jwt_token
       },
       body: formData
     })
@@ -118,12 +118,12 @@ function UpdatePassword(password, passwordCheck, activeUsername) {
     return;
   }
 
-    fetch("http://localhost:8081/usermanagement/self", {
+    fetch("http://http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/usermanagement/self", {
 method: 'DELETE',
 mode: 'cors',
 headers: {
 'Accept': 'application/json',
-'Authorization': 'bearer ' + token
+'Authorization': 'bearer ' + jwt_token
 },
 //body: JSON.stringify(item)
 body: formData
@@ -186,7 +186,7 @@ var logoutUser = document.getElementById("Logout")
   }
 
   function changePageHome() {
-    window.location.href = "http://127.0.0.1:5501/views/Recommender/Recommender.html"
+    window.location.href = "/views/Recommender/Recommender.html"
   }
 
   function getCookie(cname) {
@@ -213,4 +213,56 @@ var logoutUser = document.getElementById("Logout")
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
     var expires = "expires="+d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
+
+  async function hideButtons() {
+    var x = document.getElementById("profilePage");
+    var y = document.getElementById("loginPage");
+    var z = document.getElementById("registrationPage");
+    var vendorRef = document.getElementById("vendor-only");
+
+    var result = false;
+    var url = "http://http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/authentication/vendor"
+    await fetch(url, {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'bearer ' + jwt_token
+      },
+    })
+    .then(response => response.json())
+    .then(data => result = data);
+
+    console.log(result)
+
+    if (result === false){
+      vendorRef.hidden = true;
+    }
+
+    if (jwt_token != "") {
+      y.style.display = "none";
+      z.style.display = "none";
+    } else {
+      x.style.display = "none";
+    }
+  }
+
+  async function checkAdminPrivilege() {
+    var result = false;
+    var url = "http://http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/authentication/vendor"
+    await fetch(url, {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'bearer ' + jwt_token
+      },
+    })
+    .then(response => response.json())
+    .then(data => result = data);
+    
+    return result;
   }
