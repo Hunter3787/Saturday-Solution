@@ -7,6 +7,7 @@ using AutoBuildApp.Api.HelperFunctions;
 using System;
 using AutoBuildApp.Services;
 using AutoBuildApp.Models.Enumerations;
+using AutoBuildApp.Models.Builds;
 
 /**
 * AutoBuild Recommendation Tool Controller.
@@ -52,7 +53,7 @@ namespace AutoBuildApp.Api.Controllers
             Console.Write(requests);
 
             try { 
-                var builds = manager.RecommendBuilds(BuildType.Gaming, requests.Budget,
+                Build builds = manager.RecommendBuilds(BuildType.Gaming, requests.Budget,
                     requests.PeripheralsList,requests.Psu, requests.HddType, requests.HddCount);
 
                     if (builds != null)
