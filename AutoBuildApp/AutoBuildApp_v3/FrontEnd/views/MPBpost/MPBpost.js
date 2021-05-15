@@ -467,7 +467,7 @@ profilePage.addEventListener('click', async () => {
 
 async function checkAdminPrivilege() {
   var result = false;
-  var url = "http://localhost:8081/authentication/admin"
+  var url = "http://http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/authentication/admin"
   await fetch(url, {
     method: 'POST',
     mode: 'cors',

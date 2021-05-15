@@ -1,4 +1,4 @@
-const uri ='http://localhost:8081/registration';
+const uri ='http://http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/registration';
 let todos = [];
 let jwt_token = getCookie("JWT");
 const token = 'YOUR_TOKEN_HERE';
@@ -15,7 +15,7 @@ function register() {
     const addHashTextbox = document.getElementById('add-password');
     const addHash2Textbox = document.getElementById('add-passwordCheck');
     
-    var url = new URL("http://localhost:8081/registration"),
+    var url = new URL("http://http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/registration"),
     UserCred = {
       Username : addNameTextbox.value.trim(),
       Firstname : addFirstTextbox.value.trim(), 
@@ -80,7 +80,7 @@ profilePage.addEventListener('click', async () => {
 
 async function checkAdminPrivilege() {
   var result = false;
-  var url = "http://localhost:8081/authentication/admin"
+  var url = "http://http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/authentication/admin"
   await fetch(url, {
     method: 'POST',
     mode: 'cors',
