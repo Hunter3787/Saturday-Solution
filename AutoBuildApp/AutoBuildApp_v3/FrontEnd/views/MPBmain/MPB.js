@@ -117,16 +117,16 @@ async function getItems() {
     endpoint = endpoint + getFilterString();
   }
 
-    // await fetch(endpoint, fetchRequest) // fetches the default URI
-    //     .then(function(response) {
-    //        if(response.redirected){
-    //          console.log(response.url)
-    //         window.location.href = response.url
-    //        } 
-    //        return response.json()
-    //       })
-    //     .then(data => displayItems(data)) // will call the display items function.
-    //     .then(() => findByName(searchFilter))
+    await fetch(endpoint, fetchRequest) // fetches the default URI
+        .then(function(response) {
+           if(response.redirected){
+             console.log(response.url)
+            window.location.href = response.url
+           } 
+           return response.json()
+          })
+        .then(data => displayItems(data)) // will call the display items function.
+        .then(() => findByName(searchFilter))
 }
 
 // This function will display items received from the http response.

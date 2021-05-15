@@ -92,15 +92,15 @@ body {
   .formheader {
     padding: 10px;
     text-align: center;
-    /* background: #28B463;
+    background: #28B463;
     color: white;
-    overflow: auto hidden; */
+    overflow: auto hidden;
     height: 100px;
   }
 
-  /* .formheader .formtitle {
+  .formheader .formtitle {
     color: whitesmoke;
-  } */
+  }
 
   /********************************************************************/  
 
