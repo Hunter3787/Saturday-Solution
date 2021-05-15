@@ -7,7 +7,6 @@ var registerButton = document.getElementById("RegisterUser")
     registerButton.addEventListener("click", register)
 
 function register() {
-    console.log(getCookie("JWT"));
     const addNameTextbox = document.getElementById('add-username');
     const addFirstTextbox = document.getElementById('add-firstname');
     const addLastTextbox = document.getElementById('add-lastname');
@@ -40,13 +39,13 @@ function register() {
       .then(response => response.json())
       .then(response => displayResponse(response))
       //.catch(error => console.error('Unable to Authenticate.', error));
-  
     return false;
   }
 
   function displayResponse(id)
 {
     alert(id);
+    changePageHome();
 }
 
 function changePage() {
@@ -62,4 +61,8 @@ function getCookie(name) {
       if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
   }
   return null;
+}
+
+function changePageHome() {
+  window.location.href = "http://127.0.0.1:5501/views/Recommender/Recommender.html"
 }

@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using AutoBuildApp.Models.Users;
 using AutoMapper;
-using AutoBuildApp.Services.EmailService;
+//using AutoBuildApp.Services.EmailService;
 
 namespace AutoBuildApp.Api.Controllers
 {

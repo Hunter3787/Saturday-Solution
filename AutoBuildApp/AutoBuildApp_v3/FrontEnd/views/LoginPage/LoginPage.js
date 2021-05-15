@@ -41,7 +41,7 @@ function displayResponse(id)
   deleteAllCookies();
   eraseCookieFromAllPaths("JWT");
   if (id == "Invalid username or password" || id == "Account is locked") {
-    alert(id)
+    //alert(id)
   } else {
     setCookie("JWT", JSON.stringify(id), 7);
     alert("Login successful")
