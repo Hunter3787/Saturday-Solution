@@ -1,8 +1,4 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
     <head>
         <meta charset="utf-8">
@@ -13,10 +9,22 @@
         <link rel="stylesheet" href="MPBform.css">
         <script src="/config.js"></script>
     </head>
-    <body ng-controller="testForm">
+    <body onload="hideButtons()">
+        <div class="custom-nav">
+            <span>
+                <img src="/assets/images/Logo/Logo.png" alt="logo"/>
+                <h1 class="nav-title" onclick="location.href='/views/MPBmain/MPB.html'">AutoBuild</h1>
+                <a class="custom-a" href="/views/MPBmain/MPB.html">Home</a>
+                <a class="custom-a" href="/views/Recommender/Recommender.html">PC Builder and Upgrader</a>
+                <a class="custom-a" href="/views/ComponentCatalog/ComponentCatalog.html">Component Catalog</a>
+                <button type="button" id = "loginPage" class="nav-button" onclick="location.href='/views/LoginPage/LoginPage.html'">Login</button>
+                <button type="button" id = "registrationPage" class="nav-button" onclick="location.href='/views/RegistrationPage/RegistrationPage.html'">Register</button>
+                <button type="button" id = "profilePage" class="nav-button" >Profile Page</button>
+            </span>
+        </div>
 
         <div class="formheader">
-            <h1 class="formtitle">Build Form</h1>
+            <h1 class="formtitle">Create a Build Post</h1>
         </div>
 
         <div class="formdetails">
@@ -26,13 +34,6 @@
                     <label class="field-label">Enter Title:</label>
                     <div class="title-input">
                         <input type="text" class="text-field" id="add-title" placeholder="title" required>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label class="field-label">Enter Username:</label>
-                    <div class="username-input">
-                        <input type="text" class="text-field" id="add-username" placeholder="username" required>
                     </div>
                 </div>
 
@@ -76,6 +77,11 @@
 
             </form>
         </div>
+
+        <footer>
+            <span>&copy; 2021</span>
+            <a class="custom-a" href="/views/Privacy-Policy/PrivacyPolicy.html">Privacy Policy</a>
+        </footer>
 
         <script src="MPBform.js" asp-append-version="true" async defer></script>
     </body>

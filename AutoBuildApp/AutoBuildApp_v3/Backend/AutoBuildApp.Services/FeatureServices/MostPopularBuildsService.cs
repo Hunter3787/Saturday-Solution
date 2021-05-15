@@ -52,7 +52,10 @@ namespace AutoBuildApp.Services.FeatureServices
 
             _allowedRolesForPosting = new List<string>()
             {
-                RoleEnumType.BasicRole
+                RoleEnumType.BasicRole,
+                RoleEnumType.DelegateAdmin,
+                RoleEnumType.SystemAdmin,
+                RoleEnumType.VendorRole
             };
 
             _logger = LoggingProducerService.GetInstance;
@@ -68,8 +71,6 @@ namespace AutoBuildApp.Services.FeatureServices
         /// <returns>returns a bool marking its success or failure.</returns>
         public bool PublishBuild(BuildPost buildPost)
         {
-            ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            string username = _threadPrinciple.Identity.Name;
 
             // Authorization check
             if (!AuthorizationCheck.IsAuthorized(_allowedRolesForPosting))
@@ -82,7 +83,7 @@ namespace AutoBuildApp.Services.FeatureServices
 
             var buildPostEntity = new BuildPostEntity()
             {
-                Username = username,
+                Username = buildPost.Username,
                 Title = buildPost.Title,
                 Description = buildPost.Description,
                 LikeIncrementor = buildPost.LikeIncrementor,
@@ -103,11 +104,7 @@ namespace AutoBuildApp.Services.FeatureServices
         /// <returns>returns a list of build posts</returns>
         public List<BuildPost> GetBuildPosts(string orderLikes, string buildType)
         {
-            // Authorization check
-            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
-            {
-                return null;
-            }
+
 
             // Logs the event of getting build posts in the service layer.
             _logger.LogInformation("Most Popular Builds Service GetBuildPosts was called.");
@@ -176,11 +173,7 @@ namespace AutoBuildApp.Services.FeatureServices
         /// <returns>retruns a build post object.</returns>
         public BuildPost GetBuildPost(string buildId)
         {
-            // Authorization check
-            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
-            {
-                return null;
-            }
+
 
             // Logs the event of getting build posts in the service layer.
             _logger.LogInformation("Most Popular Builds Service GetBuildPost was called.");

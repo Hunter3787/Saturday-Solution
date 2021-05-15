@@ -25,7 +25,7 @@ namespace AutoBuildApp.Api.Controllers
         private readonly LoggingProducerService _logger = LoggingProducerService.GetInstance;
 
         // UMDAO has the connection string
-        private readonly UserManagementDAO _userManagementDAO = new UserManagementDAO(ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
+        private readonly UserManagementDAO _userManagementDAO = new UserManagementDAO(ConnectionManager.connectionManager.GetConnectionStringByName(ControllerGlobals.ADMIN_CREDENTIALS_CONNECTION));
 
         public UserManagementController()
         {

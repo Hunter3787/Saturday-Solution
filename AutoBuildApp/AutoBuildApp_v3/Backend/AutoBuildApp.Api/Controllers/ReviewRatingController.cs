@@ -27,7 +27,7 @@ namespace AutoBuildApp.Api.Controllers
     [ApiController]
     public class ReviewRatingController : ControllerBase
     {
-        private static readonly string _connectionString = ConnectionManager.connectionManager.GetConnectionStringByName(ControllerGlobals.LOCALHOST_CONNECTION);
+        private static readonly string _connectionString = ConnectionManager.connectionManager.GetConnectionStringByName(ControllerGlobals.ADMIN_CREDENTIALS_CONNECTION);
 
         // Initializes the DAO that will be used for review ratings.
         private readonly ReviewRatingDAO _reviewRatingDAO = new ReviewRatingDAO(_connectionString);

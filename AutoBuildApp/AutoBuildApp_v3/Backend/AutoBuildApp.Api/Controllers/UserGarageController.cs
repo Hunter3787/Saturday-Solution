@@ -31,7 +31,7 @@ namespace AutoBuildApp.Api.Controllers
         private readonly string _connString =
             ConnectionManager
             .connectionManager
-            .GetConnectionStringByName(ControllerGlobals.LOCALHOST_CONNECTION);
+            .GetConnectionStringByName(ControllerGlobals.ADMIN_CREDENTIALS_CONNECTION);
 
         public UserGarageController()
         {

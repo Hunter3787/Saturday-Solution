@@ -11,10 +11,6 @@ const fetchRequest = {
     }
 };
 
-window.onload = function() {
-  getItems();
-};
-
 // Adds an event listener for the key up event for a search filter.
 let searchFilter = document.getElementById('sbn');
 searchFilter.addEventListener("keyup", () => findByName(searchFilter));
@@ -92,18 +88,18 @@ function getFilterString()
   return queryString + params.toString();
 }
 
-// creates a function called process that will call the get items function.
-function process(){
-  getItems();
-}
+// // creates a function called process that will call the get items function.
+// function process(){
+//   getItems();
+// }
 
-// Sets a loop timer of 3 seconds to call the process function -> getItems();
-function looping(){
-  setTimeout(process, 3000);
-}
+// // Sets a loop timer of 3 seconds to call the process function -> getItems();
+// function looping(){
+//   setTimeout(process, 3000);
+// }
 
-// creates a timer interval of 3 seconds to keep track of the current times, so no concurrency occurs.
-var refreshData = setInterval(looping, 3000);
+// // creates a timer interval of 3 seconds to keep track of the current times, so no concurrency occurs.
+// var refreshData = setInterval(looping, 3000);
 
 // This function will call a fetch request.
 async function getItems() {
@@ -117,16 +113,16 @@ async function getItems() {
     endpoint = endpoint + getFilterString();
   }
 
-    // await fetch(endpoint, fetchRequest) // fetches the default URI
-    //     .then(function(response) {
-    //        if(response.redirected){
-    //          console.log(response.url)
-    //         window.location.href = response.url
-    //        } 
-    //        return response.json()
-    //       })
-    //     .then(data => displayItems(data)) // will call the display items function.
-    //     .then(() => findByName(searchFilter))
+    await fetch(endpoint, fetchRequest) // fetches the default URI
+        .then(function(response) {
+           if(response.redirected){
+             console.log(response.url)
+            window.location.href = response.url
+           } 
+           return response.json()
+          })
+        .then(data => displayItems(data)) // will call the display items function.
+        .then(() => findByName(searchFilter))
 }
 
 // This function will display items received from the http response.
@@ -365,17 +361,18 @@ function getCookie(cname) {
   }
 
 function changePageAdmin() {
-  window.location.href = "http://127.0.0.1:5501/views/UMUser(Admin)/UMUser(Admin).html"
+  window.location.href = "/views/UMUser(Admin)/UMUser(Admin).html"
 }
 
 function changePageNotAdmin() {
-  window.location.href = "http://127.0.0.1:5501/views/UMUser/UMUser.html"
+  window.location.href = "/views/UMUser/UMUser.html"
 }
 
 function hideButtons() {
   var x = document.getElementById("profilePage");
   var y = document.getElementById("loginPage");
   var z = document.getElementById("registrationPage");
+  console.log("hello")
   if (jwt_token != "") {
     y.style.display = "none";
     z.style.display = "none";
@@ -383,3 +380,5 @@ function hideButtons() {
     x.style.display = "none";
   }
 }
+
+getItems();

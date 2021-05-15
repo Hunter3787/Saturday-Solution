@@ -27,10 +27,11 @@ namespace AutoBuildApp.Api.Controllers
         private ComponentCatalogDAO _componentCatalogDAO;
         private ComponentCatalogService _componentCatalogService;
         private ComponentCatalogManager _componentCatalogManager;
+
         public ComponentCatalogController()
         {
             // Initializes each layer and passes into the respective layer
-            _componentCatalogDAO = new ComponentCatalogDAO(ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
+            _componentCatalogDAO = new ComponentCatalogDAO(ConnectionManager.connectionManager.GetConnectionStringByName(ControllerGlobals.ADMIN_CREDENTIALS_CONNECTION));
             _componentCatalogService = new ComponentCatalogService(_componentCatalogDAO);
             _componentCatalogManager = new ComponentCatalogManager(_componentCatalogService);
         }

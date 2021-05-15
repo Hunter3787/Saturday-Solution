@@ -450,3 +450,18 @@ function changePageAdmin() {
     function changePageNotAdmin() {
     window.location.href = "http://127.0.0.1:5501/views/UMUser/UMUser.html"
     }
+
+function hideButtons() {
+  var x = document.getElementById("profilePage");
+  var y = document.getElementById("loginPage");
+  var z = document.getElementById("registrationPage");
+  console.log("hello")
+  if (jwt_token != "") {
+    y.style.display = "none";
+    z.style.display = "none";
+  } else {
+    x.style.display = "none";
+  }
+}
+
+getUsers()

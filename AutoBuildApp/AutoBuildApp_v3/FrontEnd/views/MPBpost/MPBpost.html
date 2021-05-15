@@ -13,11 +13,29 @@
         <link rel="stylesheet" href="MPBpost.css">
         <script src="/config.js"></script>
     </head>
-    <body ng-controller="buildPost">
+    <body onload="hideButtons()">
+        <div class="custom-nav">
+            <span>
+                <img src="/assets/images/Logo/Logo.png" alt="logo"/>
+                <h1 class="nav-title" onclick="location.href='/views/MPBmain/MPB.html'">AutoBuild</h1>
+                <a class="custom-a" href="/views/MPBmain/MPB.html">Home</a>
+                <a class="custom-a" href="/views/Recommender/Recommender.html">PC Builder and Upgrader</a>
+                <a class="custom-a" href="/views/ComponentCatalog/ComponentCatalog.html">Component Catalog</a>
+                <button type="button" id = "loginPage" class="nav-button" onclick="location.href='/views/LoginPage/LoginPage.html'">Login</button>
+                <button type="button" id = "registrationPage" class="nav-button" onclick="location.href='/views/RegistrationPage/RegistrationPage.html'">Register</button>
+                <button type="button" id = "profilePage" class="nav-button" >Profile Page</button>
+            </span>
+        </div>
+    
+        <div class="formheader">
+            <h1 class="formtitle">Build Post</h1>
+        </div>
 
         <div id="main"></div>
 
-        <h1 class="review-title">Write a Review!</h1>
+        <div class="reviews-header">
+            <h1 class="formtitle">Write a Review!</h1>
+        </div>
 
         <form action="javascript:void(0);" method="POST" id="review-form">
             <br /><label>Enter Username:</label><br />
@@ -63,6 +81,9 @@
         <br />
         <br />
     
+        <div class="reviews-header">
+            <h1 class="formtitle">Reviews Section</h1>
+        </div>
     
         <div class="all-reviews" id="all-reviews"></div>
     
@@ -81,6 +102,11 @@
                 <a id="close-input" aria-label="Close">&#10006;</a>
             </form>
         </div>
+
+        <footer>
+            <span>&copy; 2021</span>
+            <a class="custom-a" href="/views/Privacy-Policy/PrivacyPolicy.html">Privacy Policy</a>
+        </footer>
 
         <script src="MPBpost.js" asp-append-version="true"></script>
     </body>

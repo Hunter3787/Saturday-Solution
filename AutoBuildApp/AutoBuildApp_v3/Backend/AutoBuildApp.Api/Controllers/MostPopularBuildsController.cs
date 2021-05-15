@@ -31,7 +31,7 @@ namespace AutoBuildApp.Api.Controllers
     public class MostPopularBuildsController : ControllerBase
     {
         // Gets the connection string of the Database
-        private static readonly string _connectionString = ConnectionManager.connectionManager.GetConnectionStringByName(ControllerGlobals.LOCALHOST_CONNECTION);
+        private static readonly string _connectionString = ConnectionManager.connectionManager.GetConnectionStringByName(ControllerGlobals.ADMIN_CREDENTIALS_CONNECTION);
 
         // The DAO that will be used for builds.
         private readonly MostPopularBuildsDAO _mostPopularBuildsDAO;
@@ -56,12 +56,18 @@ namespace AutoBuildApp.Api.Controllers
             _allowedRolesForViewing = new List<string>()
             {
                 RoleEnumType.UnregisteredRole,
-                RoleEnumType.BasicRole
+                RoleEnumType.BasicRole,
+                RoleEnumType.DelegateAdmin,
+                RoleEnumType.SystemAdmin,
+                RoleEnumType.VendorRole
             };
 
             _allowedRolesForPosting = new List<string>()
             {
-                RoleEnumType.BasicRole
+                RoleEnumType.BasicRole,
+                RoleEnumType.DelegateAdmin,
+                RoleEnumType.SystemAdmin,
+                RoleEnumType.VendorRole
             };
 
             // Pass in the connection strings to initialize the DAO.
@@ -130,12 +136,6 @@ namespace AutoBuildApp.Api.Controllers
         [HttpGet]
         public IActionResult GetBuildPosts(string orderLikes, string buildType)
         {
-            // Check authorization
-            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
-            {
-                _logger.LogInformation("MostPopularBuilds " + AuthorizationResultType.NotAuthorized.ToString());
-                return new StatusCodeResult(StatusCodes.Status403Forbidden);
-            }
 
             // Log the event of a get fetch.
             _logger.LogInformation("GetBuildPosts was fetched.");
@@ -163,12 +163,7 @@ namespace AutoBuildApp.Api.Controllers
         [HttpGet("build")]
         public IActionResult GetBuildPost(string buildId)
         {
-            // Check authorization
-            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
-            {
-                _logger.LogInformation("MostPopularBuilds " + AuthorizationResultType.NotAuthorized.ToString());
-                return new StatusCodeResult(StatusCodes.Status403Forbidden);
-            }
+
 
             // Log the event of a get fetch.
             _logger.LogInformation("GetBuildPost was fetched.");

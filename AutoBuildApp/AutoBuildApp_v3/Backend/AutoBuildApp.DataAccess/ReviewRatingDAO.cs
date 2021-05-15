@@ -64,14 +64,27 @@ namespace AutoBuildApp.DataAccess
                     command.Parameters.AddRange(parameters);
 
                     // stores the number of rows added in the statement.
-                    var rowsAdded = command.ExecuteNonQuery();
-
-                    // If the row that was added is one, it will commit the transaction and return true, else false.
-                    if (rowsAdded == 1)
+                    try
                     {
-                        command.Transaction.Commit(); // sends the transaction to be commited at the database.
-                        return true; 
+                        var rowsAdded = command.ExecuteNonQuery();
+
+
+                        // If the row that was added is one, it will commit the transaction and return true, else false.
+                        if (rowsAdded == 1)
+                        {
+                            command.Transaction.Commit(); // sends the transaction to be commited at the database.
+                            return true;
+                        }
                     }
+                    catch (SqlException e)
+                    {
+                        Console.WriteLine("SqlException.GetType: {0}", e.GetType());
+                        Console.WriteLine("SqlException.Source: {0}", e.Source);
+                        Console.WriteLine("SqlException.ErrorCode: {0}", e.ErrorCode);
+                        Console.WriteLine("SqlException.Message: {0}", e.Message);
+                    }
+
+
                 }
             }
 

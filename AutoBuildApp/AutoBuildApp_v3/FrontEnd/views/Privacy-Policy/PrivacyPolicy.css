@@ -57,7 +57,6 @@ body {
   margin-top: 20px;
   margin-right: 10px;
   float: right;
-
   display: block;
   width: 100px;
   border: none;
@@ -92,7 +91,7 @@ body {
 .formheader {
   padding: 10px;
   text-align: center;
-  background: #DC7633;
+  background: #935116;
   color: white;
   overflow: auto hidden;
   height: 100px;
@@ -102,4 +101,35 @@ body {
   color: whitesmoke;
 }
 
-/********************************************************************/  
+/********************************************************************/ 
+
+  /******************************** Footer ************************************/  
+
+  footer {
+    padding: 10px;
+    background-color: darkgrey;
+    position: relative;
+    left: 0;
+    bottom: 0;
+    height: 150px;
+    width: 100%;
+    overflow: hidden;
+    margin-top: 50px;
+    margin-bottom: 0;
+    z-index: 1;
+    overflow-x: hidden;
+    text-align: center;
+    padding-bottom: 20px;
+  }
+  
+  footer .custom-a {
+    padding-right: 10px;
+  }
+  
+  footer .custom-a:hover {
+    color: whitesmoke;
+    padding-right: 10px;
+    color: #D35400;
+  }
+  
+  /********************************************************************/ 

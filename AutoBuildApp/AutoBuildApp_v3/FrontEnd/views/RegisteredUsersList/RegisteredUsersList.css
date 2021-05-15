@@ -1,8 +1,28 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  min-height: 100%;
+  font-family: Arial;
+  margin: 0;
+  background-color: whitesmoke; 
+}
+
 .listOfDivs {
   display:inline-block;
+  text-align: center;
+  position: relative;
 }
 
 .innerDiv {
+  margin-top: 100px;
+  text-align: center;
   display:block;
   position:relative;
 }
@@ -74,7 +94,8 @@ textarea {
 
 .div-table {
   display: table;   
-  margin-bottom: 100px;      
+  margin-bottom: 100px;  
+  margin-left: 200px;    
   border: 1px solid black;         
 }
   
@@ -107,8 +128,8 @@ img {
 
 .div-table-col { 
   float: left; 
-  width: 200px;
-  height: 37px;
+  width: 100px;
+  height: 75px;
   display: block;
   position: relative;
   /* text-align: center; */
@@ -137,6 +158,8 @@ img {
   background-color: black;
 }
 
+/******************************** Navigation Bar************************************/  
+
 .custom-nav {
   padding: 10px;
   text-align: left;
@@ -158,6 +181,10 @@ img {
   display: inline-block;
 }
 
+.custom-nav .nav-title:hover {
+  cursor: pointer;
+}
+
 .custom-nav .custom-a {
   color: whitesmoke;
   padding-right: 10px;
@@ -168,7 +195,6 @@ img {
   padding-right: 10px;
   color: #D35400;
 }
-
 
 .custom-nav .nav-button {
   padding: 10px;
@@ -202,3 +228,22 @@ img {
   color: black;
   box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
 }
+
+/********************************************************************/  
+
+/******************************** Header ************************************/  
+
+.formheader {
+  padding: 10px;
+  text-align: center;
+  background: #85C1E9;
+  color: white;
+  overflow: auto hidden;
+  height: 100px;
+}
+
+.formheader .formtitle {
+  color: black;
+}
+
+/********************************************************************/  

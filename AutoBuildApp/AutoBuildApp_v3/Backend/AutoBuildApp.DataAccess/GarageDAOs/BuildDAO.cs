@@ -771,7 +771,7 @@ namespace AutoBuildApp.DataAccess
                                         build.Case.ModelNumber = (string)reader[modelNumber];
                                         break;
                                     case "HDD":
-                                        IHardDrive HDD = new HardDrive();
+                                        HardDrive HDD = new HardDrive();
                                         HDD.ProductImageStrings.Add((string)reader[imagePath]);
                                         HDD.Quantity = (int)reader[quantity];
                                         HDD.ProductName = (string)reader[buildName];
