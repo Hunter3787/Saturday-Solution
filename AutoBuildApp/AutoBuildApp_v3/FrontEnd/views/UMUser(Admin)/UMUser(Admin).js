@@ -17,7 +17,7 @@ function UpdateUsername(username, activeUsername) {
     formData.append('activeUsername', activeUsername);
     setCookie("Username", username, 7);
     activeUsernameCookie = getCookie("Username");
-    fetch("http://http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/usermanagement/username", {
+    fetch("http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/usermanagement/username", {
       method: 'PUT',
       mode: 'cors',
       headers: {
@@ -48,7 +48,7 @@ function UpdateEmail(inputEmail, activeUsername) {
     formData.append('inputEmail', inputEmail);
     formData.append('activeUsername', activeUsername);
 
-    fetch("http://http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/usermanagement/email", {
+    fetch("http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/usermanagement/email", {
       method: 'PUT',
       mode: 'cors',
       headers: {
@@ -82,7 +82,7 @@ function UpdatePassword(password, passwordCheck, activeUsername) {
     formData.append('passwordCheck', passwordCheck);
     formData.append('activeUsername', activeUsername);
 
-    fetch("http://http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/usermanagement/password", {
+    fetch("http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/usermanagement/password", {
       method: 'PUT',
       mode: 'cors',
       headers: {
@@ -122,7 +122,7 @@ function UpdatePassword(password, passwordCheck, activeUsername) {
     return;
   }
 
-    fetch("http://http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/usermanagement/self", {
+    fetch("http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/usermanagement/self", {
 method: 'DELETE',
 mode: 'cors',
 headers: {
