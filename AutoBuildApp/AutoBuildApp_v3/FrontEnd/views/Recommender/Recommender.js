@@ -89,6 +89,15 @@ function displayBuild(data) {
     gpuImage.classList.add('item-image');
     var gpuImageSrc = document.createElement('img');
     gpuImageSrc.src = data["gpu"]["productImageStrings"][0]
+
+    gpuImage.addEventListener('mouseover', () => {
+      gpuImage.classList.add('pointer');
+    })
+    gpuImage.addEventListener('click', () => {
+      sessionStorage.setItem('modelNumber', data["gpu"]["modelNumber"]);
+      window.location.assign("../ProductDetails/ProductDetails.html")
+    })
+
     gpuImage.appendChild(gpuImageSrc);
     gpu.appendChild(gpuImage);
 
@@ -126,6 +135,14 @@ function displayBuild(data) {
     cpuImage.classList.add('item-image');
     var cpuImageSrc = document.createElement('img');
     cpuImageSrc.src = data["cpu"]["productImageStrings"][0]
+
+    cpuImage.addEventListener('mouseover', () => {
+      cpuImageSrc.classList.add('pointer');
+    })
+    cpuImage.addEventListener('click', () => {
+      sessionStorage.setItem('modelNumber', data["cpu"]["modelNumber"]);
+      window.location.assign("../ProductDetails/ProductDetails.html")
+    })
     cpuImage.appendChild(cpuImageSrc);
     cpu.appendChild(cpuImage);
 
@@ -163,6 +180,15 @@ function displayBuild(data) {
     motherboardImage.classList.add('item-image');
     var motherboardImageSrc = document.createElement('img');
     motherboardImageSrc.src = data["mobo"]["productImageStrings"][0]
+
+    motherboardImage.addEventListener('mouseover', () => {
+      motherboardImage.classList.add('pointer');
+    })
+    motherboardImage.addEventListener('click', () => {
+      sessionStorage.setItem('modelNumber', data["mobo"]["modelNumber"]);
+      window.location.assign("../ProductDetails/ProductDetails.html")
+    })
+
     motherboardImage.appendChild(motherboardImageSrc);
     motherboard.appendChild(motherboardImage);
     
@@ -200,6 +226,15 @@ function displayBuild(data) {
     psuImage.classList.add('item-image');
     var psuImageSrc = document.createElement('img');
     psuImageSrc.src = data["psu"]["productImageStrings"][0]
+
+    psuImage.addEventListener('mouseover', () => {
+      psuImage.classList.add('pointer');
+    })
+    psuImage.addEventListener('click', () => {
+      sessionStorage.setItem('modelNumber', data["psu"]["modelNumber"]);
+      window.location.assign("../ProductDetails/ProductDetails.html")
+    })
+
     psuImage.appendChild(psuImageSrc);
     psu.appendChild(psuImage);
     
@@ -237,6 +272,15 @@ function displayBuild(data) {
     ssdImage.classList.add('item-image');
     var ssdImageSrc = document.createElement('img');
     ssdImageSrc.src = data["hardDrives"][0]["productImageStrings"][0]
+
+    ssdImage.addEventListener('mouseover', () => {
+      ssdImage.classList.add('pointer');
+    })
+    ssdImage.addEventListener('click', () => {
+      sessionStorage.setItem('modelNumber', data["ssd"]["modelNumber"]);
+      window.location.assign("../ProductDetails/ProductDetails.html")
+    })
+
     ssdImage.appendChild(ssdImageSrc);
     ssd.appendChild(ssdImage);
     
@@ -266,7 +310,7 @@ function displayBuild(data) {
     var ramName = document.createElement('div');
     ramName.classList.add('item-type');
     var ramNameText = document.createElement('h4');
-    ramNameText.innerHTML = "Power Supply";
+    ramNameText.innerHTML = "Memory";
     ramName.appendChild(ramNameText);
     ram.appendChild(ramName);
     
@@ -274,6 +318,15 @@ function displayBuild(data) {
     ramImage.classList.add('item-image');
     var ramImageSrc = document.createElement('img');
     ramImageSrc.src = data["ram"]["productImageStrings"][0]
+
+    ramImage.addEventListener('mouseover', () => {
+      ramImage.classList.add('pointer');
+    })
+    ramImage.addEventListener('click', () => {
+      sessionStorage.setItem('modelNumber', data["ram"]["modelNumber"]);
+      window.location.assign("../ProductDetails/ProductDetails.html")
+    })
+
     ramImage.appendChild(ramImageSrc);
     ram.appendChild(ramImage);
     
@@ -303,14 +356,23 @@ function displayBuild(data) {
     var pcCaseName = document.createElement('div');
     pcCaseName.classList.add('item-type');
     var pcCaseNameText = document.createElement('h4');
-    pcCaseNameText.innerHTML = "Memory";
+    pcCaseNameText.innerHTML = "Case";
     pcCaseName.appendChild(pcCaseNameText);
     pcCase.appendChild(pcCaseName);
     
     var pcCaseImage = document.createElement('div');
     pcCaseImage.classList.add('item-image');
     var pcCaseImageSrc = document.createElement('img');
-    pcCaseImageSrc.src = data["case"]["productImageStrings"][0]
+    pcCaseImageSrc.src = data["case"]["productImageStrings"][0];
+
+    pcCaseImage.addEventListener('mouseover', () => {
+      pcCaseImage.classList.add('pointer');
+    })
+    pcCaseImage.addEventListener('click', () => {
+      sessionStorage.setItem('modelNumber', data["case"]["modelNumber"]);
+      window.location.assign("../ProductDetails/ProductDetails.html")
+    })
+
     pcCaseImage.appendChild(pcCaseImageSrc);
     pcCase.appendChild(pcCaseImage);
     

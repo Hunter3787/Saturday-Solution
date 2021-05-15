@@ -149,7 +149,7 @@ namespace AutoBuildApp.Managers
             //SortByPriceDesc(products);
             int lastMotherboardLocation = -1;
             // Business rule to create 5 builds and return them all.
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 10; i++)
             {
                 Build build = buildFactory.CreateBuild(requestedType);
                 // Add preselected peripherals.
@@ -268,13 +268,12 @@ namespace AutoBuildApp.Managers
                 // Add hard drives of type and number. (Compatable with Mobo.)
                 // Find cooler of the selected type. Default is fan.
 
-
-
-
                 buildRecommendations.Add(build);
             }
 
             int mostExpensiveBuildIndex = 0;
+
+            // Gets the most expensive build
             for(int i = 0; i < buildRecommendations.Count; i++)
             {
                 if(buildRecommendations[i].TotalCost > buildRecommendations[mostExpensiveBuildIndex].TotalCost)
@@ -283,13 +282,7 @@ namespace AutoBuildApp.Managers
                 }
             }
 
-            Console.WriteLine(buildRecommendations);
-
-
-
-            // Add a function to builds to total their score
-            // via the scoring tool for sorting.
-
+            // Returns the most expensive build
             return buildRecommendations[mostExpensiveBuildIndex];
         }
         #endregion
@@ -360,17 +353,6 @@ namespace AutoBuildApp.Managers
                     }
                 }
             }
-            //foreach (ProductType key in products.Keys)
-            //{
-            //    foreach (Component component in products[key])
-            //    {
-            //        if (!scores.ContainsKey(component))
-            //        {
-            //            var score = scorer.ScoreComponent(component, type);
-            //            scores.Add(component, score);
-            //        }
-            //    }
-            //}
         }
         #endregion
 
@@ -378,18 +360,8 @@ namespace AutoBuildApp.Managers
         {
             foreach(var keyValue in scores)
             {
+                // Sorts each list of key value pairs by the int (score)
                 keyValue.Value.Sort((x, y) => y.Value.CompareTo(x.Value));
-            }
-        }
-
-        private void SortByPriceDesc(Dictionary<ProductType, List<IComponent>> products)
-        {
-            foreach(var keyValue in products)
-            {
-                keyValue.Value.Sort(delegate (IComponent x, IComponent y)
-                {
-                    return y.Price.CompareTo(x.Price);
-                });
             }
         }
 
@@ -400,29 +372,26 @@ namespace AutoBuildApp.Managers
                 return null;
             }
 
-            List<KeyValuePair<IComponent, int>> f = new List<KeyValuePair<IComponent, int>>();
             CentralProcUnit bestCPU = null;
             foreach (KeyValuePair<IComponent, int> keyValue in potentialCPUs)
             {
                 bestCPU = (CentralProcUnit)keyValue.Key;
                 if (motherboard.Socket == bestCPU.Socket)
                 {
-                    f.Add(keyValue);
-                    //return bestCPU;
+                    return bestCPU;
                 }
             }
-            return f.Count == 0 ? null : (CentralProcUnit)f[0].Key;
+            return null;
         }
 
         private RAM FindCompatibleRAM(Motherboard motherboard, List<KeyValuePair<IComponent, int>> potentialRAM)
         {
-            // Quick check to see if 
+            // Quick check to see if the motherboard has supported memory since it's the only check for ram.
             if(motherboard.SupportedMemory.Count == 0)
             {
                 return null;
             }
 
-            List<KeyValuePair<IComponent, int>> f = new List<KeyValuePair<IComponent, int>>();
             RAM bestRAM = null;
             foreach (KeyValuePair<IComponent, int> keyValue in potentialRAM)
             {
@@ -433,7 +402,7 @@ namespace AutoBuildApp.Managers
                 }
                 foreach(var memorySpeed in motherboard.SupportedMemory)
                 {
-                    if(bestRAM.Speed.Contains(memorySpeed) && !f.Contains(keyValue))
+                    if(bestRAM.Speed.Contains(memorySpeed))
                     {
                         return bestRAM;
                     }
@@ -442,17 +411,16 @@ namespace AutoBuildApp.Managers
             }
 
             return null;
-            return f.Count == 0 ? null : (RAM)f[0].Key;
         }
 
         private ComputerCase FindCompatibleCase(Motherboard motherboard, List<KeyValuePair<IComponent, int>> potentialCases)
         {
+            // Quick check to see if the motherboard has the form factor since it's the only check for the case
             if (motherboard.MoboForm == null)
             {
                 return null;
             }
 
-            List<KeyValuePair<IComponent, int>> f = new List<KeyValuePair<IComponent, int>>();
             ComputerCase bestCase = null;
             foreach (KeyValuePair<IComponent, int> keyValue in potentialCases)
             {
@@ -471,14 +439,10 @@ namespace AutoBuildApp.Managers
 
             }
             return null;
-            Console.WriteLine(f);
-            return f.Count == 0 ? null : (ComputerCase)f[0].Key;
         }
 
         private GraphicsProcUnit FindCompatibleGPU(ComputerCase _case, List<KeyValuePair<IComponent, int>> potentialGPUs)
         {
-
-            List<KeyValuePair<IComponent, int>> f = new List<KeyValuePair<IComponent, int>>();
             GraphicsProcUnit bestGPU = null;
             foreach (KeyValuePair<IComponent, int> keyValue in potentialGPUs)
             {
@@ -488,15 +452,12 @@ namespace AutoBuildApp.Managers
                     return bestGPU;
                 }
             }
+
             return null;
-            //Console.WriteLine(f);
-            //return f.Count == 0 ? null : (ComputerCase)f[0].Key;
         }
 
         private PowerSupplyUnit FindCompatiblePSU(ComputerCase _case, List<KeyValuePair<IComponent, int>> potentialPSUs)
         {
-
-            List<KeyValuePair<IComponent, int>> f = new List<KeyValuePair<IComponent, int>>();
             PowerSupplyUnit bestPSU = null;
             foreach (KeyValuePair<IComponent, int> keyValue in potentialPSUs)
             {
@@ -506,12 +467,9 @@ namespace AutoBuildApp.Managers
                     return bestPSU;
                 }
             }
+
             return null;
-            //Console.WriteLine(f);
-            //return f.Count == 0 ? null : (ComputerCase)f[0].Key;
         }
-
     }
-
 }
 
