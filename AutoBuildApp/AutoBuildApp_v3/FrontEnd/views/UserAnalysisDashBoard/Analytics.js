@@ -1,5 +1,5 @@
 // instantiation of the fetch URL
-const uri ='https://localhost:5001/analytics';
+const uri ='https://http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:5001/analytics';
 
 let jwt_token = getCookie("JWT");
 
@@ -17,7 +17,7 @@ headers: {
 }
 };
 
-const urlAnalytics = new URL("https://localhost:5001/analytics")
+const urlAnalytics = new URL("https://http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:5001/analytics")
 
 async function FetchGraphData(GraphType)
 {
@@ -252,7 +252,7 @@ profilePage.addEventListener('click', async () => {
 
 async function checkAdminPrivilege() {
   var result = false;
-  var url = "http://localhost:8081/authentication/admin"
+  var url = "http://http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/authentication/admin"
   await fetch(url, {
     method: 'POST',
     mode: 'cors',
