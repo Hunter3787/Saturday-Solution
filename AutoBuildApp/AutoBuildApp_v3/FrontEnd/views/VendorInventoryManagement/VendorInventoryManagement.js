@@ -166,7 +166,7 @@ async function addItem() {
   var buttonDiv = document.createElement('div');
   buttonDiv.classList.add('div-table-row');
   buttonDiv.classList.add('center');
-  buttonDiv.style="width:120px";
+  buttonDiv.style="width:150px";
   
   // Creates an add button and a cancel button and appends them
   var addItemButton = document.createElement('button');
@@ -408,7 +408,7 @@ async function submitDeleteItem(modelNumber, newDivRow) {
   // Create button header div
   var ButtonHeaderDiv = document.createElement('div');
   ButtonHeaderDiv.classList.add('div-table-row');
-  ButtonHeaderDiv.style="width:120px";
+  ButtonHeaderDiv.style="width:150px";
 
   // Append all the header divs to the first row
   divRow.appendChild(ImageHeaderDiv);
@@ -571,7 +571,7 @@ async function submitDeleteItem(modelNumber, newDivRow) {
     var buttonDiv = document.createElement('div');
     buttonDiv.classList.add('div-table-row');
     buttonDiv.classList.add('center');
-    buttonDiv.style="width:120px";
+    buttonDiv.style="width:150px";
 
     // Create edit button
     var editButton = document.createElement('button');

@@ -1,5 +1,4 @@
 const uri ='http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/Recommendation/BuildRecommend';
-
 let jwt_token = getCookie('JWT').toString();
 
 let modelNumbers = [];
