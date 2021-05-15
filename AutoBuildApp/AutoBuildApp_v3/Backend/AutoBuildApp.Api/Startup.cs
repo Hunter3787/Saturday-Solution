@@ -24,6 +24,7 @@ namespace AutoBuildApp.Api
     /// </summary>
     public class Startup
     {
+        private readonly string _mySpecificOrigin = "CorsPolicy";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -44,28 +45,30 @@ namespace AutoBuildApp.Api
                 {
                     // Lecture: Only use these CORS setting for development. Never deploy to 
                     // production with these settings.
-                    opts.AddPolicy(name: "CorsPolicy", builder =>
+                    opts.AddPolicy(name: _mySpecificOrigin, builder =>
                     {
                         builder.AllowAnyOrigin()
                                .AllowAnyMethod()
-                               .AllowAnyHeader(); });
-                }
-                else
-                {
-
-                    // Lecture: Make sure to specify the exact origins that you want to allow
-                    // cross origin communication with your code.
-                    opts.AddPolicy(name: "CorsPolicy", builder =>
-                    {
-                        builder.WithMethods("GET", "POST", "OPTIONS")
-                               .WithOrigins("http://localhost") // Change this
                                .AllowAnyHeader();
                     });
                 }
+                else
+                {
+                    // Lecture: Make sure to specify the exact origins that you want to allow
+                    // cross origin communication with your code.
+                    opts.AddPolicy(name: _mySpecificOrigin, builder =>
+                    {
+                        builder.WithOrigins("http://172.31.7.190:8081") // Change this
+                                .AllowAnyMethod()
+                                .AllowAnyHeader();
+                               
+                    });
+                }
             });
-            services.AddTransient<ClaimsPrincipal>();
+
             //services.AddSingleton<LoggingProducerService>();
-             services.AddControllers();
+            services.AddControllers();
+            services.AddTransient<ClaimsPrincipal>();
         }
 
 
@@ -82,8 +85,6 @@ namespace AutoBuildApp.Api
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors();
-            
-
 
             app.UseAuthorization();
 
