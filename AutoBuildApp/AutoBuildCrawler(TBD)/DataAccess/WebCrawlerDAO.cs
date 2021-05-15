@@ -22,36 +22,31 @@ namespace AutoBuildApp.DataAccess
             ConcurrentDictionary<string, byte> vendors = new ConcurrentDictionary<string, byte>();
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                try
+                connection.Open();
+                using (SqlTransaction transaction = connection.BeginTransaction())
                 {
-                    connection.Open();
-
-                    using (SqlTransaction transaction = connection.BeginTransaction())
+                    try
                     {
-                        try
-                        {
-                            SqlDataAdapter adapter = new SqlDataAdapter();
-                            String sql = "select vendorName from vendorclub";
-                            adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
+                        SqlDataAdapter adapter = new SqlDataAdapter();
+                        String sql = "select vendorName from vendorclub";
+                        adapter.InsertCommand = new SqlCommand(sql, connection, transaction);
 
-                            using (SqlDataReader reader = adapter.InsertCommand.ExecuteReader())
+                        using (SqlDataReader reader = adapter.InsertCommand.ExecuteReader())
+                        {
+                            while (reader.Read())
                             {
-                                while (reader.Read())
-                                {
-                                    vendors.TryAdd((string)reader["vendorname"], 0);
-                                }
+                                vendors.TryAdd((string)reader["vendorname"], 0);
                             }
+                        }
 
-                            transaction.Commit();
-                        }
-                        catch (SqlException )
-                        {
-                            Console.WriteLine("wrong");
-                            transaction.Rollback();
-                        }
+                        transaction.Commit();
+                    }
+                    catch (SqlException )
+                    {
+                        Console.WriteLine("wrong");
+                        transaction.Rollback();
                     }
                 }
-                catch (Exception) { }
             }
             return vendors;
         }
@@ -61,15 +56,7 @@ namespace AutoBuildApp.DataAccess
             ConcurrentDictionary<string, byte> modelNumbers = new ConcurrentDictionary<string, byte>();
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                try
-                {
-                    connection.Open();
-                }
-                catch (Exception)
-                {
-
-                }
-                
+                connection.Open();
                 using (SqlTransaction transaction = connection.BeginTransaction())
                 {
                     try
@@ -102,14 +89,7 @@ namespace AutoBuildApp.DataAccess
             ConcurrentDictionary<string, ConcurrentDictionary<string, byte>> vendorsProducts = new ConcurrentDictionary<string, ConcurrentDictionary<string, byte>>();
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                try
-                {
-                    connection.Open();
-                }
-                catch (Exception)
-                {
-                     
-                }
+                connection.Open();
                 using (SqlTransaction transaction = connection.BeginTransaction())
                 {
                     try
@@ -340,16 +320,17 @@ namespace AutoBuildApp.DataAccess
                         adapter.InsertCommand.Parameters.Add("@LISTINGNAME", SqlDbType.VarChar).Value = product.Name;
                         adapter.InsertCommand.Parameters.Add("@VENDORLINKURL", SqlDbType.VarChar).Value = product.Url;
                         adapter.InsertCommand.Parameters.Add("@PRODUCTSTATUS", SqlDbType.VarChar).Value = product.Availability ;
-                        if(product.Price == null)
-                        {
-                            adapter.InsertCommand.Parameters.Add("@PRODUCTPRICE", SqlDbType.Decimal).Value = DBNull.Value;
-                        }
-                        else
-                        {
-                            adapter.InsertCommand.Parameters.Add("@PRODUCTPRICE", SqlDbType.Decimal).Value = Double.Parse(product.Price.Replace("$", "").Replace(",", ""));
-                        }
-                        adapter.InsertCommand.Parameters.Add("@RATING", SqlDbType.VarChar).Value = product.TotalRating;
-                        adapter.InsertCommand.Parameters.Add("@REVIEWS", SqlDbType.VarChar).Value = product.TotalNumberOfReviews;
+                        //if(product.Price == null)
+                        //{
+                        //    adapter.InsertCommand.Parameters.Add("@PRODUCTPRICE", SqlDbType.Decimal).Value = DBNull.Value;
+                        //}
+                        //else
+                        //{
+                        //    adapter.InsertCommand.Parameters.Add("@PRODUCTPRICE", SqlDbType.Decimal).Value = Double.Parse(product.Price.Replace("$", "").Replace(",", ""));
+                        //}
+                        adapter.InsertCommand.Parameters.Add("@PRODUCTPRICE", SqlDbType.Decimal).Value = product.Price;
+                        adapter.InsertCommand.Parameters.Add("@RATING", SqlDbType.Decimal).Value = product.TotalRating;
+                        adapter.InsertCommand.Parameters.Add("@REVIEWS", SqlDbType.BigInt).Value = product.TotalNumberOfReviews;
 
                         adapter.InsertCommand.ExecuteNonQuery();
                         

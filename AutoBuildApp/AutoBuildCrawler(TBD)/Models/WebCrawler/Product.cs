@@ -14,9 +14,9 @@ namespace AutoBuildApp.Models.WebCrawler
         public string Name { get; set; }
         public string ProductType { get; set; }
         public string ManufacturerName { get; set; }
-        public string Price { get; set; }
-        public string TotalRating { get; set; }
-        public string TotalNumberOfReviews { get; set; }
+        public double Price { get; set; }
+        public double TotalRating { get; set; }
+        public int TotalNumberOfReviews { get; set; }
         public Dictionary<string, string> Specs { get; set; }
         public List<Review> Reviews { get; set; }
 
@@ -26,8 +26,8 @@ namespace AutoBuildApp.Models.WebCrawler
         }
 
         public Product(string imageUrl, bool availability, string company, string url, string modelNumber, string name, 
-            string productType, string manufacturerName, string totalRating, string totalNumberOfReviews,
-            string price, Dictionary<string, string> specs, List<Review> reviews)
+            string productType, string manufacturerName, double totalRating, int totalNumberOfReviews,
+            double price, Dictionary<string, string> specs, List<Review> reviews)
         {
             ImageUrl = imageUrl;
             Availability = availability;

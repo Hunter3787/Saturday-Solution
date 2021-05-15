@@ -20,6 +20,7 @@ namespace AutoBuildApp.Services
     {
         private ProductDAO _productDao;
         private ProductFactory _productFactory;
+        #region Specification Keys: NewEgg
         private readonly List<string> _supportedMemoryArray = new List<string>
         {
             "5333(OC)", "5133(OC)", "5000(OC)", "4800(OC)", "4600(OC)",
@@ -77,7 +78,8 @@ namespace AutoBuildApp.Services
         private readonly string _gpuLength = "Max GPU Length";
         private readonly string _effectiveMemory = "Effective Memory Clock";
         private readonly string _gpuCooler = "Cooler";
-
+        private readonly string _powerRequirement = "System Requirements";
+        #endregion
 
 
         /// <summary>
@@ -178,7 +180,7 @@ namespace AutoBuildApp.Services
                 output.ModelNumber = toCreate.ModelNumber;
                 output.AddImage(toCreate.ImageURL);
 
-                //FillComponentSpecs(toCreate, output);
+                FillComponentSpecs(toCreate, output);
             }
             catch (ArgumentException)
             {
@@ -296,6 +298,11 @@ namespace AutoBuildApp.Services
                             ((GraphicsProcUnit)component).Cooling = specDictionary[_gpuCooler];
                         }
 
+                        //if (specDictionary.ContainsKey(_powerRequirement))
+                        //{
+                        //    ((GraphicsProcUnit)component).PowerDraw =
+                        //}
+
                         break;
                     #endregion
                     #region Case = Central Processing Unit
@@ -369,7 +376,7 @@ namespace AutoBuildApp.Services
                             var tempString = specDictionary[_powerDraw];
                             var toParse = tempString.Remove(tempString.Length - 1);
 
-                            ((CentralProcUnit)component).PowerDraw = double.Parse(toParse);
+                            ((CentralProcUnit)component).PowerDraw = int.Parse(toParse);
                         }
 
                         if (specDictionary.ContainsKey(_microarchitecture))

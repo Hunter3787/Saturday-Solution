@@ -20,7 +20,7 @@ namespace AutoBuildApp.Models.Products
         public string Interface { get; set; }
         public string Color { get; set; }
         public string FrameSync { get; set; }
-        public double PowerDraw { get; set; }
+        public int PowerDraw { get; set; }
         public int Length { get; set; }
         public int DVIPorts { get; set; }
         public int HDMIPorts { get; set; }
