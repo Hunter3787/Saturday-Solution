@@ -1,4 +1,4 @@
-const uri ='http://localhost:8081/Recommendation/BuildRecommend';
+const uri ='http://http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/Recommendation/BuildRecommend';
 
 let jwt_token = getCookie('JWT').toString();
 
@@ -360,7 +360,7 @@ profilePage.addEventListener('click', async () => {
 
 async function checkAdminPrivilege() {
   var result = false;
-  var url = "http://localhost:8081/authentication/admin"
+  var url = "http://http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/authentication/admin"
   await fetch(url, {
     method: 'POST',
     mode: 'cors',
@@ -441,7 +441,7 @@ function saveBuild() {
     body: JSON.stringify(buildSave)
   };
 
-  fetch("http://localhost:8081/UserGarage/SaveRecommendedBuild", fetchRequest)
+  fetch("http://http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/UserGarage/SaveRecommendedBuild", fetchRequest)
 
   console.log(buildSave)
 }

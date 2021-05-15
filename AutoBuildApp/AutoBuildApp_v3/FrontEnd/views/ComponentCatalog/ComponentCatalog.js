@@ -1,6 +1,6 @@
 let jwt_token = getCookie("JWT")
 
-const uri ='http://localhost:8081/componentcatalog';
+const uri ='http://http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/componentcatalog';
 
 const fetchRequest = {
     method: 'GET',
@@ -190,7 +190,7 @@ function getProductsByFilter() {
 
 async function checkAdminPrivilege() {
 var result = false;
-var url = "http://localhost:8081/authentication/admin"
+var url = "http://http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/authentication/admin"
 await fetch(url, {
   method: 'POST',
   mode: 'cors',
@@ -225,11 +225,11 @@ function getCookie(cname) {
 }
 
 function changePageAdmin() {
-window.location.href = "http://127.0.0.1:5501/views/UMUser(Admin)/UMUser(Admin).html"
+window.location.href = "/views/UMUser(Admin)/UMUser(Admin).html"
 }
 
 function changePageNotAdmin() {
-window.location.href = "http://127.0.0.1:5501/views/UMUser/UMUser.html"
+window.location.href = "/views/UMUser/UMUser.html"
 }
 
 function hideButtons() {
