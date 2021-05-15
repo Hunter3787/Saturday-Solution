@@ -231,6 +231,10 @@ body {
     position: relative;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
 .item {
     margin-left: 100px;
     margin-right: 100px;

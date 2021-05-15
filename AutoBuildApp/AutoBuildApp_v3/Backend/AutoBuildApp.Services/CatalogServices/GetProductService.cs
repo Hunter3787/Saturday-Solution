@@ -7,6 +7,7 @@ using AutoBuildApp.DataAccess;
 using AutoBuildApp.Services.FactoryServices;
 using AutoBuildApp.Models.Products;
 using System;
+using System.Linq;
 
 /**
  * Getter that uses a data access object to call the and return,
@@ -45,9 +46,9 @@ namespace AutoBuildApp.Services
             "Mini ATX"
         };
         private readonly string _caseDimensions = "Dimensions (H x W x D)";
-        private readonly string _motherboardCompatability = "Motherboard Compatability";
+        private readonly string _motherboardCompatability = "Motherboard Compatibility";
         private readonly string _efficiency = "Efficiency";
-        private readonly string _formFactor = "Form Factor";
+        private readonly string _formFactor = "Form Factor ";
         private readonly string _cpuSocketType = "CPU Socket Type";
         private readonly string _maxMemorySupport = "Maximum Memory Supported";
         private readonly string _chipset = "Chipset";
@@ -63,6 +64,7 @@ namespace AutoBuildApp.Services
         private readonly string _type = "Type";
         private readonly string _cache = "Cache";
         private readonly string _memoryStandard = "Memory Standard";
+        private readonly string _memoryStandardWithSpace = "Memory Standard ";
         private readonly string _coreCount = "# of Cores";
         private readonly string _socketType = "CPU Socket Type";
         private readonly string _L1cache = "L1 Cache";
@@ -75,7 +77,8 @@ namespace AutoBuildApp.Services
         private readonly string _boostClock = "Boost Clock";
         private readonly string _memoryType = "Memory Type";
         private readonly string _gpuMemSize = "Memory Size";
-        private readonly string _gpuLength = "Max GPU Length";
+        private readonly string _gpuLength = "Max GPU Length ";
+        private readonly string _psuLength = "Max PSU Length ";
         private readonly string _effectiveMemory = "Effective Memory Clock";
         private readonly string _gpuCooler = "Cooler";
         private readonly string _powerRequirement = "System Requirements";
@@ -228,9 +231,12 @@ namespace AutoBuildApp.Services
 
                         if (specDictionary.ContainsKey(_gpuLength))
                         {
-                            var tempString = specDictionary[_gpuLength].Split(' ');
-
-                            ((ComputerCase)component).MaxGPULength = int.Parse(tempString[0]);
+                            try
+                            {
+                                ((ComputerCase)component).MaxGPULength = int.Parse(new String(specDictionary[_gpuLength].TakeWhile(Char.IsDigit).ToArray()));
+                            } catch(Exception ex)
+                            {
+                            }
                         }
 
                         if (specDictionary.ContainsKey(_motherboardCompatability))
@@ -244,6 +250,15 @@ namespace AutoBuildApp.Services
                                 {
                                     ((ComputerCase)component).AddFormFactorSupport(toCheck);
                                 }
+                            }
+                        }
+                        if (specDictionary.ContainsKey(_psuLength))
+                        {
+                            try
+                            {
+                                ((ComputerCase)component).MaxPSULength = int.Parse(new String(specDictionary[_psuLength].TakeWhile(Char.IsDigit).ToArray()));
+                            }catch(Exception ex)
+                            {
                             }
                         }
                         break;
@@ -283,9 +298,7 @@ namespace AutoBuildApp.Services
 
                         if (specDictionary.ContainsKey(_gpuLength))
                         {
-                            var tempString = specDictionary[_gpuLength].Split(' ');
-
-                            ((GraphicsProcUnit)component).Length = int.Parse(tempString[0]);
+                            ((GraphicsProcUnit)component).Length = int.Parse(new String(specDictionary[_gpuLength].TakeWhile(Char.IsDigit).ToArray()));
                         }
 
                         if (specDictionary.ContainsKey(_effectiveMemory))
@@ -444,10 +457,10 @@ namespace AutoBuildApp.Services
                             ((RAM)component).ErrCorrctionCode = specDictionary[_errCorrection];
                         }
 
-                        if (specDictionary.ContainsKey(_heatSpreader))
-                        {
-                            ((RAM)component).HeatSpreader = bool.Parse(specDictionary[_heatSpreader]);
-                        }
+                        //if (specDictionary.ContainsKey(_heatSpreader))
+                        //{
+                        //    ((RAM)component).HeatSpreader = bool.Parse(specDictionary[_heatSpreader]);
+                        //}
 
                         if (specDictionary.ContainsKey(_voltage))
                         {
@@ -486,7 +499,13 @@ namespace AutoBuildApp.Services
                     case ProductType.PSU:
                         if (specDictionary.ContainsKey(_wattage))
                         {
-                            ((PowerSupplyUnit)component).Wattage = int.Parse(specDictionary[_wattage]);
+                            try
+                            {
+                                ((PowerSupplyUnit)component).Wattage = int.Parse(new String(specDictionary[_wattage].TakeWhile(Char.IsDigit).ToArray()));
+                            } catch(Exception ex)
+                            {
+
+                            }
                         }
                         if (specDictionary.ContainsKey(_efficiency))
                         {
@@ -516,6 +535,10 @@ namespace AutoBuildApp.Services
 
                             ((PowerSupplyUnit)component).PsuModulartiy = modularity;
                         }
+                        if(specDictionary.ContainsKey(_psuLength))
+                        {
+                            ((PowerSupplyUnit)component).Length = int.Parse(new String(specDictionary[_psuLength].TakeWhile(Char.IsDigit).ToArray()));
+                        }
                         break;
                     #endregion
                     #region Case = Motherboard
@@ -540,9 +563,18 @@ namespace AutoBuildApp.Services
                             ((Motherboard)component).Chipset = specDictionary[_chipset];
                         }
 
-                        if (specDictionary.ContainsKey(_memoryStandard))
+                        if (specDictionary.ContainsKey(_memoryStandard) || specDictionary.ContainsKey(_memoryStandardWithSpace))
                         {
-                            var memTypeString = specDictionary[_memoryStandard];
+                            var memTypeString = "";
+                            if (specDictionary.ContainsKey(_memoryStandard))
+                            {
+                                memTypeString = specDictionary[_memoryStandard];
+                            }
+                            else
+                            {
+                                memTypeString = specDictionary[_memoryStandardWithSpace];
+                            }
+
                             MemoryType memType;
 
                             if (memTypeString.Contains(MemoryType.DDR.ToString()))
@@ -588,8 +620,9 @@ namespace AutoBuildApp.Services
                         break;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+
                 // Log
             }
         }

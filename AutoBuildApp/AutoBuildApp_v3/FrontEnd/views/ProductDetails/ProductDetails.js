@@ -4,7 +4,7 @@ var tokenNewEgg = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQi
 
 var currentToken = tokenNewEgg;
 
-let jwt_token = getCookie("JWT");
+// let jwt_token = getCookie("JWT");
 
 const fetchRequest = {
     method: 'GET',
