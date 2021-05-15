@@ -61,9 +61,9 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             {
                 Headless = true,
                 IgnoreHTTPSErrors = true,
-                //ExecutablePath = @"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", // MacOS Path
-                ExecutablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe",
+                //ExecutablePath = @"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", // added per danny
                 //ExecutablePath = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+                ExecutablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe",
                 Args = new[] {
                         $"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}", // ganna take a while = dannu
                         //"--proxy-server=23.251.138.105:8080",
@@ -218,6 +218,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             Browser browser = await Puppeteer.LaunchAsync(options);
 
             bool validIP = false;
+            int retries = 0;
             while (!validIP)
             {
                 try
@@ -238,6 +239,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         {
                             rotateProxy();
                             options.Args[0] = $"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}";
+                            await page.CloseAsync();
                             await browser.CloseAsync();
                             browser = await Puppeteer.LaunchAsync(options);
                             continue;
@@ -294,6 +296,13 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         Console.Write("price\t");
                         string priceString = (price == null) || String.IsNullOrEmpty(price.ToString()) ? null : price.ToString();
 
+                        double priceDouble = 0;
+                        if (priceString != null)
+                        {
+                            // Remove the $ and the ,
+                            priceString = priceString.Replace("$", "").Replace(",", "");
+                            priceDouble = Double.Parse(priceString);
+                        }
                         // click ratings
                         //new egg
                         var numberOfReviewsBeforeReload = await page.EvaluateExpressionAsync(reviewerNameQuerySelector);
@@ -328,6 +337,7 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         //{
 
                             totalStarRating = await page.EvaluateExpressionAsync("document.querySelector('.rating-views .rating-views-num').innerText");
+
                         //}
                             Console.Write("totalStarRating\t");
 
@@ -337,14 +347,23 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         }
 
                         string totalStarRatingString = "0";
+                        double totalStarRatingDouble = 0;
+
                         if (totalStarRating != null) {
                             totalStarRatingString = totalStarRating.ToString()[0].ToString();
+                            totalStarRatingDouble = Double.Parse(totalStarRatingString);
                         }
 
+
                         string totalNumberOfReviewsString = "0";
+                        int totalNumberOfReviewsInt = 0;
+
                         if(totalNumberOfReviews != null)
                         {
                             totalNumberOfReviewsString = totalNumberOfReviews.ToString().Split(' ')[0];
+                            totalNumberOfReviewsString = totalNumberOfReviewsString.Replace("$", "").Replace(",", "");
+
+                            totalNumberOfReviewsInt = Int32.Parse(totalNumberOfReviewsString);
                         }
 
 
@@ -370,12 +389,12 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                         {
                             reviews.Add(new Review(reviewerNames.ElementAt(i).ToString(), getRatingFromString(individualRatings.ElementAt(i).ToString()), reviewContent.ElementAt(i).ToString(), reviewerDates.ElementAt(i).ToString()));
                         }
-                        bool availability = price != null;
+                        bool availability = priceString != null;
 
                         string brand = specsVals.ElementAt(brandIndex).ToString();
                         companyName = companyName.ToLower();
                         Models.WebCrawler.Product product = new Models.WebCrawler.Product(imageUrl.ToString(), availability, companyName, url, modelNumber, title.ToString(), productType,
-                            brand, totalStarRatingString, totalNumberOfReviewsString, priceString, specsDictionary, reviews);
+                            brand, totalStarRatingDouble, totalNumberOfReviewsInt, priceDouble, specsDictionary, reviews);
 
                         // amazon
                         //var reviewsLink = await page.EvaluateExpressionAsync("document.querySelector('[data-hook=see-all-reviews-link-foot]').href");
@@ -459,11 +478,13 @@ namespace AutoBuildApp.Services.WebCrawlerServices
                 }
                 catch (Exception e)
                 {
-                    if(e.Message.Contains("innerText") || e.Message.Contains(".comments-content"))
+                    if ((e.Message.Contains("innerText") || e.Message.Contains(".comments-content")) && retries < 3)
                     {
+                        retries++;
                         Console.WriteLine("yo man");
                         continue;
                     }
+                    retries = 0;
                     Console.WriteLine(e.Message);
                     Console.WriteLine("BAD PROXY " + ": " + currentProxy.IPAddress + " - " + currentProxy.Port + "\t\t" + e.Message);
                     rotateProxy();
@@ -606,11 +627,11 @@ namespace AutoBuildApp.Services.WebCrawlerServices
             {
                 Headless = true,
                 IgnoreHTTPSErrors = true,
-                ExecutablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe", // edded per danny
+                ExecutablePath = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
                 Args = new[] {
                         //$"--proxy-server={currentProxy.IPAddress}:{currentProxy.Port}",
-                        //"--proxy-server=208.80.28.208:8080",
-                        "--proxy-server=132.248.196.2:8080",
+                        "--proxy-server=208.80.28.208:8080",
+                        //"--proxy-server=132.248.196.2:8080",
                         "--no-sandbox",
                         "--disable-gpu",
                         "--ignore-certificate-errors",
