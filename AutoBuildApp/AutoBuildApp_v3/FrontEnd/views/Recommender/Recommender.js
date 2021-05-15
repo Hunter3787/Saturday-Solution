@@ -419,6 +419,29 @@ function hideButtons() {
 var saveBuildForm = document.getElementById('build-save-form');
 saveBuildForm.addEventListener('submit', () => saveBuild());
 
+var nameOfBuild = document.getElementById('build-name');
+
+console.log(nameOfBuild.value.trim());
+
 function saveBuild() {
-  console.log(modelNumbers)
+
+  var buildSave = {
+    modelNumbers: modelNumbers,
+    buildName: nameOfBuild.value.trim()
+};
+
+  const fetchRequest = {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'bearer ' + jwt_token
+    },
+    body: JSON.stringify(buildSave)
+  };
+
+  fetch("http://localhost:8081/UserGarage/SaveRecommendedBuild", fetchRequest)
+
+  console.log(buildSave)
 }
