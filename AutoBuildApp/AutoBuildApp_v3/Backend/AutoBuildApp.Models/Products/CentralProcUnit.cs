@@ -15,7 +15,7 @@ namespace AutoBuildApp.Models.Products
         public int CoreCount { get; set; }
         public string CoreClock { get; set; }
         public string BoostClock { get; set; }
-        public double PowerDraw { get; set; }
+        public int PowerDraw { get; set; }
         public string Series { get; set; }
         public string MicrorArchitecture { get; set; }
         public string CoreFamily { get; set; }
