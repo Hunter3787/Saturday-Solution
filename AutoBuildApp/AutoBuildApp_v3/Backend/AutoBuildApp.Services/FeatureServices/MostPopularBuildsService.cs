@@ -222,14 +222,26 @@ namespace AutoBuildApp.Services.FeatureServices
                 {
                     var currentDirectory = Directory.GetCurrentDirectory().ToString();
 
+                    _logger.LogWarning(currentDirectory);
+
                     storeIn = $"/assets/images/MPB/{username}_{ DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}.jpg";
 
                     var path = Path.GetFullPath(Path.Combine(currentDirectory, $@"..\..\FrontEnd{storeIn}"));
 
-                    using (var stream = new FileStream(path, FileMode.CreateNew, FileAccess.ReadWrite))
+                    _logger.LogWarning(path);
+
+                    try
                     {
-                        await item.CopyToAsync(stream);
+                        using (var stream = new FileStream(path, FileMode.CreateNew, FileAccess.ReadWrite))
+                        {
+                            await item.CopyToAsync(stream);
+                        }
                     }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex.Message);
+                    }
+
                 }
             }
             return storeIn;
