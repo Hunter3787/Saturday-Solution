@@ -21,5 +21,7 @@ namespace AutoBuildApp.Models.DataTransferObjects
         public string ResponseString { get; set; }
 
 
+
+
      }
 }

@@ -1,5 +1,4 @@
 ﻿using AutoBuildApp.DataAccess.Entities;
-//using AutoBuildApp.Managers.Registration_PackManger;
 using AutoBuildApp.Security.Enumerations;
 using AutoBuildApp.Security.FactoryModels;
 using AutoBuildApp.Security.Interfaces;
@@ -19,6 +18,8 @@ using Microsoft.AspNetCore.Http;
 
 using AutoBuildApp.Managers.Registration_PackManger;
 using AutoBuildApp.Services;
+using AutoBuildApp.Security;
+using System.Collections.Generic;
 
 /// <summary>
 /// Reference: see /AuthReference.
@@ -38,7 +39,9 @@ namespace AutoBuildApp.Api.Controllers
     public class AuthenticationController : ControllerBase
     {
         #region  Authentication Controller variables 
-
+        private List<string> _adminRoles;
+        private List<string> _vendorRole;
+        private List<string> _basicRole;
         private AuthManager _loginManager;
         private UserCredentials _userCredentials;
         #endregion
@@ -64,13 +67,22 @@ namespace AutoBuildApp.Api.Controllers
             _loginManager = new AuthManager(connection);
             #endregion
 
+            _adminRoles = new List<string>()
+            { RoleEnumType.SystemAdmin,
+              RoleEnumType.DelegateAdmin};
+
+            _basicRole = new List<string>()
+            { RoleEnumType.BasicRole};
+
+            _vendorRole = new List<string>()
+            { RoleEnumType.VendorRole};
         }
 
         /// <summary>
         /// this is for testing 
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet("principle")]
         public IActionResult GetPrinciple()
         {
             //https://stackoverflow.com/questions/47513674/user-identity-name-is-null-when-integrating-asp-net-identity-with-owin-auth-to-a 
@@ -81,6 +93,45 @@ namespace AutoBuildApp.Api.Controllers
             return
                 Ok($"\n\nCurrent Thread Priciple: {JsonSerializer.Serialize(Thread.CurrentPrincipal)}/n" +
                 $"Checking name per nick: { _threadPrinciple.Identity.Name}!!!!!!");
+        }
+
+        [HttpPost("admin")]
+        public IActionResult GetAdminPermission()
+        {
+            if (!AuthorizationCheck.IsAuthorized(_adminRoles))
+            {
+                return Ok(false);
+            }
+            else
+            {
+                return Ok(true);
+            }
+        }
+
+        [HttpGet("vendor")]
+        public IActionResult GetVendorPermission()
+        {
+            if (!AuthorizationCheck.IsAuthorized(_vendorRole))
+            {
+                return Ok(false);
+            }
+            else
+            {
+                return Ok(true);
+            }
+        }
+
+        [HttpGet("basic")]
+        public IActionResult GetBasicPermission()
+        {
+            if (!AuthorizationCheck.IsAuthorized(_basicRole))
+            {
+                return Ok(false);
+            }
+            else
+            {
+                return Ok(true);
+            }
         }
 
         //[HttpPost("{Login}")]

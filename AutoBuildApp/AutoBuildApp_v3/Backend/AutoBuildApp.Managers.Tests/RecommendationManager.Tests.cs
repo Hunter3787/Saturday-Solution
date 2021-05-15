@@ -77,8 +77,8 @@ namespace AutoBuildApp.Managers.Tests
                 Quantity = 1,
                 Price = 85.99,
                 MoboFormSupport =
-                new List<MoboFormFactor>() {
-                    MoboFormFactor.ATX, MoboFormFactor.MiniATX },
+                new List<string>() {
+                    MoboFormFactor.ATX.ToString(), MoboFormFactor.MiniATX.ToString() },
                 TowerType = TowerType.FullTower,
                 ExpansionSlots = 3,
                 PsuShroud = false,
@@ -169,7 +169,7 @@ namespace AutoBuildApp.Managers.Tests
                 DisplayPortPorts = 3,
                 MiniDisplayPortPorts = 0,
                 ExpansionSlotWidth = 2,
-                Cooling = 2,
+                Cooling = "2",
                 ExternalPower = "1 PCIe 12-pin"
             };
             _processor = new CentralProcUnit

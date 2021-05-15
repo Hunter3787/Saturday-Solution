@@ -136,9 +136,7 @@ namespace AutoBuildApp.Managers
 
             var componentList = parser.CreateComponentList(prototype);
             componentList.RemoveAt(7);
-            
-            
-            //componentList.Add(new HardDrive());
+
             var portionedList = portioner.PortionOutBudget(
                 componentList,
                 requestedType,
