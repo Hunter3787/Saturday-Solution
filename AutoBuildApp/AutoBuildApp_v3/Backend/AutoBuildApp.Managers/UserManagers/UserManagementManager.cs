@@ -35,7 +35,7 @@ namespace AutoBuildApp.Managers
         }
 
         // Updates the password of the active user
-        public string UpdatePassword(string password, string passwordCheck, string activeEmail)
+        public string UpdatePassword(string password, string passwordCheck, string activeUsername)
         {
             // checks the password for validity
             if (_inputValidityManager.IsPasswordValid(password))
@@ -48,7 +48,7 @@ namespace AutoBuildApp.Managers
                     passwordCheck = BCrypt.Net.BCrypt.HashPassword(passwordCheck); ;
                     password = BCrypt.Net.BCrypt.HashPassword(password);
                     // go to DAO for storage
-                    return _userManagementService._userManagementDAO.UpdatePasswordDB(password, activeEmail);
+                    return _userManagementService._userManagementDAO.UpdatePasswordDB(password, activeUsername);
                 }
                 else
                 {
@@ -64,7 +64,7 @@ namespace AutoBuildApp.Managers
         }
 
         // Updates the email of the active user
-        public string UpdateEmail(string InputEmail, string activeEmail)
+        public string UpdateEmail(string InputEmail, string activeUsername)
         {
             // checks that email is valid
             if (_inputValidityManager.ValidEmail(InputEmail))
@@ -73,7 +73,7 @@ namespace AutoBuildApp.Managers
                 if (!_userManagementDAO.DoesEmailExist(InputEmail)) {
                     // email is valid and is not already used
                     // pass to DAO for storage
-                    return _userManagementService._userManagementDAO.UpdateEmailDB(InputEmail, activeEmail);
+                    return _userManagementService._userManagementDAO.UpdateEmailDB(InputEmail, activeUsername);
                 }
                 else
                 {
@@ -89,7 +89,7 @@ namespace AutoBuildApp.Managers
         }
 
         // Updates the username of the active user
-        public string UpdateUsername(string username, string activeEmail)
+        public string UpdateUsername(string username, string activeUsername)
         {
             // checks that username is valid
             if (_inputValidityManager.ValidUserName(username))
@@ -99,7 +99,7 @@ namespace AutoBuildApp.Managers
                 {
                     // username is valid
                     // pass to DAO for storage
-                    return _userManagementService._userManagementDAO.UpdateUserNameDB(username, activeEmail);
+                    return _userManagementService._userManagementDAO.UpdateUserNameDB(username, activeUsername);
                 } 
                 else
                 {
@@ -235,6 +235,14 @@ namespace AutoBuildApp.Managers
                 _logger.LogInformation("User deleted.");
                 return _userManagementService._userManagementDAO.DeleteUserDB(username);
             }
+        }
+
+        // deletes the active user and removes them from the database
+        public string DeleteSelf(string username)
+        {
+            // calls the DAO to remove from database
+            _logger.LogInformation("User deleted.");
+            return _userManagementService._userManagementDAO.DeleteUserDB(username);
         }
 
         // checks a user's role

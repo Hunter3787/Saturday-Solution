@@ -2,8 +2,8 @@
 const appConfigurations = 
 {
     Endpoints: {
-        MostPopularBuilds: "https://localhost:5001/MostPopularBuilds/",
-        ReviewsRatings: "https://localhost:5001/reviewrating",
-        default: "https://localhost:5001/Home/Error"
+        MostPopularBuilds: "http://localhost:8081/MostPopularBuilds/",
+        ReviewsRatings: "http://localhost:8081/reviewrating",
+        default: "http://localhost:8081/Home/Error"
     }
 }

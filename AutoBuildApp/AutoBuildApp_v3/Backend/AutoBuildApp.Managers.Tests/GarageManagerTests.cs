@@ -27,6 +27,9 @@ namespace AutoBuildApp.Manger.Tests
         private readonly string _connString;
         private readonly ClaimsPrincipal _claimsPrincipal;
 
+
+        private Build _myBuild;
+
         public UserGarageManagerTests()
         {
             _connString = ConnectionManager
@@ -54,6 +57,14 @@ namespace AutoBuildApp.Manger.Tests
             Thread.CurrentPrincipal = _claimsPrincipal;
 
             _testManager = new UserGarageManager(_connString);
+
+
+            _myBuild = new Build()
+            {
+                BuildName = "MyManagerPassedBuild",
+            };
+
+
         }
 
         [TestInitialize]
@@ -67,6 +78,74 @@ namespace AutoBuildApp.Manger.Tests
         {
 
         }
+
+
+        [TestMethod]
+        public void UserGarageCallToInsertBuildForUSer_ReturnSuccess()
+        {
+            //arrange
+            CommonResponse actualResponse = new CommonResponse();
+            Thread.CurrentPrincipal = _claimsPrincipal;
+
+            string conString = ConnectionManager.
+            connectionManager.
+            GetConnectionStringByName(ControllerGlobals.LOCALHOST_CONNECTION);
+            UserGarageManager testManager = new UserGarageManager(conString);
+            //act:
+
+            actualResponse = testManager.AddBuild(_myBuild, _myBuild.BuildName);
+
+            //assert:
+
+            Assert.AreEqual(ResponseStringGlobals.SUCCESSFUL_ADDITION, actualResponse.ResponseString);
+
+        }
+
+        [TestMethod]
+        public void UserGarageCallToDeleteBuildForUSer_ReturnSuccess()
+        {
+            //arrange
+            CommonResponse actualResponse = new CommonResponse();
+            Thread.CurrentPrincipal = _claimsPrincipal;
+
+            string conString = ConnectionManager.
+            connectionManager.
+            GetConnectionStringByName(ControllerGlobals.LOCALHOST_CONNECTION);
+            UserGarageManager testManager = new UserGarageManager(conString);
+            //act:
+
+            actualResponse = testManager.DeleteBuild(_myBuild.BuildName);
+
+            //assert:
+
+            Assert.AreEqual(ResponseStringGlobals.SUCCESSFUL_DELETION, actualResponse.ResponseString);
+
+        }
+
+        [TestMethod]
+        public void UserGarageCallToDeleteproductFromBuild_ReturnSuccess()
+        {
+            //arrange
+            CommonResponse actualResponse = new CommonResponse();
+            Thread.CurrentPrincipal = _claimsPrincipal;
+
+            string conString = ConnectionManager.
+            connectionManager.
+            GetConnectionStringByName(ControllerGlobals.LOCALHOST_CONNECTION);
+            UserGarageManager testManager = new UserGarageManager(conString);
+            //act:
+
+            actualResponse = testManager.UpdateProductsInBuild("MyBuild", "MODEL_6", 233);
+
+            //assert:
+
+            Assert.AreEqual(ResponseStringGlobals.SUCCESSFUL_MODIFICATION, actualResponse.ResponseString);
+
+        }
+
+
+
+
 
         ///// <summary>
         ///// Return a List of Builds.

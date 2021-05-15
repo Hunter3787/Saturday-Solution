@@ -96,7 +96,7 @@ namespace AutoBuildApp.DataAccess
                         {
                             if (!reader.HasRows) // use the bang!!!!!!! 
                             {
-                                _CRAuth.ResponseString = "User not found";
+                                _CRAuth.ResponseString = "Invalid username or password";
                                 _CRAuth.IsUserExists = false;
                                 return _CRAuth;
                             }
@@ -121,7 +121,7 @@ namespace AutoBuildApp.DataAccess
                                 }
                                 else if (!BCrypt.Net.BCrypt.Verify(userCredentials.Password, reader["passwordHash"].ToString())) // use the bang!!!!!!! 
                                 {
-                                    _CRAuth.ResponseString = "User not found";
+                                    _CRAuth.ResponseString = "Invalid username or password";
                                     _CRAuth.IsUserExists = false;
                                     return _CRAuth;
                                 }
