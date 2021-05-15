@@ -38,7 +38,7 @@ namespace AutoBuildApp.Api
             {
                 // Lecture: Get the configuration from an external source to make
                 // development and deployment easier to manage.
-                var env = "DEV";//Configuration.GetSection("Environment");
+                var env = "DEV1";//Configuration.GetSection("Environment");
 
                 if (env == "DEV")
                 {
@@ -57,8 +57,8 @@ namespace AutoBuildApp.Api
                     // cross origin communication with your code.
                     opts.AddPolicy(name: "CorsPolicy", builder =>
                     {
-                        builder.WithMethods("GET", "POST", "OPTIONS")
-                               .WithOrigins("http://localhost") // Change this
+                        builder.WithMethods("GET", "DELETE", "PUT", "POST", "OPTIONS")
+                               .WithOrigins("http://172.31.7.190:8081") // Change this
                                .AllowAnyHeader();
                     });
                 }
