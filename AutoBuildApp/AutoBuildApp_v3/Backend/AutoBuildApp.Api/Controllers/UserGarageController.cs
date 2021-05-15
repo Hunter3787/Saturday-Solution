@@ -173,19 +173,30 @@ namespace AutoBuildApp.Api.Controllers
             }
         }
 
-        [HttpGet("getShelf")]
-        public IActionResult GetShelf(string shelfName, string username)
+
+
+
+        // -----------------------------------------------------------------------------------------------
+
+
+        [HttpGet("GetShelfByName")] // done 
+        public IActionResult GetShelfByName(string shelfName)
         {
             _manager = new UserGarageManager(_connString);
             try
             {
                 IsAuthorized();
                 var principle = (ClaimsPrincipal)Thread.CurrentPrincipal;
-                Console.WriteLine(principle.Claims);
+                //Console.WriteLine(principle.Claims);
                 //_logger.LogInformation(_singleShelfFetch);
-                var output =_manager.GetShelfByName(shelfName, username);
+                var output =_manager.GetShelfByName(shelfName);
 
-                return Ok(output);
+                if(!output.IsSuccessful)
+                {
+
+                    return StatusCode(StatusCodes.Status400BadRequest, "Bad Request");
+                }
+                return StatusCode(StatusCodes.Status400BadRequest, output.GenericObject);
             }
             catch (ArgumentNullException)
             {
@@ -194,22 +205,31 @@ namespace AutoBuildApp.Api.Controllers
             }
         }
 
-        [HttpGet("getShelves")]
-        public IActionResult GetShelvesByUser(string username)
+
+        [HttpGet("GetAllShelvesByUser")]
+        public IActionResult GetAllShelvesByUser()
         {
             _manager = new UserGarageManager(_connString);
             try
             {
                 IsAuthorized();
                 //_logger.LogInformation();
-                var output = _manager.GetShelvesByUser(username);
+                var output = _manager.GetShelvesByUser();
 
-                return Ok(output);
+                if (!output.IsSuccessful)
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest,
+                        "Bad Request");
+                }
+                return StatusCode(StatusCodes.Status200OK,
+                    output.GenericObject);
+
             }
             catch (ArgumentNullException)
             {
                 //_logger.LogWarning();
-                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+                return new 
+                    StatusCodeResult(StatusCodes.Status400BadRequest);
             }
         }
 

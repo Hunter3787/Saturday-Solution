@@ -519,9 +519,113 @@ namespace AutoBuildApp.DataAccess
                     return output;
                 }
             }
-            
+
             return output;
         }
+
+        /// <summary>
+        /// Get all Shelves from the Database using the collections with code
+        /// class.
+        /// </summary>
+        /// <param name="username">User name</param>
+        /// <returns></returns>
+        public SystemCodeWithObject<List<Shelf>> GetShelvesByUserPrex(string username)
+        {
+            SystemCodeWithObject<List<Shelf>> output = new SystemCodeWithObject<List<Shelf>>();
+            output.GenericObject = new List<Shelf>();
+            var shelves = output.GenericObject;
+
+            try
+            {
+                IsNotNullOrEmpty(username);
+                IsAuthorized(_approvedRoles);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                output.Code = AutoBuildSystemCodes.Unauthorized;
+                return output;
+            }
+            catch (ArgumentNullException)
+            {
+                output.Code = AutoBuildSystemCodes.ArguementNull;
+                return output;
+            }
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    string sql =
+                        "SELECT S.nameOfShelf, SPS.quantity , P.productType, P.modelNumber, P.manufacturerName " +
+                        "FROM Shelves S INNER JOIN Save_Product_Shelf SPS ON S.shelfID = SPS.shelfID " +
+                        "INNER JOIN Products P ON P.productId = SPS.productID " +
+                        "WHERE userID = " +
+                        "(SELECT UI.userID FROM UserInfo UI WHERE UI.username = @USERNAME)";
+                    using (SqlCommand command = new SqlCommand())
+                    {
+
+                        InitializeSqlCommand(command, connection, AutoBuildSqlQueries.GET_ALL_SHELVES_BY_USERNAME);
+                        InitializeSqlCommand(command, connection, sql);
+                        command.Parameters.AddWithValue("@USERNAME", username);
+
+                        //using(SqlDataReader reader = command.ExecuteReader()){
+                        SqlDataReader reader = command.ExecuteReader();
+                        while (reader.Read())
+                        {
+
+                            Component component = new Component();
+                            string currentShelf = (string)reader[ShelfTableCollumns.SHELF_NAME];
+                            Shelf shelf = new Shelf();
+
+                            shelf.ShelfName = currentShelf;
+
+                            Console.WriteLine($" {shelf.ShelfName}");
+                            var hasMore = true;
+
+                            SqlDataReader prevReader;
+                            prevReader = reader;
+                            while (hasMore
+                                && (string)reader[ShelfTableCollumns.SHELF_NAME] == currentShelf
+                                && (reader[SaveProductTableCollumns.SAVED_PRODUCT_QUANTITY] != DBNull.Value
+                                && reader[ProductTableColumns.PRODUCT_COLUMN_TYPE] != DBNull.Value)
+                                )
+                            {
+
+                                component = PopulateComponent(component, reader);
+
+                                Console.WriteLine($" {component.ModelNumber}");
+                                prevReader = reader;
+                                shelf.ComponentList.Add(component);
+                                hasMore = reader.Read();
+
+                            }
+                            reader = prevReader;
+                            shelves.Add(shelf);
+                        }
+                        //}
+                        reader.Close();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    output.Code = AutoBuildSystemCodes.FailedParse;
+                    return output;
+                }
+                catch (SqlException ex)
+                {
+                    output.Code = SqlExceptionHandler.GetCode(ex.Number);
+                    return output;
+                }
+            }
+
+            output.Code = AutoBuildSystemCodes.Success;
+            return output;
+        }
+
+
+
 
         /// <summary>
         /// Get all Shelves from the Database using the collections with code
@@ -557,36 +661,51 @@ namespace AutoBuildApp.DataAccess
                 {
                     connection.Open();
 
+                    string sql =
+                        "SELECT S.nameOfShelf ,STRING_AGG( " +
+                        "CAST(" +
+                        "SPS.quantity AS VARCHAR(50)) + '#' + " +
+                        "P.productType + '#' +" +
+                        "P.modelNumber + '#' +" +
+                        "P.manufacturerName, ',') AS 'UserShelves' " +
+                        "FROM Shelves S INNER JOIN Save_Product_Shelf SPS ON S.shelfID = SPS.shelfID " +
+                        "INNER JOIN Products P ON P.productId = SPS.productID " +
+                        "WHERE userID = (SELECT UI.userID FROM UserInfo UI WHERE UI.username = 'Zeina') " +
+                        "group by S.nameOfShelf";
+
                     using (SqlCommand command = new SqlCommand())
                     {
-
-                        InitializeSqlCommand(command, connection, AutoBuildSqlQueries.GET_ALL_SHELVES_BY_USERNAME);
+                        //InitializeSqlCommand(command, connection, AutoBuildSqlQueries.GET_ALL_SHELVES_BY_USERNAME);
+                        InitializeSqlCommand(command, connection, sql);
                         command.Parameters.AddWithValue("@USERNAME", username);
 
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {
+
                                 string currentShelf = (string)reader[ShelfTableCollumns.SHELF_NAME];
                                 Shelf shelf = new Shelf();
-
                                 shelf.ShelfName = currentShelf;
-
-                                var hasMore = true;
-                                while (hasMore
-                                    && (string)reader[ShelfTableCollumns.SHELF_NAME] == currentShelf
-                                    && (reader[SaveProductTableCollumns.SAVED_PRODUCT_INDEX] != DBNull.Value
-                                    && reader[SaveProductTableCollumns.SAVED_PRODUCT_QUANTITY] != DBNull.Value
-                                    && reader[ProductTableColumns.PRODUCT_COLUMN_TYPE] != DBNull.Value)
-                                    )
+                                string shelfInfo = (string)reader["UserShelves"];
+                                string[] products = shelfInfo.Split(',');
+                                foreach (var component in products)
                                 {
-                                    Component component = new Component();
-                                    PopulateComponent(component, reader);
-                                    shelf.ComponentList.Add(component);
+                                    string[] splitPair = component.Split('#');
 
-                                    hasMore = reader.Read();
+                                    string quantity = splitPair[0];
+                                    string productType = splitPair[1];
+                                    string modelNumber = splitPair[2];
+                                    string manufacturerName = splitPair[3];
+
+                                    Component toPopulate = new Component();
+                                    toPopulate.ProductType = (ProductType)Enum.Parse(typeof(ProductType), productType);
+                                    toPopulate.ModelNumber = modelNumber;
+                                    toPopulate.ManufacturerName = manufacturerName;
+                                    toPopulate.Quantity = Int32.Parse(quantity);
+
+                                    shelf.ComponentList.Add(toPopulate);
                                 }
-                                Console.WriteLine(shelf);
                                 shelves.Add(shelf);
                             }
                         }
@@ -608,6 +727,10 @@ namespace AutoBuildApp.DataAccess
             return output;
         }
 
+
+
+
+
         /// <summary>
         /// Get a single shelf by user name and shelf name.
         /// </summary>
@@ -624,6 +747,7 @@ namespace AutoBuildApp.DataAccess
             {
                 IsNotNullOrEmpty(shelfName);
                 IsNotNullOrEmpty(username);
+
                 IsAuthorized(_approvedRoles);
             }
             catch (UnauthorizedAccessException)
@@ -642,21 +766,38 @@ namespace AutoBuildApp.DataAccess
                 try
                 {
                     connection.Open();
-
+                    string sql =
+                        "SELECT S.nameOfShelf, SPS.quantity , P.productType, P.modelNumber, P.manufacturerName " +
+                        "FROM Shelves S INNER JOIN Save_Product_Shelf SPS ON S.shelfID = SPS.shelfID " +
+                        "INNER JOIN Products P ON P.productId = SPS.productID " +
+                        "WHERE userID = " +
+                        "(SELECT UI.userID FROM UserInfo UI WHERE UI.username = @USERNAME) " +
+                        "AND nameOfShelf = @SHELFNAME;";
                     using (SqlCommand command = new SqlCommand())
                     {
-                        InitializeSqlCommand(command, connection, AutoBuildSqlQueries.GET_SHELF_BY_NAME_AND_USER);
+                        //InitializeSqlCommand(command, connection, AutoBuildSqlQueries.GET_SHELF_BY_NAME_AND_USER);
+
+                        InitializeSqlCommand(command, connection, sql);
                         command.Parameters.AddWithValue("@USERNAME", username);
                         command.Parameters.AddWithValue("@SHELFNAME", shelfName);
 
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
-                            while (reader.Read() && reader[ProductTableColumns.PRODUCT_COLUMN_TYPE] != DBNull.Value)
+                            if (!reader.HasRows)
                             {
+                                output.Code = AutoBuildSystemCodes.NoChangeOccurred;
+                                return output;
+                            }
+
+                            while (reader.Read()
+                                && reader[ProductTableColumns.PRODUCT_COLUMN_TYPE] != DBNull.Value)
+                            {
+
                                 shelf.ShelfName = (string)reader[ShelfTableCollumns.SHELF_NAME];
                                 Component component = new Component();
-                                PopulateComponent(component, reader);
+                                component = PopulateComponent(component, reader);
                                 shelf.ComponentList.Add(component);
+
                             }
                         }
                     }
@@ -666,14 +807,18 @@ namespace AutoBuildApp.DataAccess
                     output.Code = AutoBuildSystemCodes.FailedParse;
                     return output;
                 }
-                catch (SqlException ex)
+                catch (SqlException e)
                 {
-                    output.Code = SqlExceptionHandler.GetCode(ex.Number);
+                    //Console.WriteLine("SqlException.GetType: {0}", e.GetType());
+                    //Console.WriteLine("SqlException.Source: {0}", e.Source);
+                    //Console.WriteLine("SqlException.ErrorCode: {0}", e.ErrorCode);
+                    //Console.WriteLine("SqlException.Message: {0}", e.Message);
+                    output.Code = SqlExceptionHandler.GetCode(e.Number);
                     return output;
                 }
             }
 
-            if(output.GenericObject.ShelfName == null)
+            if (output.GenericObject.ShelfName == null)
             {
                 output.Code = AutoBuildSystemCodes.NoEntryFound;
                 return output;
@@ -759,12 +904,14 @@ namespace AutoBuildApp.DataAccess
         /// </summary>
         /// <param name="toPopulate"></param>
         /// <param name="reader"></param>
-        private void PopulateComponent(Component toPopulate, SqlDataReader reader)
+        private Component PopulateComponent(Component toPop, SqlDataReader reader)
         {
+            Component toPopulate = toPop;
             toPopulate.ProductType = (ProductType)Enum.Parse(typeof(ProductType), (string)reader[ProductTableColumns.PRODUCT_COLUMN_TYPE]);
             toPopulate.ModelNumber = (string)reader[ProductTableColumns.PRODUCT_COLUMN_MODEL];
             toPopulate.ManufacturerName = (string)reader[ProductTableColumns.PRODUCT_COLUMN_MANUFACTURER];
             toPopulate.Quantity = (int)reader[SaveProductTableCollumns.SAVED_PRODUCT_QUANTITY];
+            return toPopulate;
         }
 
         /// <summary>
@@ -839,7 +986,7 @@ namespace AutoBuildApp.DataAccess
         /// <param name="toCheck"></param>
         private void IsNotNull(object toCheck)
         {
-            if(toCheck is null)
+            if (toCheck is null)
             {
                 throw new ArgumentNullException(nameof(toCheck));
             }

@@ -1,6 +1,7 @@
 ﻿using AutoBuildApp.Security.Enumerations;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
 
 
@@ -137,6 +138,8 @@ namespace AutoBuildApp.Security.Models
         /// and the scope the user are allowed.
         /// </summary>
         public IList<Claims> UserCLaims { get; set; }
+
+        //public IList<Claim> UserCLaims2 { get; set; }
         #endregion
 
         #region IEquatable interface implementation
