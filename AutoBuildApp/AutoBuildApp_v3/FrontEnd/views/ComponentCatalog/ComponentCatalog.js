@@ -11,8 +11,6 @@ const fetchRequest = {
     }
   };
 
-window.onload = getProductsByFilter();
-
 // Event listeners to upload the display when a filter is changed
 var checkboxes = document.querySelectorAll('input[type=checkbox]');
 checkboxes.forEach(checkbox => checkbox.addEventListener('click', getProductsByFilter));
@@ -245,3 +243,5 @@ function hideButtons() {
     x.style.display = "none";
   }
 }
+
+getProductsByFilter();
