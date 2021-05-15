@@ -105,20 +105,22 @@ body {
 /********************************************************************/ 
 
 .list-of-divs {
+  margin-top: 100px;
+  margin-left: 200px;
+  text-align: center;
   display:inline-block;
 }
 
 .inner-div {
-  margin-left: 500px;
-  margin-left: 280px;
   display:block;
   position:relative;
 }
 
 .side-nav {
+  margin-top: 200px;
   height: 700px;
   width: 200px;
-  position: relative;
+  position: fixed;
   z-index: 1;
   top: 0;
   left: 0;
@@ -192,12 +194,12 @@ img {
 .div-table-row { 
   float: left; 
   width: 200px;
-  height: 75px;
+  height: 100px;
   display: block;
   position: relative;
   text-align: center;
   word-wrap: break-word;
-  overflow: auto;
+  /* overflow: auto; */
   border: 1px solid black;
   padding: 5px 5px 5px 5px;
 }
@@ -215,6 +217,11 @@ img {
   width:100px;
   text-align: center;
   background-color: black;
+}
+
+.my-products {
+  text-align: center;
+  margin-left: 200px;
 }
 
   /******************************** Footer ************************************/  

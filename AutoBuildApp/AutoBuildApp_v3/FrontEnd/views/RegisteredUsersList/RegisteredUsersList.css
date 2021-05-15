@@ -16,9 +16,13 @@ body {
 
 .listOfDivs {
   display:inline-block;
+  text-align: center;
+  position: relative;
 }
 
 .innerDiv {
+  margin-top: 100px;
+  text-align: center;
   display:block;
   position:relative;
 }
@@ -90,7 +94,8 @@ textarea {
 
 .div-table {
   display: table;   
-  margin-bottom: 100px;      
+  margin-bottom: 100px;  
+  margin-left: 200px;    
   border: 1px solid black;         
 }
   
@@ -123,8 +128,8 @@ img {
 
 .div-table-col { 
   float: left; 
-  width: 200px;
-  height: 37px;
+  width: 100px;
+  height: 75px;
   display: block;
   position: relative;
   /* text-align: center; */

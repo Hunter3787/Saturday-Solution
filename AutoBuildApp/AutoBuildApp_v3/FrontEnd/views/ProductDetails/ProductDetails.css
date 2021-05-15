@@ -124,19 +124,19 @@ h2 {
 }
 
 .side-nav {
-    margin-top: 200px;
-    height: 100%;
-    width: 300px;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    background-color: rgb(231, 231, 231);
-    overflow-x: hidden;
-    padding-top: 20px;
-    border-right: 0px solid black;
-    padding-left:25px;
-    padding-right:25px;
+  margin-top: 200px;
+  height: 700px;
+  height: 900px;
+  width: 300px;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: rgb(231, 231, 231);
+  overflow-x: hidden;
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
   }
 
 .side-nav h1{
@@ -144,7 +144,6 @@ h2 {
     text-align: center;
     margin-bottom: 75px;
     text-decoration: underline;
-
 }
 
 .side-nav h3, .side-nav text {
@@ -155,6 +154,14 @@ h2 {
 
 text {
     font-size: 20px;
+}
+
+.product-container{
+  margin-left: 300px;
+  margin-bottom: 150px;
+  font-size: 28px; 
+  padding: 0px 10px;
+  overflow: hidden;
 }
 
 .vendor-information-table{
@@ -172,7 +179,6 @@ text {
     position: relative;
     text-align: center;
     word-wrap: break-word;
-    overflow: auto;
     border: 1px solid black;
     padding: 5px 5px 5px 5px;
 }
@@ -184,7 +190,6 @@ text {
     position: relative;
     text-align: center;
     word-wrap: break-word;
-    overflow: auto;
     border: 1px solid black;
     padding: 5px 5px 5px 5px;
   }
@@ -223,3 +228,35 @@ text {
     font-size:35px;
     display: inline-block;
   }
+
+    /******************************** Footer ************************************/  
+
+
+    footer {
+      padding: 10px;
+      background-color: darkgrey;
+      position: relative;
+      left: 0;
+      bottom: 0;
+      height: 150px;
+      width: 100%;
+      overflow: hidden;
+      margin-top: 50px;
+      margin-bottom: 0;
+      z-index: 1;
+      overflow-x: hidden;
+      text-align: center;
+      padding-bottom: 20px;
+    }
+    
+    footer .custom-a {
+      padding-right: 10px;
+    }
+    
+    footer .custom-a:hover {
+      color: whitesmoke;
+      padding-right: 10px;
+      color: #D35400;
+    }
+    
+    /********************************************************************/ 

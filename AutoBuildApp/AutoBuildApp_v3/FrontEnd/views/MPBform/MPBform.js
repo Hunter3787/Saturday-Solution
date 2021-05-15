@@ -1,10 +1,10 @@
 let posts = [];
-let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiLCJzdWIiOiJBdXRvYnVpbGQgVXNlciIsImF1ZCI6IlVTIiwiaWF0IjoxNjIwNDMzNDI2LCJleHAiOjE2MjEwMzgyMjYsIm5iZiI6MTYyMTAzODIyNiwiVXNlcm5hbWUiOiJTRVJHRSIsIlVzZXJDTGFpbXMiOlt7IlBlcm1pc3Npb24iOiJDcmVhdGUiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJSZXZpZXdzIn0seyJQZXJtaXNzaW9uIjoiRGVsZXRlIiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZiJ9LHsiUGVybWlzc2lvbiI6IkRlbGV0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNlbGZSZXZpZXdzIn0seyJQZXJtaXNzaW9uIjoiRWRpdCIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNlbGYifSx7IlBlcm1pc3Npb24iOiJSZWFkT25seSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IkF1dG9CdWlsZCJ9LHsiUGVybWlzc2lvbiI6IlVwZGF0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNlbGYifSx7IlBlcm1pc3Npb24iOiJVcGRhdGUiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJTZWxmUmV2aWV3cyJ9XX0.ZRTrsLvZXhhKIaXbhUgbDAMBus7oIBj8qDKreA5cJck';
+let jwt_token = getCookie("JWT");
 const fetchRequest = {
     method: 'GET',
     mode: 'cors',
     headers: {
-        'Authorization': 'bearer ' + token
+        'Authorization': 'bearer ' + jwt_token
     }
 };
 
@@ -46,7 +46,6 @@ function addItem() {
     let buildTypeValue;
 
     let title = document.getElementById('add-title'); // will get the value from the html element and store it.
-    let username = document.getElementById('add-username'); // will get the value from the html element and store it.
     let description = document.getElementById('add-description'); // will get the value from the html element description and store it.
     let photo = document.getElementById("add-image").files[0]; // store the file in the photo variable.
     let buildType = document.getElementsByName("build-type"); // will get the value from the html element buildType and store it.
@@ -61,7 +60,6 @@ function addItem() {
     }
 
     // The next 6 lines will store the above data in the formData object.
-    formData.append("username", username.value.trim());
     formData.append("title", title.value.trim());
     formData.append("description", description.value.trim());
     formData.append("buildType", buildTypeValue);
@@ -81,4 +79,74 @@ function textCounter(field, field2, maxlimit) {
     } else {
         countfield.innerText = maxlimit - field.value.length;
     }
+}
+
+var profilePage = document.getElementById("profilePage")
+
+profilePage.addEventListener('click', async () => {
+  if (jwt_token == "" || jwt_token == "Invalid username or password" || jwt_token == "Account is locked") {
+    alert("You are not logged in");
+  } else {
+    if (await checkAdminPrivilege() == true) {
+      changePageAdmin();
+    } else {
+      changePageNotAdmin();
+    }
+  }
+})
+
+async function checkAdminPrivilege() {
+  var result = false;
+  var url = "http://localhost:8081/authentication/admin"
+  await fetch(url, {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'bearer ' + jwt_token
+    },
+  })
+  .then(response => response.json())
+    .then(data => result = data);
+    return result;
+}
+
+function getCookie(cname) {
+    var jwt = "";
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        jwt =  c.substring(name.length, c.length);
+        jwt = jwt.replace(/"/g,"");
+        return jwt;
+      }
+    }
+    return "";
+  }
+
+function changePageAdmin() {
+  window.location.href = "http://127.0.0.1:5501/views/UMUser(Admin)/UMUser(Admin).html"
+}
+
+function changePageNotAdmin() {
+  window.location.href = "http://127.0.0.1:5501/views/UMUser/UMUser.html"
+}
+
+function hideButtons() {
+  var x = document.getElementById("profilePage");
+  var y = document.getElementById("loginPage");
+  var z = document.getElementById("registrationPage");
+  if (jwt_token != "") {
+    y.style.display = "none";
+    z.style.display = "none";
+  } else {
+    x.style.display = "none";
+  }
 }
