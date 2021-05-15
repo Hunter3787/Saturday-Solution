@@ -1,11 +1,10 @@
 // instantiation of the fetch URL
 const uri ='https://localhost:5001/analytics';
-let JWT_TOKEN = 
-'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiLCJzdWIiOiJBdXRvYnVpbGQgVXNlciIsImF1ZCI6IlVTIiwiaWF0IjoxNjIwMzg4Nzk3LCJleHAiOjE2MjA5OTM1OTcsIm5iZiI6MTYyMDk5MzU5NywiVXNlcm5hbWUiOiJraW5nUGVuaTM5MyIsIlVzZXJDTGFpbXMiOlt7IlBlcm1pc3Npb24iOiJBbGwiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJBbGwifV19.uOuiOwuHH-qdYYj99W_mnblJz_LIu145FT4NRE9zeug'
 
-let ana =
-document.getElementById("GetAnalytics");
-ana.addEventListener("click",() => getBarItems());
+let jwt_token = getCookie("JWT");
+
+// let ana = document.getElementById("GetAnalytics");
+// ana.addEventListener("click",() => getBarItems());
 
 
 const fetchRequest = {
@@ -14,7 +13,7 @@ mode: 'cors',
 headers: {
 'Accept': 'application/json',
 'Content-Type': 'application/json',
-'Authorization': 'Bearer ' + JWT_TOKEN
+'Authorization': 'Bearer ' + jwt_token
 }
 };
 
@@ -237,3 +236,73 @@ console.log('---------DisplayAnalyticsData----------');
 
 }
 
+var profilePage = document.getElementById("profilePage")
+
+profilePage.addEventListener('click', async () => {
+  if (jwt_token == "" || jwt_token == "Invalid username or password" || jwt_token == "Account is locked") {
+    alert("You are not logged in");
+  } else {
+    if (await checkAdminPrivilege() == true) {
+      changePageAdmin();
+    } else {
+      changePageNotAdmin();
+    }
+  }
+})
+
+async function checkAdminPrivilege() {
+  var result = false;
+  var url = "http://localhost:8081/authentication/admin"
+  await fetch(url, {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'bearer ' + jwt_token
+    },
+  })
+  .then(response => response.json())
+    .then(data => result = data);
+    console.log(result)
+    return result;
+}
+
+function getCookie(cname) {
+    var jwt = "";
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        jwt =  c.substring(name.length, c.length);
+        jwt = jwt.replace(/"/g,"");
+        return jwt;
+      }
+    }
+    return "";
+  }
+
+function changePageAdmin() {
+  window.location.href = "/views/UMUser(Admin)/UMUser(Admin).html"
+}
+
+function changePageNotAdmin() {
+  window.location.href = "/views/UMUser/UMUser.html"
+}
+
+function hideButtons() {
+  var x = document.getElementById("profilePage");
+  var y = document.getElementById("loginPage");
+  var z = document.getElementById("registrationPage");
+  if (jwt_token != "") {
+    y.style.display = "none";
+    z.style.display = "none";
+  } else {
+    x.style.display = "none";
+  }
+}
