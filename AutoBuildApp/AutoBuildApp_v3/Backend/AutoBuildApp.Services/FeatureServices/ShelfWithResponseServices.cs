@@ -305,7 +305,15 @@ namespace AutoBuildApp.Services
 
             CodeToStringHandler(output, temp.Code);
 
-            if(temp.Code == AutoBuildSystemCodes.Success)
+            if (temp.Code == AutoBuildSystemCodes.NoChangeOccurred
+                || temp.Code == AutoBuildSystemCodes.FailedParse
+                || temp.Code == AutoBuildSystemCodes.DefaultError)
+            {
+                output.IsSuccessful = false;
+            }
+
+
+            if (temp.Code == AutoBuildSystemCodes.Success)
             {
                 output.IsSuccessful = true;
             }
@@ -318,9 +326,11 @@ namespace AutoBuildApp.Services
         /// </summary>
         /// <param name="username">Name associated with the account to retrieve from.</param>
         /// <returns></returns>
-        public CommonResponseWithObject<List<Shelf>> GetShelvesByUser(string username)
+        public CommonResponseWithObject<List<Shelf>>
+            GetShelvesByUser(string username)
         {
-            CommonResponseWithObject<List<Shelf>> output = new CommonResponseWithObject<List<Shelf>>()
+            CommonResponseWithObject<List<Shelf>> output = 
+                new CommonResponseWithObject<List<Shelf>>()
             {
                 IsSuccessful = false
             };
@@ -339,7 +349,14 @@ namespace AutoBuildApp.Services
 
             if(temp.Code == AutoBuildSystemCodes.Success)
             {
+                output.GenericObject = temp.GenericObject;
+
                 output.IsSuccessful = true;
+            }
+
+            if (temp.Code == AutoBuildSystemCodes.FailedParse)
+            {
+                output.IsSuccessful = false;
             }
 
             return output;
