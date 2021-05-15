@@ -62,7 +62,7 @@ namespace AutoBuildApp.Managers
         /// <param name="hddCount">Number of hard drives that the user
         /// would like to be in their final build.(Optional)</param>
         /// <returns>A list of IBuild representing the recommended builds.</returns>
-        public List<Build> RecommendBuilds(
+        public Build RecommendBuilds(
             BuildType requestedType,
             double initialBudget,
             List<IComponent> peripherals,
@@ -88,7 +88,7 @@ namespace AutoBuildApp.Managers
 
             #region Initializations
             Dictionary<ProductType, List<IComponent>> products = new Dictionary<ProductType, List<IComponent>>();
-            Dictionary<IComponent, int> scores = new Dictionary<IComponent, int>();
+            Dictionary<ProductType, List<KeyValuePair<IComponent, int>>> scores = new Dictionary<ProductType, List<KeyValuePair<IComponent, int>>>();
             //ComponentComparisonService comparator = new ComponentComparisonService();
             GetProductService getter = new GetProductService(_dao);
             PortionBudgetService portioner = new PortionBudgetService();
@@ -113,10 +113,10 @@ namespace AutoBuildApp.Managers
                 }
             }
 
-            if (adjustedBudget <= RecBusinessGlobals.MIN_BUDGET)
-            {
-                return buildRecommendations;
-            }
+            //if (adjustedBudget <= RecBusinessGlobals.MIN_BUDGET)
+            //{
+            //    return buildRecommendations;
+            //}
 
             #region Advanced option initialization
             if (psuType != PSUModularity.None)
@@ -143,25 +143,123 @@ namespace AutoBuildApp.Managers
                 adjustedBudget);
 
             products = getter.GetComponentDictionary(portionedList);
-            //ScoreProductDictionary(products, scores, requestedType);
+            ScoreProductDictionary(products, scores, requestedType);
+            SortScoreDictionary(scores);
 
-            SortByPriceDesc(products);
+            //SortByPriceDesc(products);
+            int lastMotherboardLocation = -1;
             // Business rule to create 5 builds and return them all.
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 5; i++)
             {
                 Build build = buildFactory.CreateBuild(requestedType);
                 // Add preselected peripherals.
                 build.Peripherals = peripherals;
 
-                build.Mobo = (Motherboard)products[ProductType.Motherboard][0];
-                build.Cpu = (CentralProcUnit)products[ProductType.CPU][0];
-                build.Ram = (RAM)products[ProductType.RAM][0];
-                build.Case = (ComputerCase)products[ProductType.Case][0];
-                build.Gpu = (GraphicsProcUnit)products[ProductType.GPU][0];
-                build.Psu = (PowerSupplyUnit)products[ProductType.PSU][0];
-                build.AddHardDrive((SolidStateDrive)products[ProductType.SSD][0]);
-                //build.AddHardDrive((HardDrive)products[ProductType.HDD][0]);
-                //build.HardDrives.Add((HardDrive)products[ProductType.HDD][0]);
+                Motherboard chosenMobo = null;
+                CentralProcUnit chosenCPU = null;
+                RAM chosenRAM = null;
+                ComputerCase chosenCase = null;
+                GraphicsProcUnit chosenGPU = null;
+                PowerSupplyUnit chosenPSU = null;
+                HardDrive chosenHD = null;
+
+                int iMobo;
+                for (iMobo = lastMotherboardLocation + 1; iMobo < products[ProductType.Motherboard].Count; iMobo++)
+                {
+                    // Start with the highest scored motherboard
+                    chosenMobo = (Motherboard)products[ProductType.Motherboard][iMobo];
+                    lastMotherboardLocation = iMobo;
+
+                    // If there isn't a motherboard form factor, try the next highest scored motherboard
+                    if(chosenMobo.MoboForm == null)
+                    {
+                        continue;
+                    }
+
+                    // Find a compatible CPU
+                    chosenCPU = FindCompatibleCPU(chosenMobo, scores[ProductType.CPU]);
+
+                    // If there is no compatible CPU, try the next highest scored motherboard
+                    if(chosenCPU == null)
+                    {
+                        continue;
+                    }
+
+                    // Find compatible RAM
+                    chosenRAM = FindCompatibleRAM(chosenMobo, scores[ProductType.RAM]);
+
+                    // If there is no compatible RAM, try the next highest scored motherboard
+                    if(chosenRAM == null)
+                    {
+                        continue;
+                    }
+
+                    // Find compatible case with gpu and psu
+                    int iCase;
+                    for (iCase = 0; iCase < products[ProductType.Case].Count; iCase++)
+                    {
+                        chosenCase = FindCompatibleCase(chosenMobo, scores[ProductType.Case]);
+                        if(chosenCase == null)
+                        {
+                            continue;
+                        }
+
+                        // Find compatible gpu
+                        chosenGPU = FindCompatibleGPU(chosenCase, scores[ProductType.GPU]);
+
+                        // If there is no compatible gpu, try the next highest scored case
+                        if(chosenGPU == null)
+                        {
+                            continue;
+                        }
+
+                        // Find compatible psu
+                        chosenPSU = FindCompatiblePSU(chosenCase, scores[ProductType.PSU]);
+
+                        if(chosenPSU == null)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    // If it went through all cases, that means we didn't find a compatible case
+                    if(iCase == products[ProductType.Case].Count)
+                    {
+                        continue;
+                    }
+
+                    build.Mobo = chosenMobo;
+                    build.Cpu = chosenCPU;
+                    build.Ram = chosenRAM;
+                    build.Case = chosenCase;
+                    build.Gpu = chosenGPU;
+                    build.Psu = chosenPSU;
+
+                    build.AddHardDrive((SolidStateDrive)products[ProductType.SSD][0]);
+
+                    build.TotalCost += build.Mobo.Price;
+                    build.TotalCost += build.Cpu.Price;
+                    build.TotalCost += build.Ram.Price;
+                    build.TotalCost += build.Case.Price;
+                    build.TotalCost += build.Gpu.Price;
+                    build.TotalCost += build.Psu.Price;
+                    build.TotalCost += build.HardDrives[0].Price;
+                    
+                    // If we get to the bottom, we know everything else passed
+                    break;
+                }
+
+
+                if(iMobo == products[ProductType.Motherboard].Count)
+                {
+                    // Case where no motherboard is compatible..
+                    // AKA no build was created successfully
+                }
+
 
                 // Get the highest scored mother board.
                 // Find compatable CPU, RAM, and Case
@@ -169,19 +267,30 @@ namespace AutoBuildApp.Managers
                 // Pick PSU based off selection if applicable that supports GPU.
                 // Add hard drives of type and number. (Compatable with Mobo.)
                 // Find cooler of the selected type. Default is fan.
-                
+
 
 
 
                 buildRecommendations.Add(build);
             }
 
+            int mostExpensiveBuildIndex = 0;
+            for(int i = 0; i < buildRecommendations.Count; i++)
+            {
+                if(buildRecommendations[i].TotalCost > buildRecommendations[mostExpensiveBuildIndex].TotalCost)
+                {
+                    mostExpensiveBuildIndex = i;
+                }
+            }
+
+            Console.WriteLine(buildRecommendations);
+
 
 
             // Add a function to builds to total their score
             // via the scoring tool for sorting.
 
-            return buildRecommendations;
+            return buildRecommendations[mostExpensiveBuildIndex];
         }
         #endregion
 
@@ -226,25 +335,52 @@ namespace AutoBuildApp.Managers
         /// <param name="type">Requested build type.</param>
         private void ScoreProductDictionary(
             Dictionary<ProductType, List<IComponent>> products,
-            Dictionary<IComponent, int> scores,
+            Dictionary<ProductType, List<KeyValuePair<IComponent, int>>> scores,
             BuildType type
             )
         {
             ComponentScoringService scorer = new ComponentScoringService();
 
-            foreach (ProductType key in products.Keys)
+            foreach(ProductType key in products.Keys)
             {
-                foreach (Component component in products[key])
+                if(!scores.ContainsKey(key))
                 {
-                    if (!scores.ContainsKey(component))
+                    scores.Add(key, new List<KeyValuePair<IComponent, int>>());
+                }
+                foreach(Component component in products[key])
+                {
+                    KeyValuePair<IComponent, int> tempComponentAndScore = new KeyValuePair<IComponent, int>(component, 0);
+                    if(!scores[key].Contains(tempComponentAndScore))
                     {
-                        var score = scorer.ScoreComponent(component, type);
-                        scores.Add(component, score);
+                        var score = scorer.ScoreComponent(tempComponentAndScore.Key, type);
+
+                        KeyValuePair<IComponent, int> componentAndScore = new KeyValuePair<IComponent, int>(component, score);
+
+                        scores[key].Add(componentAndScore);
                     }
                 }
             }
+            //foreach (ProductType key in products.Keys)
+            //{
+            //    foreach (Component component in products[key])
+            //    {
+            //        if (!scores.ContainsKey(component))
+            //        {
+            //            var score = scorer.ScoreComponent(component, type);
+            //            scores.Add(component, score);
+            //        }
+            //    }
+            //}
         }
         #endregion
+
+        private void SortScoreDictionary(Dictionary<ProductType, List<KeyValuePair<IComponent, int>>> scores)
+        {
+            foreach(var keyValue in scores)
+            {
+                keyValue.Value.Sort((x, y) => y.Value.CompareTo(x.Value));
+            }
+        }
 
         private void SortByPriceDesc(Dictionary<ProductType, List<IComponent>> products)
         {
@@ -256,5 +392,126 @@ namespace AutoBuildApp.Managers
                 });
             }
         }
+
+        private CentralProcUnit FindCompatibleCPU(Motherboard motherboard, List<KeyValuePair<IComponent, int>> potentialCPUs)
+        {
+            if(motherboard.Socket == null)
+            {
+                return null;
+            }
+
+            List<KeyValuePair<IComponent, int>> f = new List<KeyValuePair<IComponent, int>>();
+            CentralProcUnit bestCPU = null;
+            foreach (KeyValuePair<IComponent, int> keyValue in potentialCPUs)
+            {
+                bestCPU = (CentralProcUnit)keyValue.Key;
+                if (motherboard.Socket == bestCPU.Socket)
+                {
+                    f.Add(keyValue);
+                    //return bestCPU;
+                }
+            }
+            return f.Count == 0 ? null : (CentralProcUnit)f[0].Key;
+        }
+
+        private RAM FindCompatibleRAM(Motherboard motherboard, List<KeyValuePair<IComponent, int>> potentialRAM)
+        {
+            // Quick check to see if 
+            if(motherboard.SupportedMemory.Count == 0)
+            {
+                return null;
+            }
+
+            List<KeyValuePair<IComponent, int>> f = new List<KeyValuePair<IComponent, int>>();
+            RAM bestRAM = null;
+            foreach (KeyValuePair<IComponent, int> keyValue in potentialRAM)
+            {
+                bestRAM = (RAM)keyValue.Key;
+                if(bestRAM.Speed == null)
+                {
+                    continue;
+                }
+                foreach(var memorySpeed in motherboard.SupportedMemory)
+                {
+                    if(bestRAM.Speed.Contains(memorySpeed) && !f.Contains(keyValue))
+                    {
+                        return bestRAM;
+                    }
+                }
+
+            }
+
+            return null;
+            return f.Count == 0 ? null : (RAM)f[0].Key;
+        }
+
+        private ComputerCase FindCompatibleCase(Motherboard motherboard, List<KeyValuePair<IComponent, int>> potentialCases)
+        {
+            if (motherboard.MoboForm == null)
+            {
+                return null;
+            }
+
+            List<KeyValuePair<IComponent, int>> f = new List<KeyValuePair<IComponent, int>>();
+            ComputerCase bestCase = null;
+            foreach (KeyValuePair<IComponent, int> keyValue in potentialCases)
+            {
+                bestCase = (ComputerCase)keyValue.Key;
+                if (bestCase.MoboFormSupport.Count == 0)
+                {
+                    continue;
+                }
+                foreach (var formFactor in bestCase.MoboFormSupport)
+                {
+                    if(formFactor.Equals(motherboard.MoboForm))
+                    {
+                        return bestCase;
+                    }
+                }
+
+            }
+            return null;
+            Console.WriteLine(f);
+            return f.Count == 0 ? null : (ComputerCase)f[0].Key;
+        }
+
+        private GraphicsProcUnit FindCompatibleGPU(ComputerCase _case, List<KeyValuePair<IComponent, int>> potentialGPUs)
+        {
+
+            List<KeyValuePair<IComponent, int>> f = new List<KeyValuePair<IComponent, int>>();
+            GraphicsProcUnit bestGPU = null;
+            foreach (KeyValuePair<IComponent, int> keyValue in potentialGPUs)
+            {
+                bestGPU = (GraphicsProcUnit)keyValue.Key;
+                if (bestGPU.Length <= _case.MaxGPULength)
+                {
+                    return bestGPU;
+                }
+            }
+            return null;
+            //Console.WriteLine(f);
+            //return f.Count == 0 ? null : (ComputerCase)f[0].Key;
+        }
+
+        private PowerSupplyUnit FindCompatiblePSU(ComputerCase _case, List<KeyValuePair<IComponent, int>> potentialPSUs)
+        {
+
+            List<KeyValuePair<IComponent, int>> f = new List<KeyValuePair<IComponent, int>>();
+            PowerSupplyUnit bestPSU = null;
+            foreach (KeyValuePair<IComponent, int> keyValue in potentialPSUs)
+            {
+                bestPSU = (PowerSupplyUnit)keyValue.Key;
+                if (bestPSU.Length <= _case.MaxPSULength)
+                {
+                    return bestPSU;
+                }
+            }
+            return null;
+            //Console.WriteLine(f);
+            //return f.Count == 0 ? null : (ComputerCase)f[0].Key;
+        }
+
     }
+
 }
+
