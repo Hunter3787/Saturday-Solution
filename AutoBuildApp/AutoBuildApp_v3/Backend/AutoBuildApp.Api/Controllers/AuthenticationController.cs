@@ -61,7 +61,7 @@ namespace AutoBuildApp.Api.Controllers
             // 1) the app settings .json file
             ConnectionManager conString = ConnectionManager.connectionManager;
             // 2) passing in the name I assigned my connection string 
-            string connection = conString.GetConnectionStringByName("MyConnection");
+            string connection = conString.GetConnectionStringByName("SystemAdmin");
             // Console.WriteLine($"connection string passed in controller: {connection} ");
             //3) connection string passed to the logIn manager 
             _loginManager = new AuthManager(connection);

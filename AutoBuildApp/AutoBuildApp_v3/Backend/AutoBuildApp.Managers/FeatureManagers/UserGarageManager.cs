@@ -462,7 +462,7 @@ namespace AutoBuildApp.Managers
         /// <param name="shelfName"></param>
         /// <param name="username"></param>
         /// <returns></returns>
-        public CommonResponseWithObject<Shelf> GetShelfByName(string shelfName, string username)
+        public CommonResponseWithObject<Shelf> GetShelfByName(string shelfName)
         {
             CommonResponseWithObject<Shelf> output = new CommonResponseWithObject<Shelf>()
             {
@@ -487,7 +487,7 @@ namespace AutoBuildApp.Managers
                 return output;
             }
 
-            output = _shelfService.GetShelfByName(shelfName, username);
+            output = _shelfService.GetShelfByName(shelfName, Thread.CurrentPrincipal.Identity.Name);
 
             return output;
         }
@@ -498,7 +498,7 @@ namespace AutoBuildApp.Managers
         /// <param name="shelfName"></param>
         /// <param name="username"></param>
         /// <returns></returns>
-        public CommonResponseWithObject<List<Shelf>> GetShelvesByUser(string username)
+        public CommonResponseWithObject<List<Shelf>> GetShelvesByUser()
         {
             CommonResponseWithObject<List<Shelf>> output = new CommonResponseWithObject<List<Shelf>>()
             {
@@ -509,7 +509,6 @@ namespace AutoBuildApp.Managers
             try
             {
                 IsAuthorized();
-                NullGuard.IsNotNullOrEmpty(username);
             }
             catch (ArgumentNullException)
             {
@@ -523,7 +522,7 @@ namespace AutoBuildApp.Managers
                 return output;
             }
 
-            output = _shelfService.GetShelvesByUser(username);
+            output = _shelfService.GetShelvesByUser(Thread.CurrentPrincipal.Identity.Name);
 
             return output;
         }

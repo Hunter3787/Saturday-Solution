@@ -95,7 +95,8 @@ namespace AutoBuildApp.DataAccess
             "ORDER BY nameOfShelf, itemIndex;";
 
         public const string GET_SHELF_BY_NAME_AND_USER =
-            "SELECT S.nameOfShelf, SPS.quantity, SPS.itemIndex , P.productType, P.modelNumber, P.manufacturerName " +
+            "SELECT S.nameOfShelf, SPS.quantity" +
+            ", P.productType, P.modelNumber, P.manufacturerName " +
             "FROM Shelves S " +
             "LEFT JOIN Save_Product_Shelf SPS ON S.shelfID = SPS.shelfID " +
             "LEFT JOIN Products P ON P.productId = SPS.productID " +
@@ -105,8 +106,7 @@ namespace AutoBuildApp.DataAccess
             "INNER JOIN MappingHash MH ON UA.userID = MH.userID " +
             "INNER JOIN UserCredentials UC ON MH.userHashID = UC.userHashID " +
             "WHERE username = @USERNAME) " +
-            "AND nameOfShelf = @SHELFNAME " +
-            "ORDER BY itemIndex;";
+            "AND nameOfShelf = @SHELFNAME;";
         #endregion
 
         #region BuildDAO

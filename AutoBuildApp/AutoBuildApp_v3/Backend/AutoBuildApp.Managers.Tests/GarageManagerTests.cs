@@ -264,7 +264,7 @@ namespace AutoBuildApp.Manger.Tests
 
             // Act
             // This is in case we ever want to call other users shelves.
-            var actual = _testManager.GetShelvesByUser(Thread.CurrentPrincipal.Identity.Name);
+            var actual = _testManager.GetShelvesByUser();
             _testManager.DeleteShelf("TacoBell");
             _testManager.DeleteShelf("Lincoln");
             var actualList = actual.GenericObject;
