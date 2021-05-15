@@ -46,13 +46,13 @@ namespace AutoBuildApp.Services.FactoryServices
                     {
                         {ProductType.SSD, .09 },
                         //{ ProductType.HDD, .09 },
-                        { ProductType.GPU, .30 },
+                        { ProductType.GPU, .28 },
                         { ProductType.CPU, .25 },
                         { ProductType.Case, .08 },
                         //{ ProductType.Cooler, .03 },
                         { ProductType.RAM, .10 },
                         { ProductType.PSU, .09 },
-                        { ProductType.Motherboard, .09 }
+                        { ProductType.Motherboard, .11 }
                     };
             }
         }

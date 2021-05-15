@@ -4,15 +4,15 @@ namespace AutoBuildApp.Services.RecommendationServices
     public static class RecWeightGlobals
     {
         public const int BONUS_VALUE = 100;
-        public static readonly double[] GAMING_GPU_WEIGHTS = { -1.75, 1.1, 1.3, 1.1, 1.15, -1.4 };
-        public static readonly double[] GAMING_CPU_WEIGHTS = { -1.75, 1.5, -1.3 };
-        public static readonly double[] GAMING_PSU_WEIGHTS = { -1.75, 1.4 };
-        public static readonly double[] GAMING_RAM_WEIGHTS = { -1.75, 1.3, -2 };
-        public static readonly double[] GAMING_CASE_WEIGHTS = { -1.75, 1, 1 };
-        public static readonly double[] GAMING_COOLER_WEIGHTS = { -1.75, 1.3, 1 };
+        public static readonly double[] GAMING_GPU_WEIGHTS = { 1.75, 1.1, 1.3, 1.1, 1.15, -1.4 };
+        public static readonly double[] GAMING_CPU_WEIGHTS = { 1.75, 1.5, -1.3 };
+        public static readonly double[] GAMING_PSU_WEIGHTS = { 1.75, 1.4 };
+        public static readonly double[] GAMING_RAM_WEIGHTS = { 1.75, 1.3, -2 };
+        public static readonly double[] GAMING_CASE_WEIGHTS = { 1.75, 1, 1 };
+        public static readonly double[] GAMING_COOLER_WEIGHTS = { 1.75, 1.3, 1 };
         //public static readonly double[] GAMING_MONITOR_WEIGHTS = { -1.75 };
-        public static readonly double[] GAMING_MOTHERBOARD_WEIGHTS = { -1.75, 2 };
-        public static readonly double[] GAMING_HARDDRIVE_WEIGHTS = { -1.75, 2, 1.1 };
+        public static readonly double[] GAMING_MOTHERBOARD_WEIGHTS = { 1.75, 2 };
+        public static readonly double[] GAMING_HARDDRIVE_WEIGHTS = { 1.75, 2, 1.1 };
 
         public static readonly double[] ARTIST_GPU_WEIGHTS = { -1.75, 1.3, 1.1, 1.1, 1.15, -1.4 };
         public static readonly double[] ARTIST_CPU_WEIGHTS = { -1.75, 1.6, -1.3 };

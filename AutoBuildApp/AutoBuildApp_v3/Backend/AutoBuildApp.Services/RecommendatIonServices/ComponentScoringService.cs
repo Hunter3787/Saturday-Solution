@@ -3,6 +3,7 @@
 using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Products;
 using AutoBuildApp.Models.Enumerations;
+using System.Linq;
 
 /**
  * This service will score the components according to a passed key value
@@ -122,7 +123,7 @@ namespace AutoBuildApp.Services.RecommendationServices
             {
                 frameSyncScore += RecWeightGlobals.BONUS_VALUE;
             }
-                
+
             // Bonus score to gigabyte memory value.
             if (input.Memory != null && input.Memory.ToLower().Contains("gb"))
             {
@@ -268,7 +269,7 @@ namespace AutoBuildApp.Services.RecommendationServices
         private int Score(RAM input, BuildType type)
         {
             var price = input.Price;
-            var firstWord = 0.0;
+            var firstWord = 1.0;
             var numOfModules = input.NumOfModules;
             var moduleSize = input.ModuleCapacity;
             var casLat = 0;
@@ -462,10 +463,10 @@ namespace AutoBuildApp.Services.RecommendationServices
             var maxMemSupport = input.MaxMemoryType;
             var maxMem = 0;
             double scoreTotal = 0;
-
+            
             if (!string.IsNullOrEmpty(input.MaxMemory))
             {
-                maxMem = ParseInt(input.MaxMemory);
+                maxMem = ParseInt(new String(input.MaxMemory.TakeWhile(Char.IsDigit).ToArray()));
             }
 
             switch (type)
@@ -519,8 +520,8 @@ namespace AutoBuildApp.Services.RecommendationServices
             
 
             var output = 0;
-            if(toParse != string.Empty)
-                output = int.Parse(toParse);
+            //if (toParse != string.Empty)
+            //    output = int.Parse(toParse);
 
             return output;
         }

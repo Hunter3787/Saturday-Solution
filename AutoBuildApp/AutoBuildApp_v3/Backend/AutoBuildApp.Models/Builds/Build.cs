@@ -8,6 +8,7 @@ namespace AutoBuildApp.Models.Builds
 {
     public class Build : IBuild, IEquatable<Build>
     {
+        public double TotalCost;
         public string BuildName;
         public List<HardDrive> HardDrives { get; set; }
         public ComputerCase Case { get; set; }
