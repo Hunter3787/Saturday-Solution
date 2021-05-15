@@ -112,13 +112,12 @@ namespace AutoBuildApp.Api.Controllers
         }
 
         [HttpPost("SaveRecommendedBuild")]
-        public IActionResult SaveBuild
-            (IList<string> modelNumbers, string buildName)
+        public IActionResult SaveBuild(SaveBuild saveBuild)
         {
             try
             {
                 // TODO
-                var response = _manager.AddRecomendedBuild(modelNumbers, buildName);
+                var response = _manager.AddRecomendedBuild(saveBuild.ModelNumbers, saveBuild.BuildName);
                 Console.WriteLine($"Response : { response.ResponseString}");
                 if (!response.IsSuccessful)
                 {

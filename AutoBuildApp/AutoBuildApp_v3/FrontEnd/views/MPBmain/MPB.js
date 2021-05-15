@@ -113,6 +113,8 @@ async function getItems() {
     endpoint = endpoint + getFilterString();
   }
 
+  console.log(endpoint);
+
     await fetch(endpoint, fetchRequest) // fetches the default URI
         .then(function(response) {
            if(response.redirected){
