@@ -32,7 +32,7 @@ namespace AutoBuildApp.Api.Controllers
         //    _signInManager = signInManager;
         //    _emailSender = emailSender;
         //}
-        RegistrationManager _registrationManager = new RegistrationManager(ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
+        RegistrationManager _registrationManager = new RegistrationManager(ConnectionManager.connectionManager.GetConnectionStringByName(ControllerGlobals.ADMIN_CREDENTIALS_CONNECTION));
 
         [HttpPost]  
         //public async Task<IActionResult> RegisterUser(string username, string firstname, string lastname, string email, string password,
