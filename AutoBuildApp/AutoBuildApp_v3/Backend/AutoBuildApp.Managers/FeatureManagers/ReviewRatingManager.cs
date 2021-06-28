@@ -5,6 +5,8 @@ using AutoBuildApp.Services;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 
 /// <summary>
@@ -41,6 +43,9 @@ namespace AutoBuildApp.Managers
         /// <returns>boolean success-state</returns>
         public async Task<bool> CreateReviewRating(IFormCollection data, List<IFormFile> image)
         {
+            ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            string username = _threadPrinciple.Identity.Name;
+
             var reviewRating = new ReviewRating()
             {
                 BuildId = data["buildId"],

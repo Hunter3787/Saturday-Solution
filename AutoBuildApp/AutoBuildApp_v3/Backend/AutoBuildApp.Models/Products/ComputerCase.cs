@@ -20,6 +20,7 @@ namespace AutoBuildApp.Models.Products
         public int ThreeInchDriveBays { get; set; }
         public List<string> FrontPanel { get; set; }
         public int MaxGPULength { get; set; }
+        public int MaxPSULength { get; set; }
         public List<double> Dimensions { get; set; }
         #endregion
 

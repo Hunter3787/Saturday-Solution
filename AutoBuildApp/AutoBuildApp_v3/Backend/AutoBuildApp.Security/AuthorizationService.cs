@@ -66,13 +66,13 @@ namespace AutoBuildApp.Security
                 where item.Value != threadPrinciple.Identity.Name
                 // added per email in claims - connor
                 && item.Type != ClaimTypes.Email
-                orderby item.Type
+                orderby item.Type, item.Value
                 select item;
             var y = from Claim item in PermissionsRequired
-                    orderby item.Type
+                    orderby item.Type, item.Value
                     select item;
 
-
+            ///Print(x, y);
             ///http://csharphelper.com/blog/2018/04/determine-whether-two-lists-contain-the-same-sequences-of-objects-in-different-orders-in-c/
             ///
             bool outcome = Enumerable.SequenceEqual(x, y, new MyCustomComparer());

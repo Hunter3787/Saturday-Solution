@@ -3,6 +3,7 @@
 using AutoBuildApp.Models.Interfaces;
 using AutoBuildApp.Models.Products;
 using AutoBuildApp.Models.Enumerations;
+using System.Linq;
 
 /**
  * This service will score the components according to a passed key value
@@ -87,23 +88,33 @@ namespace AutoBuildApp.Services.RecommendationServices
             var powerDraw = input.PowerDraw;
             var frameSync = input.FrameSync;
             var frameSyncScore = 0;
-            
-            if (string.IsNullOrEmpty(input.Memory))
+            try
             {
-                mem = ParseInt(input.Memory);
+                if (!string.IsNullOrEmpty(input.Memory))
+                {
+                    var tempString = input.Memory.Split(' ');
+                    mem = ParseInt(input.Memory);
+                }
+
+                if (!string.IsNullOrEmpty(input.CoreClock))
+                {
+                    coreClock = ParseInt(input.CoreClock);
+                }
+
+                if (!string.IsNullOrEmpty(input.BoostClock))
+                {
+                    boostClock = ParseInt(input.BoostClock);
+                }
+
+                if (!string.IsNullOrEmpty(input.EffectiveMemClock))
+                {
+                    effectiveMem = ParseInt(input.EffectiveMemClock);
+                }
             }
-            if (!string.IsNullOrEmpty(input.CoreClock))
+            catch (FormatException)
             {
-                coreClock = ParseInt(input.CoreClock);
+                // TODO: Log
             }
-            if (input.BoostClock != null)
-            {
-                boostClock = ParseInt(input.BoostClock);
-            }
-            if (!string.IsNullOrEmpty(input.EffectiveMemClock))
-            {
-                effectiveMem = ParseInt(input.EffectiveMemClock);
-            } 
 
             // Unresolved magic values.
             if (frameSync != null && (frameSync.ToLower().Contains("g-sync")
@@ -112,9 +123,9 @@ namespace AutoBuildApp.Services.RecommendationServices
             {
                 frameSyncScore += RecWeightGlobals.BONUS_VALUE;
             }
-                
+
             // Bonus score to gigabyte memory value.
-            if (input.Memory.ToLower().Contains("gb"))
+            if (input.Memory != null && input.Memory.ToLower().Contains("gb"))
             {
                 mem *= RecWeightGlobals.BONUS_VALUE;
             }
@@ -258,7 +269,7 @@ namespace AutoBuildApp.Services.RecommendationServices
         private int Score(RAM input, BuildType type)
         {
             var price = input.Price;
-            var firstWord = 0.0;
+            var firstWord = 1.0;
             var numOfModules = input.NumOfModules;
             var moduleSize = input.ModuleCapacity;
             var casLat = 0;
@@ -452,10 +463,10 @@ namespace AutoBuildApp.Services.RecommendationServices
             var maxMemSupport = input.MaxMemoryType;
             var maxMem = 0;
             double scoreTotal = 0;
-
+            
             if (!string.IsNullOrEmpty(input.MaxMemory))
             {
-                maxMem = ParseInt(input.MaxMemory);
+                maxMem = ParseInt(new String(input.MaxMemory.TakeWhile(Char.IsDigit).ToArray()));
             }
 
             switch (type)
@@ -509,8 +520,8 @@ namespace AutoBuildApp.Services.RecommendationServices
             
 
             var output = 0;
-            if(toParse != string.Empty)
-                output = int.Parse(toParse);
+            //if (toParse != string.Empty)
+            //    output = int.Parse(toParse);
 
             return output;
         }

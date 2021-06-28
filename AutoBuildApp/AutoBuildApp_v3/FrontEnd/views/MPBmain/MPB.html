@@ -1,8 +1,4 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
     <head>
         <meta charset="utf-8">
@@ -17,14 +13,13 @@
         <div class="custom-nav">
             <span>
                 <img src="/assets/images/Logo/Logo.png" alt="logo"/>
-                <h1 class="nav-title">AutoBuild</h1>
-                <a class="custom-a" href="http://127.0.0.1:5501/views/Recommender/Recommender.html">Home</a>
-                <a class="custom-a" href="http://127.0.0.1:5501/views/MPBmain/MPB.html">MPB</a>
-                <a class="custom-a" href="http://127.0.0.1:5501/views/ComponentCatalog/ComponentCatalog.html">Component Catalog</a>
-                <a class="custom-a" href="">Etc.</a>
-                <button type="button" id = "loginPage" class="nav-button">Login</button>
-                <button type="button" id = "registrationPage" class="nav-button">Register</button>
-                <button type="button" id = "profilePage" >Profile Page</button>
+                <h1 class="nav-title" onclick="location.href='/views/MPBmain/MPB.html'">AutoBuild</h1>
+                <a class="custom-a" href="/views/MPBmain/MPB.html">Home</a>
+                <a class="custom-a" href="/views/Recommender/Recommender.html">PC Builder and Upgrader</a>
+                <a class="custom-a" href="/views/ComponentCatalog/ComponentCatalog.html">Component Catalog</a>
+                <button type="button" id = "loginPage" class="nav-button" onclick="location.href='/views/LoginPage/LoginPage.html'">Login</button>
+                <button type="button" id = "registrationPage" class="nav-button" onclick="location.href='/views/RegistrationPage/RegistrationPage.html'">Register</button>
+                <button type="button" id = "profilePage" class="nav-button" >Profile Page</button>
             </span>
         </div>
 
@@ -59,7 +54,7 @@
 
         <footer>
             <span>&copy; 2021</span>
-            <a class="custom-a" href="">Privacy Policy</a>
+            <a class="custom-a" href="/views/Privacy-Policy/PrivacyPolicy.html">Privacy Policy</a>
         </footer>
 
         <script src="MPB.js" asp-append-version="true"></script>

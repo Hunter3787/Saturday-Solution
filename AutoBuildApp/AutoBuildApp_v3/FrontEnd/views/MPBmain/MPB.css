@@ -12,8 +12,9 @@ body {
     font-family: Arial;
     margin: 0;
     background-color: whitesmoke; 
-    padding-bottom: 20px;
   }
+
+/******************************** Navigation Bar************************************/  
 
   .custom-nav {
     padding: 10px;
@@ -36,6 +37,10 @@ body {
     display: inline-block;
   }
 
+  .custom-nav .nav-title:hover {
+    cursor: pointer;
+  }
+
   .custom-nav .custom-a {
     color: whitesmoke;
     padding-right: 10px;
@@ -46,7 +51,6 @@ body {
     padding-right: 10px;
     color: #D35400;
   }
-
 
   .custom-nav .nav-button {
     padding: 10px;
@@ -81,26 +85,33 @@ body {
     box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
   }
 
+  /********************************************************************/  
+
+  /******************************** Header ************************************/  
+
   .formheader {
     padding: 10px;
     text-align: center;
-    /* background: #28B463;
+    background: #28B463;
     color: white;
-    overflow: auto hidden; */
+    overflow: auto hidden;
     height: 100px;
   }
 
-  /* .formheader .formtitle {
+  .formheader .formtitle {
     color: whitesmoke;
-  } */
+  }
 
-  
+  /********************************************************************/  
+
+  .mpb{
+  }
   
   .mpb .sidenav {
     margin-top: 200px;
     height: 700px;
     width: 200px;
-    position: absolute;
+    position: fixed;
     z-index: 1;
     top: 0;
     left: 0;
@@ -164,6 +175,7 @@ body {
   
   .main {
     margin-left: 220px;
+    margin-bottom: 150px;
     font-size: 28px; 
     padding: 0px 10px;
     overflow: hidden;
@@ -242,28 +254,33 @@ body {
     .sidenav a {font-size: 18px;}
   }
 
-footer {
-  padding: 10px;
-  background-color: darkgrey;
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  height: 150px;
-  width: 100%;
-  overflow:hidden;
-  margin-bottom: 0;
-  z-index: 1;
-  overflow-x: hidden;
-  text-align: center;
-  padding-bottom: 20px;
-}
+  /******************************** Footer ************************************/  
 
-footer .custom-a {
-  padding-right: 10px;
-}
-
-footer .custom-a:hover {
-  color: whitesmoke;
-  padding-right: 10px;
-  color: #D35400;
-}
+  footer {
+    padding: 10px;
+    background-color: darkgrey;
+    position: relative;
+    left: 0;
+    bottom: 0;
+    height: 150px;
+    width: 100%;
+    overflow: hidden;
+    margin-top: 50px;
+    margin-bottom: 0;
+    z-index: 1;
+    overflow-x: hidden;
+    text-align: center;
+    padding-bottom: 20px;
+  }
+  
+  footer .custom-a {
+    padding-right: 10px;
+  }
+  
+  footer .custom-a:hover {
+    color: whitesmoke;
+    padding-right: 10px;
+    color: #D35400;
+  }
+  
+  /********************************************************************/ 

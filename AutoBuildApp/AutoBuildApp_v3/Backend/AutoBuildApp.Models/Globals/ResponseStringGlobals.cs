@@ -9,6 +9,7 @@ namespace AutoBuildApp.Models
         public const string SUCCESSFUL_MODIFICATION = "Successfully modified.";
         public const string SUCCESSFUL_ADDITION = "Successfully added.";
         public const string SUCCESSFUL_REMOVAL = "Successfully removed.";
+        public const string CONNECTION_FAILED = "Failed Connection.";
         public const string FAILED_CREATION = "Failed to create.";
         public const string FAILED_DELETION = "Failed to delete.";
         public const string FAILED_MODIFICATION = "Failed modification.";

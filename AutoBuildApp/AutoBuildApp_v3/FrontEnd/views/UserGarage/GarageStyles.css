@@ -1,17 +1,138 @@
-body {
-    margin: 0;
+* {
+    box-sizing: border-box;
+  }
+  
+  html {
+    position: relative;
+    min-height: 100%;
+  }
+  
+  body {
+    min-height: 100%;
     font-family: Arial;
-    background-color: whitesmoke;
-}
-
-.header {
+    margin: 0;
+    background-color: whitesmoke; 
+  }
+  
+  /******************************** Navigation Bar************************************/  
+  
+  .custom-nav {
+    padding: 10px;
+    text-align: left;
+    background: #34495E;
+    color: white;
+    height: 100px;
+  }
+  
+  .custom-nav img {
+    width: 100px;
+    height: 75px;
+    float: left;
+  }
+  
+  .custom-nav .nav-title {
+    padding-left: 5px;
+    padding-right: 20px;
+    color: whitesmoke;
+    display: inline-block;
+  }
+  
+  .custom-nav .nav-title:hover {
+    cursor: pointer;
+  }
+  
+  .custom-nav .custom-a {
+    color: whitesmoke;
+    padding-right: 10px;
+  }
+  
+  .custom-nav .custom-a:hover {
+    color: whitesmoke;
+    padding-right: 10px;
+    color: #D35400;
+  }
+  
+  .custom-nav .nav-button {
+    padding: 10px;
+    margin-top: 20px;
+    margin-right: 10px;
+    float: right;
+    display: block;
+    width: 100px;
+    border: none;
+    background-color: #fff;
+    color: black;
+    cursor: pointer;
+    border-radius: .25rem;
+    text-align: center;
+    text-transform: uppercase;
+    transition: .15s ease-in-out;
+    transition-property: color, background-color, border-color, box-shadow;
+  }
+  
+  .custom-nav .nav-button:hover {
+    border-color: #B9770E;
+    background-color: #CCD1D1;
+    color: #D35400;
+    box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
+  }
+  
+  .custom-nav .nav-button:active {
+    border-color: #B9770E;
+    background-color: #F39C12;
+    color: black;
+    box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
+  }
+  
+  /********************************************************************/  
+  
+  /******************************** Header ************************************/  
+  
+  .formheader {
     padding: 10px;
     text-align: center;
-    background: #4285f4;
+    background: #99A3A4;
     color: white;
     overflow: auto hidden;
     height: 100px;
-}
+  }
+  
+  .formheader .formtitle {
+    color: whitesmoke;
+  }
+  
+  /********************************************************************/ 
+  
+    /******************************** Footer ************************************/  
+  
+    footer {
+      padding: 10px;
+      background-color: darkgrey;
+      position: relative;
+      left: 0;
+      bottom: 0;
+      height: 150px;
+      width: 100%;
+      overflow: hidden;
+      margin-top: 50px;
+      margin-bottom: 0;
+      z-index: 1;
+      overflow-x: hidden;
+      text-align: center;
+      padding-bottom: 20px;
+    }
+    
+    footer .custom-a {
+      padding-right: 10px;
+    }
+    
+    footer .custom-a:hover {
+      color: whitesmoke;
+      padding-right: 10px;
+      color: #D35400;
+    }
+    
+    /********************************************************************/ 
 
 .sidenav {
     float: left;
@@ -21,58 +142,189 @@ body {
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: lightgray;
+    background-color: whitesmoke;
     overflow-x: hidden;
     padding-top: 20px;
     padding-left: 20px;
     padding-right: 20px;
 }
 
-.shelf-region {
-    padding: 20px;
-    position: relative;
-    background-color: lightgray;
-    height: 250px;
+.sidenav:hover {
+    background-color: #E5E7E9;
+    box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
+  }
+
+.sidenav h1 {
+    color: #191b2b;
+    text-align: left;
+    border-bottom: 1px solid black;
 }
 
-#shelf-dropdown {
-    position: relative;
-    left: 5vh;
-    top: 5vh;
-    width:120px;
-    background-color: skyblue;
-
+.sidenav h3 {
+    font-size: 1em;
+    font-weight: bold;
+    color: #707B7C;
+    text-align: left;
+    border-bottom: 1px solid #B2BABB;
 }
 
-.build-view {
-    position: relative;
-    background-color: purple;
-    width: fit-content;
-    height: fit-content;
-
+.sidenav label {
+    font-size: smaller;
+    color: #191b2b;
 }
 
-.build-rectangle {
-    position: relative;
-    background-color: green;
-    
-}
-
-.shelf-view {
-    float: right;
-    height: 250px;
-    width: 75%;
-    background-color: rgba(255, 254, 254, 0.699);
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-}
-
-.component-card {
-    min-height: 220px;
-    min-width: 240px;
+.garage-container {
+    height: 100%;
+    position:relative;
+    margin-left: 200px;
     padding: 10px;
-    flex:  0 0;
-    background-color: lightgray;
-    border: solid gray 3px;
+}
+
+.garage-container .dropdown {
+    padding: 10px;
+    position:relative;
+    margin-bottom: 20px;
+    display: flex;
+    background-color: white;
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);  
+}
+
+.garage-container .dropdown h2{
+    position:relative;
+    margin-bottom: 20px;
+    float: left;
+}
+
+.garage-container .dropdown #shelf-dropdown {
+    margin-left: 20px;
+    float: left;
+}
+
+.garage-container .shelf {
+    height: 200px;
+    position:relative;
+    margin-bottom: 20px;
+    background-color: white;
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);  
+}
+
+.garage-container .shelf .item-details {
+    border: 4px solid black;
+    padding-left: 10px;
+    height: inherit;
+    width: 25%;
+    float: left;
+}
+
+.garage-container .shelf .items {
+    padding-left: 10px;
+    height: inherit;
+    width: 75%;
+    float: left;
+    background-color: white;
+    overflow: auto;
+    white-space: nowrap;
+}
+
+.garage-container .shelf .items a {
+    display: inline-block;
+    top: 50%;
+    color: black;
+    text-align: center;
+    padding: 14px;
+    text-decoration: none;
+  }
+
+.garage-container .shelf .items a:hover {
+    background-color: #777;
+  }
+
+.garage-container .build-container {
+    height: auto;
+    position:relative;
+    display: flex;
+}
+
+/* .garage-container .build-container .build-thumbnail {
+    border: 3px solid black;
+    width: 30%;
+    height: 200px;
+    float: left;
+}
+
+.garage-container .build-container .build-thumbnail .image{
+    border: 1px solid red;
+    height: 80%;
+    text-align: center;
+}
+
+.garage-container .build-container .build-thumbnail .image img{
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.garage-container .build-container .build-thumbnail .name{
+    border: 1px solid blue;
+    height: 20%;
+    text-align: center;
+} */
+
+.garage-container .build-container .build-details-container {
+    float: left;
+    width: 100%;
+    position: relative;
+}
+
+.garage-container .build-container .build-details-container .build-details{
+    height: 200px;
+    margin-bottom: 100px;
+    background-color: white;
+}
+
+.garage-container .build-container .build-details-container .build-details .thumbnail{
+    margin-bottom: 10px;
+    height: 100%;
+    width: 30%;
+    float: left;
+    background-color: whitesmoke;
+}
+
+
+.garage-container .build-container .build-details-container .build-details .thumbnail .image{
+    height: 80%;
+    text-align: center;
+}
+
+.garage-container .build-container .build-details-container .build-details .thumbnail .image img{
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.garage-container .build-container .build-details-container .build-details .thumbnail .name{
+    height: 20%;
+    text-align: center;
+}
+
+.garage-container .build-container .build-details-container .build-details .details{
+    width: 70%;
+    height: 100%;
+    float: left;
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);  
+}
+
+.garage-container .build-container .build-details-container .build-details .details:hover{
+    box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
+}
+
+.garage-container .build-container .build-details-container .build-details .details h5{
+    margin-left: 10px;
+    float: left;
+}
+
+
+.garage-container .build-container .build-details-container .build-details .details h3{
+    top: 0;
+    right: 0;
+    margin-right: 10px;
+    float: right;
 }

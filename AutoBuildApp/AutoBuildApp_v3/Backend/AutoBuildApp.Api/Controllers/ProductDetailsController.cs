@@ -27,7 +27,7 @@ namespace AutoBuildApp.Api.Controllers
         public ProductDetailsController()
         {
             // Set each respective layer to their constructor and pass in its respective layers to the parameter
-            _productDetailsDAO = new ProductDetailsDAO(ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
+            _productDetailsDAO = new ProductDetailsDAO(ConnectionManager.connectionManager.GetConnectionStringByName(ControllerGlobals.ADMIN_CREDENTIALS_CONNECTION));
             _productDetailsService = new ProductDetailsService(_productDetailsDAO);
             _productDetailsManager = new ProductDetailsManager(_productDetailsService);
         }

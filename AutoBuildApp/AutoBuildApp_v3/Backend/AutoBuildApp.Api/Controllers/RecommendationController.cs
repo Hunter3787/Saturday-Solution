@@ -6,6 +6,8 @@ using AutoBuildApp.DomainModels;
 using AutoBuildApp.Api.HelperFunctions;
 using System;
 using AutoBuildApp.Services;
+using AutoBuildApp.Models.Enumerations;
+using AutoBuildApp.Models.Builds;
 
 /**
 * AutoBuild Recommendation Tool Controller.
@@ -51,7 +53,7 @@ namespace AutoBuildApp.Api.Controllers
             Console.Write(requests);
 
             try { 
-                var builds = manager.RecommendBuilds(requests.Build, requests.Budget,
+                Build builds = manager.RecommendBuilds(BuildType.Gaming, requests.Budget,
                     requests.PeripheralsList,requests.Psu, requests.HddType, requests.HddCount);
 
                     if (builds != null)
@@ -63,11 +65,11 @@ namespace AutoBuildApp.Api.Controllers
                 //_logger.LogWarning(ex.Message);
                 return new StatusCodeResult(StatusCodes.Status401Unauthorized);
             }
-            catch(ArgumentOutOfRangeException )
-            {
-                //_logger.LogWarning(ex.Message);
-                return new StatusCodeResult(StatusCodes.Status400BadRequest);
-            }
+            //catch(ArgumentOutOfRangeException )
+            //{
+            //    //_logger.LogWarning(ex.Message);
+            //    return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            //}
 
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }

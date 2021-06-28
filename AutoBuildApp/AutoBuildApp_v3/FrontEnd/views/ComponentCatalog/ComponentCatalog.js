@@ -1,6 +1,6 @@
 let jwt_token = getCookie("JWT")
 
-const uri ='http://localhost:8081/componentcatalog';
+const uri ='http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/componentcatalog';
 
 const fetchRequest = {
     method: 'GET',
@@ -10,8 +10,6 @@ const fetchRequest = {
       'Content-Type': 'application/json',
     }
   };
-
-window.onload = getProductsByFilter();
 
 // Event listeners to upload the display when a filter is changed
 var checkboxes = document.querySelectorAll('input[type=checkbox]');
@@ -192,7 +190,7 @@ function getProductsByFilter() {
 
 async function checkAdminPrivilege() {
 var result = false;
-var url = "http://localhost:8081/authentication/admin"
+var url = "http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/authentication/admin"
 await fetch(url, {
   method: 'POST',
   mode: 'cors',
@@ -227,11 +225,11 @@ function getCookie(cname) {
 }
 
 function changePageAdmin() {
-window.location.href = "http://127.0.0.1:5501/views/UMUser(Admin)/UMUser(Admin).html"
+window.location.href = "/views/UMUser(Admin)/UMUser(Admin).html"
 }
 
 function changePageNotAdmin() {
-window.location.href = "http://127.0.0.1:5501/views/UMUser/UMUser.html"
+window.location.href = "/views/UMUser/UMUser.html"
 }
 
 function hideButtons() {
@@ -246,30 +244,4 @@ function hideButtons() {
   }
 }
 
-var loginPage = document.getElementById("loginPage")
-
-loginPagePage.addEventListener('click', async () => {
-    if (jwt_token == "" || jwt_token == "Invalid username or password" || jwt_token == "Account is locked") {
-        changePageLogin();
-    } else {
-        alert("You are already logged in")
-    }
-})
-
-var registerPage = document.getElementById("registrationPage")
-
-registerPage.addEventListener('click', async () => {
-    if (jwt_token == "" || jwt_token == "Invalid username or password" || jwt_token == "Account is locked") {
-        changePageRegister();
-    } else {
-        alert("Please logout before registering a new account")
-    }
-})
-
-function changePageLogin(){
-    window.location.href = "http://127.0.0.1:5501/views/LoginPage/LoginPage.html";
-}
-
-function changePageRegister() {
-    window.location.href = "http://127.0.0.1:5501/views/RegistrationPage/RegistrationPage.html";
-}
+getProductsByFilter();

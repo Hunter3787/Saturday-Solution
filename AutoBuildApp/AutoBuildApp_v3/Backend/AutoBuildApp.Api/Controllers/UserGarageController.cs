@@ -10,6 +10,8 @@ using AutoBuildApp.Security.Enumerations;
 using System.Threading;
 using System.Security.Claims;
 using AutoBuildApp.Security;
+using AutoBuildApp.Models.Builds;
+using AutoBuildApp.DomainModels;
 
 /**
 * User Garage controller that accepts incoming requests 
@@ -18,9 +20,10 @@ using AutoBuildApp.Security;
 */
 namespace AutoBuildApp.Api.Controllers
 {
+    [EnableCors("CorsPolicy")] // applying the cors policy so that the client can
+    // make a call the this controller 
     [ApiController]
-    [Route("[controller]")]
-    [EnableCors("CorsPolicy")]
+    [Route("[controller]")] // the route
     public class UserGarageController : ControllerBase
     {
         //private readonly LoggingProducerService _logger = LoggingProducerService.GetInstance;
@@ -28,7 +31,12 @@ namespace AutoBuildApp.Api.Controllers
         private readonly string _connString =
             ConnectionManager
             .connectionManager
-            .GetConnectionStringByName(ControllerGlobals.DOCKER_CONNECTION);
+            .GetConnectionStringByName(ControllerGlobals.ADMIN_CREDENTIALS_CONNECTION);
+
+        public UserGarageController()
+        {
+            _manager = new UserGarageManager(connectionString: _connString);
+        }
         private readonly List<string> _approvedRoles = new List<string>()
         {
             RoleEnumType.BasicRole,
@@ -45,14 +53,48 @@ namespace AutoBuildApp.Api.Controllers
         public IActionResult GetBuilds()
         {
             // TODO
+           
             return Ok();
         }
 
-        [HttpPost("saveBuild")]
-        public IActionResult AddBuild()
+        [HttpGet("getListBuilds")]
+        public IActionResult GetBuildList()
         {
             // TODO
-            return Ok();
+           
+            // TODO
+            var response = _manager.GetAllUserBuilds(Thread.CurrentPrincipal.Identity.Name,null);
+           if(response is null)
+            {
+
+                return StatusCode(StatusCodes.Status400BadRequest, "No Builds For User");
+
+            }
+            return StatusCode(StatusCodes.Status200OK, response);
+
+        }
+
+
+        [HttpPost("CreateBuild")]
+        public IActionResult AddBuild(string buildName)
+        {
+            if(string.IsNullOrEmpty(buildName))
+            {
+
+                return StatusCode(StatusCodes.Status400BadRequest, "Invalid Request");
+            }
+            Build myBuild = new Build()
+            {
+                BuildName = buildName,
+            };
+            // TODO
+            var response = _manager.AddBuild(myBuild, myBuild.BuildName);
+            Console.WriteLine($"Response : { response.ResponseString}");
+            if (!response.IsSuccessful)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, response.ResponseString);
+            }
+            return StatusCode(StatusCodes.Status200OK,response.ResponseString);
         }
 
         [HttpPost("copyBuild")]
@@ -69,22 +111,31 @@ namespace AutoBuildApp.Api.Controllers
             return Ok();
         }
 
+        [HttpPost("SaveRecommendedBuild")]
+        public IActionResult SaveBuild(SaveBuild saveBuild)
+        {
+            try
+            {
+                // TODO
+                var response = _manager.AddRecomendedBuild(saveBuild.ModelNumbers, saveBuild.BuildName);
+                Console.WriteLine($"Response : { response.ResponseString}");
+                if (!response.IsSuccessful)
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, response.ResponseString);
+                }
+                return StatusCode(StatusCodes.Status200OK, response.ResponseString);
+
+
+            }
+            catch(ArgumentNullException)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest,"Invalid Request");
+
+            }
+        }
+
         [HttpDelete("deleteBuild")]
-        public IActionResult DeleteBuild()
-        {
-            // TODO
-            return Ok();
-        }
-
-        [HttpPost("publishBuild")]
-        public IActionResult PublishBuild()
-        {
-            // TODO
-            return Ok();
-        }
-
-        [HttpGet("getShelf")]
-        public IActionResult GetShelf(string shelfName, string username)
+        public IActionResult DeleteBuild(string buildName)
         {
             _manager = new UserGarageManager(_connString);
             try
@@ -93,9 +144,59 @@ namespace AutoBuildApp.Api.Controllers
                 var principle = (ClaimsPrincipal)Thread.CurrentPrincipal;
                 Console.WriteLine(principle.Claims);
                 //_logger.LogInformation(_singleShelfFetch);
-                var output =_manager.GetShelfByName(shelfName, username);
+                var output = _manager.DeleteBuild(buildName);
+                return StatusCode(StatusCodes.Status200OK,output.ResponseString);
 
-                return Ok(output);
+            }
+            catch (ArgumentNullException)
+            {
+                //_logger.LogWarning(_badRequest);
+                return StatusCode(StatusCodes.Status400BadRequest, "Bad Request");
+            }
+        }
+
+        [HttpPost("publishBuild")]
+        public IActionResult PublishBuild(BuildPost BuildPost)
+        {
+            _manager = new UserGarageManager(_connString);
+            try
+            {
+                //_logger.LogInformation(_singleShelfFetch);
+                var output = _manager.PublishBuild(BuildPost);
+                return StatusCode(StatusCodes.Status200OK, output.ResponseString);
+
+            }
+            catch (ArgumentNullException)
+            {
+                //_logger.LogWarning(_badRequest);
+                return StatusCode(StatusCodes.Status400BadRequest, "Bad Request");
+            }
+        }
+
+
+
+
+        // -----------------------------------------------------------------------------------------------
+
+
+        [HttpGet("GetShelfByName")] // done 
+        public IActionResult GetShelfByName(string shelfName)
+        {
+            _manager = new UserGarageManager(_connString);
+            try
+            {
+                IsAuthorized();
+                var principle = (ClaimsPrincipal)Thread.CurrentPrincipal;
+                //Console.WriteLine(principle.Claims);
+                //_logger.LogInformation(_singleShelfFetch);
+                var output =_manager.GetShelfByName(shelfName);
+
+                if(!output.IsSuccessful)
+                {
+
+                    return StatusCode(StatusCodes.Status400BadRequest, "Bad Request");
+                }
+                return StatusCode(StatusCodes.Status400BadRequest, output.GenericObject);
             }
             catch (ArgumentNullException)
             {
@@ -104,22 +205,31 @@ namespace AutoBuildApp.Api.Controllers
             }
         }
 
-        [HttpGet("getShelves")]
-        public IActionResult GetShelvesByUser(string username)
+
+        [HttpGet("GetAllShelvesByUser")]
+        public IActionResult GetAllShelvesByUser()
         {
             _manager = new UserGarageManager(_connString);
             try
             {
                 IsAuthorized();
                 //_logger.LogInformation();
-                var output = _manager.GetShelvesByUser(username);
+                var output = _manager.GetShelvesByUser();
 
-                return Ok(output);
+                if (!output.IsSuccessful)
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest,
+                        "Bad Request");
+                }
+                return StatusCode(StatusCodes.Status200OK,
+                    output.GenericObject);
+
             }
             catch (ArgumentNullException)
             {
                 //_logger.LogWarning();
-                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+                return new 
+                    StatusCodeResult(StatusCodes.Status400BadRequest);
             }
         }
 

@@ -42,7 +42,7 @@ namespace AutoBuildApp.Api.Controllers
             };
 
             // Initializes each layer and passes into the respective layer
-            _vendorLinkingDAO = new VendorLinkingDAO(ConnectionManager.connectionManager.GetConnectionStringByName("MyConnection"));
+            _vendorLinkingDAO = new VendorLinkingDAO(ConnectionManager.connectionManager.GetConnectionStringByName(ControllerGlobals.ADMIN_CREDENTIALS_CONNECTION));
             _vendorLinkingService = new VendorLinkingService(_vendorLinkingDAO);
             _vendorLinkingManager = new VendorLinkingManager(_vendorLinkingService);
         }

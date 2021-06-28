@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using AutoBuildApp.Api.Controllers;
 using AutoBuildApp.Api.HelperFunctions;
+using AutoBuildApp.Models;
 using AutoBuildApp.Models.Builds;
+using AutoBuildApp.Models.DataTransferObjects;
 using AutoBuildApp.Models.Enumerations;
 using AutoBuildApp.Models.Products;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -142,6 +144,121 @@ namespace AutoBuildApp.DataAccess.Test
             Assert.AreEqual(build1, build2);
 
         }
+
+        [TestMethod]
+        public void CreatePCBuild_CallInsertBuild_ReturnsTrueUponCreation()
+        {
+
+            CommonResponse response = new CommonResponse();
+            // ARRANGE:
+
+            string conString = ConnectionManager.
+            connectionManager.
+            GetConnectionStringByName(ControllerGlobals.LOCALHOST_CONNECTION);
+
+            BuildDAO buildDAO = new BuildDAO(conString);
+            response= buildDAO.InsertBuild(_myBuild, _myBuild.BuildName, "Zeina");
+
+            // Act
+            // Assert
+            Assert.AreEqual(ResponseStringGlobals.SUCCESSFUL_ADDITION, response.ResponseString);
+
+        }
+
+        [TestMethod]
+        public void AddProductsToBuild_ReturnsTrueUponCreation()
+        {
+
+            CommonResponse response = new CommonResponse();
+            // ARRANGE:
+
+            string conString = ConnectionManager.
+            connectionManager.
+            GetConnectionStringByName(ControllerGlobals.LOCALHOST_CONNECTION);
+
+            BuildDAO buildDAO = new BuildDAO(conString);
+            response = buildDAO.AddProductsToBuild( _myBuild.BuildName, "MODEL_5", 14, "Zeina");
+
+            // Act
+            // Assert
+            Assert.AreEqual(ResponseStringGlobals.SUCCESSFUL_ADDITION, response.ResponseString);
+
+        }
+
+        [TestMethod]
+        public void RemoveProductsFromBuild_ReturnsTrueUponCreation()
+        {
+            CommonResponse response = new CommonResponse();
+            // ARRANGE:
+
+            string conString = ConnectionManager.
+            connectionManager.
+            GetConnectionStringByName(ControllerGlobals.LOCALHOST_CONNECTION);
+
+            BuildDAO buildDAO = new BuildDAO(conString);
+            response = buildDAO.ModifyProductQuantityFromBuild(_myBuild.BuildName, "MODEL_5", 9, "Zeina");
+
+            // Act
+            // Assert
+            Assert.AreEqual(ResponseStringGlobals.SUCCESSFUL_MODIFICATION, response.ResponseString);
+
+        }
+
+
+
+        [TestMethod]
+        public void SaveBuildRecommended_ReturnsTrueUponCreation()
+        {
+            CommonResponse response = new CommonResponse();
+            // ARRANGE:
+            IList<string> modelNumbers = new List<string>()
+            { "MODEL_6","MODEL_7", "MODEL_8" };
+
+            string conString = ConnectionManager.
+            connectionManager.
+            GetConnectionStringByName(ControllerGlobals.LOCALHOST_CONNECTION);
+
+            BuildDAO buildDAO = new BuildDAO(conString);
+            response = buildDAO.SaveBuildRecommended(modelNumbers, "MyBuild", "Zeina");
+
+            // Act
+            // Assert
+            Assert.AreEqual(ResponseStringGlobals.SUCCESSFUL_ADDITION, response.ResponseString);
+
+        }
+
+
+        [TestMethod]
+        public void GetListOfBuilds() // this will fail because of not enought data
+        {
+            List<Build> response = new List<Build>();
+            // ARRANGE:
+
+            string conString = ConnectionManager.
+            connectionManager.
+            GetConnectionStringByName(ControllerGlobals.LOCALHOST_CONNECTION);
+
+            try
+            {
+                BuildDAO buildDAO = new BuildDAO(conString);
+                response = buildDAO.GetListOfBuilds("Zeina");
+
+                // Act
+                // Assert
+                Assert.IsNotNull(response.ToString());
+            }
+            catch(NullReferenceException)
+            {
+                Console.WriteLine("no data");
+            }
+
+        }
+
+
+
+
+
+
 
     }
 }

@@ -1,4 +1,4 @@
-const uri = 'http://localhost:8081/usermanagement';
+const uri = 'http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/usermanagement';
 var users = [];
 
 
@@ -328,7 +328,7 @@ formData.append('username', username);
 formData.append('lockstate', lockState);
 // console.log(lockstate);
 // console.log(username);
-await fetch("http://localhost:8081/usermanagement/lock", {
+await fetch("http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/usermanagement/lock", {
 method: 'PUT',
 mode: 'cors',
 headers: {
@@ -347,7 +347,7 @@ async function savePermission(username, permission) {
     formData.append('permission', permission);
     console.log(permission);
 
-    await fetch("http://localhost:8081/usermanagement/permission", {
+    await fetch("http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/usermanagement/permission", {
 method: 'PUT',
 mode: 'cors',
 headers: {
@@ -374,7 +374,7 @@ async function deleteUser(username) {
     return;
   }
 
-    await fetch("http://localhost:8081/usermanagement/user", {
+    await fetch("http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/usermanagement/user", {
 method: 'DELETE',
 mode: 'cors',
 headers: {
@@ -428,7 +428,7 @@ function getCookie(cname) {
 
 async function checkAdminPrivilege() {
 var result = false;
-var url = "http://localhost:8081/authentication/admin"
+var url = "http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/authentication/admin"
 await fetch(url, {
   method: 'POST',
   mode: 'cors',
@@ -444,9 +444,24 @@ await fetch(url, {
 }
 
 function changePageAdmin() {
-    window.location.href = "http://127.0.0.1:5501/views/UMUser(Admin)/UMUser(Admin).html"
+    window.location.href = "/views/UMUser(Admin)/UMUser(Admin).html"
     }
     
     function changePageNotAdmin() {
-    window.location.href = "http://127.0.0.1:5501/views/UMUser/UMUser.html"
+    window.location.href = "/views/UMUser/UMUser.html"
     }
+
+function hideButtons() {
+  var x = document.getElementById("profilePage");
+  var y = document.getElementById("loginPage");
+  var z = document.getElementById("registrationPage");
+  console.log("hello")
+  if (jwt_token != "") {
+    y.style.display = "none";
+    z.style.display = "none";
+  } else {
+    x.style.display = "none";
+  }
+}
+
+getUsers()

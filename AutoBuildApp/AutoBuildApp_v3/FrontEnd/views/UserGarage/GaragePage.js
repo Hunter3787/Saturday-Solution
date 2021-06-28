@@ -1,20 +1,15 @@
-const uri = 'https://localhost:5001/UserGarage/';
+const uri = 'https://http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:5001/UserGarage/';
 let posts = [];
-let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBdXRvYnVpbGQiLCJzdWIiOiJBdXRvYnVpbGQgVXNlciIsImF1ZCI6IlVTIiwiaWF0IjoxNjIwNDM3OTkyLCJleHAiOjE2MjEwNDI3OTIsIm5iZiI6MTYyMTA0Mjc5MiwiVXNlcm5hbWUiOiJaZWluYSIsIlVzZXJDTGFpbXMiOlt7IlBlcm1pc3Npb24iOiJDcmVhdGUiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJSZXZpZXdzIn0seyJQZXJtaXNzaW9uIjoiRGVsZXRlIiwiU2NvcGVPZlBlcm1pc3Npb25zIjoiU2VsZiJ9LHsiUGVybWlzc2lvbiI6IkRlbGV0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNlbGZSZXZpZXdzIn0seyJQZXJtaXNzaW9uIjoiRWRpdCIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNlbGYifSx7IlBlcm1pc3Npb24iOiJSZWFkT25seSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IkF1dG9CdWlsZCJ9LHsiUGVybWlzc2lvbiI6IlVwZGF0ZSIsIlNjb3BlT2ZQZXJtaXNzaW9ucyI6IlNlbGYifSx7IlBlcm1pc3Npb24iOiJVcGRhdGUiLCJTY29wZU9mUGVybWlzc2lvbnMiOiJTZWxmUmV2aWV3cyJ9XX0.Jtkm9Gh9TCQfpQkjD7keZ2gd2G19H7xbo95MM5QB1_4";
+let jwt_token = getCookie("JWT");
 const fetchRequst = {
     method: 'GET',
     mode: 'cors',
     header: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': 'bearer ' + token
+        'Authorization': 'bearer ' + jwt_token
     }
 };
-
-window.onload = function (){
-    getGarageContents();
-
-}
 
 async function getGarageContents(){
     await fetch(uri + getFilterString(), fetchRequst)
@@ -42,3 +37,75 @@ function loadShelf(){
 function getFilterString(){
     return "getShelf?shelfName='TacoBell'&username='Zeina'";
 }
+
+var profilePage = document.getElementById("profilePage")
+
+profilePage.addEventListener('click', async () => {
+  if (jwt_token == "" || jwt_token == "Invalid username or password" || jwt_token == "Account is locked") {
+    alert("You are not logged in");
+  } else {
+    if (await checkAdminPrivilege() == true) {
+      changePageAdmin();
+    } else {
+      changePageNotAdmin();
+    }
+  }
+})
+
+async function checkAdminPrivilege() {
+  var result = false;
+  var url = "http://ec2-13-52-186-63.us-west-1.compute.amazonaws.com:8081/authentication/admin"
+  await fetch(url, {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'bearer ' + jwt_token
+    },
+  })
+  .then(response => response.json())
+    .then(data => result = data);
+    return result;
+}
+
+function getCookie(cname) {
+    var jwt = "";
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        jwt =  c.substring(name.length, c.length);
+        jwt = jwt.replace(/"/g,"");
+        return jwt;
+      }
+    }
+    return "";
+  }
+
+function changePageAdmin() {
+  window.location.href = "/views/UMUser(Admin)/UMUser(Admin).html"
+}
+
+function changePageNotAdmin() {
+  window.location.href = "/views/UMUser/UMUser.html"
+}
+
+function hideButtons() {
+  var x = document.getElementById("profilePage");
+  var y = document.getElementById("loginPage");
+  var z = document.getElementById("registrationPage");
+  if (jwt_token != "") {
+    y.style.display = "none";
+    z.style.display = "none";
+  } else {
+    x.style.display = "none";
+  }
+}
+
+getGarageContents();

@@ -12,8 +12,10 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AutoBuildApp.Managers
@@ -53,7 +55,10 @@ namespace AutoBuildApp.Managers
 
             _allowedRolesForPosting = new List<string>()
             {
-                RoleEnumType.BasicRole
+                RoleEnumType.BasicRole,
+                RoleEnumType.DelegateAdmin,
+                RoleEnumType.SystemAdmin,
+                RoleEnumType.VendorRole
             };
 
             _logger = LoggingProducerService.GetInstance;
@@ -85,7 +90,6 @@ namespace AutoBuildApp.Managers
                 // Initialize a local BuildPost Object to store data into and then pass to the manager.
                 var buildPost = new BuildPost()
                 {
-                    Username = data["username"],
                     Title = data["title"],
                     Description = data["description"],
                     BuildType = (BuildType)int.Parse(data["buildType"]),
@@ -133,6 +137,11 @@ namespace AutoBuildApp.Managers
         /// <returns>success state bool value.</returns>
         public async Task<bool> PublishBuild(BuildPost buildPost)
         {
+            ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            string username = _threadPrinciple.Identity.Name;
+
+            buildPost.Username = username;
+
             // Authorization check
             if (!AuthorizationCheck.IsAuthorized(_allowedRolesForPosting))
             {
@@ -233,11 +242,7 @@ namespace AutoBuildApp.Managers
         /// <returns>returns a build post.</returns>
         public BuildPost GetBuildPost(string buildId)
         {
-            // Authorization check
-            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
-            {
-                return null;
-            }
+
 
             // Log the manager get build posts being called
             _logger.LogInformation("Most Popular Builds Manager GetBuildPost was called.");
@@ -267,11 +272,7 @@ namespace AutoBuildApp.Managers
         /// <returns>retruns a list of Build Posts.</returns>
         public List<BuildPost> GetBuildPosts(string orderLikes, string buildType)
         {
-            // Authorization check
-            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
-            {
-                return null;
-            }
+
 
             // Log the manager get build posts being called
             _logger.LogInformation("Most Popular Builds Manager GetBuildPosts was called.");

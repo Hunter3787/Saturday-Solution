@@ -10,7 +10,7 @@ namespace Logging.Globals
 
         public const string DESTINATION = "LoggingQueue";
 
-        public const string DB_CONNECTION = "Server = localhost; Database = DB; Trusted_Connection = True;";
+        public const string DB_CONNECTION = "Data Source=satudaysolution-rds.cc5jk01zeyle.us-west-1.rds.amazonaws.com, 1433; Initial Catalog=DB; Integrated Security=True; Trusted_Connection=False; Uid=admin; Pwd=SaturdaySolution;";
 
         public const string USE_ASYNC_URI = "tcp://localhost:61616?jms.UseAsyncSend=true";
     }

@@ -52,7 +52,10 @@ namespace AutoBuildApp.Services.FeatureServices
 
             _allowedRolesForPosting = new List<string>()
             {
-                RoleEnumType.BasicRole
+                RoleEnumType.BasicRole,
+                RoleEnumType.DelegateAdmin,
+                RoleEnumType.SystemAdmin,
+                RoleEnumType.VendorRole
             };
 
             _logger = LoggingProducerService.GetInstance;
@@ -68,8 +71,6 @@ namespace AutoBuildApp.Services.FeatureServices
         /// <returns>returns a bool marking its success or failure.</returns>
         public bool PublishBuild(BuildPost buildPost)
         {
-            ClaimsPrincipal _threadPrinciple = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            string username = _threadPrinciple.Identity.Name;
 
             // Authorization check
             if (!AuthorizationCheck.IsAuthorized(_allowedRolesForPosting))
@@ -82,7 +83,7 @@ namespace AutoBuildApp.Services.FeatureServices
 
             var buildPostEntity = new BuildPostEntity()
             {
-                Username = username,
+                Username = buildPost.Username,
                 Title = buildPost.Title,
                 Description = buildPost.Description,
                 LikeIncrementor = buildPost.LikeIncrementor,
@@ -103,11 +104,7 @@ namespace AutoBuildApp.Services.FeatureServices
         /// <returns>returns a list of build posts</returns>
         public List<BuildPost> GetBuildPosts(string orderLikes, string buildType)
         {
-            // Authorization check
-            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
-            {
-                return null;
-            }
+
 
             // Logs the event of getting build posts in the service layer.
             _logger.LogInformation("Most Popular Builds Service GetBuildPosts was called.");
@@ -176,11 +173,7 @@ namespace AutoBuildApp.Services.FeatureServices
         /// <returns>retruns a build post object.</returns>
         public BuildPost GetBuildPost(string buildId)
         {
-            // Authorization check
-            if (!AuthorizationCheck.IsAuthorized(_allowedRolesForViewing))
-            {
-                return null;
-            }
+
 
             // Logs the event of getting build posts in the service layer.
             _logger.LogInformation("Most Popular Builds Service GetBuildPost was called.");
@@ -229,14 +222,26 @@ namespace AutoBuildApp.Services.FeatureServices
                 {
                     var currentDirectory = Directory.GetCurrentDirectory().ToString();
 
+                    _logger.LogWarning(currentDirectory);
+
                     storeIn = $"/assets/images/MPB/{username}_{ DateTime.UtcNow.ToString("yyyyMMdd_hh_mm_ss_ms")}.jpg";
 
                     var path = Path.GetFullPath(Path.Combine(currentDirectory, $@"..\..\FrontEnd{storeIn}"));
 
-                    using (var stream = new FileStream(path, FileMode.CreateNew, FileAccess.ReadWrite))
+                    _logger.LogWarning(path);
+
+                    try
                     {
-                        await item.CopyToAsync(stream);
+                        using (var stream = new FileStream(path, FileMode.CreateNew, FileAccess.ReadWrite))
+                        {
+                            await item.CopyToAsync(stream);
+                        }
                     }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex.Message);
+                    }
+
                 }
             }
             return storeIn;

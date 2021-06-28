@@ -106,7 +106,7 @@ namespace AutoBuildApp.Services.Auth_Services
             foreach (Claims claims in _authUserDTO.Claims)
             { // converting the claims in type System.Security.Claims
                 _securityClaims.Add(new Claim(claims.Permission, claims.ScopeOfPermissions));
-            }
+              }
             /// if the quthentication is a success then we new claims to the claims principle
             UserIdentity userIdentity = new UserIdentity()
             {
